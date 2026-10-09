@@ -1,0 +1,75 @@
+name: Nexus release
+
+# Se ejecuta al subir una etiqueta tipo v0.1.0 (git tag v0.1.0 && git push origin v0.1.0)
+# o a mano desde la pestaña Actions.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Etiqueta de la release (ej. v0.1.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: 'zulu'
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      # Firma opcional: si defines los secrets KEYSTORE (base64), KEYSTORE_PASSWORD,
+      # KEY_ALIAS y KEY_PASSWORD en Settings > Secrets, el APK sale firmado con tu clave.
+      # Sin ellos se firma con la clave de depuración (instalable, pero no actualizable
+      # luego sobre una versión firmada con tu clave real).
+      - name: Preparar firma
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ -n "$KEYSTORE" ]; then
+            echo "$KEYSTORE" | base64 --decode > "$GITHUB_WORKSPACE/key.jks"
+            {
+              echo "storePassword=$KEYSTORE_PASSWORD"
+              echo "keyAlias=$KEY_ALIAS"
+              echo "keyPassword=$KEY_PASSWORD"
+              echo "storeFile=$GITHUB_WORKSPACE/key.jks"
+            } > keystore.properties
+          else
+            echo "Sin KEYSTORE: se firmará con la clave de depuración."
+          fi
+
+      - name: Compilar APK
+        run: ./gradlew assembleLawnWithQuickstepGithubRelease
+
+      - name: Renombrar APK
+        run: |
+          mkdir -p dist
+          apk=$(find build/outputs -name '*.apk' -path '*Release*' | head -n 1)
+          if [ -z "$apk" ]; then apk=$(find build/outputs -name '*.apk' | head -n 1); fi
+          test -n "$apk"
+          cp "$apk" "dist/Nexus-${TAG}.apk"
+
+      - name: Crear release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$TAG" "dist/Nexus-${TAG}.apk" \
+            --title "Nexus Launcher $TAG" \
+            --generate-notes
