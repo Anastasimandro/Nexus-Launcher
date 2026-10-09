@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2A2A30"/><stop offset="1" stop-color="#131316"/>
+    </linearGradient>
+    <linearGradient id="fill" gradientUnits="userSpaceOnUse" x1="103" y1="72" x2="633" y2="635">
+      <stop offset="0" stop-color="#9A5BF5"/><stop offset="1" stop-color="#3A1B7A"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="wide"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="tight"/>
+      <feMerge><feMergeNode in="wide"/><feMergeNode in="tight"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="108" height="108" fill="url(#bg)"/>
+  <g transform="translate(54 54) scale(0.08526) translate(-368.0 -353.5)">
+    <g filter="url(#glow)" stroke="#CDB0FF" stroke-width="5" stroke-linejoin="miter" fill="url(#fill)" fill-opacity="0.95">
+      <polygon points="103,635 323,502 246,455 178,494 178,210 514,410 514,315 103,72"/>
+      <polygon points="633,72 413,205 490,252 558,213 558,497 222,297 222,392 633,635"/>
+    </g>
+  </g>
+</svg>
