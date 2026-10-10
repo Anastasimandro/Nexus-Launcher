@@ -118,7 +118,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         }
 
         val callbacks = RunnableList()
-        callbacks.add { dismiss(animated = true) }
+        callbacks.add { dismiss(animated = true, only = newSheet) }
         val options = makeCustomOptions(v, callbacks)
 
         launchPending = true
@@ -173,9 +173,14 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         return options
     }
 
-    /** Quita la hoja; con `animated` hace un fundido corto para que no haya un salto visible. */
-    private fun dismiss(animated: Boolean) {
+    /**
+     * Quita la hoja; con `animated` hace un fundido corto para que no haya un salto visible.
+     * Con `only` se ignora la llamada si la hoja activa ya es otra: los avisos de fin de un
+     * lanzamiento anterior llegan tarde y no deben cortar la animación del siguiente.
+     */
+    private fun dismiss(animated: Boolean, only: LaunchSheet? = null) {
         val current = sheet ?: return
+        if (only != null && only !== current) return
         sheet = null
         sheetAnimator?.cancel()
         sheetAnimator = null
