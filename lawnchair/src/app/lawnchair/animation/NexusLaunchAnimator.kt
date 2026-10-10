@@ -15,11 +15,9 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.provider.Settings
 import android.view.Display
 import android.view.RoundedCorner
 import android.view.View
-import android.view.animation.PathInterpolator
 import android.window.SplashScreen
 import app.lawnchair.LawnchairLauncher
 import app.lawnchair.compat.LawnchairQuickstepCompat
@@ -32,27 +30,44 @@ import com.android.launcher3.util.RunnableList
 import kotlin.math.min
 
 /**
- * Motor de animación de Nexus para cuando el launcher NO es el componente de recientes del
- * sistema (instalación como APK normal), caso en el que Quickstep y sus animaciones remotas
- * están desactivados.
+ * Animación de lanzamiento de apps de Nexus para cuando el launcher NO es el componente de
+ * recientes del sistema (instalación como APK normal), caso en el que Quickstep y sus
+ * animaciones remotas están desactivados.
  *
  * Funciona con dos piezas que no necesitan permisos especiales:
  *  1. Una "hoja" que se dibuja en el overlay del propio launcher y crece desde el icono hasta
- *     pantalla completa (400 ms, curva Nexus).
+ *     pantalla completa. Su progreso lo lleva un [MotionDriver] con los valores del
+ *     [MotionProfile] activo, así que es interrumpible: si se vuelve al inicio antes de que
+ *     termine, la hoja se pliega al icono conservando la velocidad.
  *  2. Una animación de ventana por recursos (`nexus_app_enter`) que hace aparecer la app
  *     encima de la hoja mientras el launcher se mantiene visible (`nexus_launcher_hold`).
  *
- * Optimización: la hoja es un único Drawable con dos operaciones de dibujo; el interpolador,
- * los pinceles y los rectángulos se crean una vez y se reutilizan en cada fotograma. Durante
- * la animación se pide la categoría de frecuencia de refresco alta y se libera al terminar.
+ * Optimización: la hoja es un único Drawable con dos operaciones de dibujo; los pinceles y los
+ * rectángulos se crean una vez y se reutilizan en cada fotograma.
  */
 class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     private val density = launcher.resources.displayMetrics.density
     private var sheet: LaunchSheet? = null
-    private var sheetAnimator: ValueAnimator? = null
     private var launchPending = false
     private var wentToBackground = false
+
+    private val openDriver = MotionDriver(
+        frameRateView = { launcher.dragLayer },
+        systemScale = { NexusMotion.systemScale(launcher) },
+        onProgress = { progress ->
+            sheet?.let {
+                it.progress = progress
+                it.invalidateSelf()
+            }
+        },
+    )
+
+    private val returnDriver = MotionDriver(
+        frameRateView = { launcher.dragLayer },
+        systemScale = { NexusMotion.systemScale(launcher) },
+        onProgress = { progress -> applyReturn(progress) },
+    )
 
     private val failSafe = Runnable {
         // Si la app tarda demasiado (o el lanzamiento falló) no dejamos la hoja tapando el inicio.
@@ -65,7 +80,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
      * por defecto (vista que no es un icono, animaciones del sistema desactivadas, etc.).
      */
     fun createLaunchOptions(v: View?): ActivityOptionsWrapper? {
-        if (v !is BubbleTextView || !animationsEnabled()) return null
+        if (v !is BubbleTextView || !NexusMotion.isEnabled(launcher)) return null
         val icon = v.icon ?: return null
         val iconBounds = icon.bounds
         val dragLayer = launcher.dragLayer
@@ -98,24 +113,10 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         newSheet.setBounds(0, 0, dragLayer.width, dragLayer.height)
         dragLayer.overlay.add(newSheet)
         sheet = newSheet
-        requestHighFrameRate(true)
 
-        sheetAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-            duration = LAUNCH_DURATION_MS
-            interpolator = OPEN_INTERPOLATOR
-            addUpdateListener {
-                newSheet.progress = it.animatedValue as Float
-                newSheet.invalidateSelf()
-            }
-            addListener(
-                object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        requestHighFrameRate(false)
-                    }
-                },
-            )
-            start()
-        }
+        val profile = NexusMotion.profile
+        openDriver.snapTo(0f)
+        openDriver.animateTo(1f, profile.open, profile.speed)
 
         val callbacks = RunnableList()
         callbacks.add { dismiss(animated = true, only = newSheet) }
@@ -137,6 +138,17 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         wentToBackground = false
         launchPending = false
         launcher.dragLayer.removeCallbacks(failSafe)
+
+        val current = sheet
+        if (current != null && NexusMotion.isEnabled(launcher)) {
+            // Volvimos antes de que terminara la apertura: la hoja se pliega al icono
+            // conservando la velocidad que llevaba, en vez de cortarse de golpe.
+            val profile = NexusMotion.profile
+            openDriver.animateTo(0f, profile.close, profile.speed) { finished ->
+                if (finished) dismiss(animated = false, only = current)
+            }
+            return
+        }
         dismiss(animated = false)
         playReturnAnimation()
     }
@@ -182,9 +194,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         val current = sheet ?: return
         if (only != null && only !== current) return
         sheet = null
-        sheetAnimator?.cancel()
-        sheetAnimator = null
-        requestHighFrameRate(false)
+        openDriver.cancel()
         val overlay = launcher.dragLayer.overlay
         if (!animated) {
             overlay.remove(current)
@@ -209,51 +219,28 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     /** Al volver al inicio, el contenido entra con un zoom suave en vez de aparecer de golpe. */
     private fun playReturnAnimation() {
-        if (!animationsEnabled()) return
+        if (!NexusMotion.isEnabled(launcher)) return
+        val profile = NexusMotion.profile
         val target = launcher.dragLayer
-        target.animate().cancel()
-        target.scaleX = RETURN_START_SCALE
-        target.scaleY = RETURN_START_SCALE
-        target.alpha = RETURN_START_ALPHA
-        requestHighFrameRate(true)
-        target.animate()
-            .scaleX(1f)
-            .scaleY(1f)
-            .alpha(1f)
-            .setDuration(RETURN_DURATION_MS)
-            .setInterpolator(OPEN_INTERPOLATOR)
-            .withLayer()
-            .withEndAction { requestHighFrameRate(false) }
-            .start()
+        target.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        returnDriver.snapTo(0f)
+        returnDriver.animateTo(1f, profile.homeReturn, profile.speed) { finished ->
+            if (finished) target.setLayerType(View.LAYER_TYPE_NONE, null)
+        }
+    }
+
+    private fun applyReturn(progress: Float) {
+        val target = launcher.dragLayer
+        val scale = lerp(RETURN_START_SCALE, 1f, progress)
+        target.scaleX = scale
+        target.scaleY = scale
+        target.alpha = lerp(RETURN_START_ALPHA, 1f, progress).coerceIn(0f, 1f)
     }
 
     private fun resetReturnAnimation() {
-        val target = launcher.dragLayer
-        target.animate().cancel()
-        target.scaleX = 1f
-        target.scaleY = 1f
-        target.alpha = 1f
-    }
-
-    private fun animationsEnabled(): Boolean {
-        if (!ValueAnimator.areAnimatorsEnabled()) return false
-        val windowScale = Settings.Global.getFloat(
-            launcher.contentResolver,
-            Settings.Global.WINDOW_ANIMATION_SCALE,
-            1f,
-        )
-        return windowScale > 0f
-    }
-
-    private fun requestHighFrameRate(high: Boolean) {
-        if (Build.VERSION.SDK_INT < 35) return
-        launcher.dragLayer.setRequestedFrameRate(
-            if (high) {
-                View.REQUESTED_FRAME_RATE_CATEGORY_HIGH
-            } else {
-                View.REQUESTED_FRAME_RATE_CATEGORY_DEFAULT
-            },
-        )
+        returnDriver.cancel()
+        applyReturn(1f)
+        launcher.dragLayer.setLayerType(View.LAYER_TYPE_NONE, null)
     }
 
     private fun snapshotOf(icon: Drawable, bounds: Rect): Bitmap? = runCatching {
@@ -283,7 +270,11 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         return DEFAULT_SCREEN_CORNER_DP * density
     }
 
-    /** Rectángulo redondeado que crece del icono a pantalla completa, con el icono encima. */
+    /**
+     * Rectángulo redondeado que crece del icono a pantalla completa, con el icono encima.
+     * Admite progresos fuera de 0..1 (rebote del resorte): la geometría se pasa un poco y el
+     * resto de valores se limita para no salirse de rango.
+     */
     private class LaunchSheet(
         private val start: RectF,
         private val screen: RectF,
@@ -309,18 +300,18 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
                 lerp(start.right, screen.right, p),
                 lerp(start.bottom, screen.bottom, p),
             )
-            val radius = lerp(startRadius, endRadius, p)
+            val radius = lerp(startRadius, endRadius, p).coerceAtLeast(0f)
 
             // El fondo aparece en los primeros fotogramas para que el primero sea idéntico al icono.
             val backdrop = (p / BACKDROP_FADE_IN).coerceIn(0f, 1f)
-            sheetPaint.color = lerpColor(startColor, endColor, (p / COLOR_SETTLE).coerceAtMost(1f))
+            sheetPaint.color = lerpColor(startColor, endColor, (p / COLOR_SETTLE).coerceIn(0f, 1f))
             sheetPaint.alpha = (255 * backdrop * fade).toInt()
             canvas.drawRoundRect(rect, radius, radius, sheetPaint)
 
             val iconAlpha = (1f - p / ICON_FADE_END).coerceIn(0f, 1f) * fade
             if (iconAlpha > 0f) {
                 iconPaint.alpha = (255 * iconAlpha).toInt()
-                val scale = lerp(1f, ICON_END_SCALE, p)
+                val scale = lerp(1f, ICON_END_SCALE, p.coerceAtLeast(0f))
                 val saved = canvas.save()
                 canvas.translate(rect.centerX(), rect.centerY())
                 canvas.scale(scale, scale)
@@ -338,10 +329,8 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     }
 
     companion object {
-        private const val LAUNCH_DURATION_MS = 400L
         private const val FADE_OUT_MS = 140L
         private const val FAIL_SAFE_MS = 3000L
-        private const val RETURN_DURATION_MS = 380L
         private const val RETURN_START_SCALE = 1.05f
         private const val RETURN_START_ALPHA = 0.55f
 
@@ -354,10 +343,6 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
         private val SURFACE_DARK = Color.rgb(0x12, 0x12, 0x16)
         private val SURFACE_LIGHT = Color.rgb(0xF6, 0xF6, 0xFA)
-
-        // Misma curva que `nexus_open.xml`: arranque rápido y frenada muy suave.
-        // Se crea una sola vez y se reutiliza en todas las animaciones.
-        private val OPEN_INTERPOLATOR = PathInterpolator(0.15f, 0.1f, 0.15f, 1f)
 
         private fun lerp(a: Float, b: Float, t: Float) = a + (b - a) * t
 
