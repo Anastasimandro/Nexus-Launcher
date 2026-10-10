@@ -203,7 +203,8 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
      */
     public static final int STATUS_BAR_TRANSITION_PRE_DELAY = 96;
 
-    public static final long APP_LAUNCH_DURATION = 500;
+    // Nexus: apertura de apps en 400 ms (valor de referencia del prototipo de animaciones).
+    public static final long APP_LAUNCH_DURATION = 400;
 
     public static final long APP_LAUNCH_ALPHA_DURATION = 50;
     public static final long APP_LAUNCH_ALPHA_START_DELAY = 25;
@@ -219,7 +220,13 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
     public static final int RECENTS_LAUNCH_DURATION = 336;
     private static final int LAUNCHER_RESUME_START_DELAY = 100;
-    private static final int CLOSING_TRANSITION_DURATION_MS = 250;
+    // Nexus: cierre de apps hacia el inicio en 400 ms (antes 250).
+    private static final int CLOSING_TRANSITION_DURATION_MS = 400;
+    // Nexus: curva de apertura (arranque rápido y frenada muy suave).
+    private static final float NEXUS_OPEN_X1 = 0.15f;
+    private static final float NEXUS_OPEN_Y1 = 0.1f;
+    private static final float NEXUS_OPEN_X2 = 0.15f;
+    private static final float NEXUS_OPEN_Y2 = 1f;
     public static final int SPLIT_LAUNCH_DURATION = 370;
     public static final int SPLIT_DIVIDER_ANIM_DURATION = 100;
 
@@ -319,8 +326,9 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
         mOpeningXInterpolator = AnimationUtils.loadInterpolator(
                 launcher, R.interpolator.app_open_x);
-        mOpeningInterpolator = AnimationUtils.loadInterpolator(
-                launcher, R.interpolator.emphasized_interpolator);
+        // Se crea una sola vez y se reutiliza en todos los fotogramas (sin reservas de memoria).
+        mOpeningInterpolator = new PathInterpolator(
+                NEXUS_OPEN_X1, NEXUS_OPEN_Y1, NEXUS_OPEN_X2, NEXUS_OPEN_Y2);
         mCoordinateTransfer = new RemoteAnimationCoordinateTransfer(mLauncher);
         mLatencyTracker = LatencyTracker.getInstance(launcher);
     }
