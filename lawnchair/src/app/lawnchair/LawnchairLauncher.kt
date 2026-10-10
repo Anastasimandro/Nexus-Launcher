@@ -32,6 +32,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import app.lawnchair.LawnchairApp.Companion.showQuickstepWarningIfNecessary
+import app.lawnchair.animation.NexusLaunchAnimator
 import app.lawnchair.compat.LawnchairQuickstepCompat
 import app.lawnchair.data.AppDatabase
 import app.lawnchair.data.wallpaper.service.WallpaperService
@@ -97,6 +98,7 @@ import kotlinx.coroutines.launch
 
 class LawnchairLauncher : QuickstepLauncher() {
     private val defaultOverlay by unsafeLazy { OverlayCallbackImpl(this) }
+    private val nexusLaunchAnimator by unsafeLazy { NexusLaunchAnimator(this) }
     private val prefs by unsafeLazy { PreferenceManager.getInstance(this) }
     private val preferenceManager2 by unsafeLazy { PreferenceManager2.getInstance(this) }
     private val insetsController: WindowInsetsControllerCompat by lazy {
@@ -427,6 +429,11 @@ class LawnchairLauncher : QuickstepLauncher() {
     }
 
     override fun getActivityLaunchOptions(v: View?, item: ItemInfo?): ActivityOptionsWrapper {
+        // Sin Quickstep (APK normal, no es el componente de recientes) no hay animaciones remotas:
+        // usamos el motor propio de Nexus.
+        if (!LawnchairApp.isRecentsEnabled) {
+            nexusLaunchAnimator.createLaunchOptions(v)?.let { return it }
+        }
         return runCatching {
             super.getActivityLaunchOptions(v, item)
         }.getOrElse {
@@ -467,8 +474,14 @@ class LawnchairLauncher : QuickstepLauncher() {
         return ActivityOptionsWrapper(options, callback)
     }
 
+    override fun onPause() {
+        super.onPause()
+        nexusLaunchAnimator.onLauncherPaused()
+    }
+
     override fun onResume() {
         super.onResume()
+        nexusLaunchAnimator.onLauncherResumed()
         restartIfPending()
         refreshPredictionContainersFromModel()
 
@@ -498,6 +511,7 @@ class LawnchairLauncher : QuickstepLauncher() {
     }
 
     override fun onDestroy() {
+        nexusLaunchAnimator.onLauncherDestroyed()
         super.onDestroy()
         // Only actually closes if required, safe to call if not enabled
         SmartspacerClient.close()

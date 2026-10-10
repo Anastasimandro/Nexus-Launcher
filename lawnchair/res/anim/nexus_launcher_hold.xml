@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mantiene visible la ventana del launcher mientras la app aparece encima. -->
+<alpha xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="450"
+    android:fromAlpha="1"
+    android:toAlpha="1" />
