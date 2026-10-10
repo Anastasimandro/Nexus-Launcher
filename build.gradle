@@ -144,6 +144,13 @@ final def releaseName = "Beta 1"
 final def versionDisplayName = "${version}.${isReleaseBuild ? releaseName : devReleaseName}"
 final def majorVersion = versionDisplayName.split("\\.")[0]
 
+// versionCode sube solo con cada push: base fija + nº de ejecución de GitHub Actions.
+// Así cada APK publicado tiene un versionCode mayor que el anterior y Android
+// permite actualizar encima sin desinstalar. En local (sin CI) se queda en la base.
+final def baseVersionCode = 16_00_02_01_00
+final def ciRunNumberInt = ((System.getenv("GITHUB_RUN_NUMBER") ?: "0").isInteger() ? System.getenv("GITHUB_RUN_NUMBER") : "0").toInteger()
+final def computedVersionCode = baseVersionCode + ciRunNumberInt
+
 final def quickstepMinSdk = "35"
 final def quickstepMaxSdk = "36"
 
@@ -154,7 +161,7 @@ android {
          * Lawnchair Launcher 16.0 Beta 1.0
          * see https://docs.lawnchair.app/developers/standards/development-workflow#versioning-scheme
          */
-        versionCode 16_00_02_01_00
+        versionCode computedVersionCode
         versionName "${versionDisplayName}"
         buildConfigField "String", "VERSION_DISPLAY_NAME", "\"${versionDisplayName}\""
         buildConfigField "String", "MAJOR_VERSION", "\"${majorVersion}\""
