@@ -27,6 +27,7 @@ import com.android.launcher3.Utilities
 import com.android.launcher3.util.ActivityOptionsWrapper
 import com.android.launcher3.util.Executors
 import com.android.launcher3.util.RunnableList
+import java.lang.ref.WeakReference
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -61,6 +62,10 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
      * son de un lanzamiento anterior: solo se atiende el del último.
      */
     private var generation = 0
+
+    /** Último icono lanzado, para plegar la hoja hacia él al volver al inicio. */
+    private var lastSource: WeakReference<BubbleTextView>? = null
+    private var lastTag: Any? = null
     private var launchPending = false
     private var wentToBackground = false
 
@@ -87,14 +92,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         val dragLayer = launcher.dragLayer
         if (iconBounds.isEmpty || v.width == 0 || dragLayer.width == 0 || dragLayer.height == 0) return null
 
-        // Posición del icono dentro del DragLayer (mismo sistema de coordenadas que el overlay).
-        val viewRect = Rect()
-        val scale = dragLayer.getDescendantRectRelativeToSelf(v, viewRect)
-        val iconWidth = iconBounds.width() * scale
-        val iconHeight = iconBounds.height() * scale
-        val left = viewRect.left + (viewRect.width() - iconWidth) / 2f
-        val top = viewRect.top + v.paddingTop * scale
-        val start = RectF(left, top, left + iconWidth, top + iconHeight)
+        val start = iconRect(v) ?: return null
 
         // Si el zoom de vuelta al inicio sigue en marcha, se deja asentar en vez de cortarlo.
         settleReturnAnimation()
@@ -105,12 +103,29 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
             ?: createSession(v, icon, iconBounds, start)
             ?: return null
 
+        // Se recuerda el icono para plegar la hoja hacia él cuando se vuelva al inicio.
+        lastSource = WeakReference(v)
+        lastTag = v.tag
+
         val profile = NexusMotion.profile
-        active.driver.animateTo(1f, profile.open, profile.speed)
+        active.finishRequested = false
+        active.driver.animateTo(1f, profile.open, profile.speed) { finished ->
+            if (finished && active.finishRequested && session === active) endSession(animated = true)
+        }
 
         val launchId = ++generation
         val callbacks = RunnableList()
-        callbacks.add { if (launchId == generation) endSession(animated = true) }
+        callbacks.add {
+            if (launchId == generation && session === active) {
+                // El aviso del sistema no debe cortar la apertura a medias: si el resorte sigue
+                // en marcha, la hoja se retira cuando termine de abrirse.
+                if (active.driver.isRunning) {
+                    active.finishRequested = true
+                } else {
+                    endSession(animated = true)
+                }
+            }
+        }
         val options = makeCustomOptions(v, callbacks)
 
         launchPending = true
@@ -130,24 +145,71 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         launchPending = false
         launcher.dragLayer.removeCallbacks(failSafe)
 
-        val current = session
-        if (current != null && NexusMotion.isEnabled(launcher)) {
-            // Volvimos antes de que terminara la apertura: la hoja se pliega al icono
-            // conservando la velocidad que llevaba, en vez de cortarse de golpe.
-            val profile = NexusMotion.profile
-            current.driver.animateTo(0f, profile.close, profile.speed) { finished ->
-                if (finished && session === current) endSession(animated = false)
-            }
+        if (!NexusMotion.isEnabled(launcher)) {
+            endSession(animated = false)
             return
         }
-        endSession(animated = false)
-        playReturnAnimation()
+
+        // Volvimos antes de que terminara la apertura: la hoja se pliega al icono conservando
+        // la velocidad que llevaba, en vez de cortarse de golpe.
+        val current = session
+        if (current != null) {
+            foldIntoIcon(current)
+            return
+        }
+
+        // Volvemos con la app ya abierta: una hoja nueva a pantalla completa se pliega al icono.
+        // Si el icono ya no está a la vista, queda el zoom suave del inicio.
+        if (!playCloseSheet()) playReturnAnimation()
     }
 
     fun onLauncherDestroyed() {
         launcher.dragLayer.removeCallbacks(failSafe)
         endSession(animated = false)
         resetReturnAnimation()
+        lastSource = null
+        lastTag = null
+    }
+
+    /** Posición del icono dentro del DragLayer (mismo sistema de coordenadas que el overlay). */
+    private fun iconRect(v: BubbleTextView): RectF? {
+        val iconBounds = v.icon?.bounds ?: return null
+        if (iconBounds.isEmpty || v.width == 0) return null
+        val viewRect = Rect()
+        val scale = launcher.dragLayer.getDescendantRectRelativeToSelf(v, viewRect)
+        val iconWidth = iconBounds.width() * scale
+        val iconHeight = iconBounds.height() * scale
+        val left = viewRect.left + (viewRect.width() - iconWidth) / 2f
+        val top = viewRect.top + v.paddingTop * scale
+        return RectF(left, top, left + iconWidth, top + iconHeight)
+    }
+
+    private fun foldIntoIcon(target: LaunchSession) {
+        val profile = NexusMotion.profile
+        target.driver.animateTo(0f, profile.close, profile.speed) { finished ->
+            if (finished && session === target) endSession(animated = false)
+        }
+    }
+
+    /**
+     * Cierre de la app: una hoja a pantalla completa se pliega hasta el icono desde el que se
+     * abrió, como la apertura al revés. Devuelve `false` si no se puede (el icono ya no está
+     * en pantalla o cambió de elemento).
+     */
+    private fun playCloseSheet(): Boolean {
+        val v = lastSource?.get() ?: return false
+        if (!v.isAttachedToWindow || v.tag !== lastTag) return false
+        val icon = v.icon ?: return false
+        val start = iconRect(v) ?: return false
+        val dragLayer = launcher.dragLayer
+        val screen = RectF(0f, 0f, dragLayer.width.toFloat(), dragLayer.height.toFloat())
+        if (!RectF.intersects(start, screen)) return false
+
+        val closing = createSession(v, icon, icon.bounds, start) ?: return false
+        resetReturnAnimation()
+        closing.driver.snapTo(1f)
+        foldIntoIcon(closing)
+        return true
     }
 
     private fun makeCustomOptions(v: View, callbacks: RunnableList): ActivityOptions {
@@ -318,6 +380,9 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         private val start: RectF,
         val sheet: LaunchSheet,
     ) {
+
+        /** El sistema ya avisó del fin del lanzamiento; la hoja se retira al terminar de abrirse. */
+        var finishRequested = false
 
         val driver = MotionDriver(
             frameRateView = { launcher.dragLayer },
