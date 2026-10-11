@@ -27,6 +27,7 @@ import com.android.launcher3.Utilities
 import com.android.launcher3.util.ActivityOptionsWrapper
 import com.android.launcher3.util.Executors
 import com.android.launcher3.util.RunnableList
+import kotlin.math.abs
 import kotlin.math.min
 
 /**
@@ -36,9 +37,12 @@ import kotlin.math.min
  *
  * Funciona con dos piezas que no necesitan permisos especiales:
  *  1. Una "hoja" que se dibuja en el overlay del propio launcher y crece desde el icono hasta
- *     pantalla completa. Su progreso lo lleva un [MotionDriver] con los valores del
- *     [MotionProfile] activo, así que es interrumpible: si se vuelve al inicio antes de que
- *     termine, la hoja se pliega al icono conservando la velocidad.
+ *     pantalla completa. Cada lanzamiento es una [LaunchSession]: la hoja más su propio
+ *     [MotionDriver], que lleva el progreso con los valores del [MotionProfile] activo. Es
+ *     interrumpible: si se vuelve al inicio antes de que termine, la hoja se pliega al icono
+ *     conservando la velocidad, y si se vuelve a tocar el mismo icono se redirige otra vez
+ *     hacia abierto desde donde esté, sin cortes. Al tocar otro icono, la hoja anterior se
+ *     funde mientras sigue moviéndose.
  *  2. Una animación de ventana por recursos (`nexus_app_enter`) que hace aparecer la app
  *     encima de la hoja mientras el launcher se mantiene visible (`nexus_launcher_hold`).
  *
@@ -48,20 +52,17 @@ import kotlin.math.min
 class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     private val density = launcher.resources.displayMetrics.density
-    private var sheet: LaunchSheet? = null
+
+    /** Lanzamiento cuya hoja sigue en pantalla (abriéndose o plegándose), si lo hay. */
+    private var session: LaunchSession? = null
+
+    /**
+     * Número del último lanzamiento. Los avisos de fin del sistema llegan con retraso y a veces
+     * son de un lanzamiento anterior: solo se atiende el del último.
+     */
+    private var generation = 0
     private var launchPending = false
     private var wentToBackground = false
-
-    private val openDriver = MotionDriver(
-        frameRateView = { launcher.dragLayer },
-        systemScale = { NexusMotion.systemScale(launcher) },
-        onProgress = { progress ->
-            sheet?.let {
-                it.progress = progress
-                it.invalidateSelf()
-            }
-        },
-    )
 
     private val returnDriver = MotionDriver(
         frameRateView = { launcher.dragLayer },
@@ -72,7 +73,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     private val failSafe = Runnable {
         // Si la app tarda demasiado (o el lanzamiento falló) no dejamos la hoja tapando el inicio.
         launchPending = false
-        dismiss(animated = true)
+        endSession(animated = true)
     }
 
     /**
@@ -86,11 +87,6 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         val dragLayer = launcher.dragLayer
         if (iconBounds.isEmpty || v.width == 0 || dragLayer.width == 0 || dragLayer.height == 0) return null
 
-        dismiss(animated = false)
-        resetReturnAnimation()
-
-        val snapshot = snapshotOf(icon, iconBounds) ?: return null
-
         // Posición del icono dentro del DragLayer (mismo sistema de coordenadas que el overlay).
         val viewRect = Rect()
         val scale = dragLayer.getDescendantRectRelativeToSelf(v, viewRect)
@@ -99,27 +95,22 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         val left = viewRect.left + (viewRect.width() - iconWidth) / 2f
         val top = viewRect.top + v.paddingTop * scale
         val start = RectF(left, top, left + iconWidth, top + iconHeight)
-        val screen = RectF(0f, 0f, dragLayer.width.toFloat(), dragLayer.height.toFloat())
 
-        val newSheet = LaunchSheet(
-            start = start,
-            screen = screen,
-            icon = snapshot,
-            startColor = averageColor(snapshot),
-            endColor = surfaceColor(),
-            startRadius = min(iconWidth, iconHeight) * ICON_CORNER_FRACTION,
-            endRadius = deviceCornerRadius(),
-        )
-        newSheet.setBounds(0, 0, dragLayer.width, dragLayer.height)
-        dragLayer.overlay.add(newSheet)
-        sheet = newSheet
+        // Si el zoom de vuelta al inicio sigue en marcha, se deja asentar en vez de cortarlo.
+        settleReturnAnimation()
+
+        // Mismo icono con su hoja todavía en pantalla: se reutiliza y se redirige. Si no, se
+        // retira la anterior (con un fundido) y se crea una nueva.
+        val active = session?.takeIf { it.isFor(v, start) }
+            ?: createSession(v, icon, iconBounds, start)
+            ?: return null
 
         val profile = NexusMotion.profile
-        openDriver.snapTo(0f)
-        openDriver.animateTo(1f, profile.open, profile.speed)
+        active.driver.animateTo(1f, profile.open, profile.speed)
 
+        val launchId = ++generation
         val callbacks = RunnableList()
-        callbacks.add { dismiss(animated = true, only = newSheet) }
+        callbacks.add { if (launchId == generation) endSession(animated = true) }
         val options = makeCustomOptions(v, callbacks)
 
         launchPending = true
@@ -139,23 +130,23 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         launchPending = false
         launcher.dragLayer.removeCallbacks(failSafe)
 
-        val current = sheet
+        val current = session
         if (current != null && NexusMotion.isEnabled(launcher)) {
             // Volvimos antes de que terminara la apertura: la hoja se pliega al icono
             // conservando la velocidad que llevaba, en vez de cortarse de golpe.
             val profile = NexusMotion.profile
-            openDriver.animateTo(0f, profile.close, profile.speed) { finished ->
-                if (finished) dismiss(animated = false, only = current)
+            current.driver.animateTo(0f, profile.close, profile.speed) { finished ->
+                if (finished && session === current) endSession(animated = false)
             }
             return
         }
-        dismiss(animated = false)
+        endSession(animated = false)
         playReturnAnimation()
     }
 
     fun onLauncherDestroyed() {
         launcher.dragLayer.removeCallbacks(failSafe)
-        dismiss(animated = false)
+        endSession(animated = false)
         resetReturnAnimation()
     }
 
@@ -186,35 +177,70 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     }
 
     /**
-     * Quita la hoja; con `animated` hace un fundido corto para que no haya un salto visible.
-     * Con `only` se ignora la llamada si la hoja activa ya es otra: los avisos de fin de un
-     * lanzamiento anterior llegan tarde y no deben cortar la animación del siguiente.
+     * Crea el lanzamiento de un icono y pone su hoja en pantalla, o devuelve `null` si no se
+     * pudo capturar el icono. La hoja anterior, si la hay, se retira antes con un fundido.
      */
-    private fun dismiss(animated: Boolean, only: LaunchSheet? = null) {
-        val current = sheet ?: return
-        if (only != null && only !== current) return
-        sheet = null
-        openDriver.cancel()
-        val overlay = launcher.dragLayer.overlay
-        if (!animated) {
-            overlay.remove(current)
-            return
+    private fun createSession(
+        v: View,
+        icon: Drawable,
+        iconBounds: Rect,
+        start: RectF,
+    ): LaunchSession? {
+        endSession(animated = true)
+        val snapshot = snapshotOf(icon, iconBounds) ?: return null
+
+        val dragLayer = launcher.dragLayer
+        val screen = RectF(0f, 0f, dragLayer.width.toFloat(), dragLayer.height.toFloat())
+        val sheet = LaunchSheet(
+            start = start,
+            screen = screen,
+            icon = snapshot,
+            startColor = averageColor(snapshot),
+            endColor = surfaceColor(),
+            startRadius = min(start.width(), start.height()) * ICON_CORNER_FRACTION,
+            endRadius = deviceCornerRadius(),
+        )
+        sheet.setBounds(0, 0, dragLayer.width, dragLayer.height)
+        dragLayer.overlay.add(sheet)
+
+        return LaunchSession(v, v.tag, start, sheet).also { session = it }
+    }
+
+    /**
+     * Retira la hoja activa; con `animated` hace un fundido corto para que no haya un salto
+     * visible. La hoja que se funde conserva su controlador y sigue moviéndose mientras tanto.
+     */
+    private fun endSession(animated: Boolean) {
+        val current = session ?: return
+        session = null
+        if (animated) {
+            fadeOut(current)
+        } else {
+            discard(current)
         }
+    }
+
+    private fun fadeOut(old: LaunchSession) {
         ValueAnimator.ofFloat(1f, 0f).apply {
             duration = FADE_OUT_MS
             addUpdateListener {
-                current.fade = it.animatedValue as Float
-                current.invalidateSelf()
+                old.sheet.fade = it.animatedValue as Float
+                old.sheet.invalidateSelf()
             }
             addListener(
                 object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        overlay.remove(current)
+                        discard(old)
                     }
                 },
             )
             start()
         }
+    }
+
+    private fun discard(old: LaunchSession) {
+        old.driver.cancel()
+        launcher.dragLayer.overlay.remove(old.sheet)
     }
 
     /** Al volver al inicio, el contenido entra con un zoom suave en vez de aparecer de golpe. */
@@ -226,6 +252,21 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         returnDriver.snapTo(0f)
         returnDriver.animateTo(1f, profile.homeReturn, profile.speed) { finished ->
             if (finished) target.setLayerType(View.LAYER_TYPE_NONE, null)
+        }
+    }
+
+    /**
+     * Un lanzamiento nuevo no corta el zoom de vuelta al inicio: si sigue en marcha se redirige
+     * a su posición final conservando la velocidad, en vez de saltar de golpe a escala 1.
+     */
+    private fun settleReturnAnimation() {
+        if (!returnDriver.isRunning) {
+            resetReturnAnimation()
+            return
+        }
+        val profile = NexusMotion.profile
+        returnDriver.animateTo(1f, profile.homeReturn, profile.speed) { finished ->
+            if (finished) launcher.dragLayer.setLayerType(View.LAYER_TYPE_NONE, null)
         }
     }
 
@@ -268,6 +309,29 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
             if (radius != null && radius > 0) return radius.toFloat()
         }
         return DEFAULT_SCREEN_CORNER_DP * density
+    }
+
+    /** Un lanzamiento: la hoja que crece del icono y el controlador que lleva su progreso. */
+    private inner class LaunchSession(
+        private val source: View,
+        private val tag: Any?,
+        private val start: RectF,
+        val sheet: LaunchSheet,
+    ) {
+
+        val driver = MotionDriver(
+            frameRateView = { launcher.dragLayer },
+            systemScale = { NexusMotion.systemScale(launcher) },
+            onProgress = { progress ->
+                sheet.progress = progress
+                sheet.invalidateSelf()
+            },
+        )
+
+        /** `true` si [view] es el mismo icono: misma vista, mismo elemento y misma posición. */
+        fun isFor(view: View, bounds: RectF): Boolean {
+            return source === view && tag === view.tag && start.isCloseTo(bounds)
+        }
     }
 
     /**
@@ -331,6 +395,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     companion object {
         private const val FADE_OUT_MS = 140L
         private const val FAIL_SAFE_MS = 3000L
+        private const val POSITION_TOLERANCE_PX = 1.5f
         private const val RETURN_START_SCALE = 1.05f
         private const val RETURN_START_ALPHA = 0.55f
 
@@ -345,6 +410,13 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         private val SURFACE_LIGHT = Color.rgb(0xF6, 0xF6, 0xFA)
 
         private fun lerp(a: Float, b: Float, t: Float) = a + (b - a) * t
+
+        private fun RectF.isCloseTo(other: RectF): Boolean {
+            return abs(left - other.left) < POSITION_TOLERANCE_PX &&
+                abs(top - other.top) < POSITION_TOLERANCE_PX &&
+                abs(right - other.right) < POSITION_TOLERANCE_PX &&
+                abs(bottom - other.bottom) < POSITION_TOLERANCE_PX
+        }
 
         private fun lerpColor(a: Int, b: Int, t: Float): Int = Color.rgb(
             (Color.red(a) + (Color.red(b) - Color.red(a)) * t).toInt(),
