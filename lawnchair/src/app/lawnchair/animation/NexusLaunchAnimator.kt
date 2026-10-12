@@ -15,6 +15,7 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.util.Log
 import android.view.Display
 import android.view.RoundedCorner
 import android.view.View
@@ -46,6 +47,14 @@ import kotlin.math.min
  *     funde mientras sigue moviéndose.
  *  2. Una animación de ventana por recursos (`nexus_app_enter`) que hace aparecer la app
  *     encima de la hoja mientras el launcher se mantiene visible (`nexus_launcher_hold`).
+ *     Desde Android 14 el sistema solo aplica una animación personalizada a la ventana de una
+ *     tarea nueva si las opciones piden `overrideTaskTransition`; sin eso usa la suya por
+ *     defecto y se pisa con la hoja (la animación "se salta"). Si no se puede pedir, Nexus no
+ *     dibuja la hoja y deja la animación estándar del sistema.
+ *
+ * Al volver al inicio la app la cierra el sistema (un launcher normal no controla su ventana),
+ * así que Nexus anima lo suyo: el contenido del inicio entra con un zoom suave y el icono de
+ * la app que se cerró "la recibe" con un pequeño rebote.
  *
  * Optimización: la hoja es un único Drawable con dos operaciones de dibujo; los pinceles y los
  * rectángulos se crean una vez y se reutilizan en cada fotograma.
@@ -75,6 +84,15 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         onProgress = { progress -> applyReturn(progress) },
     )
 
+    /** Icono que "recibe" a la app al volver al inicio, y el elemento que representaba. */
+    private var landingIcon: WeakReference<View>? = null
+    private var landingTag: Any? = null
+    private val landingDriver = MotionDriver(
+        frameRateView = { launcher.dragLayer },
+        systemScale = { NexusMotion.systemScale(launcher) },
+        onProgress = { progress -> applyLanding(progress) },
+    )
+
     private val failSafe = Runnable {
         // Si la app tarda demasiado (o el lanzamiento falló) no dejamos la hoja tapando el inicio.
         launchPending = false
@@ -94,8 +112,14 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
         val start = iconRect(v) ?: return null
 
+        // Las opciones se piden primero: si el sistema no iba a respetar la animación de
+        // ventana, no se dibuja la hoja y se usa la animación estándar del sistema.
+        val callbacks = RunnableList()
+        val options = makeCustomOptions(v, callbacks) ?: return null
+
         // Si el zoom de vuelta al inicio sigue en marcha, se deja asentar en vez de cortarlo.
         settleReturnAnimation()
+        settleLanding()
 
         // Mismo icono con su hoja todavía en pantalla: se reutiliza y se redirige. Si no, se
         // retira la anterior (con un fundido) y se crea una nueva.
@@ -103,7 +127,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
             ?: createSession(v, icon, iconBounds, start)
             ?: return null
 
-        // Se recuerda el icono para plegar la hoja hacia él cuando se vuelva al inicio.
+        // Se recuerda el icono para que "reciba" a la app cuando se vuelva al inicio.
         lastSource = WeakReference(v)
         lastTag = v.tag
 
@@ -114,7 +138,6 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         }
 
         val launchId = ++generation
-        val callbacks = RunnableList()
         callbacks.add {
             if (launchId == generation && session === active) {
                 // El aviso del sistema no debe cortar la apertura a medias: si el resorte sigue
@@ -126,7 +149,6 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
                 }
             }
         }
-        val options = makeCustomOptions(v, callbacks)
 
         launchPending = true
         wentToBackground = false
@@ -147,26 +169,31 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
         if (!NexusMotion.isEnabled(launcher)) {
             endSession(animated = false)
+            resetLanding()
             return
         }
 
-        // Volvimos antes de que terminara la apertura: la hoja se pliega al icono conservando
-        // la velocidad que llevaba, en vez de cortarse de golpe.
+        // Volvimos con la apertura aún en sus primeros instantes: la hoja se pliega al icono
+        // conservando la velocidad que llevaba, en vez de cortarse de golpe.
         val current = session
-        if (current != null) {
+        if (current != null && current.driver.progress < FOLD_MAX_PROGRESS) {
             foldIntoIcon(current)
             return
         }
 
-        // Volvemos con la app ya abierta: una hoja nueva a pantalla completa se pliega al icono.
-        // Si el icono ya no está a la vista, queda el zoom suave del inicio.
-        if (!playCloseSheet()) playReturnAnimation()
+        // Con la apertura ya avanzada la app estuvo a la vista y la está cerrando el sistema:
+        // una hoja a pantalla completa aparecería de golpe al terminar su animación, así que se
+        // retira sin fundido y se anima solo el contenido del inicio.
+        if (current != null) endSession(animated = false)
+        playReturnAnimation()
+        playLanding()
     }
 
     fun onLauncherDestroyed() {
         launcher.dragLayer.removeCallbacks(failSafe)
         endSession(animated = false)
         resetReturnAnimation()
+        resetLanding()
         lastSource = null
         lastTag = null
     }
@@ -192,27 +219,14 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     }
 
     /**
-     * Cierre de la app: una hoja a pantalla completa se pliega hasta el icono desde el que se
-     * abrió, como la apertura al revés. Devuelve `false` si no se puede (el icono ya no está
-     * en pantalla o cambió de elemento).
+     * Opciones con la animación de ventana de Nexus, o `null` si el sistema no la respetaría.
+     *
+     * En Android 14+ una animación personalizada solo se aplica a las ventanas de tarea (las de
+     * una app lanzada desde el inicio) si las opciones llevan `overrideTaskTransition`; el
+     * método de la API que lo hace está oculto, así que se activa por reflexión (el launcher
+     * ya levanta las restricciones de API ocultas al arrancar).
      */
-    private fun playCloseSheet(): Boolean {
-        val v = lastSource?.get() ?: return false
-        if (!v.isAttachedToWindow || v.tag !== lastTag) return false
-        val icon = v.icon ?: return false
-        val start = iconRect(v) ?: return false
-        val dragLayer = launcher.dragLayer
-        val screen = RectF(0f, 0f, dragLayer.width.toFloat(), dragLayer.height.toFloat())
-        if (!RectF.intersects(start, screen)) return false
-
-        val closing = createSession(v, icon, icon.bounds, start) ?: return false
-        resetReturnAnimation()
-        closing.driver.snapTo(1f)
-        foldIntoIcon(closing)
-        return true
-    }
-
-    private fun makeCustomOptions(v: View, callbacks: RunnableList): ActivityOptions {
+    private fun makeCustomOptions(v: View, callbacks: RunnableList): ActivityOptions? {
         val base = if (Utilities.ATLEAST_Q) {
             LawnchairQuickstepCompat.activityOptionsCompat.makeCustomAnimation(
                 launcher,
@@ -230,12 +244,48 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
                 R.anim.nexus_launcher_hold,
             )
         }
+        if (Build.VERSION.SDK_INT >= TASK_OVERRIDE_MIN_SDK && !overrideTaskTransition(base)) {
+            Log.w(TAG, "No se pudo pedir la animación de tarea: se usa la del sistema")
+            return null
+        }
         val options = Utilities.allowBGLaunch(base)
         if (Utilities.ATLEAST_T) {
             options.splashScreenStyle = SplashScreen.SPLASH_SCREEN_STYLE_ICON
         }
         options.launchDisplayId = v.display?.displayId ?: Display.DEFAULT_DISPLAY
         return options
+    }
+
+    /**
+     * Marca las opciones para que la animación personalizada se aplique también a las ventanas
+     * de tarea. Prueba el método oculto y, si no existe, el campo que este rellena. Devuelve
+     * `true` solo si se comprobó que la marca quedó puesta.
+     */
+    private fun overrideTaskTransition(options: ActivityOptions): Boolean {
+        val type = ActivityOptions::class.java
+
+        // 1) El método oculto, que es lo que usa el propio sistema.
+        runCatching {
+            type.getDeclaredMethod(OVERRIDE_TASK_SETTER, java.lang.Boolean.TYPE)
+                .apply { isAccessible = true }
+                .invoke(options, true)
+        }
+
+        // 2) Se comprueba leyendo el campo; si el método no existía, se rellena directamente.
+        val field = runCatching {
+            type.getDeclaredField(OVERRIDE_TASK_FIELD).apply { isAccessible = true }
+        }.getOrNull()
+        if (field != null) {
+            runCatching { if (!field.getBoolean(options)) field.setBoolean(options, true) }
+            return runCatching { field.getBoolean(options) }.getOrDefault(false)
+        }
+
+        // 3) Sin el campo, se comprueba con el método de lectura.
+        return runCatching {
+            type.getDeclaredMethod(OVERRIDE_TASK_GETTER)
+                .apply { isAccessible = true }
+                .invoke(options) as? Boolean
+        }.getOrNull() == true
     }
 
     /**
@@ -344,6 +394,53 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         returnDriver.cancel()
         applyReturn(1f)
         launcher.dragLayer.setLayerType(View.LAYER_TYPE_NONE, null)
+    }
+
+    /**
+     * El icono de la app que se cerró "la recibe": entra pequeño y recupera su tamaño con el
+     * resorte de cierre del perfil. No hay hoja ni ventana que simular: es el propio icono.
+     */
+    private fun playLanding() {
+        val v = lastSource?.get() ?: return
+        if (!v.isAttachedToWindow || v.tag !== lastTag) return
+        resetLanding()
+        landingIcon = WeakReference(v)
+        landingTag = v.tag
+        val profile = NexusMotion.profile
+        landingDriver.snapTo(0f)
+        landingDriver.animateTo(1f, profile.close, profile.speed) { finished ->
+            if (finished) resetLanding()
+        }
+    }
+
+    /** Un lanzamiento nuevo deja que el icono termine de asentarse en vez de cortarlo. */
+    private fun settleLanding() {
+        if (!landingDriver.isRunning) {
+            resetLanding()
+            return
+        }
+        val profile = NexusMotion.profile
+        landingDriver.animateTo(1f, profile.close, profile.speed) { finished ->
+            if (finished) resetLanding()
+        }
+    }
+
+    private fun applyLanding(progress: Float) {
+        val v = landingIcon?.get() ?: return
+        // Si la vista se reutilizó para otro elemento, se deja como estaba.
+        val scale = if (v.tag === landingTag) lerp(LANDING_START_SCALE, 1f, progress) else 1f
+        v.scaleX = scale
+        v.scaleY = scale
+    }
+
+    private fun resetLanding() {
+        landingDriver.cancel()
+        landingIcon?.get()?.let {
+            it.scaleX = 1f
+            it.scaleY = 1f
+        }
+        landingIcon = null
+        landingTag = null
     }
 
     private fun snapshotOf(icon: Drawable, bounds: Rect): Bitmap? = runCatching {
@@ -458,11 +555,26 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     }
 
     companion object {
+        private const val TAG = "NexusLaunchAnimator"
         private const val FADE_OUT_MS = 140L
         private const val FAIL_SAFE_MS = 3000L
         private const val POSITION_TOLERANCE_PX = 1.5f
+
+        /** Hasta aquí de abierta, volver al inicio pliega la hoja; a partir de aquí se retira. */
+        private const val FOLD_MAX_PROGRESS = 0.6f
+
+        /**
+         * El contenido del inicio entra casi transparente: así el primer fotograma tras volver
+         * no "salta" ni se ve a medio fundir sobre la app que se está cerrando.
+         */
         private const val RETURN_START_SCALE = 1.05f
-        private const val RETURN_START_ALPHA = 0.55f
+        private const val RETURN_START_ALPHA = 0.2f
+        private const val LANDING_START_SCALE = 0.74f
+
+        private const val TASK_OVERRIDE_MIN_SDK = 34
+        private const val OVERRIDE_TASK_FIELD = "mOverrideTaskTransition"
+        private const val OVERRIDE_TASK_SETTER = "setOverrideTaskTransition"
+        private const val OVERRIDE_TASK_GETTER = "getOverrideTaskTransition"
 
         private const val ICON_CORNER_FRACTION = 0.28f
         private const val DEFAULT_SCREEN_CORNER_DP = 24f
