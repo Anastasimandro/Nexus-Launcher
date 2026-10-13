@@ -441,6 +441,14 @@ class LawnchairLauncher : QuickstepLauncher() {
         }
     }
 
+    override fun onActivityLaunchFailed(options: ActivityOptionsWrapper, e: Exception): Boolean {
+        return !LawnchairApp.isRecentsEnabled && nexusLaunchAnimator.onLaunchFailed(options, e)
+    }
+
+    override fun onActivityLaunchRetried(success: Boolean) {
+        nexusLaunchAnimator.onLaunchRetried(success)
+    }
+
     private fun getActivityLaunchOptionsDefault(v: View?): ActivityOptionsWrapper {
         var left = 0
         var top = 0

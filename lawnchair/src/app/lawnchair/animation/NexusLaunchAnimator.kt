@@ -78,6 +78,9 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     private var launchPending = false
     private var wentToBackground = false
 
+    /** Últimas opciones entregadas al sistema, para reconocerlas si el lanzamiento falla. */
+    private var lastWrapper: WeakReference<ActivityOptionsWrapper>? = null
+
     private val returnDriver = MotionDriver(
         frameRateView = { launcher.dragLayer },
         systemScale = { NexusMotion.systemScale(launcher) },
@@ -105,6 +108,8 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
      */
     fun createLaunchOptions(v: View?): ActivityOptionsWrapper? {
         if (v !is BubbleTextView || !NexusMotion.isEnabled(launcher)) return null
+        // El sistema ya rechazó un lanzamiento con estas opciones: se usan las normales.
+        if (optionsRejected) return null
         val icon = v.icon ?: return null
         val iconBounds = icon.bounds
         val dragLayer = launcher.dragLayer
@@ -154,7 +159,41 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         wentToBackground = false
         dragLayer.removeCallbacks(failSafe)
         dragLayer.postDelayed(failSafe, FAIL_SAFE_MS)
-        return ActivityOptionsWrapper(options, callbacks)
+        return ActivityOptionsWrapper(options, callbacks).also { lastWrapper = WeakReference(it) }
+    }
+
+    /**
+     * El sistema rechazó el lanzamiento (`startActivity` lanzó una excepción). Si las opciones
+     * eran las de Nexus, se retira la hoja sin animación y se pide reintentar con las opciones
+     * normales; así la app se abre siempre, aunque sea con la animación estándar del sistema.
+     *
+     * Devuelve `true` si hay que reintentar.
+     */
+    fun onLaunchFailed(options: ActivityOptionsWrapper, error: Exception): Boolean {
+        if (lastWrapper?.get() !== options) return false
+        Log.w(
+            TAG,
+            "El sistema rechazó el lanzamiento con las opciones de Nexus " +
+                "(${error.javaClass.simpleName}: ${error.message}); se reintenta con las normales",
+        )
+        lastWrapper = null
+        generation++
+        launchPending = false
+        wentToBackground = false
+        launcher.dragLayer.removeCallbacks(failSafe)
+        endSession(animated = false)
+        lastSource = null
+        lastTag = null
+        optionsRejected = true
+        return true
+    }
+
+    /**
+     * Resultado del reintento. Si también falla, el problema no eran las opciones (por ejemplo,
+     * la app ya no está instalada) y la animación de Nexus se vuelve a permitir.
+     */
+    fun onLaunchRetried(success: Boolean) {
+        if (!success) optionsRejected = false
     }
 
     fun onLauncherPaused() {
@@ -556,6 +595,14 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     companion object {
         private const val TAG = "NexusLaunchAnimator"
+
+        /**
+         * `true` cuando el sistema rechazó un lanzamiento con las opciones de Nexus y el reintento
+         * con las normales funcionó: no se vuelven a pedir mientras viva el proceso.
+         */
+        @Volatile
+        private var optionsRejected = false
+
         private const val FADE_OUT_MS = 140L
         private const val FAIL_SAFE_MS = 3000L
         private const val POSITION_TOLERANCE_PX = 1.5f

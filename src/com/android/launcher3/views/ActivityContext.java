@@ -496,11 +496,32 @@ public interface ActivityContext extends SavedStateRegistryOwner {
             }
             return options.onEndCallback;
         } catch (NullPointerException | ActivityNotFoundException | SecurityException e) {
-            Toast.makeText(context, R.string.activity_not_found, Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Unable to launch. tag=" + item + " intent=" + intent, e);
+            if (onActivityLaunchFailed(options, e)) {
+                // The launch was rejected with options the launcher supplied itself: try once
+                // more with the stock ones so the app still opens.
+                RunnableList retried = startActivitySafely(v, intent, item);
+                onActivityLaunchRetried(retried != null);
+                return retried;
+            }
+            Toast.makeText(context, R.string.activity_not_found, Toast.LENGTH_SHORT).show();
         }
         return null;
     }
+
+    /**
+     * Called when {@link #startActivitySafely} failed. Return {@code true} if {@code options}
+     * were custom and the launch should be retried with the default ones (the next call to
+     * {@link #getActivityLaunchOptions} is then expected to hand out the default options).
+     */
+    default boolean onActivityLaunchFailed(ActivityOptionsWrapper options, Exception e) {
+        return false;
+    }
+
+    /**
+     * Reports whether the retry requested through {@link #onActivityLaunchFailed} succeeded.
+     */
+    default void onActivityLaunchRetried(boolean success) { }
 
     /**
      * Creates and logs a new app launch event.
