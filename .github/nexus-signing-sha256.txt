@@ -1,0 +1,5 @@
+# Huella SHA-256 del certificado con el que se firman TODAS las releases de Nexus.
+# El workflow "Nexus release" se niega a publicar un APK firmado con otra clave: Android no
+# deja actualizar encima de una app firmada con un certificado distinto (obliga a desinstalar).
+# Solo cambia esta línea si cambias de clave a propósito (y entonces habrá que desinstalar una vez).
+26fb8943568bb3ea60f25ae70ec24747c9e3ababe0e7add3d14d2952a94ae867

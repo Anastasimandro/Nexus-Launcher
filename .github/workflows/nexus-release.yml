@@ -1,14 +1,14 @@
 name: Nexus release
 
-# Se ejecuta en cada push a la rama 16-dev (publica una release "build-N"),
-# al subir una etiqueta tipo v0.1.0 (git tag v0.1.0 && git push origin v0.1.0)
-# o a mano desde la pestaña Actions.
+# Cada push a la rama 16-dev publica una release con versión numérica:
+#   0.1  ->  0.1.1  ->  0.1.2  ->  ...
+# Para saltar de línea (p. ej. a 0.2): pestaña Actions > "Nexus release" > Run workflow
+# y escribe la versión. Después siguen 0.2.1, 0.2.2, ...
+# Detalles, firma y solución de problemas: RELEASING.md
 on:
   push:
     branches:
       - '16-dev'
-    tags:
-      - 'v*'
     paths-ignore:
       - '.idea/**'
       - '.gitignore'
@@ -16,25 +16,37 @@ on:
       - 'LICENSE.txt'
   workflow_dispatch:
     inputs:
-      tag:
-        description: 'Etiqueta de la release (ej. v0.1.0)'
-        required: true
+      version:
+        description: 'Versión exacta (ej. 0.2 o 0.2.1). Vacío = la siguiente automática'
+        required: false
+        default: ''
 
 permissions:
   contents: write
 
+# Una release a la vez: evita que dos pushes seguidos calculen la misma versión.
+concurrency:
+  group: nexus-release
+  cancel-in-progress: false
+
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
-    env:
-      # Manual: la etiqueta indicada. Push de etiqueta: esa etiqueta.
-      # Push a rama (commit normal): build-<nº de ejecución>, sin prefijo "v"
-      # para que la etiqueta creada no vuelva a disparar este workflow.
-      TAG: ${{ github.event.inputs.tag || (github.ref_type == 'tag' && github.ref_name) || format('build-{0}', github.run_number) }}
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v7
         with:
           submodules: true
+
+      # Siguiente versión = la etiqueta vX.Y[.Z] más alta + 1 en el último número.
+      - name: Calcular versión
+        id: version
+        env:
+          REQUESTED: ${{ github.event.inputs.version }}
+        run: |
+          git ls-remote --tags --refs origin 'v*' | sed 's|.*refs/tags/||' > tags.txt
+          .github/scripts/next-version.sh "$REQUESTED" < tags.txt | tee -a "$GITHUB_OUTPUT"
+          rm -f tags.txt
 
       - uses: actions/setup-java@v6
         with:
@@ -43,10 +55,9 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
 
-      # Firma opcional: si defines los secrets KEYSTORE (base64), KEYSTORE_PASSWORD,
-      # KEY_ALIAS y KEY_PASSWORD en Settings > Secrets, el APK sale firmado con tu clave.
-      # Sin ellos se firma con la clave de depuración (instalable, pero no actualizable
-      # luego sobre una versión firmada con tu clave real).
+      # La clave de firma sale de los secrets KEYSTORE (base64), KEYSTORE_PASSWORD,
+      # KEY_ALIAS y KEY_PASSWORD. Sin ellos NO se publica nada: un APK firmado con otra
+      # clave (la de depuración cambia en cada ejecución) no se podría actualizar encima.
       - name: Preparar firma
         env:
           KEYSTORE: ${{ secrets.KEYSTORE }}
@@ -54,34 +65,80 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          if [ -n "$KEYSTORE" ]; then
-            echo "$KEYSTORE" | base64 --decode > "$GITHUB_WORKSPACE/key.jks"
-            {
-              echo "storePassword=$KEYSTORE_PASSWORD"
-              echo "keyAlias=$KEY_ALIAS"
-              echo "keyPassword=$KEY_PASSWORD"
-              echo "storeFile=$GITHUB_WORKSPACE/key.jks"
-            } > keystore.properties
-          else
-            echo "Sin KEYSTORE: se firmará con la clave de depuración."
+          missing=""
+          for name in KEYSTORE KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
+            if [ -z "${!name}" ]; then missing="$missing $name"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "::error title=Falta la clave de firma::No están definidos los secrets:$missing. Sin la clave de siempre el APK no se podría actualizar sin desinstalar. Ver RELEASING.md."
+            exit 1
           fi
+          echo "$KEYSTORE" | base64 --decode > "$GITHUB_WORKSPACE/key.jks"
+          {
+            printf 'storePassword=%s\n' "$KEYSTORE_PASSWORD"
+            printf 'keyAlias=%s\n' "$KEY_ALIAS"
+            printf 'keyPassword=%s\n' "$KEY_PASSWORD"
+            printf 'storeFile=%s\n' "$GITHUB_WORKSPACE/key.jks"
+          } > keystore.properties
 
       - name: Compilar APK
+        env:
+          NEXUS_VERSION: ${{ steps.version.outputs.version }}
+          NEXUS_REQUIRE_RELEASE_SIGNING: 'true'
         run: ./gradlew assembleLawnWithQuickstepGithubRelease
 
-      - name: Renombrar APK
+      # Comprueba el APK real: paquete, versión, versionCode y que la firma es la de siempre.
+      - name: Verificar APK
+        id: verify
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          VERSION_CODE: ${{ steps.version.outputs.version_code }}
         run: |
+          shopt -s nullglob
+          apks=(build/outputs/apk/lawnWithQuickstepGithub/release/*.apk)
+          if [ "${#apks[@]}" -ne 1 ]; then
+            echo "::error title=APK no encontrado::Esperaba exactamente un APK en build/outputs/apk/lawnWithQuickstepGithub/release y hay ${#apks[@]}."
+            exit 1
+          fi
           mkdir -p dist
-          apk=$(find build/outputs -name '*.apk' -path '*Release*' | head -n 1)
-          if [ -z "$apk" ]; then apk=$(find build/outputs -name '*.apk' | head -n 1); fi
-          test -n "$apk"
-          cp "$apk" "dist/Nexus-${TAG}.apk"
+          cp "${apks[0]}" "dist/Nexus-${VERSION}.apk"
+          .github/scripts/verify-apk.sh "dist/Nexus-${VERSION}.apk" "$VERSION" "$VERSION_CODE" | tee -a "$GITHUB_OUTPUT"
+          (cd dist && sha256sum "Nexus-${VERSION}.apk" > "Nexus-${VERSION}.apk.sha256")
+
+      - name: Guardar APK como artefacto
+        uses: actions/upload-artifact@v7
+        with:
+          name: Nexus-${{ steps.version.outputs.version }}
+          path: dist/
+          retention-days: 14
 
       - name: Crear release
         env:
           GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          TAG: ${{ steps.version.outputs.tag }}
+          PREVIOUS_TAG: ${{ steps.version.outputs.previous_tag }}
+          VERSION_CODE: ${{ steps.version.outputs.version_code }}
+          CERT: ${{ steps.verify.outputs.cert_sha256 }}
         run: |
-          gh release create "$TAG" "dist/Nexus-${TAG}.apk" \
-            --target "$GITHUB_SHA" \
-            --title "Nexus Launcher $TAG" \
-            --generate-notes
+          cat > notes.md <<EOF
+          **Nexus Launcher ${VERSION}**
+
+          Se instala **encima** de la versión que tengas, sin desinstalar y sin perder tus ajustes: mismo paquete (\`app.nexus.launcher\`), misma firma y un \`versionCode\` mayor.
+
+          | | |
+          |---|---|
+          | Versión | ${VERSION} |
+          | versionCode | ${VERSION_CODE} |
+          | Commit | \`${GITHUB_SHA:0:7}\` |
+          | Firma (SHA-256) | \`${CERT}\` |
+
+          **Cómo actualizar:** descarga \`Nexus-${VERSION}.apk\`, ábrelo y pulsa *Actualizar*.
+          Comprobación opcional de la descarga: \`sha256sum -c Nexus-${VERSION}.apk.sha256\`.
+
+          ---
+
+          EOF
+          args=(--target "$GITHUB_SHA" --title "Nexus Launcher ${VERSION}" --notes-file notes.md --generate-notes --latest)
+          if [ -n "$PREVIOUS_TAG" ]; then args+=(--notes-start-tag "$PREVIOUS_TAG"); fi
+          gh release create "$TAG" "dist/Nexus-${VERSION}.apk" "dist/Nexus-${VERSION}.apk.sha256" "${args[@]}"

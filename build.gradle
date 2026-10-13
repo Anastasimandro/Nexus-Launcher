@@ -129,27 +129,32 @@ final def buildCommit = providers.exec {
     commandLine('git', 'rev-parse', '--short=7', 'HEAD')
 }.standardOutput.asText.get().trim()
 
-final def ciBuild = System.getenv("CI") == "true"
-final def ciRef = System.getenv("GITHUB_REF") ?: ""
-final def ciRunNumber = System.getenv("GITHUB_RUN_NUMBER") ?: ""
-final def isReleaseBuild = ciBuild
-        && (ciRef.endsWith("-alpha")
-        || ciRef.endsWith("-beta")
-        || ciRef.endsWith("-rc")
-        || ciRef.endsWith("-stable"))
-final def devReleaseName = ciBuild ? "Dev.(#${ciRunNumber})" : "Dev.(${buildCommit})"
-
-final def version = "16"
-final def releaseName = "Beta 1"
-final def versionDisplayName = "${version}.${isReleaseBuild ? releaseName : devReleaseName}"
-final def majorVersion = versionDisplayName.split("\\.")[0]
-
-// versionCode sube solo con cada push: base fija + nº de ejecución de GitHub Actions.
-// Así cada APK publicado tiene un versionCode mayor que el anterior y Android
-// permite actualizar encima sin desinstalar. En local (sin CI) se queda en la base.
-final def baseVersionCode = 16_00_02_01_00
-final def ciRunNumberInt = ((System.getenv("GITHUB_RUN_NUMBER") ?: "0").isInteger() ? System.getenv("GITHUB_RUN_NUMBER") : "0").toInteger()
-final def computedVersionCode = baseVersionCode + ciRunNumberInt
+// ---- Versión de Nexus (0.1, 0.1.1, 0.1.2, ...) ----
+// La inyecta el workflow de release con NEXUS_VERSION (calculada por
+// .github/scripts/next-version.sh). Sin ella (compilación local o CI normal) es una
+// versión de desarrollo que nunca se publica.
+//
+// versionCode = 16_01_MM_mm_pp  (mayor, menor, parche: cada uno de 0 a 99)
+//   16 -> línea de Android/Lawnchair, igual que antes (el código que lee la versión
+//         del APK sigue viendo "16")
+//   01 -> "era Nexus": hace que el código sea siempre mayor que el de las builds
+//         antiguas (16_00_02_01_xx), así Android permite actualizar encima sin desinstalar
+// Debe coincidir con .github/scripts/next-version.sh (el workflow lo comprueba contra el APK).
+// <nexus-version>
+final def nexusVersionEnv = (System.getenv("NEXUS_VERSION") ?: "").trim()
+final def nexusVersionMatcher = nexusVersionEnv =~ /^(\d{1,2})\.(\d{1,2})(?:\.(\d{1,2}))?$/
+final def isNexusRelease = nexusVersionMatcher.matches()
+if (nexusVersionEnv && !isNexusRelease) {
+    throw new GradleException("NEXUS_VERSION no válida: '${nexusVersionEnv}'. Formato esperado: 0.1 o 0.1.2 (cada número de 0 a 99).")
+}
+final def nexusMajor = isNexusRelease ? nexusVersionMatcher.group(1).toInteger() : 0
+final def nexusMinor = isNexusRelease ? nexusVersionMatcher.group(2).toInteger() : 0
+final def nexusPatch = isNexusRelease ? (nexusVersionMatcher.group(3) ?: "0").toInteger() : 0
+final def versionDisplayName = isNexusRelease
+        ? (nexusPatch == 0 ? "${nexusMajor}.${nexusMinor}" : "${nexusMajor}.${nexusMinor}.${nexusPatch}")
+        : "dev-${buildCommit}"
+final def computedVersionCode = 1_601_000_000 + nexusMajor * 10_000 + nexusMinor * 100 + nexusPatch
+// </nexus-version>
 
 final def quickstepMinSdk = "35"
 final def quickstepMaxSdk = "36"
@@ -157,14 +162,10 @@ final def quickstepMaxSdk = "36"
 android {
     namespace "com.android.launcher3"
     defaultConfig {
-        /*
-         * Lawnchair Launcher 16.0 Beta 1.0
-         * see https://docs.lawnchair.app/developers/standards/development-workflow#versioning-scheme
-         */
+        // Versión de Nexus: ver el bloque "Versión de Nexus" más arriba y RELEASING.md
         versionCode computedVersionCode
         versionName "${versionDisplayName}"
         buildConfigField "String", "VERSION_DISPLAY_NAME", "\"${versionDisplayName}\""
-        buildConfigField "String", "MAJOR_VERSION", "\"${majorVersion}\""
         buildConfigField "String", "COMMIT_HASH", "\"${buildCommit}\""
         buildConfigField "boolean", "ENABLE_AUTO_INSTALLS_LAYOUT", "false"
 
@@ -212,7 +213,13 @@ android {
         ].collect { proj.file(it) }
     }.flatten().findAll { it.exists() }.toArray()
 
+    // Firma de release. Para que Android permita actualizar encima sin desinstalar, todas las
+    // versiones publicadas deben ir firmadas con la MISMA clave. El workflow de release exporta
+    // NEXUS_REQUIRE_RELEASE_SIGNING=true: en ese caso, si no se puede cargar la clave real la
+    // compilación falla, en vez de firmar en silencio con la clave de depuración (que cambia
+    // en cada ejecución de GitHub Actions y dejaría un APK imposible de actualizar).
     def releaseSigning
+    final def requireReleaseSigning = System.getenv("NEXUS_REQUIRE_RELEASE_SIGNING") == "true"
     try {
         def keystoreProperties = new Properties()
         keystoreProperties.load(rootProject.file("keystore.properties").newInputStream())
@@ -222,7 +229,10 @@ android {
             storeFile rootProject.file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
         }
-    } catch (Exception ignored) {
+    } catch (Exception e) {
+        if (requireReleaseSigning) {
+            throw new GradleException("No se pudo cargar la clave de firma de release (keystore.properties): ${e.message}", e)
+        }
         releaseSigning = signingConfigs.debug
     }
 
@@ -356,7 +366,7 @@ androidComponents {
     onVariants(selector().all()) { variant ->
         def channel = variant.productFlavors.last().second
         variant.outputs.forEach { output ->
-            output.outputFileName.set("Lawnchair.${output.versionName.get()}.$channel.${variant.buildType}.apk")
+            output.outputFileName.set("Nexus-${output.versionName.get()}-$channel-${variant.buildType}.apk")
         }
 
         // Lawnchair-TODO: A better way to sync proto file to the IDE preventing missing or outdated result. Please remove if this is the best solution we have right now
