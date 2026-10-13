@@ -107,20 +107,26 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
      * por defecto (vista que no es un icono, animaciones del sistema desactivadas, etc.).
      */
     fun createLaunchOptions(v: View?): ActivityOptionsWrapper? {
-        if (v !is BubbleTextView || !NexusMotion.isEnabled(launcher)) return null
+        if (v !is BubbleTextView) return skip("la vista no es un icono (${v?.javaClass?.simpleName})")
+        if (!NexusMotion.isEnabled(launcher)) return skip("animaciones del sistema desactivadas")
         // El sistema ya rechazó un lanzamiento con estas opciones: se usan las normales.
-        if (optionsRejected) return null
-        val icon = v.icon ?: return null
+        if (optionsRejected) return skip("el sistema rechazó antes las opciones de Nexus")
+        val icon = v.icon ?: return skip("el icono no tiene drawable")
         val iconBounds = icon.bounds
         val dragLayer = launcher.dragLayer
-        if (iconBounds.isEmpty || v.width == 0 || dragLayer.width == 0 || dragLayer.height == 0) return null
+        if (iconBounds.isEmpty || v.width == 0 || dragLayer.width == 0 || dragLayer.height == 0) {
+            return skip(
+                "medidas vacías (icono=$iconBounds, vista=${v.width}, " +
+                    "capa=${dragLayer.width}x${dragLayer.height})",
+            )
+        }
 
-        val start = iconRect(v) ?: return null
+        val start = iconRect(v) ?: return skip("no se pudo calcular la posición del icono")
 
         // Las opciones se piden primero: si el sistema no iba a respetar la animación de
         // ventana, no se dibuja la hoja y se usa la animación estándar del sistema.
         val callbacks = RunnableList()
-        val options = makeCustomOptions(v, callbacks) ?: return null
+        val options = makeCustomOptions(v, callbacks) ?: return skip("no se pudieron crear las opciones")
 
         // Si el zoom de vuelta al inicio sigue en marcha, se deja asentar en vez de cortarlo.
         settleReturnAnimation()
@@ -130,7 +136,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         // retira la anterior (con un fundido) y se crea una nueva.
         val active = session?.takeIf { it.isFor(v, start) }
             ?: createSession(v, icon, iconBounds, start)
-            ?: return null
+            ?: return skip("no se pudo capturar el icono para la hoja")
 
         // Se recuerda el icono para que "reciba" a la app cuando se vuelva al inicio.
         lastSource = WeakReference(v)
@@ -159,7 +165,14 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         wentToBackground = false
         dragLayer.removeCallbacks(failSafe)
         dragLayer.postDelayed(failSafe, FAIL_SAFE_MS)
+        Log.i(TAG, "Lanzamiento #$launchId con la hoja y las opciones de Nexus (sdk=${Build.VERSION.SDK_INT})")
         return ActivityOptionsWrapper(options, callbacks).also { lastWrapper = WeakReference(it) }
+    }
+
+    /** Anota por qué este lanzamiento no usa la hoja de Nexus y devuelve `null`. */
+    private fun skip(reason: String): ActivityOptionsWrapper? {
+        Log.i(TAG, "Sin hoja de Nexus: $reason")
+        return null
     }
 
     /**
@@ -197,10 +210,12 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     }
 
     fun onLauncherPaused() {
+        Log.i(TAG, "Launcher en pausa (lanzamiento pendiente=$launchPending)")
         if (launchPending) wentToBackground = true
     }
 
     fun onLauncherResumed() {
+        Log.i(TAG, "Launcher reanudado (venía de una apertura de Nexus=$wentToBackground)")
         if (!wentToBackground) return
         wentToBackground = false
         launchPending = false
@@ -304,10 +319,13 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         val type = ActivityOptions::class.java
 
         // 1) El método oculto, que es lo que usa el propio sistema.
-        runCatching {
+        val viaMethod = runCatching {
             type.getDeclaredMethod(OVERRIDE_TASK_SETTER, java.lang.Boolean.TYPE)
                 .apply { isAccessible = true }
                 .invoke(options, true)
+        }
+        viaMethod.exceptionOrNull()?.let {
+            Log.w(TAG, "$OVERRIDE_TASK_SETTER no disponible: ${it.javaClass.simpleName}: ${it.message}")
         }
 
         // 2) Se comprueba leyendo el campo; si el método no existía, se rellena directamente.
@@ -316,15 +334,20 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         }.getOrNull()
         if (field != null) {
             runCatching { if (!field.getBoolean(options)) field.setBoolean(options, true) }
-            return runCatching { field.getBoolean(options) }.getOrDefault(false)
+            val set = runCatching { field.getBoolean(options) }.getOrDefault(false)
+            Log.i(TAG, "overrideTaskTransition: campo=$set (método ok=${viaMethod.isSuccess})")
+            return set
         }
+        Log.w(TAG, "El campo $OVERRIDE_TASK_FIELD no existe en esta versión de Android")
 
         // 3) Sin el campo, se comprueba con el método de lectura.
-        return runCatching {
+        val viaGetter = runCatching {
             type.getDeclaredMethod(OVERRIDE_TASK_GETTER)
                 .apply { isAccessible = true }
                 .invoke(options) as? Boolean
         }.getOrNull() == true
+        Log.i(TAG, "overrideTaskTransition: lectura por método=$viaGetter")
+        return viaGetter
     }
 
     /**
