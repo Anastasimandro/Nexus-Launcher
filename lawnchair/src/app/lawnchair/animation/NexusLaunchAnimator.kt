@@ -37,20 +37,16 @@ import kotlin.math.min
  * recientes del sistema (instalación como APK normal), caso en el que Quickstep y sus
  * animaciones remotas están desactivados.
  *
- * Funciona con dos piezas que no necesitan permisos especiales:
- *  1. Una "hoja" que se dibuja en el overlay del propio launcher y crece desde el icono hasta
- *     pantalla completa. Cada lanzamiento es una [LaunchSession]: la hoja más su propio
- *     [MotionDriver], que lleva el progreso con los valores del [MotionProfile] activo. Es
- *     interrumpible: si se vuelve al inicio antes de que termine, la hoja se pliega al icono
- *     conservando la velocidad, y si se vuelve a tocar el mismo icono se redirige otra vez
- *     hacia abierto desde donde esté, sin cortes. Al tocar otro icono, la hoja anterior se
- *     funde mientras sigue moviéndose.
- *  2. Una animación de ventana por recursos (`nexus_app_enter`) que hace aparecer la app
- *     encima de la hoja mientras el launcher se mantiene visible (`nexus_launcher_hold`).
- *     Desde Android 14 el sistema solo aplica una animación personalizada a la ventana de una
- *     tarea nueva si las opciones piden `overrideTaskTransition`; sin eso usa la suya por
- *     defecto y se pisa con la hoja (la animación "se salta"). Si no se puede pedir, Nexus no
- *     dibuja la hoja y deja la animación estándar del sistema.
+ * Apertura: el sistema anima la propia ventana de la app desde el icono (clip reveal), así que
+ * va sincronizada con la app y no necesita permisos especiales.
+ *
+ * Hoja propia (desactivada, ver [useLaunchSheet]): una "hoja" dibujada en el overlay del
+ * launcher que crece desde el icono hasta pantalla completa, con un [MotionDriver] por
+ * lanzamiento ([LaunchSession]), interrumpible y redirigible. Para que no se pisara con la
+ * animación del sistema se probó una animación de ventana propia (`nexus_app_enter`) con
+ * `overrideTaskTransition`, pero desde Android 14 el sistema solo acepta esa marca de quien
+ * tiene `START_TASKS_FROM_RECENTS` o es el asistente activo (`SafeActivityOptions`): con un APK
+ * normal `startActivity` lanza `SecurityException`. Por eso la hoja está apagada.
  *
  * Al volver al inicio la app la cierra el sistema (un launcher normal no controla su ventana),
  * así que Nexus anima lo suyo: el contenido del inicio entra con un zoom suave y el icono de
@@ -62,6 +58,12 @@ import kotlin.math.min
 class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     private val density = launcher.resources.displayMetrics.density
+
+    /**
+     * Dibujar la hoja propia al abrir. Apagado: necesita `overrideTaskTransition`, que el
+     * sistema rechaza a una app sin `START_TASKS_FROM_RECENTS` (ver la documentación de la clase).
+     */
+    private val useLaunchSheet = false
 
     /** Lanzamiento cuya hoja sigue en pantalla (abriéndose o plegándose), si lo hay. */
     private var session: LaunchSession? = null
@@ -109,8 +111,6 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     fun createLaunchOptions(v: View?): ActivityOptionsWrapper? {
         if (v !is BubbleTextView) return skip("la vista no es un icono (${v?.javaClass?.simpleName})")
         if (!NexusMotion.isEnabled(launcher)) return skip("animaciones del sistema desactivadas")
-        // El sistema ya rechazó un lanzamiento con estas opciones: se usan las normales.
-        if (optionsRejected) return skip("el sistema rechazó antes las opciones de Nexus")
         val icon = v.icon ?: return skip("el icono no tiene drawable")
         val iconBounds = icon.bounds
         val dragLayer = launcher.dragLayer
@@ -120,6 +120,9 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
                     "capa=${dragLayer.width}x${dragLayer.height})",
             )
         }
+        if (!useLaunchSheet) return createRevealOptions(v, iconBounds)
+        // El sistema ya rechazó un lanzamiento con estas opciones: se usan las normales.
+        if (optionsRejected) return skip("el sistema rechazó antes las opciones de Nexus")
 
         val start = iconRect(v) ?: return skip("no se pudo calcular la posición del icono")
 
@@ -167,6 +170,46 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         dragLayer.postDelayed(failSafe, FAIL_SAFE_MS)
         Log.i(TAG, "Lanzamiento #$launchId con la hoja y las opciones de Nexus (sdk=${Build.VERSION.SDK_INT})")
         return ActivityOptionsWrapper(options, callbacks).also { lastWrapper = WeakReference(it) }
+    }
+
+    /**
+     * Apertura con la animación de ventana del sistema desde el icono (clip reveal): el sistema
+     * anima la ventana real de la app, así que no hace falta ningún permiso. Además deja
+     * preparado el retorno al inicio (zoom del contenido y rebote del icono).
+     */
+    private fun createRevealOptions(v: BubbleTextView, iconBounds: Rect): ActivityOptionsWrapper {
+        // Si el zoom de vuelta al inicio sigue en marcha, se deja asentar en vez de cortarlo.
+        settleReturnAnimation()
+        settleLanding()
+
+        // Se recuerda el icono para que "reciba" a la app cuando se vuelva al inicio.
+        lastSource = WeakReference(v)
+        lastTag = v.tag
+
+        val options = Utilities.allowBGLaunch(
+            ActivityOptions.makeClipRevealAnimation(
+                v,
+                (v.width - iconBounds.width()) / 2,
+                v.paddingTop,
+                iconBounds.width(),
+                iconBounds.height(),
+            ),
+        )
+        if (Utilities.ATLEAST_T) {
+            options.splashScreenStyle = SplashScreen.SPLASH_SCREEN_STYLE_ICON
+        }
+        options.launchDisplayId = v.display?.displayId ?: Display.DEFAULT_DISPLAY
+
+        val launchId = ++generation
+        launchPending = true
+        wentToBackground = false
+        val dragLayer = launcher.dragLayer
+        dragLayer.removeCallbacks(failSafe)
+        dragLayer.postDelayed(failSafe, FAIL_SAFE_MS)
+        Log.i(TAG, "Lanzamiento #$launchId con reveal del sistema (sdk=${Build.VERSION.SDK_INT})")
+        // No se registra en `lastWrapper`: son opciones normales y no hay nada que reintentar
+        // (si falla, es que la app no está instalada y el aviso es el correcto).
+        return ActivityOptionsWrapper(options, RunnableList())
     }
 
     /** Anota por qué este lanzamiento no usa la hoja de Nexus y devuelve `null`. */
