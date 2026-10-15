@@ -99,13 +99,16 @@ object ShizukuLauncher {
                     permissionAsked = true
                     Log.w(TAG, "La versión de Shizuku es demasiado antigua")
                 }
+
                 Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED -> {
                     Log.i(TAG, "Shizuku listo (${describe()})")
                 }
+
                 Shizuku.shouldShowRequestPermissionRationale() -> {
                     permissionAsked = true
                     Log.i(TAG, "El permiso de Shizuku está denegado de forma permanente")
                 }
+
                 else -> {
                     permissionAsked = true
                     Log.i(TAG, "Pidiendo permiso a Shizuku")
@@ -216,14 +219,19 @@ object ShizukuLauncher {
         for ((index, type) in types.withIndex()) {
             args[index] = when {
                 type == Intent::class.java -> intent
+
                 type == Bundle::class.java -> options
+
                 type == String::class.java -> if (strings++ == 0) SHELL_PACKAGE else null
+
                 type == Int::class.javaPrimitiveType -> when (ints++) {
                     0 -> -1
                     1 -> 0
                     else -> Process.myUid() / PER_USER_RANGE
                 }
+
                 type.isPrimitive -> return signatureMismatch(method)
+
                 else -> null
             }
         }

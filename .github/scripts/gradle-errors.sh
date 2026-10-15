@@ -22,7 +22,15 @@ clean=$(sed 's/\x1b\[[0-9;]*m//g' "$log" | cut -c1-400)
 # después el resto de líneas que parecen errores.
 block=$(printf '%s\n' "$clean" | awk '/What went wrong/{c=40} c>0{print; c--}')
 others=$(printf '%s\n' "$clean" | grep -E "$pattern" | awk '!seen[$0]++' | head -30)
-lines=$(printf '%s\n%s\n' "$block" "$others" | awk 'NF && !seen[$0]++' | head -70)
+# Algunas tareas (licensee, lint) imprimen su detalle justo antes de "FAILURE: Build failed".
+before=""
+fail_line=$(printf '%s\n' "$clean" | grep -n -m1 '^FAILURE: Build failed' | cut -d: -f1)
+if [ -n "$fail_line" ] && [ "$fail_line" -gt 1 ]; then
+  start=$(( fail_line > 61 ? fail_line - 60 : 1 ))
+  before=$(printf '%s\n' "$clean" | sed -n "${start},$((fail_line - 1))p")
+fi
+
+lines=$(printf '%s\n%s\n%s\n' "$before" "$block" "$others" | awk 'NF && !seen[$0]++' | head -110)
 if [ -z "$lines" ]; then
   lines=$(printf '%s\n' "$clean" | tail -30)
 fi
