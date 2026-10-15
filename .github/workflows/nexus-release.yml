@@ -85,7 +85,14 @@ jobs:
         env:
           NEXUS_VERSION: ${{ steps.version.outputs.version }}
           NEXUS_REQUIRE_RELEASE_SIGNING: 'true'
-        run: ./gradlew assembleLawnWithQuickstepGithubRelease
+        run: |
+          set -o pipefail
+          ./gradlew assembleLawnWithQuickstepGithubRelease 2>&1 | tee gradle-build.log
+
+      # Si falla la compilación, deja los errores en una anotación (los logs no siempre se pueden bajar).
+      - name: Resumir errores de compilación
+        if: failure()
+        run: bash .github/scripts/gradle-errors.sh gradle-build.log "Compilación de Nexus"
 
       # Comprueba el APK real: paquete, versión, versionCode y que la firma es la de siempre.
       - name: Verificar APK

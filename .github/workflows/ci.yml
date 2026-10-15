@@ -75,7 +75,11 @@ jobs:
           distribution: 'zulu'
           java-version: 21
       - uses: gradle/actions/setup-gradle@v6
-      - run: ./gradlew spotlessCheck
+      - run: |
+          set -o pipefail
+          ./gradlew spotlessCheck 2>&1 | tee gradle-style.log
+      - if: failure()
+        run: bash .github/scripts/gradle-errors.sh gradle-style.log "Estilo (spotless)"
 
   send-notifications:
     runs-on: ubuntu-latest
