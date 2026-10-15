@@ -40,13 +40,14 @@ import kotlin.math.min
  * Apertura: el sistema anima la propia ventana de la app desde el icono (clip reveal), así que
  * va sincronizada con la app y no necesita permisos especiales.
  *
- * Hoja propia (desactivada, ver [useLaunchSheet]): una "hoja" dibujada en el overlay del
- * launcher que crece desde el icono hasta pantalla completa, con un [MotionDriver] por
- * lanzamiento ([LaunchSession]), interrumpible y redirigible. Para que no se pisara con la
- * animación del sistema se probó una animación de ventana propia (`nexus_app_enter`) con
- * `overrideTaskTransition`, pero desde Android 14 el sistema solo acepta esa marca de quien
- * tiene `START_TASKS_FROM_RECENTS` o es el asistente activo (`SafeActivityOptions`): con un APK
- * normal `startActivity` lanza `SecurityException`. Por eso la hoja está apagada.
+ * Hoja propia: una "hoja" dibujada en el overlay del launcher que crece desde el icono hasta
+ * pantalla completa, con un [MotionDriver] por lanzamiento ([LaunchSession]), interrumpible y
+ * redirigible. Para que no se pisara con la animación del sistema lleva una animación de
+ * ventana propia (`nexus_app_enter`) con `overrideTaskTransition`, pero desde Android 14 el
+ * sistema solo acepta esa marca de quien tiene `START_TASKS_FROM_RECENTS` o es el asistente
+ * activo (`SafeActivityOptions`): con un APK normal `startActivity` lanza `SecurityException`.
+ * Por eso la hoja solo se usa cuando el lanzamiento lo hace Shizuku con identidad `shell`
+ * ([createSheetLaunchOptions]); sin Shizuku se abre con el reveal del sistema.
  *
  * Al volver al inicio la app la cierra el sistema (un launcher normal no controla su ventana),
  * así que Nexus anima lo suyo: el contenido del inicio entra con un zoom suave y el icono de
@@ -58,12 +59,6 @@ import kotlin.math.min
 class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     private val density = launcher.resources.displayMetrics.density
-
-    /**
-     * Dibujar la hoja propia al abrir. Apagado: necesita `overrideTaskTransition`, que el
-     * sistema rechaza a una app sin `START_TASKS_FROM_RECENTS` (ver la documentación de la clase).
-     */
-    private val useLaunchSheet = false
 
     /** Lanzamiento cuya hoja sigue en pantalla (abriéndose o plegándose), si lo hay. */
     private var session: LaunchSession? = null
@@ -107,8 +102,27 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     /**
      * Devuelve las opciones de lanzamiento de Nexus, o `null` si hay que usar la animación
      * por defecto (vista que no es un icono, animaciones del sistema desactivadas, etc.).
+     * Abre con el reveal del sistema, que no necesita ningún permiso.
      */
     fun createLaunchOptions(v: View?): ActivityOptionsWrapper? {
+        val target = resolveTarget(v) ?: return null
+        return createRevealOptions(target.view, target.iconBounds)
+    }
+
+    /**
+     * Opciones con la hoja y la animación de ventana de Nexus, o `null` si no se pueden usar.
+     * Solo valen para un lanzamiento hecho con identidad `shell` (Shizuku): el sistema rechaza
+     * `overrideTaskTransition` a un APK normal con una `SecurityException`.
+     */
+    fun createSheetLaunchOptions(v: View?): ActivityOptionsWrapper? {
+        val target = resolveTarget(v) ?: return null
+        return createSheetOptions(target)
+    }
+
+    /** Icono que se va a lanzar, con sus medidas ya comprobadas. */
+    private class LaunchTarget(val view: BubbleTextView, val icon: Drawable, val iconBounds: Rect)
+
+    private fun resolveTarget(v: View?): LaunchTarget? {
         if (v !is BubbleTextView) return skip("la vista no es un icono (${v?.javaClass?.simpleName})")
         if (!NexusMotion.isEnabled(launcher)) return skip("animaciones del sistema desactivadas")
         val icon = v.icon ?: return skip("el icono no tiene drawable")
@@ -120,7 +134,14 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
                     "capa=${dragLayer.width}x${dragLayer.height})",
             )
         }
-        if (!useLaunchSheet) return createRevealOptions(v, iconBounds)
+        return LaunchTarget(v, icon, iconBounds)
+    }
+
+    private fun createSheetOptions(target: LaunchTarget): ActivityOptionsWrapper? {
+        val v = target.view
+        val icon = target.icon
+        val iconBounds = target.iconBounds
+        val dragLayer = launcher.dragLayer
         // El sistema ya rechazó un lanzamiento con estas opciones: se usan las normales.
         if (optionsRejected) return skip("el sistema rechazó antes las opciones de Nexus")
 
@@ -168,7 +189,11 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         wentToBackground = false
         dragLayer.removeCallbacks(failSafe)
         dragLayer.postDelayed(failSafe, FAIL_SAFE_MS)
-        Log.i(TAG, "Lanzamiento #$launchId con la hoja y las opciones de Nexus (sdk=${Build.VERSION.SDK_INT})")
+        Log.i(
+            TAG,
+            "Lanzamiento #$launchId con la hoja y las opciones de Nexus " +
+                "(Shizuku, sdk=${Build.VERSION.SDK_INT})",
+        )
         return ActivityOptionsWrapper(options, callbacks).also { lastWrapper = WeakReference(it) }
     }
 
@@ -213,7 +238,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     }
 
     /** Anota por qué este lanzamiento no usa la hoja de Nexus y devuelve `null`. */
-    private fun skip(reason: String): ActivityOptionsWrapper? {
+    private fun <T : Any> skip(reason: String): T? {
         Log.i(TAG, "Sin hoja de Nexus: $reason")
         return null
     }
@@ -232,6 +257,22 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
             "El sistema rechazó el lanzamiento con las opciones de Nexus " +
                 "(${error.javaClass.simpleName}: ${error.message}); se reintenta con las normales",
         )
+        abortLaunch()
+        optionsRejected = true
+        return true
+    }
+
+    /**
+     * El lanzamiento con identidad `shell` (Shizuku) no llegó a hacerse: se retira la hoja sin
+     * animación para que la apertura normal, con el reveal del sistema, no quede tapada.
+     */
+    fun onPrivilegedLaunchFailed() {
+        Log.w(TAG, "El lanzamiento con Shizuku falló; se abre con el reveal del sistema")
+        abortLaunch()
+    }
+
+    /** Deshace lo preparado para un lanzamiento que no se llegó a producir. */
+    private fun abortLaunch() {
         lastWrapper = null
         generation++
         launchPending = false
@@ -240,8 +281,6 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         endSession(animated = false)
         lastSource = null
         lastTag = null
-        optionsRejected = true
-        return true
     }
 
     /**

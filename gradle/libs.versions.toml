@@ -12,6 +12,7 @@ retrofit = "3.0.0"
 dagger = "2.60.1"
 libsu = "6.0.0"
 refine = "4.4.0"
+shizuku = "13.1.5"
 exifinterface = "1.4.2"
 
 guava = "33.7.2-jre"
@@ -138,6 +139,8 @@ reorderable = "sh.calvin.reorderable:reorderable:3.1.0"
 rikka-annotation = { module = "dev.rikka.tools.refine:annotation", version.ref = "refine" }
 rikka-annotation-processor = { module = "dev.rikka.tools.refine:annotation-processor", version.ref = "refine" }
 rikka-refine-runtime = { group = "dev.rikka.tools.refine", name = "runtime", version.ref = "refine" }
+shizuku-api = { group = "dev.rikka.shizuku", name = "api", version.ref = "shizuku" }
+shizuku-provider = { group = "dev.rikka.shizuku", name = "provider", version.ref = "shizuku" }
 smartspacer-sdk = "com.kieronquinn.smartspacer:sdk-client:1.2"
 xdrop-fuzzywuzzy = "me.xdrop:fuzzywuzzy:1.4.0"
 errorprone-annotations = "com.google.errorprone:error_prone_annotations:2.50.0"

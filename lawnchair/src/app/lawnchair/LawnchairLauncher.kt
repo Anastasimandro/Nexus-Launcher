@@ -46,6 +46,7 @@ import app.lawnchair.preferences2.PreferenceManager2
 import app.lawnchair.preferences2.firstCached
 import app.lawnchair.root.RootHelperManager
 import app.lawnchair.root.RootNotAvailableException
+import app.lawnchair.shizuku.ShizukuLauncher
 import app.lawnchair.theme.ThemeProvider
 import app.lawnchair.ui.popup.LauncherOptionsPopup
 import app.lawnchair.ui.popup.LawnchairShortcut
@@ -449,6 +450,24 @@ class LawnchairLauncher : QuickstepLauncher() {
         nexusLaunchAnimator.onLaunchRetried(success)
     }
 
+    /**
+     * Con Shizuku activo el launcher lanza las apps con identidad `shell`, lo que permite la
+     * hoja y la animación de ventana de Nexus. Sin Shizuku (o con Quickstep) devuelve `null` y
+     * se usa el camino normal.
+     */
+    override fun getPrivilegedActivityLaunchOptions(v: View, item: ItemInfo?): ActivityOptionsWrapper? {
+        if (LawnchairApp.isRecentsEnabled || !ShizukuLauncher.isReady()) return null
+        return nexusLaunchAnimator.createSheetLaunchOptions(v)
+    }
+
+    override fun startActivityPrivileged(intent: Intent, options: Bundle?): Boolean {
+        return ShizukuLauncher.startActivity(intent, options)
+    }
+
+    override fun onPrivilegedLaunchFailed() {
+        nexusLaunchAnimator.onPrivilegedLaunchFailed()
+    }
+
     private fun getActivityLaunchOptionsDefault(v: View?): ActivityOptionsWrapper {
         var left = 0
         var top = 0
@@ -490,6 +509,7 @@ class LawnchairLauncher : QuickstepLauncher() {
     override fun onResume() {
         super.onResume()
         nexusLaunchAnimator.onLauncherResumed()
+        if (!LawnchairApp.isRecentsEnabled) ShizukuLauncher.requestPermissionIfNeeded()
         restartIfPending()
         refreshPredictionContainersFromModel()
 

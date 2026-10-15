@@ -467,10 +467,24 @@ public interface ActivityContext extends SavedStateRegistryOwner {
         if (isShortcut && !WIDGETS_ENABLED) {
             return null;
         }
-        ActivityOptionsWrapper options = v != null ? getActivityLaunchOptions(v, item)
-                : makeDefaultActivityOptions(item != null && item.animationType == DEFAULT_NO_ICON
-                        ? SPLASH_SCREEN_STYLE_SOLID_COLOR : -1 /* SPLASH_SCREEN_STYLE_UNDEFINED */);
         UserHandle user = item == null ? null : item.user;
+        boolean ownUser = user == null || user.equals(Process.myUserHandle());
+        // A plain app launch may be started by the launcher with elevated rights (see
+        // startActivityPrivileged), which lets it use window animations that the system only
+        // accepts from privileged callers.
+        ActivityOptionsWrapper options = null;
+        boolean privileged = false;
+        if (v != null && !isShortcut && ownUser) {
+            options = getPrivilegedActivityLaunchOptions(v, item);
+            privileged = options != null;
+        }
+        if (options == null) {
+            options = v != null ? getActivityLaunchOptions(v, item)
+                    : makeDefaultActivityOptions(item != null
+                            && item.animationType == DEFAULT_NO_ICON
+                            ? SPLASH_SCREEN_STYLE_SOLID_COLOR
+                            : -1 /* SPLASH_SCREEN_STYLE_UNDEFINED */);
+        }
         Bundle optsBundle = options.toBundle();
         // Prepare intent
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -483,9 +497,18 @@ public interface ActivityContext extends SavedStateRegistryOwner {
                 String packageName = intent.getPackage();
                 ((Context) this).getSystemService(LauncherApps.class).startShortcut(
                         packageName, id, intent.getSourceBounds(), optsBundle, user);
-            } else if (user == null || user.equals(Process.myUserHandle())) {
-                // Could be launching some bookkeeping activity
-                context.startActivity(intent, optsBundle);
+            } else if (ownUser) {
+                boolean started = privileged && startActivityPrivileged(intent, optsBundle);
+                if (privileged && !started) {
+                    // The elevated launch did not happen: start it normally, with stock options.
+                    onPrivilegedLaunchFailed();
+                    options = getActivityLaunchOptions(v, item);
+                    optsBundle = options.toBundle();
+                }
+                if (!started) {
+                    // Could be launching some bookkeeping activity
+                    context.startActivity(intent, optsBundle);
+                }
             } else {
                 context.getSystemService(LauncherApps.class).startMainActivity(
                         intent.getComponent(), user, intent.getSourceBounds(), optsBundle);
@@ -522,6 +545,32 @@ public interface ActivityContext extends SavedStateRegistryOwner {
      * Reports whether the retry requested through {@link #onActivityLaunchFailed} succeeded.
      */
     default void onActivityLaunchRetried(boolean success) { }
+
+    /**
+     * Returns launch options meant for {@link #startActivityPrivileged}, or {@code null} if the
+     * launcher cannot (or does not want to) start this launch with elevated rights.
+     */
+    @Nullable
+    default ActivityOptionsWrapper getPrivilegedActivityLaunchOptions(
+            @NonNull View v, @Nullable ItemInfo item) {
+        return null;
+    }
+
+    /**
+     * Starts {@code intent} with elevated rights (for example through Shizuku).
+     *
+     * @return {@code true} if the activity was started. On {@code false} nothing was started and
+     *         the caller starts it normally.
+     */
+    default boolean startActivityPrivileged(@NonNull Intent intent, @Nullable Bundle options) {
+        return false;
+    }
+
+    /**
+     * Called when {@link #startActivityPrivileged} did not start the activity, right before it
+     * is started normally with the default options.
+     */
+    default void onPrivilegedLaunchFailed() { }
 
     /**
      * Creates and logs a new app launch event.
