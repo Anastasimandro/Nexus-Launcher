@@ -16,9 +16,15 @@ fi
 pattern="^e: |error:|What went wrong|Execution failed|FAILED|Could not|Caused by|Unresolved|"
 pattern="${pattern}ktlint|spotless|Step '|\\.kt:[0-9]+:[0-9]+|licensee|not allowed|Duplicate|Manifest merger"
 
-lines=$(sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -E "$pattern" | cut -c1-400 | awk '!seen[$0]++' | head -40)
+clean=$(sed 's/\x1b\[[0-9;]*m//g' "$log" | cut -c1-400)
+
+# Primero el bloque "What went wrong" completo (ahí están el motivo y las infracciones) y
+# después el resto de líneas que parecen errores.
+block=$(printf '%s\n' "$clean" | awk '/What went wrong/{c=40} c>0{print; c--}')
+others=$(printf '%s\n' "$clean" | grep -E "$pattern" | awk '!seen[$0]++' | head -30)
+lines=$(printf '%s\n%s\n' "$block" "$others" | awk 'NF && !seen[$0]++' | head -70)
 if [ -z "$lines" ]; then
-  lines=$(sed 's/\x1b\[[0-9;]*m//g' "$log" | tail -30 | cut -c1-400)
+  lines=$(printf '%s\n' "$clean" | tail -30)
 fi
 
 # Los comandos de workflow no admiten saltos de línea: se codifican.
