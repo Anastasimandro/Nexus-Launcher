@@ -549,13 +549,14 @@ licensee {
     allow(SpdxId.Apache_20)
     allow(SpdxId.BSD_3_Clause)
     allow(SpdxId.GPL_20_or_later)
-    allow(SpdxId.MIT)
     allowDependency(libs.libsu.core)
     allowDependency(libs.libsu.service)
     allowDependency(libs.shizuku.api)
     allowDependency(libs.shizuku.provider)
     allowUrl("https://github.com/patrykmichalik/opto/blob/master/LICENSE")
     allowUrl("https://github.com/RikkaApps/HiddenApiRefinePlugin/blob/main/LICENSE")
+    // Shizuku-API (MIT): sus módulos aidl y shared llegan como dependencias de api y provider.
+    allowUrl("https://github.com/RikkaApps/Shizuku-API/blob/master/LICENSE")
     allowUrl("https://opensource.org/licenses/mit-license.php")
 
     bundleAndroidAsset = true
