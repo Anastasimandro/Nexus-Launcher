@@ -133,6 +133,7 @@ object ShizukuLauncher {
         }
 
         !hasPermission() -> "Nexus no tiene el permiso de Shizuku"
+
         else -> null
     }
 
