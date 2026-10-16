@@ -5,6 +5,8 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Process
+import android.os.RemoteException
+import android.os.SystemClock
 import android.util.Log
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -21,9 +23,16 @@ import rikka.shizuku.ShizukuBinderWrapper
  * por buenos.
  *
  * Es opcional y degrada solo: si Shizuku no está activo, no se ha dado permiso o el sistema
- * rechaza la llamada, [startActivity] devuelve `false` sin haber lanzado nada y el launcher abre
- * la app como siempre. Tras [MAX_FAILURES] fallos seguidos se deja de intentar hasta que Shizuku
- * se vuelva a conectar.
+ * rechaza la llamada, [startActivity] devuelve [LaunchOutcome.FAILED] sin haber lanzado nada y el
+ * launcher abre la app como siempre.
+ *
+ * Los fallos se distinguen para que una app rara no apague la animación de todas las demás:
+ * - Fallo de una sola app (código de retorno de error, la app no se puede abrir): se registra y
+ *   nada más. El siguiente lanzamiento vuelve a usar Shizuku.
+ * - Fallo del propio mecanismo (sin servicio, firma desconocida, el sistema rechaza las opciones
+ *   de animación): tras [MAX_SYSTEMIC_FAILURES] seguidos se pausa [COOLDOWN_MS] y se vuelve a
+ *   intentar solo; no queda desactivado para siempre.
+ * - Binder de Shizuku muerto: se vuelve a pedir y se reintenta en el acto una vez.
  *
  * La llamada va directa a `IActivityTaskManager.startActivityAsUser` por reflexión, buscando el
  * método por nombre y rellenando los parámetros por tipo, para tolerar cambios de firma entre
@@ -34,20 +43,43 @@ object ShizukuLauncher {
     private const val TAG = "NexusShizuku"
     private const val PERMISSION_REQUEST_CODE = 4107
     private const val SHELL_PACKAGE = "com.android.shell"
-    private const val MAX_FAILURES = 2
+    private const val MAX_SYSTEMIC_FAILURES = 2
+    private const val COOLDOWN_MS = 30_000L
     private const val PER_USER_RANGE = 100_000
 
-    /** Códigos de `startActivity` que significan que la actividad arrancó (o ya estaba abierta). */
-    private val SUCCESS_CODES = 0..3
+    /** Códigos de `ActivityManager.START_*` que interesan. */
+    private const val START_SUCCESS = 0
+    private const val START_RETURN_INTENT_TO_CALLER = 1
+    private const val START_TASK_TO_FRONT = 2
+    private const val START_DELIVERED_TO_TOP = 3
+
+    /** Qué pasó con un lanzamiento hecho por [startActivity]. */
+    enum class LaunchOutcome {
+        /** La actividad arranca y el sistema hará una transición de ventana (hay animación). */
+        TRANSITION,
+
+        /**
+         * La actividad se entregó a una que ya estaba delante: se abrió, pero el sistema no
+         * hará ninguna transición, así que no hay nada que animar.
+         */
+        NO_TRANSITION,
+
+        /** No se lanzó nada: quien llama debe abrir la app por su cuenta. */
+        FAILED,
+    }
 
     private var initialized = false
     private var permissionAsked = false
 
     @Volatile
-    private var consecutiveFailures = 0
+    private var systemicFailures = 0
+
+    /** Hasta cuándo (`elapsedRealtime`) Shizuku está en pausa por fallos del mecanismo. */
+    @Volatile
+    private var cooldownUntil = 0L
 
     @Volatile
-    private var disabled = false
+    private var lastFailure = "ninguno"
 
     private var activityTaskManager: Any? = null
     private var startMethod: Method? = null
@@ -77,8 +109,30 @@ object ShizukuLauncher {
     /** `true` si el servicio de Shizuku está en marcha (haya o no permiso). */
     fun isRunning(): Boolean = runCatching { Shizuku.pingBinder() }.getOrDefault(false)
 
-    /** `true` si Shizuku está en marcha, Nexus tiene permiso y no se ha desactivado por fallos. */
-    fun isReady(): Boolean = !disabled && hasPermission()
+    /** `true` si Shizuku está en marcha, Nexus tiene permiso y no está en pausa por fallos. */
+    fun isReady(): Boolean = !inCooldown() && hasPermission()
+
+    /**
+     * Igual que [isReady], pero cuando no lo está deja en el registro el motivo. Se usa en cada
+     * lanzamiento para que un logcat explique por qué esa apertura no usó la hoja de Nexus.
+     */
+    fun isReadyLogged(): Boolean {
+        val reason = unavailableReason() ?: return true
+        Log.i(TAG, "Sin Shizuku en este lanzamiento: $reason")
+        return false
+    }
+
+    private fun inCooldown(): Boolean = SystemClock.elapsedRealtime() < cooldownUntil
+
+    private fun unavailableReason(): String? = when {
+        !isRunning() -> "el servicio de Shizuku no está en marcha"
+        inCooldown() -> {
+            val left = (cooldownUntil - SystemClock.elapsedRealtime()).coerceAtLeast(0L) / 1000
+            "en pausa $left s por fallos seguidos (último: $lastFailure)"
+        }
+        !hasPermission() -> "Nexus no tiene el permiso de Shizuku"
+        else -> null
+    }
 
     private fun hasPermission(): Boolean {
         if (!isRunning()) return false
@@ -121,45 +175,99 @@ object ShizukuLauncher {
     }
 
     /**
-     * Lanza [intent] con la identidad `shell`. Devuelve `true` si el sistema aceptó el
-     * lanzamiento; con `false` no se lanzó nada y quien llama debe abrir la app por su cuenta.
+     * Lanza [intent] con la identidad `shell`. Con [LaunchOutcome.FAILED] no se lanzó nada y
+     * quien llama debe abrir la app por su cuenta.
      */
-    fun startActivity(intent: Intent, options: Bundle?): Boolean {
-        if (!isReady()) return false
+    fun startActivity(intent: Intent, options: Bundle?): LaunchOutcome {
+        if (!isReady()) return LaunchOutcome.FAILED
+        // `null` = el binder cacheado estaba muerto: se pide de nuevo y se prueba una vez más.
+        val first = attempt(intent, options)
+        if (first != null) return first
+        activityTaskManager = null
+        return attempt(intent, options) ?: failSystemic("el servicio de Shizuku no responde")
+    }
+
+    private fun attempt(intent: Intent, options: Bundle?): LaunchOutcome? {
+        val service = obtainActivityTaskManager() ?: return failSystemic("sin IActivityTaskManager")
+        val method = startMethod ?: findStartMethod() ?: return failSystemic("sin startActivityAsUser")
+        val args = buildArgs(method, intent, options) ?: return failSystemic("firma no reconocida")
         return try {
-            val service = obtainActivityTaskManager() ?: return fail("sin IActivityTaskManager")
-            val method = startMethod ?: findStartMethod() ?: return fail("sin startActivityAsUser")
-            val args = buildArgs(method, intent, options) ?: return fail("firma no reconocida")
             val code = method.invoke(service, *args) as? Int
-            if (code != null && code in SUCCESS_CODES) {
-                consecutiveFailures = 0
-                Log.i(TAG, "Lanzado con identidad shell (código $code): ${intent.component}")
-                true
-            } else {
-                fail("el sistema devolvió el código $code")
+            val component = intent.component
+            when (code) {
+                START_SUCCESS, START_TASK_TO_FRONT -> {
+                    succeeded()
+                    Log.i(TAG, "Lanzado con identidad shell (código $code): $component")
+                    LaunchOutcome.TRANSITION
+                }
+
+                START_RETURN_INTENT_TO_CALLER, START_DELIVERED_TO_TOP -> {
+                    succeeded()
+                    Log.i(TAG, "Entregado a una actividad que ya estaba delante (código $code): $component")
+                    LaunchOutcome.NO_TRANSITION
+                }
+
+                else -> failForThisLaunch("el sistema devolvió el código $code para $component")
             }
         } catch (e: InvocationTargetException) {
             val cause = e.targetException ?: e
-            fail("${cause.javaClass.simpleName}: ${cause.message}")
+            when {
+                cause is RemoteException -> {
+                    Log.w(TAG, "Binder de Shizuku caído (${cause.javaClass.simpleName}); se reintenta")
+                    null
+                }
+
+                cause is SecurityException && deniesAnimationOptions(cause) ->
+                    failSystemic("${cause.javaClass.simpleName}: ${cause.message}")
+
+                else -> failForThisLaunch("${cause.javaClass.simpleName}: ${cause.message}")
+            }
         } catch (e: Throwable) {
-            fail("${e.javaClass.simpleName}: ${e.message}")
+            failSystemic("${e.javaClass.simpleName}: ${e.message}")
         }
     }
 
-    private fun fail(reason: String): Boolean {
-        consecutiveFailures++
-        Log.w(TAG, "Falló el lanzamiento con Shizuku ($consecutiveFailures/$MAX_FAILURES): $reason")
-        if (consecutiveFailures >= MAX_FAILURES) {
-            disabled = true
-            Log.w(TAG, "Se desactiva el lanzamiento con Shizuku hasta que se vuelva a conectar")
+    /** `true` si el sistema rechaza las opciones de animación (no es un problema de esta app). */
+    private fun deniesAnimationOptions(e: SecurityException): Boolean {
+        val message = e.message ?: return false
+        return ANIMATION_PERMISSIONS.any { message.contains(it) }
+    }
+
+    private val ANIMATION_PERMISSIONS = listOf(
+        "START_TASKS_FROM_RECENTS",
+        "CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS",
+        "overrideTaskTransition",
+        "SafeActivityOptions",
+    )
+
+    private fun succeeded() {
+        systemicFailures = 0
+    }
+
+    /** Esta app no se pudo abrir con Shizuku; no dice nada del mecanismo, así que no se cuenta. */
+    private fun failForThisLaunch(reason: String): LaunchOutcome {
+        lastFailure = reason
+        Log.w(TAG, "Falló este lanzamiento con Shizuku (el resto siguen igual): $reason")
+        return LaunchOutcome.FAILED
+    }
+
+    /** Falla el mecanismo en sí: tras varios seguidos se pausa un rato y se vuelve a probar. */
+    private fun failSystemic(reason: String): LaunchOutcome {
+        lastFailure = reason
+        systemicFailures++
+        Log.w(TAG, "Falló Shizuku ($systemicFailures/$MAX_SYSTEMIC_FAILURES): $reason")
+        if (systemicFailures >= MAX_SYSTEMIC_FAILURES) {
+            systemicFailures = 0
+            cooldownUntil = SystemClock.elapsedRealtime() + COOLDOWN_MS
+            Log.w(TAG, "Shizuku en pausa ${COOLDOWN_MS / 1000} s; luego se vuelve a intentar")
         }
-        return false
+        return LaunchOutcome.FAILED
     }
 
     private fun resetState() {
         activityTaskManager = null
-        consecutiveFailures = 0
-        disabled = false
+        systemicFailures = 0
+        cooldownUntil = 0L
     }
 
     private fun describe(): String = runCatching {

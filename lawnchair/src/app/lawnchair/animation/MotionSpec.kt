@@ -38,12 +38,18 @@ data class MotionProfile(
         // Misma curva que `nexus_open.xml`: arranque rápido y frenada muy suave.
         private val OPEN_CURVE = PathInterpolator(0.15f, 0.1f, 0.15f, 1f)
 
+        /** Rigidez y amortiguación del resorte de apertura (ver [Nexus]). */
+        const val OPEN_STIFFNESS = 170f
+        const val OPEN_DAMPING = 0.95f
+
         /**
-         * Perfil por defecto. Con estos resortes la apertura llega al 90 % en unos 230 ms y se
-         * asienta en unos 350 ms, muy cerca de la curva de 400 ms que usábamos antes.
+         * Perfil por defecto. La apertura llega al 90 % en unos 280 ms y se asienta en unos
+         * 450 ms (con 300 / 0,95 eran 210 y 340 ms: demasiado rápida). La animación de ventana
+         * de la app (`nexus_app_enter` y `nexus_spring_open`) está calculada para este mismo
+         * resorte: si se cambian estos valores hay que recalcular esas curvas.
          */
         val Nexus = MotionProfile(
-            open = MotionSpec.Spring(stiffness = 300f, dampingRatio = 0.95f),
+            open = MotionSpec.Spring(stiffness = OPEN_STIFFNESS, dampingRatio = OPEN_DAMPING),
             close = MotionSpec.Spring(stiffness = 340f, dampingRatio = 0.9f),
             homeReturn = MotionSpec.Spring(stiffness = 260f, dampingRatio = 1f),
         )

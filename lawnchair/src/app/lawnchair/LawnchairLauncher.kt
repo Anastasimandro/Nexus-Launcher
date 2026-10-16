@@ -456,12 +456,21 @@ class LawnchairLauncher : QuickstepLauncher() {
      * se usa el camino normal.
      */
     override fun getPrivilegedActivityLaunchOptions(v: View, item: ItemInfo?): ActivityOptionsWrapper? {
-        if (LawnchairApp.isRecentsEnabled || !ShizukuLauncher.isReady()) return null
+        if (LawnchairApp.isRecentsEnabled || !ShizukuLauncher.isReadyLogged()) return null
         return nexusLaunchAnimator.createSheetLaunchOptions(v)
     }
 
     override fun startActivityPrivileged(intent: Intent, options: Bundle?): Boolean {
-        return ShizukuLauncher.startActivity(intent, options)
+        return when (ShizukuLauncher.startActivity(intent, options)) {
+            ShizukuLauncher.LaunchOutcome.TRANSITION -> true
+
+            ShizukuLauncher.LaunchOutcome.NO_TRANSITION -> {
+                nexusLaunchAnimator.onLaunchWithoutTransition()
+                true
+            }
+
+            ShizukuLauncher.LaunchOutcome.FAILED -> false
+        }
     }
 
     override fun onPrivilegedLaunchFailed() {

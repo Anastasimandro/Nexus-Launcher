@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Entrada de la ventana de la app lanzada desde Nexus.
-  Aparece con un fundido corto mientras la hoja del launcher termina de crecer.
+
+  Va sincronizada con la hoja del launcher (resorte de apertura, rigidez 170 / amortiguación
+  0,95): la escala sigue la misma curva en 460 ms y el fundido empieza cuando la hoja ya va
+  por la mitad (~130 ms) y termina cuando está casi abierta (~330 ms).
 -->
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:shareInterpolator="false">
     <alpha
-        android:duration="170"
+        android:duration="200"
         android:fromAlpha="0"
         android:interpolator="@android:interpolator/decelerate_quad"
-        android:startOffset="110"
+        android:startOffset="130"
         android:toAlpha="1" />
     <scale
-        android:duration="400"
+        android:duration="460"
         android:fromXScale="0.94"
         android:fromYScale="0.94"
-        android:interpolator="@interpolator/nexus_open"
+        android:interpolator="@interpolator/nexus_spring_open"
         android:pivotX="50%"
         android:pivotY="50%"
         android:toXScale="1"

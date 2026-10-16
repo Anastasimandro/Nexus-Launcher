@@ -96,7 +96,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     private val failSafe = Runnable {
         // Si la app tarda demasiado (o el lanzamiento falló) no dejamos la hoja tapando el inicio.
         launchPending = false
-        endSession(animated = true)
+        endSession(Retire.FADE)
     }
 
     /**
@@ -106,7 +106,10 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
      */
     fun createLaunchOptions(v: View?): ActivityOptionsWrapper? {
         val target = resolveTarget(v) ?: return null
-        return createRevealOptions(target.view, target.iconBounds)
+        // El reveal del sistema solo se prepara para iconos de app; otras vistas siguen el
+        // camino por defecto del launcher.
+        val icon = target.view as? BubbleTextView ?: return null
+        return createRevealOptions(icon, target.bounds)
     }
 
     /**
@@ -119,33 +122,41 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         return createSheetOptions(target)
     }
 
-    /** Icono que se va a lanzar, con sus medidas ya comprobadas. */
-    private class LaunchTarget(val view: BubbleTextView, val icon: Drawable, val iconBounds: Rect)
+    /**
+     * Vista que se va a lanzar, con sus medidas ya comprobadas. Para un icono de app, [bounds] es
+     * el recuadro del icono dentro de la vista y [icon] su drawable; para cualquier otra vista
+     * (resultado de búsqueda, acceso directo...) es la vista entera y [icon] es `null`.
+     */
+    private class LaunchTarget(val view: View, val bounds: Rect, val icon: Drawable?)
 
     private fun resolveTarget(v: View?): LaunchTarget? {
-        if (v !is BubbleTextView) return skip("la vista no es un icono (${v?.javaClass?.simpleName})")
+        if (v == null) return skip("el lanzamiento no viene de una vista")
         if (!NexusMotion.isEnabled(launcher)) return skip("animaciones del sistema desactivadas")
-        val icon = v.icon ?: return skip("el icono no tiene drawable")
-        val iconBounds = icon.bounds
         val dragLayer = launcher.dragLayer
-        if (iconBounds.isEmpty || v.width == 0 || dragLayer.width == 0 || dragLayer.height == 0) {
-            return skip(
-                "medidas vacías (icono=$iconBounds, vista=${v.width}, " +
-                    "capa=${dragLayer.width}x${dragLayer.height})",
-            )
+        if (dragLayer.width == 0 || dragLayer.height == 0) {
+            return skip("el launcher aún no tiene medidas (${dragLayer.width}x${dragLayer.height})")
         }
-        return LaunchTarget(v, icon, iconBounds)
+        if (v is BubbleTextView) {
+            val icon = v.icon ?: return skip("el icono no tiene drawable")
+            val bounds = icon.bounds
+            if (bounds.isEmpty || v.width == 0) {
+                return skip("medidas vacías (icono=$bounds, vista=${v.width})")
+            }
+            return LaunchTarget(v, bounds, icon)
+        }
+        if (v.width == 0 || v.height == 0 || !v.isAttachedToWindow) {
+            return skip("la vista ${v.javaClass.simpleName} no tiene medidas (${v.width}x${v.height})")
+        }
+        return LaunchTarget(v, Rect(0, 0, v.width, v.height), null)
     }
 
     private fun createSheetOptions(target: LaunchTarget): ActivityOptionsWrapper? {
         val v = target.view
-        val icon = target.icon
-        val iconBounds = target.iconBounds
         val dragLayer = launcher.dragLayer
         // El sistema ya rechazó un lanzamiento con estas opciones: se usan las normales.
         if (optionsRejected) return skip("el sistema rechazó antes las opciones de Nexus")
 
-        val start = iconRect(v) ?: return skip("no se pudo calcular la posición del icono")
+        val start = sourceRect(target) ?: return skip("no se pudo calcular la posición del icono")
 
         // Las opciones se piden primero: si el sistema no iba a respetar la animación de
         // ventana, no se dibuja la hoja y se usa la animación estándar del sistema.
@@ -159,17 +170,18 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         // Mismo icono con su hoja todavía en pantalla: se reutiliza y se redirige. Si no, se
         // retira la anterior (con un fundido) y se crea una nueva.
         val active = session?.takeIf { it.isFor(v, start) }
-            ?: createSession(v, icon, iconBounds, start)
+            ?: createSession(target, start)
             ?: return skip("no se pudo capturar el icono para la hoja")
 
-        // Se recuerda el icono para que "reciba" a la app cuando se vuelva al inicio.
-        lastSource = WeakReference(v)
+        // Se recuerda el icono para que "reciba" a la app cuando se vuelva al inicio (solo
+        // tiene sentido en un icono de app).
+        lastSource = (v as? BubbleTextView)?.let { WeakReference(it) }
         lastTag = v.tag
 
         val profile = NexusMotion.profile
         active.finishRequested = false
         active.driver.animateTo(1f, profile.open, profile.speed) { finished ->
-            if (finished && active.finishRequested && session === active) endSession(animated = true)
+            if (finished && active.finishRequested && session === active) endSession(Retire.FADE)
         }
 
         val launchId = ++generation
@@ -180,7 +192,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
                 if (active.driver.isRunning) {
                     active.finishRequested = true
                 } else {
-                    endSession(animated = true)
+                    endSession(Retire.FADE)
                 }
             }
         }
@@ -271,6 +283,19 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         abortLaunch()
     }
 
+    /**
+     * Shizuku entregó la actividad a una que ya estaba delante: la app está abierta pero el
+     * sistema no hará ninguna transición de ventana, así que la hoja no tiene nada que
+     * acompañar. Se retira y se avisa de que el lanzamiento terminó (si no, el icono se quedaría
+     * con el estado de pulsado).
+     */
+    fun onLaunchWithoutTransition() {
+        Log.i(TAG, "La actividad ya estaba delante: no hay transición, se retira la hoja")
+        val callbacks = lastWrapper?.get()?.onEndCallback
+        abortLaunch()
+        callbacks?.executeAllAndDestroy()
+    }
+
     /** Deshace lo preparado para un lanzamiento que no se llegó a producir. */
     private fun abortLaunch() {
         lastWrapper = null
@@ -278,7 +303,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         launchPending = false
         wentToBackground = false
         launcher.dragLayer.removeCallbacks(failSafe)
-        endSession(animated = false)
+        endSession(Retire.NOW)
         lastSource = null
         lastTag = null
     }
@@ -304,7 +329,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         launcher.dragLayer.removeCallbacks(failSafe)
 
         if (!NexusMotion.isEnabled(launcher)) {
-            endSession(animated = false)
+            endSession(Retire.NOW)
             resetLanding()
             return
         }
@@ -320,28 +345,33 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         // Con la apertura ya avanzada la app estuvo a la vista y la está cerrando el sistema:
         // una hoja a pantalla completa aparecería de golpe al terminar su animación, así que se
         // retira sin fundido y se anima solo el contenido del inicio.
-        if (current != null) endSession(animated = false)
+        if (current != null) endSession(Retire.NOW)
         playReturnAnimation()
         playLanding()
     }
 
     fun onLauncherDestroyed() {
         launcher.dragLayer.removeCallbacks(failSafe)
-        endSession(animated = false)
+        endSession(Retire.NOW)
         resetReturnAnimation()
         resetLanding()
         lastSource = null
         lastTag = null
     }
 
-    /** Posición del icono dentro del DragLayer (mismo sistema de coordenadas que el overlay). */
-    private fun iconRect(v: BubbleTextView): RectF? {
-        val iconBounds = v.icon?.bounds ?: return null
-        if (iconBounds.isEmpty || v.width == 0) return null
+    /**
+     * Posición del icono (o de la vista entera, si no es un icono de app) dentro del DragLayer:
+     * el mismo sistema de coordenadas que el overlay.
+     */
+    private fun sourceRect(target: LaunchTarget): RectF? {
+        val v = target.view
+        val bounds = target.bounds
+        if (bounds.isEmpty || v.width == 0) return null
         val viewRect = Rect()
         val scale = launcher.dragLayer.getDescendantRectRelativeToSelf(v, viewRect)
-        val iconWidth = iconBounds.width() * scale
-        val iconHeight = iconBounds.height() * scale
+        if (v !is BubbleTextView) return RectF(viewRect)
+        val iconWidth = bounds.width() * scale
+        val iconHeight = bounds.height() * scale
         val left = viewRect.left + (viewRect.width() - iconWidth) / 2f
         val top = viewRect.top + v.paddingTop * scale
         return RectF(left, top, left + iconWidth, top + iconHeight)
@@ -350,7 +380,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     private fun foldIntoIcon(target: LaunchSession) {
         val profile = NexusMotion.profile
         target.driver.animateTo(0f, profile.close, profile.speed) { finished ->
-            if (finished && session === target) endSession(animated = false)
+            if (finished && session === target) endSession(Retire.NOW)
         }
     }
 
@@ -434,16 +464,14 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     /**
      * Crea el lanzamiento de un icono y pone su hoja en pantalla, o devuelve `null` si no se
-     * pudo capturar el icono. La hoja anterior, si la hay, se retira antes con un fundido.
+     * pudo capturar el icono. La hoja anterior, si la hay, "pierde": se pliega y se funde.
      */
-    private fun createSession(
-        v: View,
-        icon: Drawable,
-        iconBounds: Rect,
-        start: RectF,
-    ): LaunchSession? {
-        endSession(animated = true)
-        val snapshot = snapshotOf(icon, iconBounds) ?: return null
+    private fun createSession(target: LaunchTarget, start: RectF): LaunchSession? {
+        // Varios lanzamientos a la vez: solo gana el último. La hoja anterior se pliega hacia su
+        // icono y se funde mientras la nueva crece.
+        endSession(Retire.FOLD)
+        val v = target.view
+        val snapshot = snapshotOf(target) ?: return null
 
         val dragLayer = launcher.dragLayer
         val screen = RectF(0f, 0f, dragLayer.width.toFloat(), dragLayer.height.toFloat())
@@ -462,23 +490,42 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         return LaunchSession(v, v.tag, start, sheet).also { session = it }
     }
 
+    /** Cómo sale de pantalla una hoja. */
+    private enum class Retire {
+        /** Se quita de golpe. */
+        NOW,
+
+        /** Se funde en el sitio (la app ya la cubre o el lanzamiento terminó). */
+        FADE,
+
+        /** Pierde la carrera frente a otro lanzamiento: se pliega hacia su icono mientras se funde. */
+        FOLD,
+    }
+
     /**
-     * Retira la hoja activa; con `animated` hace un fundido corto para que no haya un salto
-     * visible. La hoja que se funde conserva su controlador y sigue moviéndose mientras tanto.
+     * Retira la hoja activa. Una hoja que se funde o se pliega conserva su controlador y sigue
+     * moviéndose mientras tanto, así que puede haber varias retirándose a la vez.
      */
-    private fun endSession(animated: Boolean) {
+    private fun endSession(how: Retire) {
         val current = session ?: return
         session = null
-        if (animated) {
-            fadeOut(current)
-        } else {
-            discard(current)
+        when (how) {
+            Retire.NOW -> discard(current)
+
+            Retire.FADE -> fadeOut(current, FADE_OUT_MS)
+
+            Retire.FOLD -> {
+                val profile = NexusMotion.profile
+                // Con resorte conserva la velocidad que llevaba: no hay salto al cambiar de rumbo.
+                current.driver.animateTo(0f, profile.close, profile.speed)
+                fadeOut(current, FOLD_FADE_MS)
+            }
         }
     }
 
-    private fun fadeOut(old: LaunchSession) {
+    private fun fadeOut(old: LaunchSession, durationMs: Long) {
         ValueAnimator.ofFloat(1f, 0f).apply {
-            duration = FADE_OUT_MS
+            duration = durationMs
             addUpdateListener {
                 old.sheet.fade = it.animatedValue as Float
                 old.sheet.invalidateSelf()
@@ -587,13 +634,23 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         landingTag = null
     }
 
-    private fun snapshotOf(icon: Drawable, bounds: Rect): Bitmap? = runCatching {
-        Bitmap.createBitmap(bounds.width(), bounds.height(), Bitmap.Config.ARGB_8888).also {
-            val canvas = Canvas(it)
-            canvas.translate(-bounds.left.toFloat(), -bounds.top.toFloat())
-            icon.draw(canvas)
-        }
-    }.getOrNull()
+    /** Captura el icono (o la vista entera) para dibujarlo encima de la hoja mientras crece. */
+    private fun snapshotOf(target: LaunchTarget): Bitmap? {
+        val bounds = target.bounds
+        if (bounds.width().toLong() * bounds.height() > MAX_SNAPSHOT_PIXELS) return null
+        return runCatching {
+            Bitmap.createBitmap(bounds.width(), bounds.height(), Bitmap.Config.ARGB_8888).also {
+                val canvas = Canvas(it)
+                val icon = target.icon
+                if (icon != null) {
+                    canvas.translate(-bounds.left.toFloat(), -bounds.top.toFloat())
+                    icon.draw(canvas)
+                } else {
+                    target.view.draw(canvas)
+                }
+            }
+        }.getOrNull()
+    }
 
     private fun averageColor(bitmap: Bitmap): Int {
         val pixel = Bitmap.createScaledBitmap(bitmap, 1, 1, true).getPixel(0, 0)
@@ -709,6 +766,8 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         private var optionsRejected = false
 
         private const val FADE_OUT_MS = 140L
+        private const val FOLD_FADE_MS = 200L
+        private const val MAX_SNAPSHOT_PIXELS = 4_000_000L
         private const val FAIL_SAFE_MS = 3000L
         private const val POSITION_TOLERANCE_PX = 1.5f
 
