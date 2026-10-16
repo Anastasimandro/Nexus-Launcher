@@ -27,12 +27,15 @@ sealed interface MotionSpec {
  * estilos (Nexus, OxygenOS, iOS...): el resto del código solo lee de aquí.
  *
  * @param speed multiplicador global de velocidad (2 = el doble de rápido).
+ * @param depth cuánto se aleja y se desenfoca el fondo con la app abierta, de 0 (nada) a 1
+ *   (profundidad máxima de Launcher3). El zoom del fondo y el desenfoque salen de este único valor.
  */
 data class MotionProfile(
     val speed: Float = 1f,
     val open: MotionSpec,
     val close: MotionSpec,
     val homeReturn: MotionSpec,
+    val depth: Float = 0f,
 ) {
     companion object {
         // Misma curva que `nexus_open.xml`: arranque rápido y frenada muy suave.
@@ -41,6 +44,9 @@ data class MotionProfile(
         /** Rigidez y amortiguación del resorte de apertura (ver [Nexus]). */
         const val OPEN_STIFFNESS = 170f
         const val OPEN_DAMPING = 0.95f
+
+        /** Punto de partida del zoom y desenfoque del fondo: hay que afinarlo a ojo en el móvil. */
+        const val NEXUS_DEPTH = 0.35f
 
         /**
          * Perfil por defecto. La apertura llega al 90 % en unos 280 ms y se asienta en unos
@@ -52,6 +58,7 @@ data class MotionProfile(
             open = MotionSpec.Spring(stiffness = OPEN_STIFFNESS, dampingRatio = OPEN_DAMPING),
             close = MotionSpec.Spring(stiffness = 340f, dampingRatio = 0.9f),
             homeReturn = MotionSpec.Spring(stiffness = 260f, dampingRatio = 1f),
+            depth = NEXUS_DEPTH,
         )
 
         /** La versión anterior, basada en curvas de duración fija. */

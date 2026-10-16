@@ -93,10 +93,18 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         onProgress = { progress -> applyLanding(progress) },
     )
 
+    /** Zoom out y desenfoque del fondo mientras hay una app abierta o abriéndose. */
+    private val backdrop = BackdropDepth(
+        frameRateView = { launcher.dragLayer },
+        systemScale = { NexusMotion.systemScale(launcher) },
+        depthController = { launcher.depthController },
+    )
+
     private val failSafe = Runnable {
         // Si la app tarda demasiado (o el lanzamiento falló) no dejamos la hoja tapando el inicio.
         launchPending = false
         endSession(Retire.FADE)
+        backdrop.leave(NexusMotion.profile)
     }
 
     /**
@@ -183,6 +191,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         active.driver.animateTo(1f, profile.open, profile.speed) { finished ->
             if (finished && active.finishRequested && session === active) endSession(Retire.FADE)
         }
+        backdrop.enter(profile)
 
         val launchId = ++generation
         callbacks.add {
@@ -222,6 +231,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         // Se recuerda el icono para que "reciba" a la app cuando se vuelva al inicio.
         lastSource = WeakReference(v)
         lastTag = v.tag
+        backdrop.enter(NexusMotion.profile)
 
         val options = Utilities.allowBGLaunch(
             ActivityOptions.makeClipRevealAnimation(
@@ -304,6 +314,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         wentToBackground = false
         launcher.dragLayer.removeCallbacks(failSafe)
         endSession(Retire.NOW)
+        backdrop.leave(NexusMotion.profile)
         lastSource = null
         lastTag = null
     }
@@ -323,21 +334,32 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     fun onLauncherResumed() {
         Log.i(TAG, "Launcher reanudado (venía de una apertura de Nexus=$wentToBackground)")
-        if (!wentToBackground) return
+        if (!wentToBackground) {
+            // Resume sin haber salido a ninguna app (arranque, o vuelta de algo que no era un
+            // lanzamiento): si el fondo quedó alejado, se recoloca.
+            if (!launchPending) backdrop.leave(NexusMotion.profile)
+            return
+        }
         wentToBackground = false
         launchPending = false
         launcher.dragLayer.removeCallbacks(failSafe)
 
         if (!NexusMotion.isEnabled(launcher)) {
             endSession(Retire.NOW)
+            backdrop.reset()
             resetLanding()
             return
         }
 
-        // Volvimos con la apertura aún en sus primeros instantes: la hoja se pliega al icono
-        // conservando la velocidad que llevaba, en vez de cortarse de golpe.
+        // El fondo vuelve a su sitio con el mismo resorte, redirigido desde donde esté.
+        backdrop.leave(NexusMotion.profile)
+
+        // Interrupción: se volvió al inicio con la apertura todavía en marcha (o apenas
+        // empezada). La hoja cambia de rumbo y se pliega al icono conservando la velocidad que
+        // llevaba, en vez de cortarse de golpe.
         val current = session
-        if (current != null && current.driver.progress < FOLD_MAX_PROGRESS) {
+        val stillOpening = current != null && current.driver.isRunning
+        if (current != null && (stillOpening || current.driver.progress < FOLD_MAX_PROGRESS)) {
             foldIntoIcon(current)
             return
         }
@@ -353,6 +375,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     fun onLauncherDestroyed() {
         launcher.dragLayer.removeCallbacks(failSafe)
         endSession(Retire.NOW)
+        backdrop.reset()
         resetReturnAnimation()
         resetLanding()
         lastSource = null

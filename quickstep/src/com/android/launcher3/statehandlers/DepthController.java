@@ -298,6 +298,7 @@ public class DepthController extends BaseDepthController implements StateHandler
         writer.println(prefix + "\tmBaseSurfaceOverride=" + mBaseSurfaceOverride);
         writer.println(prefix + "\tmStateDepth=" + stateDepth.getValue());
         writer.println(prefix + "\tmWidgetDepth=" + widgetDepth.getValue());
+        writer.println(prefix + "\tmLaunchDepth=" + launchDepth.getValue());
         writer.println(prefix + "\tmCurrentBlur=" + mCurrentBlur);
         writer.println(prefix + "\tmInEarlyWakeUp=" + mInEarlyWakeUp);
         writer.println(prefix + "\tmIgnoreStateChangesDuringMultiWindowAnimation="
