@@ -131,6 +131,7 @@ object ShizukuLauncher {
             val left = (cooldownUntil - SystemClock.elapsedRealtime()).coerceAtLeast(0L) / 1000
             "en pausa $left s por fallos seguidos (último: $lastFailure)"
         }
+
         !hasPermission() -> "Nexus no tiene el permiso de Shizuku"
         else -> null
     }
