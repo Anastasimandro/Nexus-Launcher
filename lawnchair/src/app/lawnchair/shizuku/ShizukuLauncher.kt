@@ -126,6 +126,7 @@ object ShizukuLauncher {
 
     private fun unavailableReason(): String? = when {
         !isRunning() -> "el servicio de Shizuku no está en marcha"
+
         inCooldown() -> {
             val left = (cooldownUntil - SystemClock.elapsedRealtime()).coerceAtLeast(0L) / 1000
             "en pausa $left s por fallos seguidos (último: $lastFailure)"
