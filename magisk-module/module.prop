@@ -1,0 +1,6 @@
+id=nexus_launcher_systemless
+name=Nexus Launcher Systemless Overlay
+version=@VERSION@
+versionCode=@VERSION_CODE@
+author=Anastasimandro
+description=Convierte Nexus Launcher en app privilegiada de /product sin modificar /system (systemless). Se flashea una vez: las actualizaciones normales del APK conservan los permisos.

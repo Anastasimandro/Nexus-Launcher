@@ -41,6 +41,7 @@ import androidx.core.content.FileProvider
 import app.lawnchair.backup.LawnchairBackup
 import app.lawnchair.flowerpot.Flowerpot
 import app.lawnchair.preferences.PreferenceManager
+import app.lawnchair.root.RootSystemManager
 import app.lawnchair.shizuku.ShizukuLauncher
 import app.lawnchair.ui.ModalBottomSheetContent
 import app.lawnchair.ui.preferences.destinations.openAppInfo
@@ -72,6 +73,7 @@ class LawnchairApp : LauncherApplication() {
         Flowerpot.Manager.getInstance(this)
         registerActivityLifecycleCallbacks(activityHandler)
         ShizukuLauncher.init()
+        RootSystemManager.init(this)
     }
 
     fun hideClockInStatusBar() {
