@@ -132,8 +132,9 @@ object RootSystemManager {
             origin == Origin.USER_APP ->
                 "Nexus se ejecuta como app normal: falta instalar el módulo o reiniciar tras flashearlo"
 
-            else -> "el sistema no ha concedido " +
-                TRANSITION_PERMISSIONS.filter { it !in granted }.joinToString { it.substringAfterLast('.') }
+            else ->
+                "el sistema no ha concedido " +
+                    TRANSITION_PERMISSIONS.filter { it !in granted }.joinToString { it.substringAfterLast('.') }
         }
 
         /** Una línea para el registro y el informe de errores. */
