@@ -1,8 +1,22 @@
 # Releases de Nexus
 
 Cada push a la rama `16-dev` publica una release nueva con una versión numérica.
-No hay que hacer nada más: GitHub Actions compila, firma, comprueba y publica el APK.
+No hay que hacer nada más: GitHub Actions compila, firma, comprueba y publica el APK y el módulo Magisk/KernelSU.
 (Los cambios que solo tocan archivos `.md` no publican nada.)
+
+Cada release lleva estos archivos:
+
+| Archivo | Qué es |
+|---|---|
+| `Nexus-v0.1.2.apk` | La app. |
+| `Nexus-MagiskModule-v0.1.2.zip` | Módulo Magisk/KernelSU opcional (solo con root). Lleva dentro el mismo APK. Ver [magisk-module/README.md](magisk-module/README.md). |
+| `…apk.sha256`, `…zip.sha256` | Huellas para comprobar las descargas. |
+
+## Cuándo se publica
+
+- **Push a `16-dev`:** versión automática (la siguiente de la secuencia de abajo).
+- **Push de una etiqueta** (`v0.1.5` o `0.1.5`): publica esa versión sobre esa etiqueta. Si ya hay release para ella (por ejemplo, la acaba de crear el push a la rama), no hace nada. No hace falta crear etiquetas a mano; es solo para fijar una versión concreta.
+- **Run workflow** a mano: ver «Versiones».
 
 ## Versiones
 
@@ -12,7 +26,7 @@ La secuencia es `0.1` → `0.1.1` → `0.1.2` → `0.1.3` …
 - La primera release es `0.1` (equivale a `0.1.0`).
 - Para cambiar de línea (por ejemplo a `0.2` o `1.0`): pestaña **Actions** → **Nexus release** → **Run workflow** → escribe la versión. Después siguen `0.2.1`, `0.2.2`…
 - Cada número va de 0 a 99. La versión nueva debe ser mayor que la última publicada.
-- El APK se llama `Nexus-0.1.2.apk` y la etiqueta es `v0.1.2`.
+- El APK se llama `Nexus-v0.1.2.apk`, el módulo `Nexus-MagiskModule-v0.1.2.zip` y la etiqueta es `v0.1.2`. (Las releases anteriores a este cambio llevan el APK sin la `v`, p. ej. `Nexus-0.1.2.apk`.)
 - Las compilaciones locales o de CI que no son release llevan la versión `dev-<commit>` y nunca se publican.
 
 El `versionCode` (el número que Android compara) se calcula a partir de la versión:
@@ -23,7 +37,8 @@ versionCode = 1601000000 + mayor*10000 + menor*100 + parche
 ```
 
 Se calcula igual en `build.gradle` y en `.github/scripts/next-version.sh`, y el workflow
-comprueba que el APK final lleva exactamente el valor esperado.
+comprueba que el APK final lleva exactamente el valor esperado. El `module.prop` del módulo
+recibe ese mismo `version` y `versionCode`, y el workflow lo comprueba abriendo el `.zip` que publica.
 
 ## Actualizar sin desinstalar
 
@@ -58,6 +73,9 @@ La huella SHA-256 del certificado aceptado está en `.github/nexus-signing-sha25
 | El APK está firmado con otra clave | Los secrets apuntan a una clave distinta de la de las versiones anteriores. Corrígelos; no cambies la huella salvo que cambies de clave a propósito. |
 | La versión X no es mayor que la última publicada | La versión manual indicada es igual o menor que una ya existente. |
 | versionCode / versionName no coinciden | `build.gradle` y `next-version.sh` calculan distinto: hay que revisarlos juntos. |
+| Módulo Magisk: «es imprescindible y no está en allow.txt» / «el APK no pide…» | `START_TASKS_FROM_RECENTS` o `CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS` dejaron de estar en `magisk-module/permissions/allow.txt` o en los manifiestos del APK. Sin ellos el módulo no serviría. |
+| Módulo no válido | El `.zip` no coincide con el APK publicado o con la versión. No se publica nada. |
+| Etiqueta sin formato de versión | Una etiqueta que empieza por número (p. ej. `1.0-beta`) lanza el workflow y se rechaza. Usa `v0.2` o `v0.2.1`, o borra la etiqueta. |
 
 Si una release falla a medias, haz un nuevo push (o **Run workflow**): se publicará la siguiente versión libre.
 Las releases antiguas `build-N` siguen en GitHub y se pueden borrar a mano; ya no se crean.

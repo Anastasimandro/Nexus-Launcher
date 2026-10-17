@@ -1,0 +1,47 @@
+# Permisos "privileged" que el módulo concede a Nexus (app.nexus.launcher).
+# Uno por línea; '#' es un comentario.
+#
+# Con esta lista y los permisos que pide el APK, .github/scripts/build-magisk-module.sh genera
+# system/product/etc/permissions/privapp-permissions-nexus.xml:
+#   - en esta lista Y lo pide el APK        -> <permission>       (se concede)
+#   - en not-privileged.txt                  -> no aparece en el XML (normales y peligrosos)
+#   - cualquier otra cosa que pide el APK    -> <deny-permission>  (se deniega)
+#
+# Cada permiso privilegiado que pide un priv-app tiene que quedar concedido o denegado: si no
+# aparece en ningún sitio es una violación de la lista blanca y Android 9+ puede negarse a
+# arrancar. Por eso lo que no se concede se deniega de forma explícita en vez de omitirlo.
+#
+# Los permisos son los que Nexus declara en quickstep/AndroidManifest.xml. Android solo concede
+# de verdad los que, en tu ROM, tienen el nivel privileged (o recents); lo que haya concedido
+# realmente lo informa RootSystemManager.
+
+# --- Transiciones de ventana propias (los dos imprescindibles) ---
+# SafeActivityOptions exige START_TASKS_FROM_RECENTS (o ser el asistente activo) para
+# overrideTaskTransition, y CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS para las animaciones
+# remotas (RemoteAnimationAdapter / RemoteTransition).
+android.permission.START_TASKS_FROM_RECENTS
+android.permission.CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS
+
+# --- Quickstep: tareas, gestos, miniaturas y ventanas del sistema ---
+android.permission.MANAGE_ACTIVITY_TASKS
+android.permission.REMOVE_TASKS
+android.permission.STOP_APP_SWITCHES
+android.permission.STATUS_BAR
+android.permission.STATUS_BAR_SERVICE
+android.permission.READ_FRAME_BUFFER
+android.permission.MONITOR_INPUT
+android.permission.ALLOW_SLIPPERY_TOUCHES
+android.permission.INTERNAL_SYSTEM_WINDOW
+android.permission.SET_ORIENTATION
+android.permission.ACCESS_SHORTCUTS
+android.permission.MANAGE_ACCESSIBILITY
+android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS
+android.permission.MANAGE_KEY_GESTURES
+android.permission.ACCESS_HIDDEN_PROFILES
+android.permission.ACCESS_HIDDEN_PROFILES_FULL
+android.permission.SYSTEM_APPLICATION_OVERLAY
+
+# No se conceden a propósito (el script los deniega): WRITE_SECURE_SETTINGS, MANAGE_USERS,
+# INTERACT_ACROSS_USERS(_FULL), FORCE_STOP_PACKAGES, SUSPEND_APPS, BIND_APPWIDGET,
+# PACKAGE_USAGE_STATS, READ_DEVICE_CONFIG, ROTATE/WAKEUP_SURFACE_FLINGER. Nexus ya funciona sin
+# ellos y cada uno amplía lo que puede hacer la app. Se añaden aquí cuando una función los necesite.

@@ -46,6 +46,7 @@ import app.lawnchair.preferences2.PreferenceManager2
 import app.lawnchair.preferences2.firstCached
 import app.lawnchair.root.RootHelperManager
 import app.lawnchair.root.RootNotAvailableException
+import app.lawnchair.root.RootSystemManager
 import app.lawnchair.shizuku.ShizukuLauncher
 import app.lawnchair.theme.ThemeProvider
 import app.lawnchair.ui.popup.LauncherOptionsPopup
@@ -451,16 +452,19 @@ class LawnchairLauncher : QuickstepLauncher() {
     }
 
     /**
-     * Con Shizuku activo el launcher lanza las apps con identidad `shell`, lo que permite la
-     * hoja y la animación de ventana de Nexus. Sin Shizuku (o con Quickstep) devuelve `null` y
-     * se usa el camino normal.
+     * La hoja y la animación de ventana de Nexus necesitan un lanzamiento privilegiado: o la propia
+     * app tiene privilegios de sistema (módulo Magisk/KernelSU, ver [RootSystemManager]) o lo hace
+     * Shizuku con identidad `shell`. Sin ninguno de los dos (o con Quickstep) devuelve `null` y se
+     * usa el camino normal.
      */
     override fun getPrivilegedActivityLaunchOptions(v: View, item: ItemInfo?): ActivityOptionsWrapper? {
-        if (LawnchairApp.isRecentsEnabled || !ShizukuLauncher.isReadyLogged()) return null
+        if (LawnchairApp.isRecentsEnabled) return null
+        if (!RootSystemManager.isSystemPrivilegedActive && !ShizukuLauncher.isReadyLogged()) return null
         return nexusLaunchAnimator.createSheetLaunchOptions(v)
     }
 
     override fun startActivityPrivileged(intent: Intent, options: Bundle?): Boolean {
+        if (RootSystemManager.isSystemPrivilegedActive) return startActivityWithSystemPrivileges(intent, options)
         return when (ShizukuLauncher.startActivity(intent, options)) {
             ShizukuLauncher.LaunchOutcome.TRANSITION -> true
 
@@ -475,6 +479,25 @@ class LawnchairLauncher : QuickstepLauncher() {
 
     override fun onPrivilegedLaunchFailed() {
         nexusLaunchAnimator.onPrivilegedLaunchFailed()
+    }
+
+    /**
+     * Lanza con los permisos que el sistema ya le dio a Nexus (no hace falta Shizuku). Si el sistema
+     * rechaza las opciones por los permisos de animación, [RootSystemManager] pasa al modo
+     * alternativo y se devuelve `false`: el launcher abre la app con las opciones normales. Una
+     * `SecurityException` por otro motivo se deja subir para que la trate el flujo de siempre.
+     *
+     * A diferencia de Shizuku, `startActivity` no dice si el sistema hará una transición: si la app
+     * no llega a animarse, la hoja se retira sola por el temporizador de seguridad del animador.
+     */
+    private fun startActivityWithSystemPrivileges(intent: Intent, options: Bundle?): Boolean {
+        return try {
+            startActivity(intent, options)
+            true
+        } catch (e: SecurityException) {
+            if (!RootSystemManager.reportLaunchRejected(this, e)) throw e
+            false
+        }
     }
 
     private fun getActivityLaunchOptionsDefault(v: View?): ActivityOptionsWrapper {
@@ -519,6 +542,7 @@ class LawnchairLauncher : QuickstepLauncher() {
         super.onResume()
         nexusLaunchAnimator.onLauncherResumed()
         if (!LawnchairApp.isRecentsEnabled) ShizukuLauncher.requestPermissionIfNeeded()
+        RootSystemManager.refresh(this)
         restartIfPending()
         refreshPredictionContainersFromModel()
 

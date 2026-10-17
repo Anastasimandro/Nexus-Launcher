@@ -1,14 +1,25 @@
 name: Nexus release
 
-# Cada push a la rama 16-dev publica una release con versión numérica:
-#   0.1  ->  0.1.1  ->  0.1.2  ->  ...
-# Para saltar de línea (p. ej. a 0.2): pestaña Actions > "Nexus release" > Run workflow
-# y escribe la versión. Después siguen 0.2.1, 0.2.2, ...
+# Publica una release con versión numérica y estos archivos:
+#   Nexus-vX.Y.Z.apk                  la app
+#   Nexus-MagiskModule-vX.Y.Z.zip     módulo Magisk/KernelSU (opcional, solo para quien tenga root)
+# más el .sha256 de cada uno. El módulo lleva dentro el mismo APK y la misma versión.
+#
+# Cuándo se lanza:
+#   - Push a la rama 16-dev: versión automática  0.1 -> 0.1.1 -> 0.1.2 -> ...
+#   - Push de una etiqueta (v0.1.5 o 0.1.5): publica esa versión sobre esa etiqueta.
+#     Si ya hay release para ella (por ejemplo, la creó el push a la rama), no hace nada.
+#   - Pestaña Actions > "Nexus release" > Run workflow: versión a mano (p. ej. 0.2).
+#     Después siguen 0.2.1, 0.2.2, ...
 # Detalles, firma y solución de problemas: RELEASING.md
 on:
   push:
     branches:
       - '16-dev'
+    tags:
+      - 'v[0-9]*.[0-9]*'
+      - '[0-9]*.[0-9]*'
+    # Los filtros de ruta no se aplican a las etiquetas.
     paths-ignore:
       - '.idea/**'
       - '.gitignore'
@@ -24,29 +35,77 @@ on:
 permissions:
   contents: write
 
+# `shell: bash` explícito activa `-eo pipefail`. Sin esto, un `script | tee` no detiene el paso
+# cuando el script falla, y por ejemplo la verificación del APK no frenaría la publicación.
+defaults:
+  run:
+    shell: bash
+
 # Una release a la vez: evita que dos pushes seguidos calculen la misma versión.
 concurrency:
   group: nexus-release
   cancel-in-progress: false
 
 jobs:
-  build-and-release:
+  # Decide la versión y si hay algo que publicar. Es rápido y no descarga submódulos.
+  plan:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
+      previous_tag: ${{ steps.version.outputs.previous_tag }}
+      version_code: ${{ steps.version.outputs.version_code }}
+      latest: ${{ steps.version.outputs.latest }}
+      skip: ${{ steps.exists.outputs.skip }}
     steps:
       - uses: actions/checkout@v7
-        with:
-          submodules: true
 
-      # Siguiente versión = la etiqueta vX.Y[.Z] más alta + 1 en el último número.
+      # Push a la rama o ejecución manual: siguiente versión = la etiqueta vX.Y[.Z] más alta + 1
+      # en el último número. Push de una etiqueta: la versión de esa etiqueta.
       - name: Calcular versión
         id: version
         env:
           REQUESTED: ${{ github.event.inputs.version }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          git ls-remote --tags --refs origin 'v*' | sed 's|.*refs/tags/||' > tags.txt
-          .github/scripts/next-version.sh "$REQUESTED" < tags.txt | tee -a "$GITHUB_OUTPUT"
+          git ls-remote --tags --refs origin | sed 's|.*refs/tags/||' > tags.txt
+          if [ "$REF_TYPE" = "tag" ]; then
+            .github/scripts/next-version.sh --tag "$REF_NAME" < tags.txt | tee -a "$GITHUB_OUTPUT"
+          else
+            .github/scripts/next-version.sh "$REQUESTED" < tags.txt | tee -a "$GITHUB_OUTPUT"
+          fi
           rm -f tags.txt
+
+      - name: Comprobar si la release ya existe
+        id: exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "::notice title=Release ya publicada::La release $TAG ya existe: no hay nada que publicar."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-and-release:
+    needs: plan
+    if: needs.plan.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      VERSION: ${{ needs.plan.outputs.version }}
+      VERSION_CODE: ${{ needs.plan.outputs.version_code }}
+      TAG: ${{ needs.plan.outputs.tag }}
+      PREVIOUS_TAG: ${{ needs.plan.outputs.previous_tag }}
+      LATEST: ${{ needs.plan.outputs.latest }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
 
       - uses: actions/setup-java@v6
         with:
@@ -83,11 +142,9 @@ jobs:
 
       - name: Compilar APK
         env:
-          NEXUS_VERSION: ${{ steps.version.outputs.version }}
+          NEXUS_VERSION: ${{ needs.plan.outputs.version }}
           NEXUS_REQUIRE_RELEASE_SIGNING: 'true'
-        run: |
-          set -o pipefail
-          ./gradlew assembleLawnWithQuickstepGithubRelease 2>&1 | tee gradle-build.log
+        run: ./gradlew assembleLawnWithQuickstepGithubRelease 2>&1 | tee gradle-build.log
 
       # Si falla la compilación, deja los errores en una anotación (los logs no siempre se pueden bajar).
       - name: Resumir errores de compilación
@@ -97,9 +154,6 @@ jobs:
       # Comprueba el APK real: paquete, versión, versionCode y que la firma es la de siempre.
       - name: Verificar APK
         id: verify
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
-          VERSION_CODE: ${{ steps.version.outputs.version_code }}
         run: |
           shopt -s nullglob
           apks=(build/outputs/apk/lawnWithQuickstepGithub/release/*.apk)
@@ -108,30 +162,48 @@ jobs:
             exit 1
           fi
           mkdir -p dist
-          cp "${apks[0]}" "dist/Nexus-${VERSION}.apk"
-          .github/scripts/verify-apk.sh "dist/Nexus-${VERSION}.apk" "$VERSION" "$VERSION_CODE" | tee -a "$GITHUB_OUTPUT"
-          (cd dist && sha256sum "Nexus-${VERSION}.apk" > "Nexus-${VERSION}.apk.sha256")
+          cp "${apks[0]}" "dist/Nexus-v${VERSION}.apk"
+          .github/scripts/verify-apk.sh "dist/Nexus-v${VERSION}.apk" "$VERSION" "$VERSION_CODE" | tee -a "$GITHUB_OUTPUT"
+          (cd dist && sha256sum "Nexus-v${VERSION}.apk" > "Nexus-v${VERSION}.apk.sha256")
 
-      - name: Guardar APK como artefacto
+      # El módulo lleva dentro el APK que acaba de pasar la verificación y los mismos version y
+      # versionCode. Su lista de permisos se genera a partir de lo que pide ese APK.
+      - name: Generar módulo Magisk/KernelSU
+        run: |
+          .github/scripts/build-magisk-module.sh "dist/Nexus-v${VERSION}.apk" "$VERSION" "$VERSION_CODE" "dist/Nexus-MagiskModule-v${VERSION}.zip"
+          (cd dist && sha256sum "Nexus-MagiskModule-v${VERSION}.zip" > "Nexus-MagiskModule-v${VERSION}.zip.sha256")
+
+      # Se vuelve a abrir el .zip que se va a publicar (no la carpeta de trabajo del script).
+      - name: Verificar módulo
+        run: |
+          zip="dist/Nexus-MagiskModule-v${VERSION}.zip"
+          fail() { echo "::error title=Módulo no válido::$1"; exit 1; }
+          prop=$(unzip -p "$zip" module.prop)
+          grep -qxF "version=${VERSION}" <<<"$prop" || fail "module.prop no tiene version=${VERSION}."
+          grep -qxF "versionCode=${VERSION_CODE}" <<<"$prop" || fail "module.prop no tiene versionCode=${VERSION_CODE}."
+          grep -qxF "id=nexus_launcher_systemless" <<<"$prop" || fail "module.prop no tiene el id esperado."
+          cmp -s <(unzip -p "$zip" system/product/priv-app/Nexus/Nexus.apk) "dist/Nexus-v${VERSION}.apk" \
+            || fail "El APK dentro del módulo no es el que se publica."
+          unzip -p "$zip" system/product/etc/permissions/privapp-permissions-nexus.xml | grep -qF 'name="android.permission.START_TASKS_FROM_RECENTS"' \
+            || fail "La lista de permisos no concede START_TASKS_FROM_RECENTS."
+          echo "Módulo ${VERSION} (versionCode ${VERSION_CODE}) correcto."
+
+      - name: Guardar archivos como artefacto
         uses: actions/upload-artifact@v7
         with:
-          name: Nexus-${{ steps.version.outputs.version }}
+          name: Nexus-${{ needs.plan.outputs.version }}
           path: dist/
           retention-days: 14
 
       - name: Crear release
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ steps.version.outputs.version }}
-          TAG: ${{ steps.version.outputs.tag }}
-          PREVIOUS_TAG: ${{ steps.version.outputs.previous_tag }}
-          VERSION_CODE: ${{ steps.version.outputs.version_code }}
           CERT: ${{ steps.verify.outputs.cert_sha256 }}
         run: |
           cat > notes.md <<EOF
           **Nexus Launcher ${VERSION}**
 
-          Se instala **encima** de la versión que tengas, sin desinstalar y sin perder tus ajustes: mismo paquete (\`app.nexus.launcher\`), misma firma y un \`versionCode\` mayor.
+          El APK se instala **encima** de la versión que tengas, sin desinstalar y sin perder tus ajustes: mismo paquete (\`app.nexus.launcher\`), misma firma y un \`versionCode\` mayor.
 
           | | |
           |---|---|
@@ -140,12 +212,19 @@ jobs:
           | Commit | \`${GITHUB_SHA:0:7}\` |
           | Firma (SHA-256) | \`${CERT}\` |
 
-          **Cómo actualizar:** descarga \`Nexus-${VERSION}.apk\`, ábrelo y pulsa *Actualizar*.
-          Comprobación opcional de la descarga: \`sha256sum -c Nexus-${VERSION}.apk.sha256\`.
+          | Archivo | Para qué |
+          |---|---|
+          | \`Nexus-v${VERSION}.apk\` | La app. Ábrelo y pulsa *Actualizar*. |
+          | \`Nexus-MagiskModule-v${VERSION}.zip\` | Opcional, solo con root (Magisk o KernelSU). Convierte Nexus en app privilegiada de \`/product\` sin tocar \`/system\`. Flashéalo y reinicia; después puedes actualizar Nexus con el APK normal y conserva los permisos del módulo. Vuelve a flashearlo solo si una versión nueva lo indica. |
+
+          Comprobación opcional de las descargas: \`sha256sum -c Nexus-v${VERSION}.apk.sha256\` y \`sha256sum -c Nexus-MagiskModule-v${VERSION}.zip.sha256\`.
 
           ---
 
           EOF
-          args=(--target "$GITHUB_SHA" --title "Nexus Launcher ${VERSION}" --notes-file notes.md --generate-notes --latest)
+          args=(--target "$GITHUB_SHA" --title "Nexus Launcher ${VERSION}" --notes-file notes.md --generate-notes "--latest=${LATEST}")
           if [ -n "$PREVIOUS_TAG" ]; then args+=(--notes-start-tag "$PREVIOUS_TAG"); fi
-          gh release create "$TAG" "dist/Nexus-${VERSION}.apk" "dist/Nexus-${VERSION}.apk.sha256" "${args[@]}"
+          gh release create "$TAG" \
+            "dist/Nexus-v${VERSION}.apk" "dist/Nexus-v${VERSION}.apk.sha256" \
+            "dist/Nexus-MagiskModule-v${VERSION}.zip" "dist/Nexus-MagiskModule-v${VERSION}.zip.sha256" \
+            "${args[@]}"
