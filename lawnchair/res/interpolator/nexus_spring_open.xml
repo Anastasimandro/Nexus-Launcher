@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Curva del resorte de apertura de Nexus (MotionProfile.Nexus.open: rigidez 170, amortiguación
-  0,95) normalizada a 460 ms. La ventana de la app usa esta curva para moverse al mismo ritmo
-  que la hoja del launcher. Error máximo frente al resorte real: menos del 1 %.
+  0,90) normalizada a 460 ms. La ventana de la app usa esta curva para moverse al mismo ritmo
+  que el icono del launcher. Error máximo frente al resorte real: menos del 3 %.
   Si cambian OPEN_STIFFNESS / OPEN_DAMPING hay que recalcularla.
 -->
 <pathInterpolator xmlns:android="http://schemas.android.com/apk/res/android"
-    android:controlX1="0.23"
-    android:controlY1="0.14"
-    android:controlX2="0.225"
+    android:controlX1="0.17"
+    android:controlY1="0.13"
+    android:controlX2="0.22"
     android:controlY2="1" />

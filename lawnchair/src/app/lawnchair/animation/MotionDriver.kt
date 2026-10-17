@@ -1,8 +1,5 @@
 package app.lawnchair.animation
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
 import android.view.View
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.FloatValueHolder
@@ -10,14 +7,23 @@ import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 
 /**
- * Motor de progreso: lleva un valor entre 0 y 1 (por ejemplo "cuánto está abierta la app")
- * y avisa en cada fotograma. Todo lo visual se calcula a partir de ese progreso.
+ * Destino del progreso sin boxing: `(Float) -> Unit` empaqueta un `java.lang.Float` en cada
+ * fotograma; con una interfaz de primitivos el camino caliente queda libre de asignaciones.
+ */
+fun interface FloatSink {
+    fun onValue(value: Float)
+}
+
+/**
+ * Motor de progreso: lleva un valor (por ejemplo "cuánto está abierto el icono", de 0 a 1) y avisa
+ * en cada fotograma. Todo lo visual se calcula a partir de ese progreso.
  *
- * - Se puede redirigir en cualquier momento (`animateTo` con otro destino): con resorte, la
- *   velocidad que llevaba se conserva, así que abrir y cerrar de golpe no produce saltos.
- * - Con resorte el progreso puede pasarse de 1 o bajar de 0 (rebote); quien dibuja lo admite.
- * - Mientras corre pide frecuencia de refresco alta sobre [frameRateView].
- * - No reserva memoria durante la animación: el resorte y los oyentes se crean una vez.
+ * - Un único [SpringAnimation] por driver, reutilizado durante toda la vida del objeto: no se
+ *   crea nada al animar.
+ * - [animateTo] redirige el objetivo en caliente conservando la velocidad residual del resorte,
+ *   así que abrir y cerrar a medias no produce saltos ni reinicios de curva.
+ * - Mientras corre pide frecuencia de refresco alta sobre [frameRateView] y la libera al terminar
+ *   (recordando la vista exacta que la pidió, para no dejar la petición colgada).
  *
  * Solo se debe usar desde el hilo principal.
  *
@@ -26,20 +32,19 @@ import androidx.dynamicanimation.animation.SpringForce
 class MotionDriver(
     private val frameRateView: () -> View?,
     private val systemScale: () -> Float,
-    private val onProgress: (Float) -> Unit,
+    private val onProgress: FloatSink,
 ) {
 
     var progress = 0f
         private set
 
     val isRunning: Boolean
-        get() = spring.isRunning || timing != null
+        get() = spring.isRunning
 
     private val holder = FloatValueHolder(0f)
     private val spring = SpringAnimation(holder)
-    private var timing: ValueAnimator? = null
     private var onEnd: ((finished: Boolean) -> Unit)? = null
-    private var boosting = false
+    private var boostedView: View? = null
 
     init {
         spring.setSpring(SpringForce(0f))
@@ -78,24 +83,20 @@ class MotionDriver(
         tempo: Float = 1f,
         onEnd: ((finished: Boolean) -> Unit)? = null,
     ) {
+        // El callback anterior se desengancha ANTES de arrancar: si redirige, no reentra en un
+        // driver a medio configurar. Si él mismo lanza otra animación, se respeta la suya.
         val previous = this.onEnd
-        this.onEnd = onEnd
-        beginBoost()
-        when (spec) {
-            is MotionSpec.Spring -> animateSpring(target, spec, tempo)
-            is MotionSpec.Timing -> animateTiming(target, spec, tempo)
-        }
+        this.onEnd = null
         previous?.invoke(false)
-    }
+        if (this.onEnd == null) this.onEnd = onEnd
 
-    private fun animateSpring(target: Float, spec: MotionSpec.Spring, tempo: Float) {
-        stopTiming()
+        beginBoost()
         // La frecuencia natural es la raíz de la rigidez: para ir `t` veces más rápido hay
         // que multiplicarla por t al cuadrado.
         val speedUp = (tempo / systemScale().coerceAtLeast(MIN_SCALE)).coerceAtLeast(MIN_SCALE)
         val force = spring.spring
         force.setStiffness((spec.stiffness * speedUp * speedUp).coerceAtLeast(MIN_STIFFNESS))
-        force.setDampingRatio(spec.dampingRatio.coerceAtLeast(0.05f))
+        force.setDampingRatio(spec.dampingRatio.coerceIn(0.05f, 1f))
         if (!spring.isRunning) {
             holder.value = progress
             spring.setStartVelocity(0f)
@@ -103,36 +104,9 @@ class MotionDriver(
         spring.animateToFinalPosition(target)
     }
 
-    private fun animateTiming(target: Float, spec: MotionSpec.Timing, tempo: Float) {
-        stopSpring()
-        stopTiming()
-        val animator = ValueAnimator.ofFloat(progress, target)
-        // ValueAnimator ya aplica la escala del sistema por su cuenta.
-        animator.duration = (spec.durationMs / tempo.coerceAtLeast(MIN_SCALE)).toLong().coerceAtLeast(1L)
-        animator.interpolator = spec.interpolator
-        animator.addUpdateListener { publish(it.animatedValue as Float) }
-        animator.addListener(
-            object : AnimatorListenerAdapter() {
-                private var canceled = false
-
-                override fun onAnimationCancel(animation: Animator) {
-                    canceled = true
-                }
-
-                override fun onAnimationEnd(animation: Animator) {
-                    if (canceled) return
-                    if (timing === animation) timing = null
-                    finish(true)
-                }
-            },
-        )
-        timing = animator
-        animator.start()
-    }
-
     private fun publish(value: Float) {
         progress = value
-        onProgress(value)
+        onProgress.onValue(value)
     }
 
     private fun finish(finished: Boolean) {
@@ -144,31 +118,21 @@ class MotionDriver(
 
     private fun stop() {
         onEnd = null
-        stopSpring()
-        stopTiming()
+        if (spring.isRunning) spring.cancel()
         endBoost()
     }
 
-    private fun stopSpring() {
-        if (spring.isRunning) spring.cancel()
-    }
-
-    private fun stopTiming() {
-        timing?.cancel()
-        timing = null
-    }
-
     private fun beginBoost() {
-        if (boosting) return
+        if (boostedView != null) return
         val view = frameRateView() ?: return
-        boosting = true
+        boostedView = view
         FrameRateBoost.acquire(view)
     }
 
     private fun endBoost() {
-        if (!boosting) return
-        boosting = false
-        frameRateView()?.let(FrameRateBoost::release)
+        val view = boostedView ?: return
+        boostedView = null
+        FrameRateBoost.release(view)
     }
 
     private companion object {

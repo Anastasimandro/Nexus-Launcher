@@ -2,9 +2,9 @@
 <!--
   Entrada de la ventana de la app lanzada desde Nexus.
 
-  Va sincronizada con la hoja del launcher (resorte de apertura, rigidez 170 / amortiguación
-  0,95): la escala sigue la misma curva en 460 ms y el fundido empieza cuando la hoja ya va
-  por la mitad (~130 ms) y termina cuando está casi abierta (~330 ms).
+  Va sincronizada con el zoom del icono del launcher (resorte de apertura, rigidez 170 /
+  amortiguación 0,90): la escala sigue la misma curva en 460 ms y el fundido empieza cuando el
+  icono ya va por la mitad (~130 ms) y termina cuando está casi abierto (~330 ms).
 -->
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:shareInterpolator="false">

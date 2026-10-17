@@ -1,34 +1,24 @@
 package app.lawnchair.animation
 
-import android.view.animation.Interpolator
-import android.view.animation.PathInterpolator
-
 /**
- * Cómo se mueve algo en Nexus. Es la única descripción de movimiento que entiende el motor:
- * quien anima no sabe si por debajo hay un resorte o una curva, así que los ajustes y los
- * estilos prediseñados solo tienen que cambiar estos valores.
+ * Un resorte con masa 1. No hay curvas de duración fija: todo el motor es físico, redirigible
+ * en caliente y sin asignaciones por fotograma.
+ *
+ * @param stiffness rigidez: más alta = más rápido (la frecuencia natural es su raíz).
+ * @param dampingRatio amortiguación: 1 = sin rebote, menos de 1 = rebote sutil.
  */
-sealed interface MotionSpec {
-
-    /**
-     * Resorte con masa 1. Se puede interrumpir y redirigir conservando la velocidad.
-     *
-     * @param stiffness rigidez: más alta = más rápido.
-     * @param dampingRatio amortiguación: 1 = sin rebote, menos de 1 = rebota.
-     */
-    data class Spring(val stiffness: Float, val dampingRatio: Float) : MotionSpec
-
-    /** Curva con duración fija. Sirve para reproducir exactamente la curva de otro sistema. */
-    data class Timing(val durationMs: Long, val interpolator: Interpolator) : MotionSpec
-}
+data class MotionSpec(
+    val stiffness: Float,
+    val dampingRatio: Float,
+)
 
 /**
- * Valores de movimiento de todo el launcher. Es lo que luego tocarán los ajustes y los
- * estilos (Nexus, OxygenOS, iOS...): el resto del código solo lee de aquí.
+ * Valores de movimiento de todo el launcher. El resto del código solo lee de aquí.
  *
  * @param speed multiplicador global de velocidad (2 = el doble de rápido).
- * @param depth cuánto se aleja y se desenfoca el fondo con la app abierta, de 0 (nada) a 1
- *   (profundidad máxima de Launcher3). El zoom del fondo y el desenfoque salen de este único valor.
+ * @param depth cuánto se aleja el fondo con la app abierta, de 0 (nada) a 1 (profundidad
+ *   máxima de Launcher3). Se mantiene bajo: el zoom del fondo debe ser sutil y su coste (una
+ *   transacción de superficie por fotograma) no debe crecer con la gama del dispositivo.
  */
 data class MotionProfile(
     val speed: Float = 1f,
@@ -38,34 +28,31 @@ data class MotionProfile(
     val depth: Float = 0f,
 ) {
     companion object {
-        // Misma curva que `nexus_open.xml`: arranque rápido y frenada muy suave.
-        private val OPEN_CURVE = PathInterpolator(0.15f, 0.1f, 0.15f, 1f)
-
-        /** Rigidez y amortiguación del resorte de apertura (ver [Nexus]). */
+        /** Resorte de apertura. Sobre un rango 0..1 se asienta en ~450 ms. */
         const val OPEN_STIFFNESS = 170f
-        const val OPEN_DAMPING = 0.95f
+        const val OPEN_DAMPING = 0.90f
 
-        /** Punto de partida del zoom y desenfoque del fondo: hay que afinarlo a ojo en el móvil. */
-        const val NEXUS_DEPTH = 0.35f
+        /** Resorte de cierre: mismo camino de vuelta al icono, algo más rápido y con rebote leve. */
+        const val CLOSE_STIFFNESS = 320f
+        const val CLOSE_DAMPING = 0.88f
+
+        /** Vuelta del fondo de pantalla: sin rebote perceptible (un rebote se lee como parpadeo). */
+        const val RETURN_STIFFNESS = 260f
+        const val RETURN_DAMPING = 0.98f
+
+        /** Zoom del fondo: sutil, apto para GPU de gama entrada. */
+        const val NEXUS_DEPTH = 0.15f
 
         /**
-         * Perfil por defecto. La apertura llega al 90 % en unos 280 ms y se asienta en unos
-         * 450 ms (con 300 / 0,95 eran 210 y 340 ms: demasiado rápida). La animación de ventana
-         * de la app (`nexus_app_enter` y `nexus_spring_open`) está calculada para este mismo
-         * resorte: si se cambian estos valores hay que recalcular esas curvas.
+         * Perfil por defecto. Si se cambia [OPEN_STIFFNESS] o [OPEN_DAMPING] hay que recalcular
+         * `nexus_spring_open.xml`, que es la aproximación que usa la ventana de la app para moverse
+         * al mismo ritmo que el icono.
          */
         val Nexus = MotionProfile(
-            open = MotionSpec.Spring(stiffness = OPEN_STIFFNESS, dampingRatio = OPEN_DAMPING),
-            close = MotionSpec.Spring(stiffness = 340f, dampingRatio = 0.9f),
-            homeReturn = MotionSpec.Spring(stiffness = 260f, dampingRatio = 1f),
+            open = MotionSpec(stiffness = OPEN_STIFFNESS, dampingRatio = OPEN_DAMPING),
+            close = MotionSpec(stiffness = CLOSE_STIFFNESS, dampingRatio = CLOSE_DAMPING),
+            homeReturn = MotionSpec(stiffness = RETURN_STIFFNESS, dampingRatio = RETURN_DAMPING),
             depth = NEXUS_DEPTH,
-        )
-
-        /** La versión anterior, basada en curvas de duración fija. */
-        val Classic = MotionProfile(
-            open = MotionSpec.Timing(400L, OPEN_CURVE),
-            close = MotionSpec.Timing(400L, OPEN_CURVE),
-            homeReturn = MotionSpec.Timing(380L, OPEN_CURVE),
         )
     }
 }
