@@ -35,6 +35,8 @@ class MotionDriver(
     private val onProgress: FloatSink,
 ) {
 
+    /** Se lee también desde el hilo de binder al sincronizar la transición remota. */
+    @Volatile
     var progress = 0f
         private set
 

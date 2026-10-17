@@ -2,6 +2,7 @@ package app.lawnchair.animation
 
 import android.app.ActivityOptions
 import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Build
 import android.util.Log
 import android.view.Display
@@ -11,6 +12,8 @@ import android.view.ViewParent
 import android.window.SplashScreen
 import app.lawnchair.LawnchairLauncher
 import app.lawnchair.compat.LawnchairQuickstepCompat
+import app.lawnchair.util.getWindowCornerRadius
+import app.lawnchair.util.supportsRoundedCornersOnWindows
 import com.android.launcher3.BubbleTextView
 import com.android.launcher3.R
 import com.android.launcher3.Utilities
@@ -32,19 +35,27 @@ import kotlin.math.max
  * inicio el resorte se redirige hacia el icono conservando la velocidad residual: interrupción
  * fluida a 120/140 Hz sin tirones ni reconstrucción de vistas.
  *
- * - Apertura: el sistema anima la ventana de la app (clip reveal, o animación de tarea propia en
- *   modo privilegiado) mientras el icono escala desde sus coordenadas exactas.
+ * - Apertura: en Android 14+ con privilegios se entrega una transición remota que recorta y
+ *   desplaza la superficie real de la tarea desde el icono hasta la ventana completa
+ *   ([NexusAppLaunchTransition]); el icono la acompaña y se desvanece. Sin privilegios se usa el
+ *   clip reveal del sistema, o la animación de tarea propia como respaldo.
  * - Cierre: el icono vuelve a su celda con el resorte de cierre, que deja un rebote de asentamiento.
  * - Fondo: solo un zoom sutil de muelle ([BackdropDepth]); sin desenfoques añadidos por Nexus.
  *
- * Compatibilidad: tanto el camino normal (reveal del sistema) como el privilegiado (Shizuku o
- * módulo de sistema, con `overrideTaskTransition`) comparten el mismo motor de icono; si algo no
- * está disponible se cae con transparencia a la transición del sistema.
+ * Compatibilidad: todos los caminos comparten el mismo motor de icono; si la transición de
+ * superficie no está disponible se cae con transparencia a la transición del sistema.
  */
 class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     /** Zoom de icono en curso (abriéndose o plegándose), si lo hay. */
+    @Volatile
     private var session: ZoomSession? = null
+
+    /**
+     * Última transición de superficie entregada al sistema. Se conserva para poder marcarla como
+     * cancelada si el lanzamiento ni siquiera llega a producirse.
+     */
+    private var lastSurfaceTransition: CancellableTransition? = null
 
     private var launchPending = false
     private var wentToBackground = false
@@ -100,23 +111,89 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     }
 
     /**
-     * Opciones con la animación de ventana de Nexus, o `null` si no se pueden usar.
+     * Opciones con la animación de Nexus, o `null` si no se pueden usar.
      * Solo valen para un lanzamiento con privilegios (módulo de sistema) o identidad `shell`
-     * (Shizuku): el sistema rechaza `overrideTaskTransition` a un APK normal.
+     * (Shizuku): el sistema rechaza las transiciones propias a un APK normal.
+     *
+     * En Android 14+ se usa una transición remota que mueve la superficie real de la tarea. Si no
+     * está disponible, se mantiene la animación de ventana con `overrideTaskTransition`.
      */
     fun createSheetLaunchOptions(v: View?): ActivityOptionsWrapper? {
         val target = resolveTarget(v) ?: return null
         if (optionsRejected) return skip("el sistema rechazó antes las opciones de Nexus")
 
-        // Las opciones se piden primero: si el sistema no iba a respetar la animación de
-        // ventana, no se anima el icono y se usa la transición estándar.
+        // Las opciones se piden primero: si el sistema no iba a respetar la animación, no se
+        // anima el icono y se usa la transición estándar.
         val callbacks = RunnableList()
-        val options = makeCustomOptions(target.view, callbacks) ?: return skip("no se pudieron crear las opciones")
+        val options = makeRemoteOptions(target)
+            ?: makeCustomOptions(target.view, callbacks)
+            ?: return skip("no se pudieron crear las opciones")
 
         startZoom(target)
         armFailSafe()
-        Log.i(TAG, "Lanzamiento con la animación de ventana de Nexus (sdk=${Build.VERSION.SDK_INT})")
         return ActivityOptionsWrapper(options, callbacks).also { lastWrapper = WeakReference(it) }
+    }
+
+    private fun makeRemoteOptions(target: LaunchTarget): ActivityOptions? {
+        if (Build.VERSION.SDK_INT < REMOTE_TRANSITION_MIN_SDK) return null
+        val icon = iconScreenBounds(target) ?: return null
+        return runCatching {
+            val radius = if (supportsRoundedCornersOnWindows(launcher)) {
+                getWindowCornerRadius(launcher)
+            } else {
+                0f
+            }
+            val transition = NexusAppLaunchTransition(
+                iconBounds = Rect().also { icon.round(it) },
+                cornerRadius = radius,
+                systemScale = NexusMotion.systemScale(launcher),
+                progressProvider = { session?.driver?.progress ?: 0f },
+            )
+            lastSurfaceTransition?.cancelIfPending()
+            lastSurfaceTransition = transition
+
+            val remote = LawnchairQuickstepCompat.remoteTransitionCompat
+                .getRemoteTransition(transition, null, "NexusAppLaunch")
+            val options = Utilities.allowBGLaunch(ActivityOptions.makeRemoteTransition(remote))
+            if (Utilities.ATLEAST_T) {
+                options.splashScreenStyle = SplashScreen.SPLASH_SCREEN_STYLE_ICON
+            }
+            options.launchDisplayId = target.view.display?.displayId ?: Display.DEFAULT_DISPLAY
+            Log.i(
+                TAG,
+                "Lanzamiento con transición de superficie " +
+                    "(icono=$icon, radio=$radius, sdk=${Build.VERSION.SDK_INT})",
+            )
+            options
+        }.onFailure {
+            lastSurfaceTransition?.cancelIfPending()
+            lastSurfaceTransition = null
+            Log.w(TAG, "No se pudo crear la transición de superficie; se usa la de ventana", it)
+        }.getOrNull()
+    }
+
+    /**
+     * Centro y tamaño del icono en coordenadas de pantalla, con la escala real que tenga en este
+     * momento (puede estar dentro de una carpeta o de una página desplazada).
+     */
+    private fun iconScreenBounds(target: LaunchTarget): RectF? {
+        val view = target.view
+        val viewRect = Rect()
+        val scale = launcher.dragLayer.getDescendantRectRelativeToSelf(view, viewRect)
+        if (viewRect.isEmpty || scale <= 0f) return null
+        val width = target.bounds.width() * scale
+        val height = target.bounds.height() * scale
+        if (width <= 0f || height <= 0f) return null
+        val origin = IntArray(2)
+        launcher.dragLayer.getLocationOnScreen(origin)
+        val centerX = origin[0] + viewRect.left + target.bounds.exactCenterX() * scale
+        val centerY = origin[1] + viewRect.top + target.bounds.exactCenterY() * scale
+        return RectF(
+            centerX - width / 2f,
+            centerY - height / 2f,
+            centerX + width / 2f,
+            centerY + height / 2f,
+        )
     }
 
     /**
@@ -266,6 +343,8 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         launchPending = false
         wentToBackground = false
         launcher.dragLayer.removeCallbacks(failSafe)
+        lastSurfaceTransition?.cancelIfPending()
+        lastSurfaceTransition = null
         endZoomNow()
         backdrop.leave(NexusMotion.profile)
     }
@@ -305,6 +384,8 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     fun onLauncherDestroyed() {
         launcher.dragLayer.removeCallbacks(failSafe)
+        lastSurfaceTransition?.cancelIfPending()
+        lastSurfaceTransition = null
         endZoomNow()
         backdrop.reset()
         lastWrapper = null
@@ -514,6 +595,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         /** A partir de este progreso el icono ya se ha desvanecido del todo. */
         private const val FADE_AT = 0.55f
 
+        private const val REMOTE_TRANSITION_MIN_SDK = 34
         private const val TASK_OVERRIDE_MIN_SDK = 34
         private const val OVERRIDE_TASK_FIELD = "mOverrideTaskTransition"
         private const val OVERRIDE_TASK_SETTER = "setOverrideTaskTransition"
