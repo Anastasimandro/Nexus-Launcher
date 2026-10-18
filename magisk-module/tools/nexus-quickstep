@@ -1,0 +1,107 @@
+#!/system/bin/sh
+# Activa, desactiva y comprueba el overlay que hace de Nexus el proveedor de Quickstep.
+#
+# Uso (como root):  nexus-quickstep status | enable [--force] | disable
+#
+# El overlay (app.nexus.launcher.overlay.recents) cambia config_recentsComponentName para que
+# SystemUI enlace con el TouchInteractionService de Nexus y los gestos del sistema (Inicio, recientes)
+# los lleve Nexus. Viene desactivado de serie. Activarlo o desactivarlo solo tiene efecto tras
+# reiniciar: system_server y SystemUI leen ese recurso al arrancar.
+#
+# `enable` se niega si Nexus no ha comprobado que Quickstep es compatible con este Android
+# (archivo quickstep-probe.txt que escribe la app al arrancar); --force se lo salta.
+
+OVERLAY="app.nexus.launcher.overlay.recents"
+PKG="app.nexus.launcher"
+USER_ID=0
+PROBE_FILE="${NEXUS_PROBE_FILE:-/data/user/$USER_ID/$PKG/files/quickstep-probe.txt}"
+
+say() { echo "$*"; }
+die() { echo "nexus-quickstep: $*" >&2; exit 1; }
+
+usage() {
+  say "Uso: nexus-quickstep status | enable [--force] | disable"
+  exit "${1:-2}"
+}
+
+# Línea de `cmd overlay list` de nuestro overlay ("[x] paquete", "[ ] paquete" o "--- paquete").
+overlay_line() {
+  cmd overlay list --user "$USER_ID" "$OVERLAY" 2>/dev/null | grep -F "$OVERLAY" | head -n 1
+}
+
+# Estado del overlay: enabled, disabled, unavailable (instalado pero sin aprobar) o missing.
+overlay_state() {
+  line=$(overlay_line)
+  case "$line" in
+    "[x]"*) echo enabled ;;
+    "[ ]"*) echo disabled ;;
+    "---"*) echo unavailable ;;
+    *) echo missing ;;
+  esac
+}
+
+# Valor de una clave del archivo de comprobación (vacío si no existe).
+probe_value() {
+  [ -r "$PROBE_FILE" ] || return 0
+  sed -n "s/^$1=//p" "$PROBE_FILE" | head -n 1
+}
+
+need_root() {
+  [ "$(id -u)" = "0" ] || die "hace falta root (su -c nexus-quickstep ...)."
+}
+
+show_status() {
+  state=$(overlay_state)
+  say "Overlay $OVERLAY: $state"
+  case "$state" in
+    missing) say "  No está instalado: flashea el módulo de Nexus y reinicia." ;;
+    unavailable) say "  Instalado pero no aprobado por el sistema (revisa 'cmd overlay list')." ;;
+  esac
+  value=$(cmd overlay lookup --user "$USER_ID" android android:string/config_recentsComponentName 2>/dev/null | head -n 1)
+  say "config_recentsComponentName ahora: ${value:-desconocido}"
+  if [ -r "$PROBE_FILE" ]; then
+    say "Comprobación de Nexus: sdk=$(probe_value sdk) compatible=$(probe_value passed)"
+    missing=$(probe_value missing)
+    [ -n "$missing" ] && say "  Falta en este Android: $missing"
+  else
+    say "Comprobación de Nexus: sin datos (abre Nexus una vez)."
+  fi
+  say "Los cambios del overlay solo se aplican al reiniciar."
+}
+
+do_enable() {
+  force=0
+  [ "$1" = "--force" ] && force=1
+  need_root
+  state=$(overlay_state)
+  [ "$state" = "missing" ] && die "el overlay no está instalado: flashea el módulo y reinicia."
+  [ "$state" = "unavailable" ] && die "el sistema no ha aprobado el overlay."
+  if [ "$force" != "1" ]; then
+    [ -r "$PROBE_FILE" ] || die "Nexus aún no ha comprobado la compatibilidad: ábrelo una vez (o usa --force)."
+    passed=$(probe_value passed)
+    if [ "$passed" != "true" ]; then
+      missing=$(probe_value missing)
+      die "Quickstep no es compatible con este Android (sdk=$(probe_value sdk); falta: ${missing:-?}). Con --force se activa igualmente, pero los gestos pueden dejar de funcionar."
+    fi
+  fi
+  cmd overlay enable --user "$USER_ID" "$OVERLAY" >/dev/null 2>&1 || die "'cmd overlay enable' falló."
+  [ "$(overlay_state)" = "enabled" ] || die "el overlay no quedó activado."
+  say "Overlay activado. Reinicia para que los gestos pasen a Nexus."
+  say "Para deshacerlo: nexus-quickstep disable (y reinicia)."
+}
+
+do_disable() {
+  need_root
+  [ "$(overlay_state)" = "missing" ] && die "el overlay no está instalado."
+  cmd overlay disable --user "$USER_ID" "$OVERLAY" >/dev/null 2>&1 || die "'cmd overlay disable' falló."
+  [ "$(overlay_state)" = "disabled" ] || die "el overlay no quedó desactivado."
+  say "Overlay desactivado. Reinicia para que los gestos vuelvan al launcher del sistema."
+}
+
+case "$1" in
+  status) show_status ;;
+  enable) do_enable "$2" ;;
+  disable) do_disable ;;
+  -h | --help | help) usage 0 ;;
+  *) usage 2 ;;
+esac

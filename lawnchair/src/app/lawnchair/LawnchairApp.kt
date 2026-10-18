@@ -41,6 +41,7 @@ import androidx.core.content.FileProvider
 import app.lawnchair.backup.LawnchairBackup
 import app.lawnchair.flowerpot.Flowerpot
 import app.lawnchair.preferences.PreferenceManager
+import app.lawnchair.root.QuickstepProbe
 import app.lawnchair.root.RootSystemManager
 import app.lawnchair.shizuku.ShizukuLauncher
 import app.lawnchair.ui.ModalBottomSheetContent
@@ -74,6 +75,8 @@ class LawnchairApp : LauncherApplication() {
         registerActivityLifecycleCallbacks(activityHandler)
         ShizukuLauncher.init()
         RootSystemManager.init(this)
+        // Fuera del hilo principal: lee clases del framework por reflexión y escribe un archivo.
+        Thread({ QuickstepProbe.run(this) }, "NexusQuickstepProbe").start()
     }
 
     fun hideClockInStatusBar() {

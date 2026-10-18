@@ -186,6 +186,10 @@ jobs:
             || fail "El APK dentro del módulo no es el que se publica."
           unzip -p "$zip" system/product/etc/permissions/privapp-permissions-nexus.xml | grep -qF 'name="android.permission.START_TASKS_FROM_RECENTS"' \
             || fail "La lista de permisos no concede START_TASKS_FROM_RECENTS."
+          unzip -l "$zip" system/product/overlay/NexusRecentsOverlay.apk >/dev/null 2>&1 \
+            || fail "El módulo no lleva el overlay de recientes."
+          unzip -l "$zip" system/bin/nexus-quickstep >/dev/null 2>&1 \
+            || fail "El módulo no lleva nexus-quickstep."
           echo "Módulo ${VERSION} (versionCode ${VERSION_CODE}) correcto."
 
       - name: Guardar archivos como artefacto

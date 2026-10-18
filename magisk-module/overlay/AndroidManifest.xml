@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Overlay de recursos (RRO) que hace de Nexus el proveedor de Quickstep.
+
+  Cambia una sola cadena del framework, config_recentsComponentName. SystemUI la lee para saber
+  qué paquete enlazar con su servicio QUICKSTEP_SERVICE (y el sistema, para saber qué app es la de
+  recientes). No se toca SystemUI ni ninguna comprobación de seguridad.
+
+  No es estático: se instala desactivado y se activa a propósito con `nexus-quickstep enable`
+  (ver magisk-module/README.md). Así, flashear el módulo no cambia los gestos del sistema.
+
+  El APK lo genera .github/scripts/build-recents-overlay.sh.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="app.nexus.launcher.overlay.recents">
+
+    <overlay android:targetPackage="android" />
+
+    <application android:hasCode="false" />
+</manifest>

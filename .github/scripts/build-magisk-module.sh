@@ -10,6 +10,9 @@
 #   customize.sh, META-INF/        instalador
 #   system/product/priv-app/Nexus/Nexus.apk
 #   system/product/etc/permissions/privapp-permissions-nexus.xml
+#   system/product/overlay/NexusRecentsOverlay.apk   RRO que hace de Nexus el proveedor de Quickstep
+#                                                    (desactivado hasta `nexus-quickstep enable`)
+#   system/bin/nexus-quickstep                       activa, desactiva y comprueba ese overlay
 set -euo pipefail
 # sort y comm tienen que ordenar igual.
 export LC_ALL=C
@@ -19,6 +22,7 @@ version="${2:?falta la versión}"
 version_code="${3:?falta el versionCode}"
 out_zip="${4:?falta el zip de salida}"
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 module_dir="${MODULE_DIR:-magisk-module}"
 pkg="app.nexus.launcher"
 allow_file="$module_dir/permissions/allow.txt"
@@ -38,6 +42,8 @@ fail() {
 [[ -f $allow_file ]] || fail "Falta $allow_file."
 [[ -f $normal_file ]] || fail "Falta $normal_file."
 [[ -f $module_dir/module.prop && -f $module_dir/customize.sh ]] || fail "Faltan archivos en $module_dir."
+[[ -f $module_dir/tools/nexus-quickstep ]] || fail "Falta $module_dir/tools/nexus-quickstep."
+[[ -f $module_dir/overlay/AndroidManifest.xml ]] || fail "Falta $module_dir/overlay/AndroidManifest.xml."
 [[ $version =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] || fail "Versión no válida: '$version'."
 [[ $version_code =~ ^[0-9]+$ ]] || fail "versionCode no válido: '$version_code'."
 # Magisk guarda versionCode como int con signo.
@@ -48,6 +54,7 @@ if [[ -z "${AAPT2:-}" ]]; then
   [[ -n $sdk && -d $sdk/build-tools ]] || fail "No encuentro el SDK de Android (build-tools)."
   AAPT2="$sdk/build-tools/$(ls "$sdk/build-tools" | sort -V | tail -n 1)/aapt2"
 fi
+export AAPT2
 
 # --- El APK que se mete en el módulo tiene que ser el de esta versión ---
 badging=$("$AAPT2" dump badging "$apk" | sed -n '1p')
@@ -106,13 +113,19 @@ fi
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 root="$work/module"
-mkdir -p "$root/system/product/priv-app/Nexus" "$root/system/product/etc/permissions"
+mkdir -p "$root/system/product/priv-app/Nexus" "$root/system/product/etc/permissions" \
+  "$root/system/product/overlay" "$root/system/bin"
 
 cp -R "$module_dir/META-INF" "$root/META-INF"
 cp "$module_dir/customize.sh" "$root/customize.sh"
 sed -e "s/@VERSION@/$version/" -e "s/@VERSION_CODE@/$version_code/" \
   "$module_dir/module.prop" > "$root/module.prop"
 cp "$apk" "$root/system/product/priv-app/Nexus/Nexus.apk"
+
+# Overlay de recientes (RRO) y su herramienta de control. El overlay va desactivado de serie.
+OVERLAY_DIR="$module_dir/overlay" bash "$script_dir/build-recents-overlay.sh" \
+  "$root/system/product/overlay/NexusRecentsOverlay.apk"
+cp "$module_dir/tools/nexus-quickstep" "$root/system/bin/nexus-quickstep"
 
 xml="$root/system/product/etc/permissions/privapp-permissions-nexus.xml"
 {
@@ -148,7 +161,8 @@ if command -v python3 >/dev/null 2>&1; then
 fi
 
 # --- Zip ---
-chmod 0755 "$root/customize.sh" "$root/META-INF/com/google/android/update-binary"
+chmod 0755 "$root/customize.sh" "$root/META-INF/com/google/android/update-binary" \
+  "$root/system/bin/nexus-quickstep"
 mkdir -p "$(dirname "$out_zip")"
 out_abs="$(cd "$(dirname "$out_zip")" && pwd)/$(basename "$out_zip")"
 rm -f "$out_abs"
@@ -156,7 +170,8 @@ rm -f "$out_abs"
 unzip -tq "$out_abs" >/dev/null || fail "El zip generado está corrupto."
 for entry in module.prop customize.sh META-INF/com/google/android/update-binary \
   META-INF/com/google/android/updater-script system/product/priv-app/Nexus/Nexus.apk \
-  system/product/etc/permissions/privapp-permissions-nexus.xml; do
+  system/product/etc/permissions/privapp-permissions-nexus.xml \
+  system/product/overlay/NexusRecentsOverlay.apk system/bin/nexus-quickstep; do
   unzip -l "$out_abs" "$entry" >/dev/null 2>&1 || fail "Falta $entry dentro del zip."
 done
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Componente de recientes. LawnchairApp.checkRecentsComponent compara el paquete y la clase con
+      app.nexus.launcher y com.android.quickstep.RecentsActivity: tienen que ser exactamente estos.
+      Solo vale para el paquete oficial (sabor github), como el resto del módulo.
+    -->
+    <string name="config_recentsComponentName" translatable="false">app.nexus.launcher/com.android.quickstep.RecentsActivity</string>
+</resources>

@@ -157,7 +157,8 @@ final def computedVersionCode = 1_601_000_000 + nexusMajor * 10_000 + nexusMinor
 // </nexus-version>
 
 final def quickstepMinSdk = "35"
-final def quickstepMaxSdk = "36"
+// 37: el overlay de recientes solo se activa si QuickstepProbe da el visto bueno (ver magisk-module/README.md)
+final def quickstepMaxSdk = "37"
 
 android {
     namespace "com.android.launcher3"

@@ -137,12 +137,19 @@ public class InputConsumerController {
      */
     public void registerInputConsumer() {
         if (mInputEventReceiver == null) {
-            final InputChannel inputChannel = new InputChannel();
+            InputChannel inputChannel = null;
             try {
-                mWindowManager.destroyInputConsumer(mToken, DEFAULT_DISPLAY);
-                mWindowManager.createInputConsumer(mToken, mName, DEFAULT_DISPLAY, inputChannel);
+                InputConsumerCompat.destroy(mWindowManager, mToken, DEFAULT_DISPLAY);
+                inputChannel = InputConsumerCompat.create(
+                        mWindowManager, mToken, mName, DEFAULT_DISPLAY);
             } catch (RemoteException e) {
                 Log.e(TAG, "Failed to create input consumer", e);
+            }
+            if (inputChannel == null) {
+                // Sin canal no hay nada que recibir: no se registra (antes se creaba un receptor
+                // sobre un canal vacío, que lanza una excepción).
+                Log.e(TAG, "Input consumer " + mName + " not registered");
+                return;
             }
             mInputEventReceiver = new InputEventReceiver(inputChannel, Looper.myLooper(),
                     Choreographer.getInstance());
@@ -158,7 +165,7 @@ public class InputConsumerController {
     public void unregisterInputConsumer() {
         if (mInputEventReceiver != null) {
             try {
-                mWindowManager.destroyInputConsumer(mToken, DEFAULT_DISPLAY);
+                InputConsumerCompat.destroy(mWindowManager, mToken, DEFAULT_DISPLAY);
             } catch (RemoteException e) {
                 Log.e(TAG, "Failed to destroy input consumer", e);
             }

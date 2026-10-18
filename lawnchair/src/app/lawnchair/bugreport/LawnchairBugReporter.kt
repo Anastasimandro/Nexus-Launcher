@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Build
 import android.util.Log
 import app.lawnchair.LawnchairApp
+import app.lawnchair.root.QuickstepProbe
 import app.lawnchair.root.RootSystemManager
 import app.lawnchair.util.MainThreadInitializedObject
 import app.lawnchair.util.requireSystemService
@@ -115,6 +116,7 @@ class LawnchairBugReporter(private val context: Context) {
             .appendLine("display.density_dpi: ${context.resources.displayMetrics.densityDpi}")
             .appendLine("isRecentsEnabled: ${LawnchairApp.isRecentsEnabled}")
             .appendLine("systemPrivileges: ${RootSystemManager.status.value.summary()}")
+            .appendLine("quickstepProbe: ${QuickstepProbe.evaluate()}")
             .appendLine()
             .appendLine("error: $error")
             .also {

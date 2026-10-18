@@ -10,10 +10,14 @@
 # Estructura del zip (la genera .github/scripts/build-magisk-module.sh):
 #   system/product/priv-app/Nexus/Nexus.apk
 #   system/product/etc/permissions/privapp-permissions-nexus.xml
+#   system/product/overlay/NexusRecentsOverlay.apk   (desactivado hasta `nexus-quickstep enable`)
+#   system/bin/nexus-quickstep
 
 MIN_API=34
 APK="$MODPATH/system/product/priv-app/Nexus/Nexus.apk"
 ALLOWLIST="$MODPATH/system/product/etc/permissions/privapp-permissions-nexus.xml"
+OVERLAY="$MODPATH/system/product/overlay/NexusRecentsOverlay.apk"
+TOOL="$MODPATH/system/bin/nexus-quickstep"
 
 ui_print "- Nexus Launcher Systemless Overlay"
 ui_print "- Android API $API"
@@ -25,10 +29,18 @@ fi
 [ -d /product ] || abort "! Este sistema no tiene la partición /product"
 [ -f "$APK" ] || abort "! El zip no lleva Nexus.apk: está incompleto"
 [ -f "$ALLOWLIST" ] || abort "! El zip no lleva la lista de permisos: está incompleto"
+[ -f "$OVERLAY" ] || abort "! El zip no lleva el overlay de recientes: está incompleto"
+[ -f "$TOOL" ] || abort "! El zip no lleva nexus-quickstep: está incompleto"
 
 set_perm_recursive "$MODPATH/system/product" 0 0 0755 0644
+set_perm "$TOOL" 0 2000 0755
 
 ui_print "- Nexus pasará a ser app privilegiada de /product"
 ui_print "- Reinicia una vez para que Android lo registre"
 ui_print "- Después actualiza Nexus como siempre (APK normal):"
 ui_print "  conserva los permisos sin volver a flashear el módulo"
+ui_print "- Gestos del sistema en Nexus (opcional, desactivado):"
+ui_print "  tras reiniciar, abre Nexus una vez y, con root, ejecuta"
+ui_print "  nexus-quickstep status   (para ver si este Android lo admite)"
+ui_print "  nexus-quickstep enable   (y reinicia)"
+ui_print "  Si algo va mal: nexus-quickstep disable (y reinicia)"
