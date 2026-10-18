@@ -1,0 +1,30 @@
+10-18 20:03:59.809  1292  1305 E AndroidRuntime: FATAL EXCEPTION: Thread-2
+10-18 20:03:59.809  1292  1305 E AndroidRuntime: Process: com.google.android.cellbroadcastreceiver, PID: 1292
+10-18 20:04:00.055  1315  1327 E AndroidRuntime: FATAL EXCEPTION: Thread-2
+10-18 20:04:00.055  1315  1327 E AndroidRuntime: Process: com.google.android.cellbroadcastreceiver, PID: 1315
+10-18 20:04:05.771  1331  1331 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:04:05.771  1331  1331 E AndroidRuntime: Process: com.google.android.dialer, PID: 1331
+10-18 20:04:06.975  1629  1827 E AndroidRuntime: FATAL EXCEPTION: fg
+10-18 20:04:06.975  1629  1827 E AndroidRuntime: Process: com.google.android.providers.media.module, PID: 1629
+10-18 20:04:07.798  1870  1870 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:04:07.798  1870  1870 E AndroidRuntime: Process: com.google.android.dialer, PID: 1870
+10-18 20:04:07.962  1627  1903 E AndroidRuntime: FATAL EXCEPTION: aiai-app-predictor-0
+10-18 20:04:07.962  1627  1903 E AndroidRuntime: Process: com.google.android.as, PID: 1627
+10-18 20:04:08.109  1968  1968 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:04:08.109  1968  1968 E AndroidRuntime: Process: android.process.media, PID: 1968
+10-18 20:04:08.281  1593  1997 E AndroidRuntime: FATAL EXCEPTION: CredManRegistrationManager
+10-18 20:04:08.281  1593  1997 E AndroidRuntime: Process: com.google.android.gms, PID: 1593
+10-18 20:04:08.887  2076  2076 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:04:08.887  2076  2076 E AndroidRuntime: Process: android.process.media, PID: 2076
+10-18 20:04:11.143  2237  2278 E AndroidRuntime: FATAL EXCEPTION: aiai-app-predictor-0
+10-18 20:04:11.143  2237  2278 E AndroidRuntime: Process: com.google.android.as, PID: 2237
+10-18 20:04:14.344  2343  2343 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:04:14.344  2343  2343 E AndroidRuntime: Process: com.google.android.gms, PID: 2343
+10-18 20:04:15.869  2339  2428 E AndroidRuntime: FATAL EXCEPTION: WM.task-1
+10-18 20:04:15.869  2339  2428 E AndroidRuntime: Process: com.google.android.as.oss, PID: 2339
+10-18 20:04:16.419  1053  1097 E AndroidRuntime: FATAL EXCEPTION: launcher-loader
+10-18 20:04:16.419  1053  1097 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1053
+10-18 20:04:16.843  2595  2684 E AndroidRuntime: FATAL EXCEPTION: aiai-app-predictor-0
+10-18 20:04:16.843  2595  2684 E AndroidRuntime: Process: com.google.android.as, PID: 2595
+10-18 20:04:17.959  2904  2904 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:04:17.959  2904  2904 E AndroidRuntime: Process: android.process.media, PID: 2904

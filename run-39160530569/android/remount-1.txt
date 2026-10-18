@@ -1,0 +1,11 @@
+Successfully disabled verity
+virtual FiemapStatus android::fiemap::ImageManagerBinder::CreateBackingImage(const std::string &, uint64_t, int, std::function<bool (uint64_t, uint64_t)> &&) binder returned: Status(-8, EX_SERVICE_SPECIFIC): '-28: Failed to create: No space left on device'
+[libfs_mgr] could not create scratch image of 20799488 bytes
+Failed to allocate scratch on /data, fallback to use free space on super
+Using overlayfs for /system
+Using overlayfs for /vendor
+Using overlayfs for /product
+Using overlayfs for /system_dlkm
+Using overlayfs for /system_ext
+Verity disabled; overlayfs enabled.
+Now reboot your device for settings to take effect

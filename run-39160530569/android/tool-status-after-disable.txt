@@ -1,0 +1,6 @@
+Overlay app.nexus.launcher.overlay.recents: missing
+  No está instalado: flashea el módulo de Nexus y reinicia.
+config_recentsComponentName ahora: desconocido
+Comprobación de Nexus: sin datos (abre Nexus una vez).
+Vigilante: sin verificar todavía.
+Los cambios del overlay solo se aplican al reiniciar.

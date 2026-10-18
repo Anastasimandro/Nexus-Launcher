@@ -1,0 +1,3 @@
+!! el arranque no terminó en 10 min
+cmd: Failure calling service input: Broken pipe (32)
+cmd: Failure calling service input: Broken pipe (32)

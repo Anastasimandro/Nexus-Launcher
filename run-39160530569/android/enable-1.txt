@@ -1,0 +1,2 @@
+nexus-quickstep: el sistema no ha aprobado el overlay.
+exit del primer enable (sin --force): 1

@@ -1,0 +1,250 @@
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: Caused by: android.database.sqlite.SQLiteCantOpenDatabaseException: Cannot open database [unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory] '/data/user/0/com.android.mtp/databases/database' with flags 0x10000000: Directory /data/user/0/com.android.mtp/databases doesn't exist
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:285)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:229)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.openConnectionLocked(SQLiteConnectionPool.java:544)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:224)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:216)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openInner(SQLiteDatabase.java:1189)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.open(SQLiteDatabase.java:1169)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1033)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1022)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:390)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getWritableDatabase(SQLiteOpenHelper.java:332)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at com.android.mtp.MtpDatabase.<init>(MtpDatabase.java:99)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at com.android.mtp.MtpDocumentsProvider.onCreate(MtpDocumentsProvider.java:115)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.content.ContentProvider.attachInfo(ContentProvider.java:2695)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.content.ContentProvider.attachInfo(ContentProvider.java:2664)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.provider.DocumentsProvider.attachInfo(DocumentsProvider.java:185)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.app.ActivityThread.installProvider(ActivityThread.java:9188)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	... 12 more
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: Caused by: android.database.sqlite.SQLiteCantOpenDatabaseException: unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.nativeOpen(Native Method)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:248)
+10-18 20:05:47.636 11838 11838 E AndroidRuntime: 	... 28 more
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: FATAL EXCEPTION: CredManRegistrationManager
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: Process: com.google.android.gms, PID: 11513
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: java.security.ProviderException: Keystore key generation failed
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at android.security.keystore2.AndroidKeyStoreKeyGeneratorSpi.engineGenerateKey(AndroidKeyStoreKeyGeneratorSpi.java:415)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at javax.crypto.KeyGenerator.generateKey(KeyGenerator.java:612)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at fdnq.h(:com.google.android.gms@261136038@26.11.36 (260800-892401869):50)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at fdnq.i(:com.google.android.gms@261136038@26.11.36 (260800-892401869):43)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at fdnq.f(:com.google.android.gms@261136038@26.11.36 (260800-892401869):2)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at fdnk.a(:com.google.android.gms@261136038@26.11.36 (260800-892401869):1149)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at fdnh.run(:com.google.android.gms@261136038@26.11.36 (260800-892401869):5)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at cwwb.mr(:com.google.android.gms@261136038@26.11.36 (260800-892401869):1)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at cwwb.dispatchMessage(:com.google.android.gms@261136038@26.11.36 (260800-892401869):140)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:397)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at android.os.HandlerThread.run(HandlerThread.java:139)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	Suppressed: gxmx: 
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 		at tk_trace.service_entitlement-ServiceEntitlementIntentOperation_onHandleIntentWithRedelivery(Unknown Source:0)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: Caused by: android.security.KeyStoreException: System error (internal Keystore code: 4 message: system/security/keystore2/src/security_level.rs:814
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: Caused by:
+10-18 20:05:47.730 11513 11916 E AndroidRuntime:     0: system/security/keystore2/src/security_level.rs:226
+10-18 20:05:47.730 11513 11916 E AndroidRuntime:     1: system/security/keystore2/src/security_level.rs:219
+10-18 20:05:47.730 11513 11916 E AndroidRuntime:     2: system/security/keystore2/src/database.rs:2006
+10-18 20:05:47.730 11513 11916 E AndroidRuntime:     3: system/security/keystore2/src/database.rs:1604
+10-18 20:05:47.730 11513 11916 E AndroidRuntime:     4: Trying to create new key entry.
+10-18 20:05:47.730 11513 11916 E AndroidRuntime:     5: system/security/keystore2/src/database.rs:1657
+10-18 20:05:47.730 11513 11916 E AndroidRuntime:     6: system/security/keystore2/src/database.rs:3011: failed to insert into database.
+10-18 20:05:47.730 11513 11916 E AndroidRuntime:     7: database or disk is full
+10-18 20:05:47.730 11513 11916 E AndroidRuntime:     8: Error code 13: Insertion failed because database is full) (public error code: 4 internal Keystore code: 4)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at android.security.KeyStore2.getKeyStoreException(KeyStore2.java:396)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at android.security.KeyStoreSecurityLevel.retryBusyException(KeyStoreSecurityLevel.java:78)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at android.security.KeyStoreSecurityLevel.generateKey(KeyStoreSecurityLevel.java:168)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	at android.security.keystore2.AndroidKeyStoreKeyGeneratorSpi.engineGenerateKey(AndroidKeyStoreKeyGeneratorSpi.java:402)
+10-18 20:05:47.730 11513 11916 E AndroidRuntime: 	... 14 more
+10-18 20:05:48.610 11469 12045 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 20:05:48.932 10873 10873 D TouchInteractionService: onCreate: user=0 instance=68679244
+10-18 20:05:48.933 10873 10873 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=68679244
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: disconnectFromLauncherService bound?: true currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: java.lang.Throwable
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService$2.onReceive(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:118)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at com.android.systemui.broadcast.ActionReceiver$onReceive$1$1$1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-18 20:05:49.896 10742 10742 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-18 20:05:50.466 10873 10873 D TouchInteractionService: onUserUnlocked: userId=0 instance=68679244
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: FATAL EXCEPTION: launcher-loader
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 10873
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: android.database.sqlite.SQLiteCantOpenDatabaseException: Cannot open database [unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory] '/data/user/0/com.google.android.apps.nexuslauncher/databases/launcher_4_by_6.db' with flags 0x10000011: Directory /data/user/0/com.google.android.apps.nexuslauncher/databases doesn't exist
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:285)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:229)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.openConnectionLocked(SQLiteConnectionPool.java:544)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:224)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:216)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openInner(SQLiteDatabase.java:1189)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.open(SQLiteDatabase.java:1169)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1033)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1022)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:400)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getReadableDatabase(SQLiteOpenHelper.java:356)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at com.android.launcher3.model.ModelDbController.createDatabaseHelper(go/retraceme dc5b05c43537c6aa1d671c685c710819682fcc95b6af33c0ce7f88e1808452b7:60)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at com.android.launcher3.model.ModelDbController.createDbIfNotExists(go/retraceme dc5b05c43537c6aa1d671c685c710819682fcc95b6af33c0ce7f88e1808452b7:47)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at com.android.launcher3.model.LoaderTask.loadWorkspaceImpl(go/retraceme dc5b05c43537c6aa1d671c685c710819682fcc95b6af33c0ce7f88e1808452b7:57)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at com.android.launcher3.model.LoaderTask.loadAllSurfacesOrdered(go/retraceme dc5b05c43537c6aa1d671c685c710819682fcc95b6af33c0ce7f88e1808452b7:26)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at com.android.launcher3.model.LoaderTask.run(go/retraceme dc5b05c43537c6aa1d671c685c710819682fcc95b6af33c0ce7f88e1808452b7:56)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:397)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.os.HandlerThread.run(HandlerThread.java:139)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: Caused by: android.database.sqlite.SQLiteCantOpenDatabaseException: unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.nativeOpen(Native Method)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:248)
+10-18 20:05:50.469 10873 10954 E AndroidRuntime: 	... 21 more
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: FATAL EXCEPTION: WM.task-1
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: Process: com.google.android.as.oss, PID: 11937
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: java.lang.IllegalStateException: The file system on the device is in a bad state. WorkManager cannot access the app's internal data store.
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at egb.run(PG:619)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at ebr.run(PG:78)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1100)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1572)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: Caused by: android.database.sqlite.SQLiteCantOpenDatabaseException: Cannot open database [unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory] '/data/user/0/com.google.android.as.oss/no_backup/androidx.work.workdb' with flags 0x30000000: Directory /data/user/0/com.google.android.as.oss/no_backup doesn't exist
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:285)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:229)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.openConnectionLocked(SQLiteConnectionPool.java:544)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:224)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:216)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openInner(SQLiteDatabase.java:1189)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.open(SQLiteDatabase.java:1169)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1033)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1022)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:390)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getWritableDatabase(SQLiteOpenHelper.java:332)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at duv.c(PG:1)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at duv.a(PG:148)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at duw.b(PG:6)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at kan.ae(PG:90)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at dru.a(PG:307)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at lcb.a(PG:21)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at dtd.a(PG:33)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at dry.f(PG:13)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at dtn.invokeSuspend(PG:160)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at dtn.invoke(PG:37)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at lgo.t(PG:14)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at lgn.u(PG:20)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at dtk.invokeSuspend(PG:34)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at dtk.invoke(PG:13)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at adg.invokeSuspend(PG:143)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at adg.invoke(PG:63)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at lkf.b(PG:33)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at lgn.v(PG:23)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at dtj.invokeSuspend(PG:72)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at lep.resumeWith(PG:11)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at lkq.run(PG:107)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at llc.l(PG:142)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at lgn.x(PG:74)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at dep.l(PG:13)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at deq.g(PG:70)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at efd.b(PG:12)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at edf.g(PG:13)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at egb.run(PG:266)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	... 4 more
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: Caused by: android.database.sqlite.SQLiteCantOpenDatabaseException: unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.nativeOpen(Native Method)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:248)
+10-18 20:05:50.893 11937 11989 E AndroidRuntime: 	... 42 more
+10-18 20:05:50.923 10873 10873 D TouchInteractionService: onDestroy: user=0 instance=68679244
+10-18 20:05:50.923 10873 10873 D TouchInteractionService: disposeEventHandlers: Reason: TouchInteractionService onDestroy() instance=68679244
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: FATAL EXCEPTION: BG Thread #0
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: Process: com.google.android.dialer, PID: 11167
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: java.lang.IllegalStateException: The file system on the device is in a bad state. WorkManager cannot access the app's internal data store.
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at ggw.run(PG:889)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at ghb.run(PG:3)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at zob.run(PG:7)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at agkb.run(PG:44)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at ytk.run(PG:202)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at wag.run(PG:297)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1572)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at zpc.run(PG:61)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: Caused by: android.database.sqlite.SQLiteCantOpenDatabaseException: Cannot open database [unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory] '/data/user/0/com.google.android.dialer/no_backup/androidx.work.workdb' with flags 0x30000000: Directory /data/user/0/com.google.android.dialer/no_backup doesn't exist
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:285)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:229)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.openConnectionLocked(SQLiteConnectionPool.java:544)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:224)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:216)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openInner(SQLiteDatabase.java:1189)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.open(SQLiteDatabase.java:1169)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1033)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1022)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:390)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getWritableDatabase(SQLiteOpenHelper.java:332)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at fsv.c(PG:1)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at fsv.b(PG:144)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at fsw.b(PG:5)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at flc.a(PG:695)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at alvr.a(PG:23)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at fpq.w(PG:47)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at frl.b(PG:46)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at frl.a(PG:13)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at amaq.w(PG:14)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at ambk.aj(PG:20)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at frm.b(PG:30)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at frm.a(PG:13)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at amo.b(PG:388)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at amo.a(PG:18)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at amfe.a(PG:37)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at ambk.al(PG:23)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at frj.b(PG:646)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at alyq.w(PG:17)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at amfr.run(PG:123)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at amgd.m(PG:142)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at ambk.ao(PG:75)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at fps.e(PG:13)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at dzl.n(PG:70)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at gfy.b(PG:11)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at ggw.run(PG:338)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	... 7 more
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: Caused by: android.database.sqlite.SQLiteCantOpenDatabaseException: unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.nativeOpen(Native Method)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:248)
+10-18 20:05:50.961 11167 11186 E AndroidRuntime: 	... 42 more
+10-18 20:05:51.019 10873 10873 D TouchInteractionService: onCreate: user=0 instance=183699898
+10-18 20:05:51.019 10873 10873 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=183699898
+10-18 20:05:51.021 10873 10873 D TouchInteractionService: onUserUnlocked: userId=0 instance=183699898
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: FATAL EXCEPTION: fg
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: Process: com.google.android.providers.media.module, PID: 12217
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: android.database.sqlite.SQLiteCantOpenDatabaseException: Cannot open database [unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory] '/data/user/0/com.google.android.providers.media.module/databases/external.db' with flags 0x30000000: Directory /data/user/0/com.google.android.providers.media.module/databases doesn't exist
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:285)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:229)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.openConnectionLocked(SQLiteConnectionPool.java:544)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:224)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:216)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openInner(SQLiteDatabase.java:1189)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.open(SQLiteDatabase.java:1169)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1033)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1022)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:390)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getWritableDatabase(SQLiteOpenHelper.java:332)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at com.android.providers.media.DatabaseHelper.setFilterVolumeNames(DatabaseHelper.java:342)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at com.android.providers.media.MediaProvider.lambda$updateVolumes$0(MediaProvider.java:637)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at com.android.providers.media.MediaProvider.$r8$lambda$FfC0eTN4zVrvwLZaOM_Ga9D5kJw(MediaProvider.java:0)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at com.android.providers.media.MediaProvider$$ExternalSyntheticLambda17.run(R8$$SyntheticClass:0)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:397)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.os.HandlerThread.run(HandlerThread.java:139)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: Caused by: android.database.sqlite.SQLiteCantOpenDatabaseException: unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.nativeOpen(Native Method)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:248)
+10-18 20:05:51.152 12217 12283 E AndroidRuntime: 	... 20 more
+10-18 20:05:51.493 11167 11167 D AndroidRuntime: Shutting down VM

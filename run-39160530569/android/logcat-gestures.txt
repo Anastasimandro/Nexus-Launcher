@@ -1,0 +1,250 @@
+10-18 20:07:31.675 22083 22083 E AndroidRuntime: Process: com.google.android.googlequicksearchbox:googleapp, PID: 22083
+10-18 20:07:31.675 22083 22083 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:31.678 21190 21253 E AndroidRuntime: FATAL EXCEPTION: highpool[0]
+10-18 20:07:31.678 21190 21253 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 21190
+10-18 20:07:31.678 21190 21253 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:31.691 22083 22202 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-18 20:07:31.691 22083 22202 E AndroidRuntime: Process: com.google.android.googlequicksearchbox:googleapp, PID: 22083
+10-18 20:07:31.691 22083 22202 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:31.700 20939 21043 E AndroidRuntime: FATAL EXCEPTION: SysUiBg
+10-18 20:07:31.700 20939 21043 E AndroidRuntime: Process: com.android.systemui, PID: 20939
+10-18 20:07:31.700 20939 21043 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: FATAL EXCEPTION: BG Thread #2
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: Process: com.google.android.dialer, PID: 21364
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: java.lang.IllegalStateException: The file system on the device is in a bad state. WorkManager cannot access the app's internal data store.
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at ggw.run(PG:889)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at ghb.run(PG:3)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at zob.run(PG:7)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at agkb.run(PG:44)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at ytk.run(PG:202)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at wag.run(PG:297)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1572)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at zpc.run(PG:61)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: Caused by: android.database.sqlite.SQLiteCantOpenDatabaseException: Cannot open database [unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory] '/data/user/0/com.google.android.dialer/no_backup/androidx.work.workdb' with flags 0x30000000: Directory /data/user/0/com.google.android.dialer/no_backup doesn't exist
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:285)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:229)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.openConnectionLocked(SQLiteConnectionPool.java:544)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:224)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:216)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openInner(SQLiteDatabase.java:1189)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.open(SQLiteDatabase.java:1169)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1033)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:1022)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:390)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getWritableDatabase(SQLiteOpenHelper.java:332)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at fsv.c(PG:1)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at fsv.b(PG:144)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at fsw.b(PG:5)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at flc.a(PG:695)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at alvr.a(PG:23)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at fpq.w(PG:47)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at frl.b(PG:46)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at frl.a(PG:13)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at amaq.w(PG:14)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at ambk.aj(PG:20)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at frm.b(PG:30)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at frm.a(PG:13)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at amo.b(PG:388)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at amo.a(PG:18)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at amfe.a(PG:37)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at ambk.al(PG:23)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at frj.b(PG:646)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at alyq.w(PG:17)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at amfr.run(PG:123)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at amgd.m(PG:142)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at ambk.ao(PG:75)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at fps.e(PG:13)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at dzl.n(PG:70)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at gfy.b(PG:11)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at ggw.run(PG:338)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	... 7 more
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: Caused by: android.database.sqlite.SQLiteCantOpenDatabaseException: unable to open database file (code 14 SQLITE_CANTOPEN): No such file or directory
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.nativeOpen(Native Method)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:248)
+10-18 20:07:31.709 21364 22074 E AndroidRuntime: 	... 42 more
+10-18 20:07:31.726 21646 22137 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-18 20:07:31.726 21646 22137 E AndroidRuntime: Process: com.google.android.inputmethod.latin, PID: 21646
+10-18 20:07:31.726 21646 22137 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:31.737 21646 21681 E AndroidRuntime: FATAL EXCEPTION: Back-P10-4
+10-18 20:07:31.737 21646 21681 E AndroidRuntime: Process: com.google.android.inputmethod.latin, PID: 21646
+10-18 20:07:31.737 21646 21681 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:31.753 21077 21077 D AndroidRuntime: Shutting down VM
+10-18 20:07:31.753 21077 21077 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:07:31.753 21077 21077 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 21077
+10-18 20:07:31.753 21077 21077 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:31.779 20939 20939 D AndroidRuntime: Shutting down VM
+10-18 20:07:31.779 20939 20939 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:07:31.779 20939 20939 E AndroidRuntime: Process: com.android.systemui, PID: 20939
+10-18 20:07:31.779 20939 20939 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:31.780 21060 21060 D AndroidRuntime: Shutting down VM
+10-18 20:07:31.780 21060 21060 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:07:31.780 21060 21060 E AndroidRuntime: Process: com.android.phone, PID: 21060
+10-18 20:07:31.780 21060 21060 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:32.523 22307 22307 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-18 20:07:32.526 22307 22307 I AndroidRuntime: Using default boot image
+10-18 20:07:32.526 22307 22307 I AndroidRuntime: Leaving lock profiling enabled
+10-18 20:07:34.591 22698 22698 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: FATAL EXCEPTION: Thread-2
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: Process: com.google.android.cellbroadcastreceiver, PID: 23073
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: android.database.sqlite.SQLiteFullException: database or disk is full (code 13 SQLITE_FULL)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.nativeExecuteForChangedRowCount(Native Method)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.executeForChangedRowCount(SQLiteConnection.java:947)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at android.database.sqlite.SQLiteSession.executeForChangedRowCount(SQLiteSession.java:791)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at android.database.sqlite.SQLiteStatement.executeUpdateDelete(SQLiteStatement.java:67)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.executeSql(SQLiteDatabase.java:2233)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.execSQL(SQLiteDatabase.java:2152)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at com.android.cellbroadcastreceiver.CellBroadcastDatabaseHelper.onCreate(CellBroadcastDatabaseHelper.java:157)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:428)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getReadableDatabase(SQLiteOpenHelper.java:356)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at com.android.cellbroadcastreceiver.CellBroadcastDatabaseHelper.getReadableDatabase(CellBroadcastDatabaseHelper.java:228)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at com.android.cellbroadcastreceiver.CellBroadcastContentProvider.lambda$onCreate$0(CellBroadcastContentProvider.java:115)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at com.android.cellbroadcastreceiver.CellBroadcastContentProvider.$r8$lambda$_wxTQXU5bUEeT220HVo3jvhx62o(CellBroadcastContentProvider.java:0)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at com.android.cellbroadcastreceiver.CellBroadcastContentProvider$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+10-18 20:07:36.176 23073 23095 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1572)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: FATAL EXCEPTION: Thread-2
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: Process: com.google.android.cellbroadcastreceiver, PID: 23140
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: android.database.sqlite.SQLiteFullException: database or disk is full (code 13 SQLITE_FULL)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.nativeExecuteForChangedRowCount(Native Method)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at android.database.sqlite.SQLiteConnection.executeForChangedRowCount(SQLiteConnection.java:947)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at android.database.sqlite.SQLiteSession.executeForChangedRowCount(SQLiteSession.java:791)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at android.database.sqlite.SQLiteStatement.executeUpdateDelete(SQLiteStatement.java:67)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.executeSql(SQLiteDatabase.java:2233)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at android.database.sqlite.SQLiteDatabase.execSQL(SQLiteDatabase.java:2152)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at com.android.cellbroadcastreceiver.CellBroadcastDatabaseHelper.onCreate(CellBroadcastDatabaseHelper.java:157)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:428)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at android.database.sqlite.SQLiteOpenHelper.getReadableDatabase(SQLiteOpenHelper.java:356)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at com.android.cellbroadcastreceiver.CellBroadcastDatabaseHelper.getReadableDatabase(CellBroadcastDatabaseHelper.java:228)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at com.android.cellbroadcastreceiver.CellBroadcastContentProvider.lambda$onCreate$0(CellBroadcastContentProvider.java:115)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at com.android.cellbroadcastreceiver.CellBroadcastContentProvider.$r8$lambda$_wxTQXU5bUEeT220HVo3jvhx62o(CellBroadcastContentProvider.java:0)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at com.android.cellbroadcastreceiver.CellBroadcastContentProvider$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+10-18 20:07:36.852 23140 23174 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1572)
+10-18 20:07:37.557 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.557 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.557 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.557 22373 22396 F system_server: runtime.cc:761]   native: #04 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.557 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.557 22373 22396 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.558 22373 22396 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.558 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.558 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.558 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.558 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.558 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.558 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.558 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.558 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.558 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:37.558 22373 22396 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-18 20:07:38.302 22821 22821 D AndroidRuntime: Shutting down VM
+10-18 20:07:38.302 22821 22821 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:07:38.302 22821 22821 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 22821
+10-18 20:07:38.302 22821 22821 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:38.571 22771 22771 D AndroidRuntime: Shutting down VM
+10-18 20:07:38.571 22771 22771 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:07:38.571 22771 22771 E AndroidRuntime: Process: com.android.networkstack.process, PID: 22771
+10-18 20:07:38.571 22771 22771 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:38.734 22804 22804 D AndroidRuntime: Shutting down VM
+10-18 20:07:38.734 22804 22804 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:07:38.734 22804 22804 E AndroidRuntime: Process: com.android.phone, PID: 22804
+10-18 20:07:38.734 22804 22804 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:38.736 23181 23181 D AndroidRuntime: Shutting down VM
+10-18 20:07:38.736 23181 23181 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:07:38.736 23181 23181 E AndroidRuntime: PID: 23181
+10-18 20:07:38.736 23181 23181 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:38.739 22675 22675 D AndroidRuntime: Shutting down VM
+10-18 20:07:38.739 22675 22675 E AndroidRuntime: FATAL EXCEPTION: main
+10-18 20:07:38.739 22675 22675 E AndroidRuntime: Process: com.android.systemui, PID: 22675
+10-18 20:07:38.739 22675 22675 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-18 20:07:39.177 23259 23259 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-18 20:07:39.183 23259 23259 I AndroidRuntime: Using default boot image
+10-18 20:07:39.183 23259 23259 I AndroidRuntime: Leaving lock profiling enabled
+10-18 20:07:40.788 23325 23325 D AndroidRuntime: Shutting down VM
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: java.lang.RuntimeException: Failed to boot service com.android.server.NetworkStatsServiceInitializer: onBootPhase threw an exception during phase 550
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.server.SystemServiceManager.startBootPhase(SystemServiceManager.java:332)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.server.SystemServer.lambda$startOtherServices$6(SystemServer.java:3397)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.server.SystemServer.$r8$lambda$Zs26TzwLVmpFF2G8LTrYh_8ptIk(SystemServer.java:0)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.server.SystemServer$$ExternalSyntheticLambda6.run(R8$$SyntheticClass:0)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.server.am.ActivityManagerService.systemReady(ActivityManagerService.java:9779)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.server.SystemServer.startOtherServices(SystemServer.java:3394)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1049)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'int android.net.connectivity.com.android.server.net.PersistentInt.get()' on a null object reference
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at android.net.connectivity.com.android.server.net.NetworkStatsService.makeRecordersLocked(NetworkStatsService.java:1173)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at android.net.connectivity.com.android.server.net.NetworkStatsService.systemReady(NetworkStatsService.java:1079)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.server.NetworkStatsServiceInitializer.onBootPhase(NetworkStatsServiceInitializer.java:70)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	at com.android.server.SystemServiceManager.startBootPhase(SystemServiceManager.java:329)
+10-18 20:07:40.789 23325 23325 E AndroidRuntime: 	... 10 more
+10-18 20:07:44.177 23578 23578 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-18 20:07:44.179 23578 23578 I AndroidRuntime: Using default boot image
+10-18 20:07:44.179 23578 23578 I AndroidRuntime: Leaving lock profiling enabled
+10-18 20:07:45.935 23647 23647 D AndroidRuntime: Shutting down VM
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: java.lang.RuntimeException: Failed to boot service com.android.server.NetworkStatsServiceInitializer: onBootPhase threw an exception during phase 550
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.server.SystemServiceManager.startBootPhase(SystemServiceManager.java:332)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.server.SystemServer.lambda$startOtherServices$6(SystemServer.java:3397)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.server.SystemServer.$r8$lambda$Zs26TzwLVmpFF2G8LTrYh_8ptIk(SystemServer.java:0)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.server.SystemServer$$ExternalSyntheticLambda6.run(R8$$SyntheticClass:0)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.server.am.ActivityManagerService.systemReady(ActivityManagerService.java:9779)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.server.SystemServer.startOtherServices(SystemServer.java:3394)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1049)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'int android.net.connectivity.com.android.server.net.PersistentInt.get()' on a null object reference
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at android.net.connectivity.com.android.server.net.NetworkStatsService.makeRecordersLocked(NetworkStatsService.java:1173)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at android.net.connectivity.com.android.server.net.NetworkStatsService.systemReady(NetworkStatsService.java:1079)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.server.NetworkStatsServiceInitializer.onBootPhase(NetworkStatsServiceInitializer.java:70)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	at com.android.server.SystemServiceManager.startBootPhase(SystemServiceManager.java:329)
+10-18 20:07:45.935 23647 23647 E AndroidRuntime: 	... 10 more
+10-18 20:07:49.129 23959 23959 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-18 20:07:49.131 23959 23959 I AndroidRuntime: Using default boot image
+10-18 20:07:49.131 23959 23959 I AndroidRuntime: Leaving lock profiling enabled
+10-18 20:07:50.883 24024 24024 D AndroidRuntime: Shutting down VM
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: java.lang.RuntimeException: Failed to boot service com.android.server.NetworkStatsServiceInitializer: onBootPhase threw an exception during phase 550
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.server.SystemServiceManager.startBootPhase(SystemServiceManager.java:332)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.server.SystemServer.lambda$startOtherServices$6(SystemServer.java:3397)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.server.SystemServer.$r8$lambda$Zs26TzwLVmpFF2G8LTrYh_8ptIk(SystemServer.java:0)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.server.SystemServer$$ExternalSyntheticLambda6.run(R8$$SyntheticClass:0)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.server.am.ActivityManagerService.systemReady(ActivityManagerService.java:9779)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.server.SystemServer.startOtherServices(SystemServer.java:3394)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1049)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'int android.net.connectivity.com.android.server.net.PersistentInt.get()' on a null object reference
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at android.net.connectivity.com.android.server.net.NetworkStatsService.makeRecordersLocked(NetworkStatsService.java:1173)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at android.net.connectivity.com.android.server.net.NetworkStatsService.systemReady(NetworkStatsService.java:1079)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.server.NetworkStatsServiceInitializer.onBootPhase(NetworkStatsServiceInitializer.java:70)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	at com.android.server.SystemServiceManager.startBootPhase(SystemServiceManager.java:329)
+10-18 20:07:50.883 24024 24024 E AndroidRuntime: 	... 10 more
+10-18 20:07:54.145 24331 24331 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-18 20:07:54.148 24331 24331 I AndroidRuntime: Using default boot image
+10-18 20:07:54.148 24331 24331 I AndroidRuntime: Leaving lock profiling enabled
+10-18 20:07:55.956 24400 24400 D AndroidRuntime: Shutting down VM
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: java.lang.RuntimeException: Failed to boot service com.android.server.NetworkStatsServiceInitializer: onBootPhase threw an exception during phase 550
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.server.SystemServiceManager.startBootPhase(SystemServiceManager.java:332)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.server.SystemServer.lambda$startOtherServices$6(SystemServer.java:3397)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.server.SystemServer.$r8$lambda$Zs26TzwLVmpFF2G8LTrYh_8ptIk(SystemServer.java:0)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.server.SystemServer$$ExternalSyntheticLambda6.run(R8$$SyntheticClass:0)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.server.am.ActivityManagerService.systemReady(ActivityManagerService.java:9779)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.server.SystemServer.startOtherServices(SystemServer.java:3394)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1049)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'int android.net.connectivity.com.android.server.net.PersistentInt.get()' on a null object reference
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at android.net.connectivity.com.android.server.net.NetworkStatsService.makeRecordersLocked(NetworkStatsService.java:1173)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at android.net.connectivity.com.android.server.net.NetworkStatsService.systemReady(NetworkStatsService.java:1079)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.server.NetworkStatsServiceInitializer.onBootPhase(NetworkStatsServiceInitializer.java:70)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	at com.android.server.SystemServiceManager.startBootPhase(SystemServiceManager.java:329)
+10-18 20:07:55.956 24400 24400 E AndroidRuntime: 	... 10 more
+10-18 20:07:57.331  2317  2317 I adbd    : adbd service requested 'shell,v2,raw:dumpsys activity service app.nexus.launcher/com.android.quickstep.TouchInteractionService'

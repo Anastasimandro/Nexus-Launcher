@@ -1,0 +1,18 @@
+--------- beginning of main
+10-18 20:03:14.116  2931  2931 I NexusRootSystem: Privilegios de sistema: privilegiado, origen=SYSTEM_PARTITION, concedidos=8/19, faltan=MANAGE_ACTIVITY_TASKS, REMOVE_TASKS, STATUS_BAR_SERVICE, READ_FRAME_BUFFER, MONITOR_INPUT, INTERNAL_SYSTEM_WINDOW, SET_ORIENTATION, ACCESS_SHORTCUTS, MANAGE_ACCESSIBILITY, MANAGE_KEY_GESTURES, SYSTEM_APPLICATION_OVERLAY, listaBlanca=visible (/product/priv-app/Nexus/Nexus.apk)
+10-18 20:03:14.136  2931  3060 I NexusQuickstepProbe: sdk=37 passed=false missing=[DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_ALTTAB_TRANSITIONS_BUGFIX, DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_TRANSITIONS_BUGFIX, DesktopModeFlags.ENABLE_DESKTOP_TRAMPOLINE_CLOSE_ANIMATION_BUGFIX, DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_EXIT_BY_MINIMIZE_TRANSITION_BUGFIX, DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_QUICK_SWITCH, DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_TASKBAR_RUNNING_APPS, DesktopModeFlags.ENABLE_QUICKSWITCH_DESKTOP_SPLIT_BUGFIX, DesktopModeFlags.ENABLE_START_LAUNCH_TRANSITION_FROM_TASKBAR_BUGFIX, DesktopModeFlags.ENABLE_TASKBAR_RECENTS_LAYOUT_TRANSITION, DesktopExperienceFlags.ENABLE_DESKTOP_APP_LAUNCH_BUGFIX, DesktopExperienceFlags.ENABLE_DESKTOP_FIRST_FULLSCREEN_REFOCUS_BUGFIX, DesktopExperienceFlags.ENABLE_DESKTOP_WINDOWING_PIP, DesktopExperienceFlags.ENABLE_FREEFORM_DISPLAY_LAUNCH_PARAMS, DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND, DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_FRONTEND, DesktopExperienceFlags.ENABLE_PINNING_APP_WITH_CONTEXT_MENU, DesktopExperienceFlags.ENABLE_REJECT_HOME_TRANSITION, DesktopExperienceFlags.ENABLE_TASKBAR_RECENT_TASKS_THROTTLE_BUGFIX]
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: No se pudo escribir quickstep-probe.txt
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: java.io.FileNotFoundException: /data/user/0/app.nexus.launcher/files/quickstep-probe.txt.tmp: open failed: ENOENT (No such file or directory)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	at libcore.io.IoBridge.open(IoBridge.java:574)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	at java.io.FileOutputStream.<init>(FileOutputStream.java:259)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	at java.io.FileOutputStream.<init>(FileOutputStream.java:208)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	at o13.run(r8-map-id-9a3fdde6c3c424fc6616c883464dbfb83f28dc257cb2622c5a7e9963406750cc:506)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	at java.lang.Thread.run(Thread.java:1572)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	at libcore.io.Linux.open(Native Method)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	at libcore.io.ForwardingOs.open(ForwardingOs.java:579)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	at libcore.io.BlockGuardOs.open(BlockGuardOs.java:274)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	at libcore.io.ForwardingOs.open(ForwardingOs.java:579)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	at android.app.AndroidForwardingOs.open(AndroidForwardingOs.java:120)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	at libcore.io.IoBridge.open(IoBridge.java:560)
+10-18 20:03:14.137  2931  3060 W NexusQuickstepProbe: 	... 4 more

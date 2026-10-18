@@ -1,0 +1,2 @@
+SystemUI enlazado al servicio de Quickstep de Nexus: NO
+(overlay: unavailable)

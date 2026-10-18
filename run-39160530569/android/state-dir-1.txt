@@ -1,0 +1,4 @@
+total 24
+drwxrwxrwx 2 root root 4096 2026-10-18 20:04 .
+drwx------ 3 root root 4096 2026-10-18 20:04 ..
+-rw-rw-rw- 1 root root   66 2026-10-18 20:04 watchdog.log

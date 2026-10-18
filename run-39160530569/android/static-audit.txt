@@ -1,0 +1,376 @@
+app: 3 DEX, 11591 clases | sistema: 56 DEX, 63054 clases (con extra: 101419)
+== Landroid/window/DesktopModeFlags;
+  campo   $VALUES : [Landroid/window/DesktopModeFlags;
+  campo   ENABLE_DESKTOP_APP_HANDLE_ANIMATION : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_DESKTOP_WALLPAPER_ACTIVITY_FOR_SYSTEM_USER : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_DESKTOP_WINDOWING_APP_TO_WEB_EDUCATION : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_DESKTOP_WINDOWING_BACK_NAVIGATION : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_DESKTOP_WINDOWING_EXIT_TRANSITIONS_BUGFIX : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_DESKTOP_WINDOWING_MODE : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_DESKTOP_WINDOWING_PERSISTENCE : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_DESKTOP_WINDOWING_SIZE_CONSTRAINTS : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_DESKTOP_WINDOWING_WALLPAPER_ACTIVITY : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_HANDLE_INPUT_FIX : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_RESIZING_METRICS : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_TASKBAR_OVERFLOW : Landroid/window/DesktopModeFlags;
+  campo   ENABLE_TASK_STACK_OBSERVER_IN_SHELL : Landroid/window/DesktopModeFlags;
+  campo   TAG : Ljava/lang/String;
+  campo   mFlagFunction : Ljava/util/function/BooleanSupplier;
+  campo   mShouldOverrideByDevOption : Z
+  campo   sCachedRawToggleOverride : Landroid/window/DesktopModeFlags$ToggleOverride;
+  campo   sCachedToggleOverride : Landroid/window/DesktopModeFlags$ToggleOverride;
+  metodo  $values()[Landroid/window/DesktopModeFlags;
+  metodo  -$$Nest$smisFlagTrue(Ljava/util/function/BooleanSupplier;Z)Z
+  metodo  <clinit>()V
+  metodo  <init>(Ljava/lang/String;ILjava/util/function/BooleanSupplier;Z)V
+  metodo  getRawToggleOverride()Landroid/window/DesktopModeFlags$ToggleOverride;
+  metodo  getToggleOverride()Landroid/window/DesktopModeFlags$ToggleOverride;
+  metodo  getToggleOverrideFromSystem()Landroid/window/DesktopModeFlags$ToggleOverride;
+  metodo  isDesktopModeForcedEnabled()Z
+  metodo  isFlagTrue(Ljava/util/function/BooleanSupplier;Z)Z
+  metodo  isTrue()Z
+  metodo  valueOf(Ljava/lang/String;)Landroid/window/DesktopModeFlags;
+  metodo  values()[Landroid/window/DesktopModeFlags;
+== Landroid/window/DesktopExperienceFlags;
+  campo   $VALUES : [Landroid/window/DesktopExperienceFlags;
+  campo   CLOSE_FULLSCREEN_AND_SPLITSCREEN_KEYBOARD_SHORTCUT : Landroid/window/DesktopExperienceFlags;
+  campo   DEFER_RESUME_FOCUS_IN_NON_FOCUSED_WINDOW : Landroid/window/DesktopExperienceFlags;
+  campo   DIMMING_WALLPAPER_FOR_MAXIMIZED_AND_TILED : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_ADD_WINDOW_DECORATION_TO_ALL_TASKS : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_AUTO_RECOVERY_FROM_SELF_KILL : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_AUTO_ROTATE_ON_SLATE_STATE : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_BOUNDS_RESTORING_ON_DRAG_EXIT : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_BUG_FIXES_FOR_SECONDARY_DISPLAY : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_DEFAULT_DESK_WITHOUT_WARMUP_MIGRATION : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_DESKTOP_FIRST_BASED_DEFAULT_TO_DESKTOP_BUGFIX : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_DESKTOP_FIRST_POLICY_IN_LPM : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_DESKTOP_FIRST_TOP_FULLSCREEN_BUGFIX : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_DESKTOP_IME_BUGFIX : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_DESKTOP_TASKBAR_ON_FREEFORM_DISPLAYS : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_DISPLAY_CONTENT_MODE_MANAGEMENT : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_DISPLAY_DISCONNECT_INTERACTION : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_DISPLAY_RECONNECT_INTERACTION : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_DISPLAY_WINDOWING_MODE_SWITCHING : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_DRAWING_APP_HANDLE : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_FREEFORM_BOX_SHADOWS_V2 : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_FULLSCREEN_WINDOW_CONTROLS : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_GAME_CONTROLS_HANDLE_MENU_ENTRY : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_INTERACTION_DEPENDENT_TAB_TEARING_BOUNDS : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_INTERACTIVE_PICTURE_IN_PICTURE : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_MULTIPLE_DESKTOPS_ACTIVATION_IN_DESKTOP_FIRST_DISPLAYS : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_NESTED_TASKS_WITH_INDEPENDENT_BOUNDS_BUGFIX : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_NON_DEFAULT_DISPLAY_SPLIT_BUGFIX : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_PER_DISPLAY_DESKTOP_WALLPAPER_ACTIVITY : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_PROJECTED_DISPLAY_DESKTOP_MODE : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_REENABLE_APP_HANDLE_COLOR_ANIMATIONS : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_REQUEST_FULLSCREEN_REFACTOR : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_REQUIRE_MOVABLE_TASK_API : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_SYS_DECORS_CALLBACKS_VIA_WM : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_TASKBAR_CONNECTED_DISPLAYS : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_WINDOW_DECORATION_REFACTOR : Landroid/window/DesktopExperienceFlags;
+  campo   ENABLE_WINDOW_REPOSITIONING_API : Landroid/window/DesktopExperienceFlags;
+  campo   SKIP_DEACTIVATION_OF_DESK_WITH_NOTHING_IN_FRONT : Landroid/window/DesktopExperienceFlags;
+  campo   SYSTEM_PROPERTY_NAME : Ljava/lang/String;
+  campo   SYSTEM_PROPERTY_OVERRIDE_PREFIX : Ljava/lang/String;
+  campo   TAG : Ljava/lang/String;
+  campo   USE_RESOURCES_FROM_CONTEXT_TO_CREATE_DRAWABLE_ICONS : Landroid/window/DesktopExperienceFlags;
+  campo   mFlagFunction : Ljava/util/function/BooleanSupplier;
+  campo   mFlagName : Ljava/lang/String;
+  campo   mShouldOverrideByDevOption : Z
+  campo   sApplicationContext : Landroid/content/Context;
+  campo   sCachedToggleOverride : Ljava/lang/Boolean;
+  campo   sDynamicFlags : Ljava/util/Map;
+  metodo  $values()[Landroid/window/DesktopExperienceFlags;
+  metodo  -$$Nest$smisFlagTrue(Ljava/util/function/BooleanSupplier;Z)Z
+  metodo  -$$Nest$smregisterFlag(Ljava/lang/String;Landroid/window/DesktopExperienceFlags$DesktopExperienceFlag;)V
+  metodo  <clinit>()V
+  metodo  <init>(Ljava/lang/String;ILjava/util/function/BooleanSupplier;ZLjava/lang/String;)V
+  metodo  getApplicationContext()Landroid/content/Context;
+  metodo  getFlagName()Ljava/lang/String;
+  metodo  getFlagValue()Z
+  metodo  getRegisteredFlags()Ljava/util/List;
+  metodo  getToggleOverride()Z
+  metodo  isDesktopExperienceDevOptionSupported()Z
+  metodo  isDesktopModeDevOptionSupported()Z
+  metodo  isFlagTrue(Ljava/util/function/BooleanSupplier;Z)Z
+  metodo  isOverridable()Z
+  metodo  isToggleOverriddenBySystem()Z
+  metodo  isTrue()Z
+  metodo  registerFlag(Ljava/lang/String;Landroid/window/DesktopExperienceFlags$DesktopExperienceFlag;)V
+  metodo  valueOf(Ljava/lang/String;)Landroid/window/DesktopExperienceFlags;
+  metodo  values()[Landroid/window/DesktopExperienceFlags;
+== Landroid/view/IWindowManager;
+  campo   FIXED_TO_USER_ROTATION_DEFAULT : I = 0
+  campo   FIXED_TO_USER_ROTATION_DISABLED : I = 1
+  campo   FIXED_TO_USER_ROTATION_ENABLED : I = 2
+  campo   FIXED_TO_USER_ROTATION_IF_NO_AUTO_ROTATION : I = 3
+  metodo  addKeyguardLockedStateListener(Lcom/android/internal/policy/IKeyguardLockedStateListener;)V
+  metodo  addShellRoot(ILandroid/view/IWindow;I)Landroid/view/SurfaceControl;
+  metodo  addToSurfaceSyncGroup(Landroid/os/IBinder;ZLandroid/window/ISurfaceSyncGroupCompletedListener;Landroid/window/AddToSurfaceSyncGroupResult;)Z
+  metodo  addWindowToken(Landroid/os/IBinder;IILandroid/os/Bundle;)V
+  metodo  attachWindowContextToDisplayArea(Landroid/app/IApplicationThread;Landroid/os/IBinder;IILandroid/os/Bundle;)Landroid/window/WindowContextInfo;
+  metodo  attachWindowContextToDisplayContent(Landroid/app/IApplicationThread;Landroid/os/IBinder;I)Landroid/window/WindowContextInfo;
+  metodo  attachWindowContextToWindowToken(Landroid/app/IApplicationThread;Landroid/os/IBinder;Landroid/os/IBinder;)Landroid/window/WindowContextInfo;
+  metodo  captureDisplay(ILandroid/window/ScreenCaptureInternal$CaptureArgs;Landroid/window/ScreenCaptureInternal$ScreenCaptureListener;)V
+  metodo  clearForcedDisplayDensityForUser(II)V
+  metodo  clearForcedDisplaySize(I)V
+  metodo  clearWindowContentFrameStats(Landroid/os/IBinder;)Z
+  metodo  closeSystemDialogs(Ljava/lang/String;)V
+  metodo  createInputConsumer(Landroid/os/IBinder;Ljava/lang/String;I)Landroid/view/InputChannel;
+  metodo  destroyInputConsumer(Landroid/os/IBinder;I)Z
+  metodo  detachWindowContext(Landroid/os/IBinder;)V
+  metodo  disableKeyguard(Landroid/os/IBinder;Ljava/lang/String;I)V
+  metodo  dismissKeyguard(Lcom/android/internal/policy/IKeyguardDismissCallback;Ljava/lang/CharSequence;)V
+  metodo  dispatchScrollToTop(III)V
+  metodo  endProlongedAnimations()V
+  metodo  exitKeyguardSecurely(Landroid/view/IOnKeyguardExitResult;)V
+  metodo  freezeDisplayRotation(IILjava/lang/String;)V
+  metodo  freezeRotation(ILjava/lang/String;)V
+  metodo  getAnimationScale(I)F
+  metodo  getAnimationScales()[F
+  metodo  getApplicationLaunchKeyboardShortcuts(I)Landroid/view/KeyboardShortcutGroup;
+  metodo  getBaseDisplayDensity(I)I
+  metodo  getBaseDisplaySize(ILandroid/graphics/Point;)V
+  metodo  getCurrentAnimatorScale()F
+  metodo  getCurrentImeTouchRegion()Landroid/graphics/Region;
+  metodo  getDefaultDisplayRotation()I
+  metodo  getDisplayEngagementMode(I)I
+  metodo  getDisplayIdByUniqueId(Ljava/lang/String;)I
+  metodo  getDisplayImePolicy(I)I
+  metodo  getDisplayUserRotation(I)I
+  metodo  getDockedStackSide()I
+  metodo  getIgnoreOrientationRequest(I)Z
+  metodo  getImeDisplayId()I
+  metodo  getInitialDisplayDensity(I)I
+  metodo  getInitialDisplaySize(ILandroid/graphics/Point;)V
+  metodo  getLetterboxBackgroundColorInArgb()I
+  metodo  getPossibleDisplayInfo(I)Ljava/util/List;
+  metodo  getPreferredOptionsPanelGravity(I)I
+  metodo  getRemoveContentMode(I)I
+  metodo  getStableInsets(ILandroid/graphics/Rect;)V
+  metodo  getSupportedDisplayHashAlgorithms()[Ljava/lang/String;
+  metodo  getWindowContentFrameStats(Landroid/os/IBinder;)Landroid/view/WindowContentFrameStats;
+  metodo  getWindowInsets(ILandroid/os/IBinder;Landroid/view/InsetsState;)V
+  metodo  getWindowingMode(I)I
+  metodo  hasNavigationBar(I)Z
+  metodo  hideTransientBars(I)V
+  metodo  holdLock(Landroid/os/IBinder;I)V
+  metodo  isDisplayRotationFrozen(I)Z
+  metodo  isEligibleForDesktopMode(I)Z
+  metodo  isGlobalKey(I)Z
+  metodo  isInTouchMode(I)Z
+  metodo  isKeyguardLocked()Z
+  metodo  isKeyguardSecure(I)Z
+  metodo  isLayerTracing()Z
+  metodo  isLetterboxBackgroundMultiColored()Z
+  metodo  isRotationFrozen()Z
+  metodo  isSafeModeEnabled()Z
+  metodo  isTaskSnapshotSupported()Z
+  metodo  isTransitionTraceEnabled()Z
+  metodo  isViewServerRunning()Z
+  metodo  isWindowToken(Landroid/os/IBinder;)Z
+  metodo  isWindowTraceEnabled()Z
+  metodo  lockNow(Landroid/os/Bundle;)V
+  metodo  markSurfaceSyncGroupReady(Landroid/os/IBinder;)V
+  metodo  mirrorDisplay(ILandroid/view/SurfaceControl;)Z
+  metodo  mirrorWallpaperSurface(I)Landroid/view/SurfaceControl;
+  metodo  notifyScreenshotListeners(I)Ljava/util/List;
+  metodo  onNotificationShadeExpanded(Landroid/os/IBinder;Z)V
+  metodo  openSession(Landroid/view/IWindowSessionCallback;)Landroid/view/IWindowSession;
+  metodo  overridePendingAppTransitionMultiThumbFuture(Landroid/view/IAppTransitionAnimationSpecsFuture;Landroid/os/IRemoteCallback;ZI)V
+  metodo  overridePendingAppTransitionRemote(Landroid/view/RemoteAnimationAdapter;I)V
+  metodo  reenableKeyguard(Landroid/os/IBinder;I)V
+  metodo  refreshScreenCaptureDisabled()V
+  metodo  registerCrossWindowBlurEnabledListener(Landroid/view/ICrossWindowBlurEnabledListener;)Z
+  metodo  registerDecorViewGestureListener(Landroid/view/IDecorViewGestureListener;I)V
+  metodo  registerDisplayEngagementModeCallback(Landroid/window/IDisplayEngagementModeCallback;)V
+  metodo  registerDisplayFoldListener(Landroid/view/IDisplayFoldListener;)V
+  metodo  registerDisplayWindowListener(Landroid/view/IDisplayWindowListener;)[I
+  metodo  registerEngagementControlRequestConsumer(Landroid/window/IEngagementControlRequestConsumer;)V
+  metodo  registerPinnedTaskListener(ILandroid/view/IPinnedTaskListener;)V
+  metodo  registerProposedRotationListener(Landroid/os/IBinder;Landroid/view/IRotationWatcher;)I
+  metodo  registerScreenRecordingCallback(Landroid/window/IScreenRecordingCallback;)Z
+  metodo  registerShortcutKey(JLcom/android/internal/policy/IShortcutService;)V
+  metodo  registerSystemGestureExclusionListener(Landroid/view/ISystemGestureExclusionListener;I)V
+  metodo  registerTaskFpsCallback(ILandroid/window/ITaskFpsCallback;)V
+  metodo  registerTrustedPresentationListener(Landroid/os/IBinder;Landroid/window/ITrustedPresentationListener;Landroid/window/TrustedPresentationThresholds;I)V
+  metodo  registerWallpaperVisibilityListener(Landroid/view/IWallpaperVisibilityListener;I)Z
+  metodo  removeKeyguardLockedStateListener(Lcom/android/internal/policy/IKeyguardLockedStateListener;)V
+  metodo  removeRotationWatcher(Landroid/view/IRotationWatcher;)V
+  metodo  removeWindowToken(Landroid/os/IBinder;I)V
+  metodo  reparentWindowContextToDisplayArea(Landroid/app/IApplicationThread;Landroid/os/IBinder;I)Z
+  metodo  replaceContentOnDisplay(ILandroid/view/SurfaceControl;)Z
+  metodo  requestAppKeyboardShortcuts(Lcom/android/internal/os/IResultReceiver;I)V
+  metodo  requestEngagementControlState(Landroid/os/IBinder;I)V
+  metodo  requestImeKeyboardShortcuts(Lcom/android/internal/os/IResultReceiver;I)V
+  metodo  requestScrollCapture(ILandroid/os/IBinder;ILandroid/view/IScrollCaptureResponseListener;)V
+  metodo  saveWindowTraceToFile()V
+  metodo  screenCapture(Landroid/window/ScreenCapture$ScreenCaptureParams;Landroid/window/IScreenCaptureCallback;)V
+  metodo  screenshotWallpaper()Landroid/graphics/Bitmap;
+  metodo  setActiveTransactionTracing(Z)V
+  metodo  setAnimationScale(IF)V
+  metodo  setAnimationScales([F)V
+  metodo  setConfigurationChangeSettingsForUser(Ljava/util/List;I)V
+  metodo  setDeviceStateAutoRotateSetting(IZ)V
+  metodo  setDisplayChangeWindowController(Landroid/view/IDisplayChangeWindowController;)V
+  metodo  setDisplayEngagementMode(II)V
+  metodo  setDisplayHashThrottlingEnabled(Z)V
+  metodo  setDisplayImePolicy(II)V
+  metodo  setDisplayWindowInsetsController(ILandroid/view/IDisplayWindowInsetsController;)V
+  metodo  setEventDispatching(Z)V
+  metodo  setFixedToUserRotation(II)V
+  metodo  setForcedDisplayDensityForUser(III)V
+  metodo  setForcedDisplayDensityRatio(IFI)V
+  metodo  setForcedDisplayScalingMode(II)V
+  metodo  setForcedDisplaySize(III)V
+  metodo  setGlobalDragListener(Landroid/window/IGlobalDragListener;)V
+  metodo  setIgnoreOrientationRequest(IZ)V
+  metodo  setInTouchMode(ZI)V
+  metodo  setInTouchModeOnAllDisplays(Z)V
+  metodo  setLayerTracing(Z)V
+  metodo  setLayerTracingFlags(I)V
+  metodo  setNavBarVirtualKeyHapticFeedbackEnabled(Z)V
+  metodo  setRecentsAppBehindSystemBars(Z)V
+  metodo  setRecentsVisibility(Z)V
+  metodo  setRemoveContentMode(II)V
+  metodo  setRotationAtAngleIfAllowed(ILjava/lang/String;)V
+  metodo  setShellRootAccessibilityWindow(IILandroid/view/IWindow;)V
+  metodo  setShouldShowWithInsecureKeyguard(IZ)V
+  metodo  setStrictModeVisualIndicatorPreference(Ljava/lang/String;)V
+  metodo  setSwitchingUser(Z)V
+  metodo  setTaskSnapshotEnabled(Z)V
+  metodo  setWindowingMode(II)V
+  metodo  shouldShowSystemDecors(I)Z
+  metodo  shouldShowWithInsecureKeyguard(I)Z
+  metodo  showGlobalActions()V
+  metodo  showStrictModeViolation(Z)V
+  metodo  snapshotTaskForRecents(I)Landroid/graphics/Bitmap;
+  metodo  startTransitionTrace()V
+  metodo  startViewServer(I)Z
+  metodo  startWindowTrace()V
+  metodo  stopTransitionTrace()V
+  metodo  stopViewServer()Z
+  metodo  stopWindowTrace()V
+  metodo  syncInputTransactions(Z)V
+  metodo  thawDisplayRotation(ILjava/lang/String;)V
+  metodo  thawRotation(Ljava/lang/String;)V
+  metodo  transferTouchGesture(Landroid/window/InputTransferToken;Landroid/window/InputTransferToken;)Z
+  metodo  unregisterCrossWindowBlurEnabledListener(Landroid/view/ICrossWindowBlurEnabledListener;)V
+  metodo  unregisterDecorViewGestureListener(Landroid/view/IDecorViewGestureListener;I)V
+  metodo  unregisterDisplayEngagementModeCallback(Landroid/window/IDisplayEngagementModeCallback;)V
+  metodo  unregisterDisplayFoldListener(Landroid/view/IDisplayFoldListener;)V
+  metodo  unregisterDisplayWindowListener(Landroid/view/IDisplayWindowListener;)V
+  metodo  unregisterEngagementControlRequestConsumer(Landroid/window/IEngagementControlRequestConsumer;)V
+  metodo  unregisterScreenRecordingCallback(Landroid/window/IScreenRecordingCallback;)V
+  metodo  unregisterSystemGestureExclusionListener(Landroid/view/ISystemGestureExclusionListener;I)V
+  metodo  unregisterTaskFpsCallback(Landroid/window/ITaskFpsCallback;)V
+  metodo  unregisterTrustedPresentationListener(Landroid/window/ITrustedPresentationListener;I)V
+  metodo  unregisterWallpaperVisibilityListener(Landroid/view/IWallpaperVisibilityListener;I)V
+  metodo  updateDisplayWindowAnimatingTypes(IILandroid/view/inputmethod/ImeTracker$Token;)V
+  metodo  updateDisplayWindowRequestedVisibleTypes(IIILandroid/view/inputmethod/ImeTracker$Token;)V
+  metodo  updateStaticPrivacyIndicatorBounds(I[Landroid/graphics/Rect;)V
+  metodo  verifyDisplayHash(Landroid/view/displayhash/DisplayHash;)Landroid/view/displayhash/VerifiedDisplayHash;
+  metodo  watchRotation(Landroid/view/IRotationWatcher;I)I
+== Lcom/android/wm/shell/recents/IRecentTasks;: NO EXISTE en el sistema
+== Lcom/android/wm/shell/recents/IRecentTasks$Stub;: NO EXISTE en el sistema
+== ENLACE: clases que la app usa y el sistema no tiene (66)
+  CLASE   Landroid/companion/virtualdevice/flags/Flags;
+  CLASE   Landroid/hardware/devicestate/feature/flags/Flags;
+  CLASE   Landroid/multiuser/Flags;
+  CLASE   Landroid/os/Flags;
+  CLASE   Landroid/view/DisplayListCanvas;
+  CLASE   Landroid/view/RenderNode;
+  CLASE   Landroid/view/inputmethod/Flags;
+  CLASE   Landroid/window/ScreenCapture$CaptureArgs$Builder;
+  CLASE   Landroid/window/ScreenCapture$LayerCaptureArgs$Builder;
+  CLASE   Landroid/window/ScreenCapture$LayerCaptureArgs;
+  CLASE   Landroid/window/ScreenCapture$ScreenshotHardwareBuffer;
+  CLASE   Landroidx/window/extensions/WindowExtensions;
+  CLASE   Landroidx/window/extensions/WindowExtensionsProvider;
+  CLASE   Landroidx/window/extensions/area/ExtensionWindowAreaPresentation;
+  CLASE   Landroidx/window/extensions/core/util/function/Consumer;
+  CLASE   Landroidx/window/extensions/core/util/function/Function;
+  CLASE   Landroidx/window/extensions/core/util/function/Predicate;
+  CLASE   Landroidx/window/extensions/embedding/ActivityEmbeddingComponent;
+  CLASE   Landroidx/window/extensions/embedding/ActivityRule$Builder;
+  CLASE   Landroidx/window/extensions/embedding/ActivityRule;
+  CLASE   Landroidx/window/extensions/embedding/ActivityStack$Token;
+  CLASE   Landroidx/window/extensions/embedding/ActivityStack;
+  CLASE   Landroidx/window/extensions/embedding/AnimationBackground$ColorBackground;
+  CLASE   Landroidx/window/extensions/embedding/AnimationBackground;
+  CLASE   Landroidx/window/extensions/embedding/AnimationParams$Builder;
+  CLASE   Landroidx/window/extensions/embedding/AnimationParams;
+  CLASE   Landroidx/window/extensions/embedding/DividerAttributes$Builder;
+  CLASE   Landroidx/window/extensions/embedding/DividerAttributes;
+  CLASE   Landroidx/window/extensions/embedding/EmbeddedActivityWindowInfo;
+  CLASE   Landroidx/window/extensions/embedding/EmbeddingRule;
+  CLASE   Landroidx/window/extensions/embedding/SplitAttributes$Builder;
+  CLASE   Landroidx/window/extensions/embedding/SplitAttributes$SplitType$ExpandContainersSplitType;
+  CLASE   Landroidx/window/extensions/embedding/SplitAttributes$SplitType$HingeSplitType;
+  CLASE   Landroidx/window/extensions/embedding/SplitAttributes$SplitType$RatioSplitType;
+  CLASE   Landroidx/window/extensions/embedding/SplitAttributes$SplitType;
+  CLASE   Landroidx/window/extensions/embedding/SplitAttributes;
+  CLASE   Landroidx/window/extensions/embedding/SplitAttributesCalculatorParams;
+  CLASE   Landroidx/window/extensions/embedding/SplitInfo$Token;
+  CLASE   Landroidx/window/extensions/embedding/SplitInfo;
+  CLASE   Landroidx/window/extensions/embedding/SplitPairRule$Builder;
+  CLASE   Landroidx/window/extensions/embedding/SplitPairRule;
+  CLASE   Landroidx/window/extensions/embedding/SplitPinRule;
+  CLASE   Landroidx/window/extensions/embedding/SplitPlaceholderRule$Builder;
+  CLASE   Landroidx/window/extensions/embedding/SplitPlaceholderRule;
+  CLASE   Landroidx/window/extensions/embedding/SplitRule;
+  CLASE   Landroidx/window/extensions/embedding/WindowAttributes;
+  CLASE   Landroidx/window/extensions/layout/DisplayFeature;
+  CLASE   Landroidx/window/extensions/layout/FoldingFeature;
+  CLASE   Landroidx/window/extensions/layout/WindowLayoutComponent;
+  CLASE   Landroidx/window/extensions/layout/WindowLayoutInfo;
+  CLASE   Landroidx/window/sidecar/SidecarDeviceState;
+  CLASE   Landroidx/window/sidecar/SidecarDisplayFeature;
+  CLASE   Landroidx/window/sidecar/SidecarInterface$SidecarCallback;
+  CLASE   Landroidx/window/sidecar/SidecarInterface;
+  CLASE   Landroidx/window/sidecar/SidecarProvider;
+  CLASE   Landroidx/window/sidecar/SidecarWindowLayoutInfo;
+  CLASE   Lcom/android/systemui/plugins/FalsingManager;
+  CLASE   Lcom/android/systemui/plugins/PluginProtector;
+  CLASE   Lcom/skydoves/balloon/ArrowPositionRules;
+  CLASE   Lcom/skydoves/balloon/Balloon$Builder;
+  CLASE   Lcom/skydoves/balloon/Balloon;
+  CLASE   Lcom/skydoves/balloon/BalloonAnimation;
+  CLASE   Lorg/bouncycastle/jsse/BCSSLParameters;
+  CLASE   Lorg/bouncycastle/jsse/BCSSLSocket;
+  CLASE   Lorg/conscrypt/Conscrypt$Version;
+  CLASE   Lorg/conscrypt/Conscrypt;
+== ENLACE: campos que faltan (2 clases)
+  CAMPO   Landroid/window/DesktopExperienceFlags;.ENABLE_DESKTOP_APP_LAUNCH_BUGFIX : Landroid/window/DesktopExperienceFlags;
+  CAMPO   Landroid/window/DesktopExperienceFlags;.ENABLE_DESKTOP_FIRST_FULLSCREEN_REFOCUS_BUGFIX : Landroid/window/DesktopExperienceFlags;
+  CAMPO   Landroid/window/DesktopExperienceFlags;.ENABLE_DESKTOP_WINDOWING_PIP : Landroid/window/DesktopExperienceFlags;
+  CAMPO   Landroid/window/DesktopExperienceFlags;.ENABLE_FREEFORM_DISPLAY_LAUNCH_PARAMS : Landroid/window/DesktopExperienceFlags;
+  CAMPO   Landroid/window/DesktopExperienceFlags;.ENABLE_MULTIPLE_DESKTOPS_BACKEND : Landroid/window/DesktopExperienceFlags;
+  CAMPO   Landroid/window/DesktopExperienceFlags;.ENABLE_PINNING_APP_WITH_CONTEXT_MENU : Landroid/window/DesktopExperienceFlags;
+  CAMPO   Landroid/window/DesktopExperienceFlags;.ENABLE_REJECT_HOME_TRANSITION : Landroid/window/DesktopExperienceFlags;
+  CAMPO   Landroid/window/DesktopExperienceFlags;.ENABLE_TASKBAR_RECENT_TASKS_THROTTLE_BUGFIX : Landroid/window/DesktopExperienceFlags;
+  CAMPO   Landroid/window/DesktopModeFlags;.ENABLE_DESKTOP_APP_LAUNCH_ALTTAB_TRANSITIONS_BUGFIX : Landroid/window/DesktopModeFlags;
+  CAMPO   Landroid/window/DesktopModeFlags;.ENABLE_DESKTOP_APP_LAUNCH_TRANSITIONS_BUGFIX : Landroid/window/DesktopModeFlags;
+  CAMPO   Landroid/window/DesktopModeFlags;.ENABLE_DESKTOP_TRAMPOLINE_CLOSE_ANIMATION_BUGFIX : Landroid/window/DesktopModeFlags;
+  CAMPO   Landroid/window/DesktopModeFlags;.ENABLE_DESKTOP_WINDOWING_EXIT_BY_MINIMIZE_TRANSITION_BUGFIX : Landroid/window/DesktopModeFlags;
+  CAMPO   Landroid/window/DesktopModeFlags;.ENABLE_START_LAUNCH_TRANSITION_FROM_TASKBAR_BUGFIX : Landroid/window/DesktopModeFlags;
+  CAMPO   Landroid/window/DesktopModeFlags;.ENABLE_TASKBAR_RECENTS_LAYOUT_TRANSITION : Landroid/window/DesktopModeFlags;
+== ENLACE: métodos que faltan (6 clases)
+  METODO  Landroid/app/ActivityOptions;.makeCustomAnimation(Landroid/content/Context;IILandroid/os/Handler;Landroid/app/ActivityOptions$OnAnimationStartedListener;)Landroid/app/ActivityOptions;
+  METODO  Landroid/app/ActivityOptions;.makeCustomAnimation(Landroid/content/Context;IILandroid/os/Handler;Landroid/app/ActivityOptions$OnAnimationStartedListener;Landroid/app/ActivityOptions$OnAnimationFinishedListener;)Landroid/app/ActivityOptions;
+  METODO  Landroid/app/IActivityTaskManager;.getFilteredTasks(III)Ljava/util/List;
+  METODO  Landroid/app/IActivityTaskManager;.getFilteredTasks(IZ)Ljava/util/List;
+  METODO  Landroid/app/IActivityTaskManager;.getTaskSnapshot(IZ)Landroid/window/TaskSnapshot;
+  METODO  Landroid/app/IActivityTaskManager;.invalidateHomeTaskSnapshot(Landroid/os/IBinder;)V
+  METODO  Landroid/app/IActivityTaskManager;.registerRemoteAnimationForNextActivityStart(Ljava/lang/String;Landroid/view/RemoteAnimationAdapter;)V
+  METODO  Landroid/app/IActivityTaskManager;.takeTaskSnapshot(IZ)Landroid/window/TaskSnapshot;
+  METODO  Landroid/view/IWindowManager;.createInputConsumer(Landroid/os/IBinder;Ljava/lang/String;ILandroid/view/InputChannel;)V
+  METODO  Landroid/window/ScreenCapture;.captureLayers(Landroid/window/ScreenCapture$LayerCaptureArgs;)Landroid/window/ScreenCapture$ScreenshotHardwareBuffer;
+  METODO  Lcom/android/internal/hidden_from_bootclasspath/com/android/window/flags/Flags;.enableDesktopRecentsTransitionsCornersBugfix()Z
+  METODO  Lcom/android/internal/protolog/common/IProtoLog;.log(Lcom/android/internal/protolog/common/LogLevel;Lcom/android/internal/protolog/common/IProtoLogGroup;JI[Ljava/lang/Object;)V
+== ENLACE: total 92 (clases referenciadas: 13042, campos: 46261, métodos: 81038)
+== AIDL: interfaces comparadas: 3; con diferencias: contadas arriba; solo en la app (no están en los binarios dados): 3
+  SOLO-APP Lcom/kieronquinn/app/smartspacer/sdk/IRemoteAdapter
+  SOLO-APP Lcom/kieronquinn/app/smartspacer/sdk/client/ISmartspaceCallback
+  SOLO-APP Lcom/kieronquinn/app/smartspacer/sdk/client/ISmartspaceManager
+== AIDL: total de diferencias 0
