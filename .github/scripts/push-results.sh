@@ -31,12 +31,23 @@ for attempt in 1 2 3 4 5; do
   cp -R "$src"/. "$dest"/
   git add -A
   git commit -q -m "Resultados ${name} (run ${GITHUB_RUN_ID})" || true
-  if git push -q origin "HEAD:${branch}" 2>/dev/null; then
+  if err="$(git push -q origin "HEAD:${branch}" 2>&1)"; then
     echo "Resultados subidos a ${branch}:${dest}"
     exit 0
   fi
-  echo "Intento $attempt: conflicto al subir, reintentando"
+  last_err="$err"
+  echo "Intento $attempt: no se pudo subir: $err"
   sleep $((attempt * 3))
 done
-echo "No se pudieron subir los resultados"
+
+# Último recurso: que al menos el resumen quede en una anotación legible desde la API.
+msg="No se pudieron subir los resultados de ${name}: ${last_err:-?}"
+echo "::warning title=push-results::$(printf '%s' "$msg" | head -c 2000 | sed ':a;N;$!ba;s/\n/%0A/g')"
+if [[ -f $src/summary.md ]]; then
+  body="$(head -c 55000 "$src/summary.md" | sed ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g')"
+  echo "::notice title=resumen-${name}::${body}"
+elif [[ -f $src/summary.txt ]]; then
+  body="$(head -c 55000 "$src/summary.txt" | sed ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g')"
+  echo "::notice title=resumen-${name}::${body}"
+fi
 exit 0

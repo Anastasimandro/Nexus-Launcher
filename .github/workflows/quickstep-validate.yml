@@ -118,6 +118,7 @@ jobs:
       # El emulador y la validación van en el mismo paso: un proceso en segundo plano puede no
       # sobrevivir al paso que lo lanzó.
       - name: Emulador Android y validación
+        timeout-minutes: 50
         run: |
           mkdir -p results
           .github/scripts/emulator-up.sh "${{ inputs.api_level || '37' }}" results

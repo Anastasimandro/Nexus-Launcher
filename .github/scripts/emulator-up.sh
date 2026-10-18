@@ -27,21 +27,32 @@ if [[ -z $pkg ]]; then
 fi
 echo "Imagen: $pkg" | tee "$out/image.txt"
 
-"$sm" --install "$pkg" "emulator" "platform-tools" > "$out/sdkmanager-install.txt" 2>&1
+timeout 1200 "$sm" --install "$pkg" "emulator" "platform-tools" > "$out/sdkmanager-install.txt" 2>&1 \
+  || { echo "::error title=sdkmanager::fallo o tiempo agotado instalando $pkg"; tail -n 20 "$out/sdkmanager-install.txt"; exit 1; }
 echo no | "$avdm" create avd -n qs -k "$pkg" -d pixel_6 --force > "$out/avd-create.txt" 2>&1
 
 # Los procesos en segundo plano de un paso pueden morir con él: se ejecuta todo en el mismo paso.
 nohup "$sdk/emulator/emulator" -avd qs -no-window -no-audio -no-boot-anim -no-snapshot \
   -gpu swiftshader_indirect -memory 4096 -cores 3 -writable-system \
   > "$out/emulator.log" 2>&1 &
-echo "emulador lanzado (pid $!)"
+emu_pid=$!
+echo "emulador lanzado (pid $emu_pid)"
+ls -l /dev/kvm > "$out/kvm.txt" 2>&1 || true
 
 adb start-server > /dev/null 2>&1
-adb wait-for-device
 deadline=$((SECONDS + 900))
+# Sin `adb wait-for-device` a secas: si el emulador muere, bloquearía el paso hasta el límite del job.
+until adb get-state 2>/dev/null | grep -q device; do
+  if ! kill -0 "$emu_pid" 2>/dev/null || (( SECONDS > deadline )); then
+    echo "::error title=Emulador::El emulador no apareció en adb (¿murió o falta KVM?)"
+    tail -n 40 "$out/emulator.log" || true
+    exit 1
+  fi
+  sleep 5
+done
 until [[ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == "1" ]]; do
-  if (( SECONDS > deadline )); then
-    echo "::error title=Emulador::No terminó de arrancar en 15 minutos"
+  if ! kill -0 "$emu_pid" 2>/dev/null || (( SECONDS > deadline )); then
+    echo "::error title=Emulador::No terminó de arrancar (murió o pasaron 15 minutos)"
     tail -n 40 "$out/emulator.log" || true
     exit 1
   fi
