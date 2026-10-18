@@ -29,7 +29,21 @@ echo "Imagen: $pkg" | tee "$out/image.txt"
 
 timeout 1200 "$sm" --install "$pkg" "emulator" "platform-tools" > "$out/sdkmanager-install.txt" 2>&1 \
   || { echo "::error title=sdkmanager::fallo o tiempo agotado instalando $pkg"; tail -n 20 "$out/sdkmanager-install.txt"; exit 1; }
-echo no | "$avdm" create avd -n qs -k "$pkg" -d pixel_6 --force > "$out/avd-create.txt" 2>&1
+export ANDROID_AVD_HOME="${ANDROID_AVD_HOME:-$HOME/.android/avd}"
+mkdir -p "$ANDROID_AVD_HOME"
+"$avdm" list device -c > "$out/avd-devices.txt" 2>&1 || true
+# Se comprueba que el AVD exista de verdad: avdmanager ha salido sin error y sin crearlo.
+for dev in pixel_6 pixel_5 ""; do
+  echo no | "$avdm" create avd -n qs -k "$pkg" ${dev:+-d "$dev"} --force > "$out/avd-create.txt" 2>&1 || true
+  [[ -f $ANDROID_AVD_HOME/qs.ini ]] && break
+done
+if [[ ! -f $ANDROID_AVD_HOME/qs.ini ]]; then
+  echo "::error title=AVD::avdmanager no creó el AVD (ANDROID_AVD_HOME=$ANDROID_AVD_HOME)"
+  tr '\r' '\n' < "$out/avd-create.txt" | tail -n 15
+  ls -la "$ANDROID_AVD_HOME" "$HOME/.android" 2>&1 | head -20
+  exit 1
+fi
+echo "AVD creado en $ANDROID_AVD_HOME" | tee -a "$out/image.txt"
 
 # Los procesos en segundo plano de un paso pueden morir con él: se ejecuta todo en el mismo paso.
 nohup "$sdk/emulator/emulator" -avd qs -no-window -no-audio -no-boot-anim -no-snapshot \
