@@ -12,6 +12,7 @@
 #   system/product/etc/permissions/privapp-permissions-nexus.xml
 #   system/product/overlay/NexusRecentsOverlay.apk   (desactivado hasta `nexus-quickstep enable`)
 #   system/bin/nexus-quickstep
+#   service.sh                                       (vigilante de Quickstep)
 
 MIN_API=34
 APK="$MODPATH/system/product/priv-app/Nexus/Nexus.apk"
@@ -31,6 +32,7 @@ fi
 [ -f "$ALLOWLIST" ] || abort "! El zip no lleva la lista de permisos: está incompleto"
 [ -f "$OVERLAY" ] || abort "! El zip no lleva el overlay de recientes: está incompleto"
 [ -f "$TOOL" ] || abort "! El zip no lleva nexus-quickstep: está incompleto"
+[ -f "$MODPATH/service.sh" ] || abort "! El zip no lleva service.sh: está incompleto"
 
 set_perm_recursive "$MODPATH/system/product" 0 0 0755 0644
 set_perm "$TOOL" 0 2000 0755
@@ -43,4 +45,6 @@ ui_print "- Gestos del sistema en Nexus (opcional, desactivado):"
 ui_print "  tras reiniciar, abre Nexus una vez y, con root, ejecuta"
 ui_print "  nexus-quickstep status   (para ver si este Android lo admite)"
 ui_print "  nexus-quickstep enable   (y reinicia)"
-ui_print "  Si algo va mal: nexus-quickstep disable (y reinicia)"
+ui_print "  nexus-quickstep bound    (comprueba que SystemUI se enlazó a Nexus)"
+ui_print "  Si en el arranque SystemUI no se enlaza a Nexus, el módulo"
+ui_print "  desactiva el overlay solo. A mano: nexus-quickstep disable"

@@ -190,6 +190,8 @@ jobs:
             || fail "El módulo no lleva el overlay de recientes."
           unzip -l "$zip" system/bin/nexus-quickstep >/dev/null 2>&1 \
             || fail "El módulo no lleva nexus-quickstep."
+          unzip -l "$zip" service.sh >/dev/null 2>&1 \
+            || fail "El módulo no lleva service.sh."
           echo "Módulo ${VERSION} (versionCode ${VERSION_CODE}) correcto."
 
       - name: Guardar archivos como artefacto

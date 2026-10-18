@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Instala una imagen de sistema de Android (google_apis, con root) y arranca un emulador.
+# Autodetecta el nombre de la imagen para la API pedida: no se supone.
+#
+# Uso: emulator-up.sh API RESULTADOS
+set -euo pipefail
+
+api="${1:?falta la API}"
+out="${2:?falta RESULTADOS}"
+mkdir -p "$out"
+
+sdk="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+export ANDROID_HOME="$sdk" ANDROID_SDK_ROOT="$sdk"
+sm="$(ls "$sdk"/cmdline-tools/*/bin/sdkmanager | sort -V | tail -n 1)"
+avdm="$(ls "$sdk"/cmdline-tools/*/bin/avdmanager | sort -V | tail -n 1)"
+export PATH="$sdk/platform-tools:$sdk/emulator:$PATH"
+
+yes | "$sm" --licenses > /dev/null 2>&1 || true
+"$sm" --list 2>/dev/null > "$out/sdkmanager-list.txt" || true
+grep -oE 'system-images;android-[0-9.]+[^ |]*' "$out/sdkmanager-list.txt" | sort -u > "$out/system-images.txt" || true
+
+pkg="$(grep -E "^system-images;android-${api}(\.[0-9]+)?;google_apis;x86_64$" "$out/system-images.txt" | sort -V | tail -n 1 || true)"
+if [[ -z $pkg ]]; then
+  echo "::error title=Sin imagen::No hay imagen google_apis x86_64 para la API ${api}. Imágenes de esa API:"
+  grep -E "android-${api}" "$out/system-images.txt" || echo "(ninguna)"
+  exit 1
+fi
+echo "Imagen: $pkg" | tee "$out/image.txt"
+
+"$sm" --install "$pkg" "emulator" "platform-tools" > "$out/sdkmanager-install.txt" 2>&1
+echo no | "$avdm" create avd -n qs -k "$pkg" -d pixel_6 --force > "$out/avd-create.txt" 2>&1
+
+# Los procesos en segundo plano de un paso pueden morir con él: se ejecuta todo en el mismo paso.
+nohup "$sdk/emulator/emulator" -avd qs -no-window -no-audio -no-boot-anim -no-snapshot \
+  -gpu swiftshader_indirect -memory 4096 -cores 3 -writable-system \
+  > "$out/emulator.log" 2>&1 &
+echo "emulador lanzado (pid $!)"
+
+adb start-server > /dev/null 2>&1
+adb wait-for-device
+deadline=$((SECONDS + 900))
+until [[ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == "1" ]]; do
+  if (( SECONDS > deadline )); then
+    echo "::error title=Emulador::No terminó de arrancar en 15 minutos"
+    tail -n 40 "$out/emulator.log" || true
+    exit 1
+  fi
+  sleep 5
+done
+sleep 5
+echo "Emulador listo: $(adb shell getprop ro.build.version.release | tr -d '\r') (API $(adb shell getprop ro.build.version.sdk | tr -d '\r'))"
