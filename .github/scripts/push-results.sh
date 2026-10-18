@@ -12,6 +12,7 @@ work="$(mktemp -d)"
 url="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
 [[ -d $src ]] || { echo "No existe $src"; exit 0; }
+src="$(cd "$src" && pwd)"   # absoluta: más abajo se cambia de directorio
 cd "$work" || exit 1
 git init -q .
 git config user.name "github-actions"
