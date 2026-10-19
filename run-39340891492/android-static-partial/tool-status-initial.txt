@@ -1,0 +1,5 @@
+Overlay app.nexus.launcher.overlay.recents: disabled
+config_recentsComponentName ahora: com.google.android.apps.nexuslauncher/com.android.quickstep.RecentsActivity
+Comprobación de Nexus: sin datos (abre Nexus una vez).
+Vigilante: sin verificar todavía.
+Los cambios del overlay solo se aplican al reiniciar.
