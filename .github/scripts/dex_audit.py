@@ -42,6 +42,27 @@ def read_uleb(buf, off):
         shift += 7
 
 
+def _build_width_table():
+    w = [1] * 256
+    two = [0x02, 0x05, 0x08, 0x13, 0x15, 0x16, 0x19, 0x1A, 0x1C, 0x1F, 0x20, 0x22, 0x23, 0x29, 0xFE, 0xFF]
+    three = [0x03, 0x06, 0x09, 0x14, 0x17, 0x1B, 0x24, 0x25, 0x26, 0x2A, 0x2B, 0x2C, 0xFC, 0xFD]
+    for o in two:
+        w[o] = 2
+    for o in three:
+        w[o] = 3
+    w[0x18] = 5
+    for o in list(range(0x2D, 0x3E)) + list(range(0x44, 0x6E)) + list(range(0x90, 0xB0)) + list(range(0xD0, 0xE3)):
+        w[o] = 2
+    for o in list(range(0x6E, 0x73)) + list(range(0x74, 0x79)):
+        w[o] = 3
+    w[0xFA] = w[0xFB] = 4
+    return w
+
+
+_WIDTH = _build_width_table()
+SCAN_STATS = [0, 0]  # métodos recorridos, métodos cuyo recorrido no acabó justo al final
+
+
 class Dex:
     """Un archivo .dex. Todo se lee bajo demanda: los de framework tienen cientos de miles de ids."""
 
@@ -152,6 +173,71 @@ class Dex:
                 if isinstance(value, int):
                     consts[name] = value
         return fields, methods, consts
+
+    def code_refs(self):
+        """(clase que referencia, tipo, referencia) leyendo el bytecode de cada método.
+
+        tipo: "field", "method" o "class". Se usa para saber QUÉ código de la app toca un símbolo que
+        el sistema ya no tiene (y no solo que la app lo menciona).
+        """
+        buf = self.data
+        for cdef in self.class_defs():
+            off = cdef["class_data"]
+            if not off:
+                continue
+            n_sf, off = read_uleb(buf, off)
+            n_if, off = read_uleb(buf, off)
+            n_dm, off = read_uleb(buf, off)
+            n_vm, off = read_uleb(buf, off)
+            for count in (n_sf, n_if):
+                for _ in range(count):
+                    _, off = read_uleb(buf, off)
+                    _, off = read_uleb(buf, off)
+            for count in (n_dm, n_vm):
+                idx = 0
+                for _ in range(count):
+                    diff, off = read_uleb(buf, off)
+                    _, off = read_uleb(buf, off)
+                    code_off, off = read_uleb(buf, off)
+                    idx += diff
+                    if not code_off:
+                        continue
+                    mname = self.method_ref(idx)[1]
+                    for kind, ref in self._scan_code(code_off):
+                        yield cdef["name"], mname, kind, ref
+
+    def _scan_code(self, code_off):
+        buf = self.data
+        (insns_size,) = struct.unpack_from("<I", buf, code_off + 12)
+        base = code_off + 16
+        units = struct.unpack_from("<%dH" % insns_size, buf, base)
+        i = 0
+        while i < insns_size:
+            u = units[i]
+            op = u & 0xFF
+            if op == 0x00 and u != 0:  # cargas útiles de switch / arrays
+                if u == 0x0100:
+                    i += 4 + units[i + 1] * 2
+                elif u == 0x0200:
+                    i += 2 + units[i + 1] * 4
+                else:
+                    width = units[i + 1]
+                    size = units[i + 2] | (units[i + 3] << 16)
+                    i += 4 + (size * width + 1) // 2
+                continue
+            width = _WIDTH[op]
+            if i + 1 < insns_size:
+                ref = units[i + 1]
+                if 0x52 <= op <= 0x6D:
+                    yield "field", self.field_ref(ref)
+                elif op in (0x6E, 0x6F, 0x70, 0x71, 0x72, 0x74, 0x75, 0x76, 0x77, 0x78):
+                    yield "method", self.method_ref(ref)
+                elif op in (0x1C, 0x1F, 0x20, 0x22, 0x23, 0x24, 0x25):
+                    yield "class", self.type(ref)
+            i += width
+        SCAN_STATS[0] += 1
+        if i != insns_size:
+            SCAN_STATS[1] += 1
 
     def _static_values(self, off):
         size, off = read_uleb(self.data, off)
@@ -275,7 +361,19 @@ def referenced_members(app_dex_files):
     return classes, fields, methods
 
 
-def link_check(app_index, app_dex_files, device_index, out):
+def referrers_of(app_dex_files, wanted_fields, wanted_methods, wanted_classes, mapping):
+    """Para cada símbolo ausente, las clases (y métodos) de la app que lo usan en su código."""
+    found = collections.defaultdict(set)
+    for dex in app_dex_files:
+        for cls, mname, kind, ref in dex.code_refs():
+            if (kind == "field" and ref in wanted_fields) or (kind == "method" and ref in wanted_methods) \
+                    or (kind == "class" and ref in wanted_classes):
+                found[(kind, ref)].add("%s.%s" % (mapping.get(cls, cls), mname))
+    return found
+
+
+def link_check(app_index, app_dex_files, device_index, out, mapping=None):
+    mapping = mapping or {}
     classes, fields, methods = referenced_members(app_dex_files)
     external = lambda c: not app_index.has(c)
 
@@ -296,17 +394,41 @@ def link_check(app_index, app_dex_files, device_index, out):
                    for a in device_index.ancestors(cls) if device_index.has(a)):
             missing_methods[cls].append("%s%s" % (name, sig))
 
+    wf = {(c, n.split(" : ")[0], n.split(" : ")[1]) for c, items in missing_fields.items() for n in items}
+    wm = set()
+    for c, items in missing_methods.items():
+        for n in items:
+            k = n.index("(")
+            wm.add((c, n[:k], n[k:]))
+    refs = referrers_of(app_dex_files, wf, wm, set(missing_classes), mapping)
+
+    def show(kind, ref):
+        who = sorted(refs.get((kind, ref), ()))
+        if not who:
+            print("      (sin referencias en el bytecode: solo declarado)", file=out)
+        for item in who[:8]:
+            print("      usado en %s" % item, file=out)
+        if len(who) > 8:
+            print("      ... y %d más" % (len(who) - 8), file=out)
+
+    print("== ESCANEO de bytecode: %d métodos recorridos, %d desalineados (debe ser 0)"
+          % (SCAN_STATS[0], SCAN_STATS[1]), file=out)
     print("== ENLACE: clases que la app usa y el sistema no tiene (%d)" % len(missing_classes), file=out)
     for cls in missing_classes:
-        print("  CLASE   %s" % cls, file=out)
+        print("  CLASE   %s" % mapping.get(cls, cls), file=out)
+        show("class", cls)
     print("== ENLACE: campos que faltan (%d clases)" % len(missing_fields), file=out)
     for cls in sorted(missing_fields):
         for item in missing_fields[cls]:
             print("  CAMPO   %s.%s" % (cls, item), file=out)
+            name, typ = item.split(" : ")
+            show("field", (cls, name, typ))
     print("== ENLACE: métodos que faltan (%d clases)" % len(missing_methods), file=out)
     for cls in sorted(missing_methods):
         for item in missing_methods[cls]:
             print("  METODO  %s.%s" % (cls, item), file=out)
+            k = item.index("(")
+            show("method", (cls, item[:k], item[k:]))
     total = (len(missing_classes) + sum(map(len, missing_fields.values()))
              + sum(map(len, missing_methods.values())))
     print("== ENLACE: total %d (clases referenciadas: %d, campos: %d, métodos: %d)"
@@ -358,6 +480,76 @@ def aidl_check(app_index, device_index, out):
     return differences
 
 
+def parse_aidl(path):
+    """(descriptor de clase, [métodos en orden de declaración]) de un .aidl con una interfaz."""
+    import re
+    with open(path, encoding="utf-8", errors="replace") as handle:
+        text = handle.read()
+    text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
+    text = re.sub(r"//[^\n]*", " ", text)
+    pkg = re.search(r"^\s*package\s+([\w.]+)\s*;", text, re.M)
+    iface = re.search(r"\binterface\s+(\w+)\s*\{", text)
+    if not pkg or not iface:
+        return None
+    start = iface.end()
+    depth, end = 1, start
+    while end < len(text) and depth:
+        depth += {"{": 1, "}": -1}.get(text[end], 0)
+        end += 1
+    body = text[start:end - 1]
+    methods = []
+    for stmt in body.split(";"):
+        stmt = re.sub(r"@\w+(\([^)]*\))?", " ", stmt).strip()
+        if "(" not in stmt or re.match(r"^(const|parcelable)\b", stmt):
+            continue
+        head = stmt[:stmt.index("(")]
+        if "=" in head:
+            continue
+        methods.append(head.split()[-1])
+    return "L%s/%s;" % (pkg.group(1).replace(".", "/"), iface.group(1)), methods
+
+
+def aidl_source_check(src_dirs, system_index, out):
+    """Compara el orden de métodos de los .aidl del repositorio con los códigos de transacción del
+    sistema. El código de un método AIDL es su posición (desde 1): si SystemUI tiene otro orden,
+    una llamada de Nexus llega a otro método. Es independiente de R8, que borra las constantes
+    TRANSACTION_* del APK."""
+    compared = differences = absent = 0
+    for src in src_dirs:
+        for root, _, names in sorted(os.walk(src)):
+            for name in sorted(names):
+                if not name.endswith(".aidl"):
+                    continue
+                parsed = parse_aidl(os.path.join(root, name))
+                if not parsed or not parsed[1]:
+                    continue
+                desc, methods = parsed
+                stub = desc[:-1] + "$Stub;"
+                if not system_index.has(stub):
+                    absent += 1
+                    print("  AUSENTE  %s (la interfaz no está en el sistema con ese nombre)" % desc[:-1], file=out)
+                    continue
+                compared += 1
+                system = {k[len("TRANSACTION_"):]: v for k, v in transactions(system_index, stub).items()}
+                problems = []
+                for index, method in enumerate(methods, 1):
+                    got = system.get(method)
+                    if got is None:
+                        problems.append("%s: el repositorio la tiene (código %d) y el sistema no" % (method, index))
+                    elif got != index:
+                        problems.append("%s: repositorio=%d sistema=%d" % (method, index, got))
+                for method in sorted(set(system) - set(methods)):
+                    problems.append("%s: el sistema la tiene (código %d) y el repositorio no" % (method, system[method]))
+                if problems:
+                    differences += len(problems)
+                    print("  DIFERENCIA %s" % desc[:-1], file=out)
+                    for item in problems:
+                        print("      %s" % item, file=out)
+    print("== AIDL-FUENTES: %d interfaces comparadas, %d ausentes en el sistema, %d diferencias"
+          % (compared, absent, differences), file=out)
+    return differences
+
+
 def dump_class(device_index, name, out):
     if not device_index.has(name):
         print("== %s: NO EXISTE en el sistema" % name, file=out)
@@ -381,6 +573,11 @@ def main():
     parser.add_argument("--link", action="store_true")
     parser.add_argument("--aidl", action="store_true")
     parser.add_argument("--dump", nargs="*", default=[], help="descriptores, p. ej. Landroid/view/IWindowManager;")
+    parser.add_argument("--aidl-src", nargs="*", default=[],
+                        help="carpetas con .aidl del repositorio para comparar con el sistema")
+    parser.add_argument("--mapping", help="mapping.txt de R8: muestra los nombres originales de las clases de la app")
+    parser.add_argument("--find", nargs="*", default=[],
+                        help="lista las clases del sistema (con SystemUI) cuyo nombre contiene estos textos")
     args = parser.parse_args()
 
     app_dex = [d for p in args.app for d in load_dex_files(p)]
@@ -398,12 +595,29 @@ def main():
           % (len(app_dex), len(app_index.cdefs), len(device_dex), len(device_index.cdefs),
              len(wide_index.cdefs)))
 
+    for text in args.find:
+        hits = sorted(c for c in wide_index.cdefs if text in c)
+        print("== BUSCAR %r: %d clases" % (text, len(hits)))
+        for c in hits[:60]:
+            print("  %s" % c)
+
+    mapping = {}
+    if args.mapping and os.path.isfile(args.mapping):
+        with open(args.mapping, encoding="utf-8", errors="replace") as handle:
+            for line in handle:
+                if line.startswith("#") or line.startswith(" ") or " -> " not in line:
+                    continue
+                orig, obf = line.rstrip().rstrip(":").split(" -> ")
+                mapping["L%s;" % obf.replace(".", "/")] = "L%s;" % orig.replace(".", "/")
+
     for name in args.dump:
         dump_class(wide_index, name if name.endswith(";") else name + ";", sys.stdout)
     if args.link:
-        link_check(app_index, app_dex, device_index, sys.stdout)
+        link_check(app_index, app_dex, device_index, sys.stdout, mapping)
     if args.aidl:
         aidl_check(app_index, wide_index, sys.stdout)
+    if args.aidl_src:
+        aidl_source_check(args.aidl_src, wide_index, sys.stdout)
 
 
 if __name__ == "__main__":

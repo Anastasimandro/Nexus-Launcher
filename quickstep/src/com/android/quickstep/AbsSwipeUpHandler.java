@@ -187,6 +187,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.function.Consumer;
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat;
 
 /**
  * Handles the navigation gestures when Launcher is the default home activity.
@@ -1693,7 +1694,7 @@ public abstract class AbsSwipeUpHandler<
             // Literal int because https://github.com/LawnchairLauncher/lawnchair/issues/6817
             if (Build.VERSION.SDK_INT >= 36 && Build.VERSION.SDK_INT_FULL >= 3600001) {
                 try {
-                    enableDesktopWindowingPipCompat = DesktopExperienceFlags.ENABLE_DESKTOP_WINDOWING_PIP.isTrue();
+                    enableDesktopWindowingPipCompat = DesktopFlagsCompat.isTrue(() -> DesktopExperienceFlags.ENABLE_DESKTOP_WINDOWING_PIP.isTrue());
                 } catch (Exception e) {
                     Log.d("LC-AbsSwipeUpHandler", "Failed to get ENABLE_DESKTOP_WINDOWING_PIP flag, defaulting to false", e);
                 }

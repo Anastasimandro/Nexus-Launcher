@@ -38,6 +38,7 @@ import com.android.internal.jank.Cuj;
 import com.android.launcher3.taskbar.bubbles.BubbleBarViewController;
 import com.android.systemui.shared.system.InteractionJankMonitorWrapper;
 import com.android.wm.shell.shared.bubbles.BubbleBarLocation;
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat;
 
 /**
  * Callbacks for {@link TaskbarView} to interact with its controller.

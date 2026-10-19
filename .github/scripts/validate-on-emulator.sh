@@ -97,14 +97,19 @@ phase_static() {
   echo "SystemUI: $ui" > "$out/systemui-path.txt"
   adb pull "$ui" "$sysui/SystemUI.apk" > /dev/null 2>&1 || echo "no se pudo bajar SystemUI" >> "$out/static-pull-errors.txt"
   du -sh "$sys" "$sysui" > "$out/static-sizes.txt" 2>&1
+  local repo="$here/../.." mapping_args=()
+  [[ -f $dist/mapping.txt ]] && mapping_args=(--mapping "$dist/mapping.txt")
   python3 -I "$here/dex_audit.py" --app "$apk" --device "$sys" --aidl-device "$sysui" --link --aidl \
+    "${mapping_args[@]}" \
+    --aidl-src "$repo/wmshell" "$repo/systemUI" "$repo/quickstep" "$repo/compatLib" "$repo/lawnchair/aidl" \
+    --find ScreenCapture IRecentTasks ILauncherProxy IOverviewProxy ISystemUiProxy IRecentsAnimation IShellTransitions \
     --dump 'Landroid/window/DesktopModeFlags;' 'Landroid/window/DesktopExperienceFlags;' \
-           'Landroid/view/IWindowManager;' 'Lcom/android/wm/shell/recents/IRecentTasks;' \
-           'Lcom/android/wm/shell/recents/IRecentTasks$Stub;' \
+           'Landroid/view/IWindowManager;' 'Landroid/window/ScreenCapture;' 'Landroid/window/ScreenCaptureInternal;' \
+           'Landroid/app/IActivityTaskManager;' 'Landroid/app/ActivityOptions;' \
     > "$out/static-audit.txt" 2>&1
 }
 cap static-audit-run phase_static
-grep -E "^== (ENLACE|AIDL)|^app:" "$out/static-audit.txt" | tee -a "$out/summary.md"
+grep -E "^== (ENLACE|AIDL|ESCANEO|BUSCAR)|^app:|^  (DIFERENCIA|AUSENTE)" "$out/static-audit.txt" | tee -a "$out/summary.md"
 say ""
 
 # ---------------------------------------------------------------------------------------------
@@ -112,6 +117,7 @@ say "## Fase 2: instalar el módulo como lo hace Magisk (remount)"
 phase_install() {
   unzip -q "$zip" -d "$work/module"
   adb root; adb wait-for-device
+  dsh df -h /data > "$out/df-data-before.txt"
   local r
   r="$(adb remount 2>&1)"; echo "$r" > "$out/remount-1.txt"
   if grep -qiE "verity|reboot|failed|not " <<<"$r"; then

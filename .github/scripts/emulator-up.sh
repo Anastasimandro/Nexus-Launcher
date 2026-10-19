@@ -45,6 +45,16 @@ if [[ ! -f $ANDROID_AVD_HOME/qs.ini ]]; then
 fi
 echo "AVD creado en $ANDROID_AVD_HOME" | tee -a "$out/image.txt"
 
+# La partición /data por defecto es pequeña: con el módulo y el remount de overlayfs se llenaba
+# (ENOSPC), no se podían escribir los idmaps y system_server entraba en bucle de caídas.
+cfg="$ANDROID_AVD_HOME/qs.avd/config.ini"
+if [[ -f $cfg ]]; then
+  sed -i '/^disk.dataPartition.size=/d' "$cfg"
+  echo "disk.dataPartition.size=8G" >> "$cfg"
+  cp "$cfg" "$out/avd-config.ini"
+fi
+df -h / | tail -1
+
 # Los procesos en segundo plano de un paso pueden morir con él: se ejecuta todo en el mismo paso.
 nohup "$sdk/emulator/emulator" -avd qs -no-window -no-audio -no-boot-anim -no-snapshot \
   -gpu swiftshader_indirect -memory 4096 -cores 3 -writable-system \

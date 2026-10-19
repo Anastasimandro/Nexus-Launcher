@@ -72,6 +72,7 @@ import java.util.stream.Collectors;
 
 import app.lawnchair.LawnchairApp;
 import app.lawnchair.compat.LawnchairQuickstepCompat;
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat;
 
 /**
  * Manages the recent task list from the system, caching it as necessary.
@@ -514,7 +515,7 @@ public class RecentTasksList {
         Set<Integer> minimizedTaskIds = minimizedTaskIdArray != null
                 ? CollectionsKt.toSet(ArraysKt.asIterable(minimizedTaskIdArray))
                 : Collections.emptySet();
-        if (!DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND.isTrue()) {
+        if (!DesktopFlagsCompat.isTrue(() -> DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND.isTrue())) {
             // This code is not needed when the multiple desktop feature is enabled, since Shell
             // will send a single `GroupedTaskInfo` for each desk with a unique `deskId` across
             // all displays.

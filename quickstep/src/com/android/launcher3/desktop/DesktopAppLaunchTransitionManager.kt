@@ -30,6 +30,7 @@ import com.android.launcher3.desktop.DesktopAppLaunchTransition.AppLaunchType
 import com.android.launcher3.util.Executors.MAIN_EXECUTOR
 import com.android.quickstep.SystemUiProxy
 import com.android.wm.shell.shared.desktopmode.DesktopModeStatus
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat
 
 /** Manages transitions related to app launches in Desktop Mode. */
 class DesktopAppLaunchTransitionManager(
@@ -77,7 +78,7 @@ class DesktopAppLaunchTransitionManager(
     private fun shouldRegisterTransitions(): Boolean =
         Utilities.ATLEAST_BAKLAVA && // LC-Note: This is only available for Baklava
             DesktopModeStatus.canEnterDesktopMode(context) &&
-            DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_TRANSITIONS_BUGFIX.isTrue
+            DesktopFlagsCompat.isTrue { DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_TRANSITIONS_BUGFIX.isTrue }
 
     companion object {
         private fun buildAppLaunchFilter(): TransitionFilter {
@@ -87,7 +88,7 @@ class DesktopAppLaunchTransitionManager(
                     mWindowingMode = WINDOWING_MODE_FREEFORM
                     mModes = DesktopAppLaunchTransition.LAUNCH_CHANGE_MODES
                     mMustBeTask = true
-                    if (!DesktopExperienceFlags.ENABLE_DESKTOP_APP_LAUNCH_BUGFIX.isTrue) {
+                    if (!DesktopFlagsCompat.isTrue { DesktopExperienceFlags.ENABLE_DESKTOP_APP_LAUNCH_BUGFIX.isTrue }) {
                         mOrder = CONTAINER_ORDER_TOP
                     }
                 }

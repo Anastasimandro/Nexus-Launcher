@@ -146,7 +146,7 @@ class DesktopStateImpl(context: Context) : DesktopState {
     override val enableMultipleDesktops: Boolean =
         if (false) {
             // LC-Ignored: Intentional, all Android desktop flags are disabled
-            DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND.isTrue
+            DesktopFlagsCompat.isTrue { DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND.isTrue }
                     && DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_FRONTEND.isTrue
         } else {
             false
@@ -156,7 +156,7 @@ class DesktopStateImpl(context: Context) : DesktopState {
         if (false) {
             // LC-Ignored: Intentional, all Android desktop flags are disabled
             DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_FRONTEND.isTrue
-                    && DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND.isTrue
+                    && DesktopFlagsCompat.isTrue { DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND.isTrue }
         } else {
             false
         } && isDesktopModeSupportedOnDisplay(display)

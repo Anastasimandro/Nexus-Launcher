@@ -105,6 +105,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat;
 
 /**
  * Handles properties/data collection, then passes the results to TaskbarView to render.
@@ -1292,7 +1293,7 @@ public class TaskbarViewController implements TaskbarControllers.LoggableTaskbar
     /** Called when there's a change in running apps to update the UI. */
     public void commitRunningAppsToUI() {
         mModelCallbacks.commitRunningAppsToUI();
-        if (ENABLE_TASKBAR_RECENTS_LAYOUT_TRANSITION.isTrue()
+        if (DesktopFlagsCompat.isTrue(() -> ENABLE_TASKBAR_RECENTS_LAYOUT_TRANSITION.isTrue())
                 && !mActivity.isTransientTaskbar()
                 && mTaskbarView.getLayoutTransition() == null) {
             // Set up after the first commit so that the initial recents do not animate (janky).

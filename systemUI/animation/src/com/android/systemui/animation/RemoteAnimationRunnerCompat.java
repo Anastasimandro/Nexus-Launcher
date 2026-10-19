@@ -48,6 +48,7 @@ import android.window.RemoteTransitionStub;
 import android.window.TransitionInfo;
 
 import com.android.wm.shell.shared.CounterRotator;
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat;
 
 public abstract class RemoteAnimationRunnerCompat extends IRemoteAnimationRunner.Stub {
     private static final String TAG = "RemoteAnimRunnerCompat";
@@ -274,7 +275,7 @@ public abstract class RemoteAnimationRunnerCompat extends IRemoteAnimationRunner
     ) {
         checkArgument(isOpeningMode(launcherChange.getMode()));
         if (!isClosingType(info.getType())
-                && !ENABLE_DESKTOP_WINDOWING_EXIT_BY_MINIMIZE_TRANSITION_BUGFIX.isTrue()) {
+                && !DesktopFlagsCompat.isTrue(() -> ENABLE_DESKTOP_WINDOWING_EXIT_BY_MINIMIZE_TRANSITION_BUGFIX.isTrue())) {
             return;
         }
         for (int i = info.getChanges().size() - 1; i >= 0; --i) {

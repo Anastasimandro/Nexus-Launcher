@@ -68,6 +68,8 @@ jobs:
           [ "${#apks[@]}" -eq 1 ] || { echo "::error::Esperaba un APK y hay ${#apks[@]}"; exit 1; }
           mkdir -p dist results
           cp "${apks[0]}" "dist/Nexus-v${VALIDATION_VERSION}.apk"
+          # El mapping de R8 permite leer los nombres originales en la auditoría del DEX.
+          cp build/outputs/mapping/lawnWithQuickstepGithubRelease/mapping.txt dist/mapping.txt || echo "sin mapping.txt"
           .github/scripts/build-magisk-module.sh "dist/Nexus-v${VALIDATION_VERSION}.apk" \
             "$VALIDATION_VERSION" "$VALIDATION_VERSION_CODE" "dist/Nexus-MagiskModule-v${VALIDATION_VERSION}.zip"
 

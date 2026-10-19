@@ -38,6 +38,7 @@ import com.android.quickstep.util.SingleTask
 import com.android.systemui.shared.recents.model.Task
 import com.android.wm.shell.shared.desktopmode.DesktopModeStatus
 import java.io.PrintWriter
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat
 
 /**
  * Provides recent apps functionality, when the Taskbar Recent Apps section is enabled. Behavior:
@@ -66,7 +67,7 @@ class TaskbarRecentAppsController(
 
     val enableRecentTasksThrottle =
         if (Utilities.ATLEAST_BAKLAVA_1) {
-            DesktopExperienceFlags.ENABLE_TASKBAR_RECENT_TASKS_THROTTLE_BUGFIX.isTrue
+            DesktopFlagsCompat.isTrue { DesktopExperienceFlags.ENABLE_TASKBAR_RECENT_TASKS_THROTTLE_BUGFIX.isTrue }
         } else {
             false
         }

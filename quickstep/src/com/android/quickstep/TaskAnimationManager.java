@@ -68,6 +68,7 @@ import dagger.assisted.AssistedInject;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Locale;
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat;
 
 public class TaskAnimationManager implements RecentsAnimationCallbacks.RecentsAnimationListener {
 
@@ -393,7 +394,7 @@ public class TaskAnimationManager implements RecentsAnimationCallbacks.RecentsAn
      * @param homeAction The lambda to execute for the standard home action on the default display.
      */
     public void maybeStartHomeAction(Runnable homeAction) {
-        if (!DesktopExperienceFlags.ENABLE_REJECT_HOME_TRANSITION.isTrue()) {
+        if (!DesktopFlagsCompat.isTrue(() -> DesktopExperienceFlags.ENABLE_REJECT_HOME_TRANSITION.isTrue())) {
           homeAction.run();
           return;
         }

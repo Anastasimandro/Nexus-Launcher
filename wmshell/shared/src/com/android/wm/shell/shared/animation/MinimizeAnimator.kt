@@ -29,6 +29,7 @@ import com.android.internal.jank.Cuj.CUJ_DESKTOP_MODE_MINIMIZE_WINDOW
 import com.android.internal.jank.InteractionJankMonitor
 import com.android.wm.shell.shared.animation.WindowAnimator.BoundsAnimationParams.AnimationBounds
 import java.time.Duration
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat
 
 /** Creates minimization animation */
 object MinimizeAnimator {
@@ -41,7 +42,7 @@ object MinimizeAnimator {
             endOffsetYDp = 12f,
             endScale = 0.97f,
             interpolator = Interpolators.STANDARD_ACCELERATE,
-            animBounds = if (DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND.isTrue) {
+            animBounds = if (DesktopFlagsCompat.isTrue { DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND.isTrue }) {
                 // In some cases, nav-back on the last desktop task may cause it to be reparented
                 // into a fullscreen TDA before being minimized back into a desk by
                 // [DesktopBackNavTransitionObserver]. The minimize animation would then occur when

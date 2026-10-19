@@ -31,6 +31,7 @@ import com.android.launcher3.model.data.ItemInfo
 import com.android.launcher3.model.data.WorkspaceItemInfo
 import com.android.launcher3.popup.SystemShortcut
 import com.android.launcher3.views.ActivityContext
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat
 
 /**
  * A single menu item shortcut to allow users to pin an item to the taskbar and unpin an item from
@@ -106,7 +107,7 @@ class PinToTaskbarShortcut<T>(
 
     companion object {
         fun isPinningAppWithContextMenuEnabled(context: TaskbarActivityContext): Boolean =
-            DesktopExperienceFlags.ENABLE_PINNING_APP_WITH_CONTEXT_MENU.isTrue &&
+            DesktopFlagsCompat.isTrue { DesktopExperienceFlags.ENABLE_PINNING_APP_WITH_CONTEXT_MENU.isTrue } &&
                 context.isTaskbarShowingDesktopTasks
     }
 }
