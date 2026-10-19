@@ -411,6 +411,28 @@ phase_static_overlay() {
   crashes > "$out/crashes-static-overlay.txt"
   dsh logcat -d | grep -E "SystemUiProxy|TouchInteraction|OverviewProxy|LauncherProxy|NoSuchMethod|NoSuchField|NoClassDef|RemoteException|SecurityException|AbsSwipeUpHandler" | tail -n 300 > "$out/logcat-static-overlay.txt"
 }
+# 8b: el APK mutable de siempre, pero declarado inmutable y activo por defecto en overlay/config/config.xml.
+phase_config_overlay() {
+  adb root > /dev/null 2>&1; adb wait-for-device
+  adb remount > "$out/remount-config.txt" 2>&1
+  adb shell rm -f /product/overlay/NexusRecentsOverlay.apk
+  adb push "$work/module/system/product/overlay/NexusRecentsOverlay.apk" /product/overlay/NexusRecentsOverlay.apk > /dev/null
+  adb shell mkdir -p /product/overlay/config
+  adb shell 'printf "%s\n" "<config>" "    <overlay package=\"app.nexus.launcher.overlay.recents\" enabled=\"true\" mutable=\"false\" />" "</config>" > /product/overlay/config/config.xml'
+  adb shell 'restorecon -RF /product/overlay' > /dev/null 2>&1
+  dsh "cat /product/overlay/config/config.xml; ls -lZ /product/overlay/config" > "$out/config-overlay-files.txt"
+  reboot_device
+  dsh cmd overlay list --user 0 "$OVERLAY" > "$out/config-overlay-list.txt"
+  dsh dumpsys overlay "$OVERLAY" > "$out/config-overlay-dumpsys.txt"
+  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/config-overlay-lookup.txt"
+  sleep 60
+  perm_state config-overlay > "$out/perm-state-config-overlay.txt"
+  dsh "$TOOL bound" > "$out/tool-bound-config-overlay.txt"
+  dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-config-overlay.txt"
+  crashes > "$out/crashes-config-overlay.txt"
+}
+effective() { grep -q "app.nexus.launcher/" "$1" 2>/dev/null; }
+
 if granted_somewhere; then
   say "No hace falta: el overlay mutable ya recibió los permisos."
 elif [[ ! -f $static_apk ]]; then
@@ -419,8 +441,16 @@ else
   cap static-overlay phase_static_overlay
   { cat "$out/static-overlay-list.txt" "$out/static-overlay-lookup.txt" "$out/perm-state-static-overlay.txt" "$out/tool-bound-static-overlay.txt"
     echo "--- caídas:"; cat "$out/crashes-static-overlay.txt"; } | tee -a "$out/summary.md"
-  S="-static"
-  cap gestures-static phase_gestures
+  if ! effective "$out/static-overlay-lookup.txt"; then
+    say "El overlay estático no llegó a aplicarse. 8b: overlay inmutable por overlay/config/config.xml."
+    cap config-overlay phase_config_overlay
+    { cat "$out/config-overlay-list.txt" "$out/config-overlay-lookup.txt" "$out/perm-state-config-overlay.txt" "$out/tool-bound-config-overlay.txt"
+      echo "--- caídas:"; cat "$out/crashes-config-overlay.txt"; } | tee -a "$out/summary.md"
+    S="-config"
+  else
+    S="-static"
+  fi
+  cap gestures-final phase_gestures
   cat "$out/gesture-notes$S.txt" | tee -a "$out/summary.md"
   S=""
 fi
