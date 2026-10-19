@@ -1,0 +1,3 @@
+Overlay activado. Reinicia para que los gestos pasen a Nexus.
+Tras reiniciar, el vigilante lo desactiva solo si SystemUI no llega a enlazarse con Nexus.
+Para deshacerlo a mano: nexus-quickstep disable

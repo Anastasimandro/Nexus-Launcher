@@ -1,0 +1,30 @@
+10-19 20:39:57.110  1432  1432 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 20:39:57.110  1432  1432 E AndroidRuntime: Process: app.nexus.launcher, PID: 1432
+10-19 20:40:03.737  2062  2062 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 20:40:03.737  2062  2062 E AndroidRuntime: Process: app.nexus.launcher, PID: 2062
+10-19 20:40:36.546  3437  3437 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 20:40:36.546  3437  3437 E AndroidRuntime: Process: app.nexus.launcher, PID: 3437
+10-19 20:40:37.796  3467  3467 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 20:40:37.796  3467  3467 E AndroidRuntime: Process: app.nexus.launcher, PID: 3467
+10-19 20:40:57.717  3597  3597 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 20:40:57.717  3597  3597 E AndroidRuntime: Process: app.nexus.launcher, PID: 3597
+10-19 20:40:58.983  3657  3657 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 20:40:58.983  3657  3657 E AndroidRuntime: Process: app.nexus.launcher, PID: 3657
+10-19 20:41:08.428  1272  1378 E AndroidRuntime: FATAL EXCEPTION: pool-4-thread-8
+10-19 20:41:08.428  1272  1378 E AndroidRuntime: Process: com.google.android.permissioncontroller, PID: 1272
+10-19 20:41:08.462  1184  1269 E AndroidRuntime: FATAL EXCEPTION: highpool[0]
+10-19 20:41:08.462  1184  1269 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 1184
+10-19 20:41:08.497  2444  2547 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-19 20:41:08.497  2444  2547 E AndroidRuntime: Process: com.google.android.gms.unstable, PID: 2444
+10-19 20:41:08.519  1120  1120 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 20:41:08.519  1120  1120 E AndroidRuntime: Process: com.android.settings, PID: 1120
+10-19 20:41:08.603   894  1425 E AndroidRuntime: FATAL EXCEPTION: WifiPickerTracker-WifiRepository
+10-19 20:41:08.603   894  1425 E AndroidRuntime: Process: com.android.systemui, PID: 894
+10-19 20:41:08.604   894   894 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 20:41:08.604   894   894 E AndroidRuntime: Process: com.android.systemui, PID: 894
+10-19 20:41:08.606  1026  1203 E AndroidRuntime: FATAL EXCEPTION: BluetoothScanManager
+10-19 20:41:08.606  1026  1203 E AndroidRuntime: Process: com.google.android.bluetooth, PID: 1026
+10-19 20:41:14.394  4471  4471 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 20:41:14.394  4471  4471 E AndroidRuntime: Process: app.nexus.launcher, PID: 4471
+10-19 20:41:26.721  5889  5889 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 20:41:26.721  5889  5889 E AndroidRuntime: Process: app.nexus.launcher, PID: 5889
