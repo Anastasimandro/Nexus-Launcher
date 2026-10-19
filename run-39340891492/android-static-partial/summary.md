@@ -13,3 +13,4 @@ id=uid=0(root) gid=0(root) groups=0(root),1004(input),1007(log),1011(adb),1015(s
 wm_size=Physical size: 1080x2400
 
 ## Fase 2: instalar el módulo como lo hace Magisk (remount)
+!! el sistema no se estabilizó en 5 min (pid system_server: 22990)
