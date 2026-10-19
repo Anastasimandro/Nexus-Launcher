@@ -1,0 +1,2 @@
+minSdkVersion:'34'
+targetSdkVersion:'37'
