@@ -1,0 +1,2 @@
+inicio resuelto: com.google.android.apps.nexuslauncher/.NexusLauncherActivity
+actividad en primer plano:       topResumedActivity=ActivityRecord{181708216 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2}

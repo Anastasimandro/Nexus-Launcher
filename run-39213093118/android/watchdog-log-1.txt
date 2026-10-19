@@ -1,0 +1,1 @@
+2026-10-19 07:13:47 arranque con el overlay activo: vigilando (espera 150s, vigilancia 300s)

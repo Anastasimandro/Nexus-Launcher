@@ -1,0 +1,4 @@
+10-19 07:13:40.300  1432  1432 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:13:40.300  1432  1432 E AndroidRuntime: Process: app.nexus.launcher, PID: 1432
+10-19 07:13:49.994  1887  1887 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:13:49.994  1887  1887 E AndroidRuntime: Process: app.nexus.launcher, PID: 1887

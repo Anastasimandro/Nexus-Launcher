@@ -1,0 +1,30 @@
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: FATAL EXCEPTION: UiThreadHelper
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 5065
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: FATAL EXCEPTION: UiThreadHelper
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 9644
+10-19 07:24:15.041 14994 14994 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:15.041 14994 14994 E AndroidRuntime: Process: com.android.dynsystem:dynsystem, PID: 14994
+10-19 07:24:34.706 16512 16565 E AndroidRuntime: FATAL EXCEPTION: lowpool[0]
+10-19 07:24:34.706 16512 16565 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.707 16512 16588 E AndroidRuntime: FATAL EXCEPTION: lowpool[2]
+10-19 07:24:34.707 16512 16588 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.709 16512 16908 E AndroidRuntime: FATAL EXCEPTION: lowpool[7]
+10-19 07:24:34.709 16512 16908 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.709 16512 16906 E AndroidRuntime: FATAL EXCEPTION: lowpool[5]
+10-19 07:24:34.709 16512 16906 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.713 16512 16567 E AndroidRuntime: FATAL EXCEPTION: lowpool[1]
+10-19 07:24:34.713 16512 16567 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.713 16512 16590 E AndroidRuntime: FATAL EXCEPTION: lowpool[3]
+10-19 07:24:34.713 16512 16590 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.714 16512 16911 E AndroidRuntime: FATAL EXCEPTION: lowpool[10]
+10-19 07:24:34.714 16512 16911 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.714 16512 16907 E AndroidRuntime: FATAL EXCEPTION: lowpool[6]
+10-19 07:24:34.714 16512 16907 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.715 16512 16910 E AndroidRuntime: FATAL EXCEPTION: lowpool[8]
+10-19 07:24:34.715 16512 16910 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.718 16512 16914 E AndroidRuntime: FATAL EXCEPTION: lowpool[12]
+10-19 07:24:34.718 16512 16914 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.892 16393 16393 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:34.892 16393 16393 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 16393
+10-19 07:24:34.905 16865 16865 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:34.915 16391 16391 E AndroidRuntime: FATAL EXCEPTION: main

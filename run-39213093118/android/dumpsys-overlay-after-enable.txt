@@ -1,0 +1,24 @@
+app.nexus.launcher.overlay.recents:0 {
+  mPackageName...........: app.nexus.launcher.overlay.recents
+  mOverlayName...........: null
+  mUserId................: 0
+  mTargetPackageName.....: android
+  mTargetOverlayableName.: null
+  mBaseCodePath..........: /product/overlay/NexusRecentsOverlay.apk
+  mState.................: STATE_ENABLED
+  mIsEnabled.............: true
+  mIsMutable.............: true
+  mPriority..............: 2147483647
+  mCategory..............: null
+  mIsFabricated..........: false
+  mConstraints...........: None
+}
+IDMAP OF app.nexus.launcher.overlay.recents
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/NexusRecentsOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x01040305 -> 0x7f010000 (string/config_recentsComponentName -> string/config_recentsComponentName)
+

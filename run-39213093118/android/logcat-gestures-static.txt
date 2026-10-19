@@ -1,0 +1,164 @@
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: FATAL EXCEPTION: UiThreadHelper
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 5065
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: java.lang.RuntimeException: Couldn't removeRegionSamplingListener
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: 	at android.view.CompositionSamplingListener.nativeUnregister(Native Method)
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: 	at android.view.CompositionSamplingListener.unregister(CompositionSamplingListener.java:84)
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: 	at com.android.wm.shell.shared.handles.RegionSamplingHelper$$ExternalSyntheticLambda2.run(go/retraceme dc5b05c43537c6aa1d671c685c710819682fcc95b6af33c0ce7f88e1808452b7:11)
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:397)
+10-19 07:22:26.161  5065  5121 E AndroidRuntime: 	at android.os.HandlerThread.run(HandlerThread.java:139)
+10-19 07:22:59.414  1953  1953 I adbd    : adbd service requested 'shell,v2,raw:dumpsys activity service app.nexus.launcher/com.android.quickstep.TouchInteractionService'
+10-19 07:22:59.965  9525  9525 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-19 07:23:20.684  9644  9644 D TouchInteractionService: onCreate: user=0 instance=56119796
+10-19 07:23:20.685  9644  9644 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=56119796
+10-19 07:23:23.639  9644  9644 D TouchInteractionService: onUserUnlocked: userId=0 instance=56119796
+10-19 07:23:24.773  9644  9644 D TouchInteractionService: onDestroy: user=0 instance=56119796
+10-19 07:23:24.775  9644  9644 D TouchInteractionService: disposeEventHandlers: Reason: TouchInteractionService onDestroy() instance=56119796
+10-19 07:23:24.786  9644  9644 D OtherActivityInputConsumer: startTouchTrackingForWindowAnimation: isRecentsAnimationRunning=false
+10-19 07:23:24.786  9644  9644 D TaskAnimationManager: startRecentsAnimation - running TaskAnimationMnaager count: 0
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: FATAL EXCEPTION: UiThreadHelper
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 9644
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: java.lang.RuntimeException: Couldn't removeRegionSamplingListener
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: 	at android.view.CompositionSamplingListener.nativeUnregister(Native Method)
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: 	at android.view.CompositionSamplingListener.unregister(CompositionSamplingListener.java:84)
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: 	at com.android.wm.shell.shared.handles.RegionSamplingHelper$$ExternalSyntheticLambda2.run(go/retraceme dc5b05c43537c6aa1d671c685c710819682fcc95b6af33c0ce7f88e1808452b7:11)
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:397)
+10-19 07:23:25.135  9644  9713 E AndroidRuntime: 	at android.os.HandlerThread.run(HandlerThread.java:139)
+10-19 07:23:25.979 11353 11353 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 07:23:25.985 11353 11353 I AndroidRuntime: Using default boot image
+10-19 07:23:25.985 11353 11353 I AndroidRuntime: Leaving lock profiling enabled
+10-19 07:23:29.851 11775 11775 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-19 07:23:45.662 11888 11888 D TouchInteractionService: onCreate: user=0 instance=115934946
+10-19 07:23:45.662 11888 11888 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=115934946
+10-19 07:23:46.336 11888 11888 D TouchInteractionService: onUserUnlocked: userId=0 instance=115934946
+10-19 07:23:48.023 13134 13134 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 07:23:48.029 13134 13134 I AndroidRuntime: Using default boot image
+10-19 07:23:48.030 13134 13134 I AndroidRuntime: Leaving lock profiling enabled
+10-19 07:23:51.986 13546 13546 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-19 07:24:12.727 13221 13244 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:12.727 13221 13244 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:12.727 13221 13244 F system_server: runtime.cc:761]   native: #04 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:12.727 13221 13244 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:12.727 13221 13244 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:15.041 14994 14994 D AndroidRuntime: Shutting down VM
+10-19 07:24:15.041 14994 14994 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:15.041 14994 14994 E AndroidRuntime: Process: com.android.dynsystem:dynsystem, PID: 14994
+10-19 07:24:15.041 14994 14994 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:15.797 15070 15070 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 07:24:15.801 15070 15070 I AndroidRuntime: Using default boot image
+10-19 07:24:15.801 15070 15070 I AndroidRuntime: Leaving lock profiling enabled
+10-19 07:24:18.566 15456 15456 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-19 07:24:22.517 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.517 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.517 15139 15162 F system_server: runtime.cc:761]   native: #04 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.517 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.517 15139 15162 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.517 15139 15162 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.518 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.518 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.518 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.518 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.518 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.518 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.518 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.518 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.518 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.518 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:22.518 15139 15162 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:24.461 15977 15977 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 07:24:24.465 15977 15977 I AndroidRuntime: Using default boot image
+10-19 07:24:24.465 15977 15977 I AndroidRuntime: Leaving lock profiling enabled
+10-19 07:24:26.763 16302 16302 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-19 07:24:32.943 16042 16065 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:32.943 16042 16065 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:34.706 16512 16565 E AndroidRuntime: FATAL EXCEPTION: lowpool[0]
+10-19 07:24:34.706 16512 16565 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.706 16512 16565 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.707 16512 16588 E AndroidRuntime: FATAL EXCEPTION: lowpool[2]
+10-19 07:24:34.707 16512 16588 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.707 16512 16588 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.709 16512 16908 E AndroidRuntime: FATAL EXCEPTION: lowpool[7]
+10-19 07:24:34.709 16512 16908 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.709 16512 16908 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.709 16512 16906 E AndroidRuntime: FATAL EXCEPTION: lowpool[5]
+10-19 07:24:34.709 16512 16906 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.709 16512 16906 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.713 16512 16567 E AndroidRuntime: FATAL EXCEPTION: lowpool[1]
+10-19 07:24:34.713 16512 16567 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.713 16512 16567 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.713 16512 16590 E AndroidRuntime: FATAL EXCEPTION: lowpool[3]
+10-19 07:24:34.713 16512 16590 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.713 16512 16590 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.714 16512 16911 E AndroidRuntime: FATAL EXCEPTION: lowpool[10]
+10-19 07:24:34.714 16512 16911 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.714 16512 16911 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.714 16512 16907 E AndroidRuntime: FATAL EXCEPTION: lowpool[6]
+10-19 07:24:34.714 16512 16907 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.714 16512 16907 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.715 16512 16910 E AndroidRuntime: FATAL EXCEPTION: lowpool[8]
+10-19 07:24:34.715 16512 16910 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.715 16512 16910 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.718 16512 16914 E AndroidRuntime: FATAL EXCEPTION: lowpool[12]
+10-19 07:24:34.718 16512 16914 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 16512
+10-19 07:24:34.718 16512 16914 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.892 16393 16393 D AndroidRuntime: Shutting down VM
+10-19 07:24:34.892 16393 16393 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:34.892 16393 16393 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 16393
+10-19 07:24:34.892 16393 16393 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.905 16865 16865 D AndroidRuntime: Shutting down VM
+10-19 07:24:34.905 16865 16865 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:34.905 16865 16865 E AndroidRuntime: PID: 16865
+10-19 07:24:34.905 16865 16865 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.915 16391 16391 D AndroidRuntime: Shutting down VM
+10-19 07:24:34.915 16391 16391 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:34.915 16391 16391 E AndroidRuntime: Process: com.android.phone, PID: 16391
+10-19 07:24:34.915 16391 16391 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:34.916 16283 16283 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:34.916 16283 16283 E AndroidRuntime: Process: com.android.systemui, PID: 16283
+10-19 07:24:34.916 16283 16283 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:35.470 16942 16942 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 07:24:35.473 16942 16942 I AndroidRuntime: Using default boot image
+10-19 07:24:35.473 16942 16942 I AndroidRuntime: Leaving lock profiling enabled
+10-19 07:24:37.903 17272 17272 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-19 07:24:42.951 17008 17031 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:42.951 17008 17031 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:42.951 17008 17031 F system_server: runtime.cc:761]   native: #04 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:42.951 17008 17031 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:42.952 17008 17031 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:42.952 17008 17031 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:42.953 17008 17031 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:42.953 17008 17031 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:42.953 17008 17031 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:42.953 17008 17031 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:42.953 17008 17031 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:42.953 17008 17031 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 07:24:44.569 17579 17579 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:44.569 17579 17579 E AndroidRuntime: Process: com.google.android.permissioncontroller, PID: 17579
+10-19 07:24:44.569 17579 17579 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:44.570 17716 17716 D AndroidRuntime: Shutting down VM
+10-19 07:24:44.570 17716 17716 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:44.570 17716 17716 E AndroidRuntime: Process: com.google.android.inputmethod.latin, PID: 17716
+10-19 07:24:44.570 17716 17716 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:44.574 17400 17400 D AndroidRuntime: Shutting down VM
+10-19 07:24:44.575 17400 17400 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:44.575 17400 17400 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 17400
+10-19 07:24:44.575 17400 17400 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:44.579 17716 17811 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-19 07:24:44.579 17716 17811 E AndroidRuntime: Process: com.google.android.inputmethod.latin, PID: 17716
+10-19 07:24:44.579 17716 17811 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:44.596 17741 17741 D AndroidRuntime: Shutting down VM
+10-19 07:24:44.596 17741 17741 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:24:44.596 17741 17741 E AndroidRuntime: PID: 17741
+10-19 07:24:44.596 17741 17741 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 07:24:44.599 17247 17247 D AndroidRuntime: Shutting down VM
+10-19 07:24:44.887  1953  1953 I adbd    : adbd service requested 'shell,v2,raw:dumpsys activity service app.nexus.launcher/com.android.quickstep.TouchInteractionService'
+10-19 07:24:45.407 17846 17846 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 07:24:45.421 17846 17846 I AndroidRuntime: Using default boot image
+10-19 07:24:45.421 17846 17846 I AndroidRuntime: Leaving lock profiling enabled
