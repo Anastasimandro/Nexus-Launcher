@@ -1,0 +1,1 @@
+nexus-quickstep: el vigilante ya desactivó el overlay con esta versión de Nexus (1601009900): 2026-10-19 07:49:56 SystemUI no se enlazó al servicio de Nexus en 60 s. Actualiza Nexus o usa --force.

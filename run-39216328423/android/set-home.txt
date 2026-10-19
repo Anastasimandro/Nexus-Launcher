@@ -1,0 +1,2 @@
+inicio resuelto: app.nexus.launcher/app.lawnchair.LawnchairLauncher
+actividad en primer plano:       topResumedActivity=ActivityRecord{248268892 u0 app.nexus.launcher/app.lawnchair.LawnchairLauncher t8}

@@ -1,0 +1,250 @@
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: Couldn't report crash. Here's the crash:
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:04:55.860 20422 20422 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:04:55.861 20422 20422 E AndroidRuntime: Error reporting crash. Here's the error:
+10-19 08:04:55.861 20422 20422 E AndroidRuntime: java.lang.NullPointerException: Attempt to invoke interface method 'void android.app.IActivityManager.handleApplicationCrash(android.os.IBinder, android.app.ApplicationErrorReport$ParcelableCrashInfo)' on a null object reference
+10-19 08:04:55.861 20422 20422 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$KillApplicationHandler.uncaughtException(RuntimeInit.java:166)
+10-19 08:04:55.861 20422 20422 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1098)
+10-19 08:04:55.861 20422 20422 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1093)
+10-19 08:04:55.861 20422 20422 E AndroidRuntime: 	at java.lang.Thread.dispatchUncaughtException(Thread.java:3387)
+10-19 08:05:00.123 20517 20517 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 08:05:00.125 20517 20517 I AndroidRuntime: Using default boot image
+10-19 08:05:00.125 20517 20517 I AndroidRuntime: Leaving lock profiling enabled
+10-19 08:05:00.839 20578 20578 D AndroidRuntime: Shutting down VM
+10-19 08:05:00.839 20578 20578 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+10-19 08:05:00.839 20578 20578 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:00.839 20578 20578 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:00.839 20578 20578 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:00.839 20578 20578 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:00.839 20578 20578 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:00.839 20578 20578 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:00.839 20578 20578 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:00.839 20578 20578 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:00.839 20578 20578 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:00.839 20578 20578 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: Couldn't report crash. Here's the crash:
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: Error reporting crash. Here's the error:
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: java.lang.NullPointerException: Attempt to invoke interface method 'void android.app.IActivityManager.handleApplicationCrash(android.os.IBinder, android.app.ApplicationErrorReport$ParcelableCrashInfo)' on a null object reference
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$KillApplicationHandler.uncaughtException(RuntimeInit.java:166)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1098)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1093)
+10-19 08:05:00.840 20578 20578 E AndroidRuntime: 	at java.lang.Thread.dispatchUncaughtException(Thread.java:3387)
+10-19 08:05:05.137 20677 20677 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 08:05:05.139 20677 20677 I AndroidRuntime: Using default boot image
+10-19 08:05:05.139 20677 20677 I AndroidRuntime: Leaving lock profiling enabled
+10-19 08:05:05.821 20740 20740 D AndroidRuntime: Shutting down VM
+10-19 08:05:05.821 20740 20740 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+10-19 08:05:05.821 20740 20740 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:05.821 20740 20740 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:05.821 20740 20740 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:05.821 20740 20740 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:05.821 20740 20740 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:05.821 20740 20740 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:05.821 20740 20740 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:05.821 20740 20740 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:05.821 20740 20740 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:05.821 20740 20740 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: Couldn't report crash. Here's the crash:
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: Error reporting crash. Here's the error:
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: java.lang.NullPointerException: Attempt to invoke interface method 'void android.app.IActivityManager.handleApplicationCrash(android.os.IBinder, android.app.ApplicationErrorReport$ParcelableCrashInfo)' on a null object reference
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$KillApplicationHandler.uncaughtException(RuntimeInit.java:166)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1098)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1093)
+10-19 08:05:05.822 20740 20740 E AndroidRuntime: 	at java.lang.Thread.dispatchUncaughtException(Thread.java:3387)
+10-19 08:05:10.168 20815 20815 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 08:05:10.178 20815 20815 I AndroidRuntime: Using default boot image
+10-19 08:05:10.178 20815 20815 I AndroidRuntime: Leaving lock profiling enabled
+10-19 08:05:10.901 20884 20884 D AndroidRuntime: Shutting down VM
+10-19 08:05:10.901 20884 20884 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+10-19 08:05:10.901 20884 20884 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:10.901 20884 20884 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:10.901 20884 20884 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:10.901 20884 20884 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:10.901 20884 20884 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:10.901 20884 20884 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:10.901 20884 20884 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:10.901 20884 20884 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:10.901 20884 20884 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:10.901 20884 20884 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: Couldn't report crash. Here's the crash:
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: Error reporting crash. Here's the error:
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: java.lang.NullPointerException: Attempt to invoke interface method 'void android.app.IActivityManager.handleApplicationCrash(android.os.IBinder, android.app.ApplicationErrorReport$ParcelableCrashInfo)' on a null object reference
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$KillApplicationHandler.uncaughtException(RuntimeInit.java:166)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1098)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1093)
+10-19 08:05:10.903 20884 20884 E AndroidRuntime: 	at java.lang.Thread.dispatchUncaughtException(Thread.java:3387)
+10-19 08:05:15.168 20966 20966 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 08:05:15.172 20966 20966 I AndroidRuntime: Using default boot image
+10-19 08:05:15.172 20966 20966 I AndroidRuntime: Leaving lock profiling enabled
+10-19 08:05:15.888 21027 21027 D AndroidRuntime: Shutting down VM
+10-19 08:05:15.888 21027 21027 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+10-19 08:05:15.888 21027 21027 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:15.888 21027 21027 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:15.888 21027 21027 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:15.888 21027 21027 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:15.888 21027 21027 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:15.888 21027 21027 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:15.888 21027 21027 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:15.888 21027 21027 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:15.888 21027 21027 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:15.888 21027 21027 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: Couldn't report crash. Here's the crash:
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: Error reporting crash. Here's the error:
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: java.lang.NullPointerException: Attempt to invoke interface method 'void android.app.IActivityManager.handleApplicationCrash(android.os.IBinder, android.app.ApplicationErrorReport$ParcelableCrashInfo)' on a null object reference
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$KillApplicationHandler.uncaughtException(RuntimeInit.java:166)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1098)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1093)
+10-19 08:05:15.889 21027 21027 E AndroidRuntime: 	at java.lang.Thread.dispatchUncaughtException(Thread.java:3387)
+10-19 08:05:20.178 21107 21107 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 08:05:20.181 21107 21107 I AndroidRuntime: Using default boot image
+10-19 08:05:20.181 21107 21107 I AndroidRuntime: Leaving lock profiling enabled
+10-19 08:05:20.901 21168 21168 D AndroidRuntime: Shutting down VM
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: Couldn't report crash. Here's the crash:
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: Error reporting crash. Here's the error:
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: java.lang.NullPointerException: Attempt to invoke interface method 'void android.app.IActivityManager.handleApplicationCrash(android.os.IBinder, android.app.ApplicationErrorReport$ParcelableCrashInfo)' on a null object reference
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$KillApplicationHandler.uncaughtException(RuntimeInit.java:166)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1098)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1093)
+10-19 08:05:20.902 21168 21168 E AndroidRuntime: 	at java.lang.Thread.dispatchUncaughtException(Thread.java:3387)
+10-19 08:05:25.225 21253 21253 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 08:05:25.228 21253 21253 I AndroidRuntime: Using default boot image
+10-19 08:05:25.228 21253 21253 I AndroidRuntime: Leaving lock profiling enabled
+10-19 08:05:25.931 21308 21308 D AndroidRuntime: Shutting down VM
+10-19 08:05:25.931 21308 21308 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+10-19 08:05:25.931 21308 21308 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:25.931 21308 21308 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:25.931 21308 21308 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:25.931 21308 21308 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:25.931 21308 21308 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:25.931 21308 21308 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:25.931 21308 21308 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:25.931 21308 21308 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:25.931 21308 21308 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:25.931 21308 21308 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: Couldn't report crash. Here's the crash:
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: Error reporting crash. Here's the error:
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: java.lang.NullPointerException: Attempt to invoke interface method 'void android.app.IActivityManager.handleApplicationCrash(android.os.IBinder, android.app.ApplicationErrorReport$ParcelableCrashInfo)' on a null object reference
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$KillApplicationHandler.uncaughtException(RuntimeInit.java:166)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1098)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1093)
+10-19 08:05:25.932 21308 21308 E AndroidRuntime: 	at java.lang.Thread.dispatchUncaughtException(Thread.java:3387)
+10-19 08:05:30.166 21386 21386 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 08:05:30.169 21386 21386 I AndroidRuntime: Using default boot image
+10-19 08:05:30.169 21386 21386 I AndroidRuntime: Leaving lock profiling enabled
+10-19 08:05:30.925 21442 21442 D AndroidRuntime: Shutting down VM
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: Couldn't report crash. Here's the crash:
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: java.lang.RuntimeException: Required services extension package is missing, config_servicesExtensionPackage had defined with android.ext.services, but can not find the package info on the system image, check if the package has a problem.
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.getRequiredServicesExtensionPackageLPr(PackageManagerService.java:2722)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.<init>(PackageManagerService.java:2509)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.pm.PackageManagerService.main(PackageManagerService.java:1794)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.SystemServer.startBootstrapServices(SystemServer.java:1375)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.SystemServer.run(SystemServer.java:1047)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.server.SystemServer.main(SystemServer.java:727)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: Error reporting crash. Here's the error:
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: java.lang.NullPointerException: Attempt to invoke interface method 'void android.app.IActivityManager.handleApplicationCrash(android.os.IBinder, android.app.ApplicationErrorReport$ParcelableCrashInfo)' on a null object reference
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$KillApplicationHandler.uncaughtException(RuntimeInit.java:166)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1098)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1093)
+10-19 08:05:30.925 21442 21442 E AndroidRuntime: 	at java.lang.Thread.dispatchUncaughtException(Thread.java:3387)
+10-19 08:05:31.286 16850 16850 I adbd    : adbd service requested 'shell,v2,raw:dumpsys activity service app.nexus.launcher/com.android.quickstep.TouchInteractionService'

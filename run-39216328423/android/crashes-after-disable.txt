@@ -1,0 +1,30 @@
+10-19 07:46:03.229  1437  1437 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:46:03.229  1437  1437 E AndroidRuntime: Process: app.nexus.launcher, PID: 1437
+10-19 07:46:08.963  2112  2112 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:46:08.963  2112  2112 E AndroidRuntime: Process: app.nexus.launcher, PID: 2112
+10-19 07:46:41.004  3383  3383 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:46:41.004  3383  3383 E AndroidRuntime: Process: app.nexus.launcher, PID: 3383
+10-19 07:46:42.220  3409  3409 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:46:42.220  3409  3409 E AndroidRuntime: Process: app.nexus.launcher, PID: 3409
+10-19 07:47:02.000  3567  3567 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:47:02.000  3567  3567 E AndroidRuntime: Process: app.nexus.launcher, PID: 3567
+10-19 07:47:03.176  3594  3594 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:47:03.176  3594  3594 E AndroidRuntime: Process: app.nexus.launcher, PID: 3594
+10-19 07:47:12.282  1036  1036 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:47:12.282  1036  1036 E AndroidRuntime: Process: com.android.phone, PID: 1036
+10-19 07:47:12.353  2343  2387 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-19 07:47:12.353  2343  2387 E AndroidRuntime: Process: com.google.android.gms.unstable, PID: 2343
+10-19 07:47:17.216  4404  4404 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:47:17.216  4404  4404 E AndroidRuntime: Process: app.nexus.launcher, PID: 4404
+10-19 07:47:25.017  4305  5250 E AndroidRuntime: FATAL EXCEPTION: NearbyDiscovery
+10-19 07:47:25.017  4305  5250 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 4305
+10-19 07:47:25.071  4169  4397 E AndroidRuntime: FATAL EXCEPTION: BluetoothScanManager
+10-19 07:47:25.071  4169  4397 E AndroidRuntime: Process: com.google.android.bluetooth, PID: 4169
+10-19 07:47:25.230  4206  4459 E AndroidRuntime: FATAL EXCEPTION: RcsProvisioningMonitor
+10-19 07:47:25.230  4206  4459 E AndroidRuntime: Process: com.android.phone, PID: 4206
+10-19 07:47:25.230  4787  4787 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:47:25.230  4787  4787 E AndroidRuntime: Process: com.google.android.gms, PID: 4787
+10-19 07:47:25.231  4081  4081 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:47:25.231  4081  4081 E AndroidRuntime: Process: com.android.systemui, PID: 4081
+10-19 07:47:25.236  5339  5339 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 07:47:25.236  5339  5339 E AndroidRuntime: Process: com.google.android.dialer, PID: 5339

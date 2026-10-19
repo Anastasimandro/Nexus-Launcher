@@ -1,0 +1,46 @@
++ OVERLAY=app.nexus.launcher.overlay.recents 
++ PKG=app.nexus.launcher 
++ SERVICE=app.nexus.launcher/com.android.quickstep.TouchInteractionService 
++ USER_ID=0 
++ STATE_DIR=/data/adb/nexus_quickstep 
++ PROBE_FILE=/data/user/0/app.nexus.launcher/files/quickstep-probe.txt 
++ GUARD_WAIT=120 
++ GUARD_WATCH=300 
++ GUARD_STEP=5 
++ GUARD_LOST=60 
++ do_disable ''
++ need_root
++ id -u
++ '[' 0 '=' 0 ']'
++ >/dev/null 
++ 2>&1 
++ cmd overlay disable --user 0 app.nexus.launcher.overlay.recents
++ overlay_state
++ overlay_line
++ n=0 
++ out='' 
++ '[' 0 -lt 3 ']'
++ 2>&1 
++ cmd overlay list --user 0 app.nexus.launcher.overlay.recents
++ out='[ ] app.nexus.launcher.overlay.recents' 
++ echo '[ ] app.nexus.launcher.overlay.recents'
++ head -n 1
++ grep -F app.nexus.launcher.overlay.recents
++ line='[ ] app.nexus.launcher.overlay.recents' 
++ '[' -n '[ ] app.nexus.launcher.overlay.recents' ']'
++ echo '[ ] app.nexus.launcher.overlay.recents'
++ return 0
++ line='[ ] app.nexus.launcher.overlay.recents' 
++ echo disabled
++ '[' disabled '=' disabled ']'
++ rm -f /data/adb/nexus_quickstep/armed /data/adb/nexus_quickstep/healthy
++ '[' '' '=' --no-restart ']'
++ restart_systemui
++ 2>/dev/null 
++ killall com.android.systemui
++ say 'Overlay desactivado y SystemUI reiniciado: el gesto vuelve al launcher del sistema.'
++ echo 'Overlay desactivado y SystemUI reiniciado: el gesto vuelve al launcher del sistema.'
+Overlay desactivado y SystemUI reiniciado: el gesto vuelve al launcher del sistema.
++ say 'Reinicia cuando puedas para que todo el sistema lo asuma.'
++ echo 'Reinicia cuando puedas para que todo el sistema lo asuma.'
+Reinicia cuando puedas para que todo el sistema lo asuma.

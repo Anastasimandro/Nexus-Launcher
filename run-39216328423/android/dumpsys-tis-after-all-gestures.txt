@@ -1,0 +1,3 @@
+SERVICE app.nexus.launcher/com.android.quickstep.TouchInteractionService c8cf95f pid=7050 user=0
+  Client:
+    Failure while dumping the service: java.io.IOException: Timeout

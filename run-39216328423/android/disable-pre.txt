@@ -1,0 +1,8 @@
+--- cmd overlay list:
+[x] app.nexus.launcher.overlay.recents
+--- pm path:
+package:/product/overlay/NexusRecentsOverlay.apk
+--- service check overlay:
+Service overlay: found
+--- lookup:
+app.nexus.launcher/com.android.quickstep.RecentsActivity

@@ -1,0 +1,4 @@
+2026-10-19 07:44:05 arranque con el overlay activo: vigilando (espera 150s, vigilancia 300s)
+2026-10-19 07:48:56 arranque con el overlay activo: vigilando (espera 60s, vigilancia 30s)
+2026-10-19 07:49:56 DESACTIVO el overlay: SystemUI no se enlazó al servicio de Nexus en 60 s
+2026-10-19 07:49:56 overlay desactivado y SystemUI reiniciado

@@ -1,0 +1,300 @@
+10-19 07:51:14.944   895   895 D LauncherProxyService: disconnectFromLauncherService bound?: false currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-19 07:51:14.944   895   895 D LauncherProxyService: java.lang.Throwable
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.updateEnabledAndBinding(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:29)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.<init>(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:462)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get3(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:1309)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4566)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at dagger.internal.DelegateFactory.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get14(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:2584)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4511)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl$$ExternalSyntheticLambda1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:46)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.timeInitialization(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:27)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:232)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startSystemUserServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:69)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.systemui.SystemUIService.onCreate(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:9)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5644)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(ActivityThread.java:0)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2804)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 07:51:14.944   895   895 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 07:51:16.283   895   997 E AmbientCueCoreStartable: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:51:17.533  1456  1747 E PackagePolicyHandler: java.lang.SecurityException: Caller does not have the required permissions for this user. Permission required: android.permission.MANAGE_DEVICE_POLICY_APPS_CONTROL.
+10-19 07:51:17.533  1456  1747 E PackagePolicyHandler: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:51:18.519   895   895 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:18.670   895   895 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:20.532   895   895 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:22.471   895   895 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:22.546  1057  1057 D TouchInteractionService: onCreate: user=0 instance=215966644
+10-19 07:51:22.546  1057  1057 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=215966644
+10-19 07:51:22.557   895   895 E BatteryInfoBroadcast: java.lang.SecurityException: Failed to find provider com.google.android.apps.turbo.estimated_time_remaining for user 0; expected to find a valid ContentProvider for this authority
+10-19 07:51:22.557   895   895 E BatteryInfoBroadcast: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:51:22.568   895   895 E LauncherProxyService: Failed to get launcher proxy for system bar attr change.
+10-19 07:51:22.860   895   895 W LauncherProxyService: Binder supposed established connection but actual connection to service timed out, trying again
+10-19 07:51:22.860   895   895 W LauncherProxyService: Failed to connect on attempt 1 will try again in 1000ms
+10-19 07:51:23.014   895   895 D LauncherProxyService: disconnectFromLauncherService bound?: true currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-19 07:51:23.014   895   895 D LauncherProxyService: java.lang.Throwable
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService$2.onReceive(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:118)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at com.android.systemui.broadcast.ActionReceiver$onReceive$1$1$1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 07:51:23.014   895   895 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 07:51:24.990  1057  1057 D TouchInteractionService: onUserUnlocked: userId=0 instance=215966644
+10-19 07:51:25.329  1057  1057 D TouchInteractionService: onDestroy: user=0 instance=215966644
+10-19 07:51:25.329  1057  1057 D TouchInteractionService: disposeEventHandlers: Reason: TouchInteractionService onDestroy() instance=215966644
+10-19 07:51:25.373  1057  1057 D TouchInteractionService: onCreate: user=0 instance=241168533
+10-19 07:51:25.373  1057  1057 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=241168533
+10-19 07:51:25.373  1057  1057 D TouchInteractionService: onUserUnlocked: userId=0 instance=241168533
+10-19 07:51:29.451  2931  2931 W BatteryControllerGoogle: java.lang.SecurityException: Failed to find provider com.google.android.flipendo.api for user 0; expected to find a valid ContentProvider for this authority
+10-19 07:51:29.451  2931  2931 W BatteryControllerGoogle: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:51:30.484  2623  2856 E Binder  : 	at android.bluetooth.BluetoothUtils$RemoteExceptionIgnoringFunction.apply(BluetoothUtils.java:411)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: disconnectFromLauncherService bound?: false currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: java.lang.Throwable
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.updateEnabledAndBinding(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:29)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.<init>(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:462)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get3(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:1309)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4566)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at dagger.internal.DelegateFactory.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get14(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:2584)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4511)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl$$ExternalSyntheticLambda1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:46)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.timeInitialization(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:27)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:232)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startSystemUserServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:69)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.systemui.SystemUIService.onCreate(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:9)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5644)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(ActivityThread.java:0)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2804)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 07:51:35.076  2931  2931 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 07:51:35.375  2931  3011 E AmbientCueCoreStartable: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:51:35.809  2931  2931 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:35.867  2931  2931 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:36.127  2931  2931 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:36.980  3584  3643 E PackagePolicyHandler: java.lang.SecurityException: Caller does not have the required permissions for this user. Permission required: android.permission.MANAGE_DEVICE_POLICY_APPS_CONTROL.
+10-19 07:51:36.980  3584  3643 E PackagePolicyHandler: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:51:36.988  2931  2931 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:37.226  2931  2931 E BatteryInfoBroadcast: java.lang.SecurityException: Failed to find provider com.google.android.apps.turbo.estimated_time_remaining for user 0; expected to find a valid ContentProvider for this authority
+10-19 07:51:37.418  2931  2931 E LauncherProxyService: Failed to get launcher proxy for system bar attr change.
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: disconnectFromLauncherService bound?: true currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: java.lang.Throwable
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService$2.onReceive(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:118)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at com.android.systemui.broadcast.ActionReceiver$onReceive$1$1$1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 07:51:38.775  2931  2931 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 07:51:38.776  2931  3011 W DL2025Feature: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:51:40.318  3082  3082 D TouchInteractionService: onCreate: user=0 instance=127762469
+10-19 07:51:40.319  3082  3082 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=127762469
+10-19 07:51:42.206  3082  3082 D TouchInteractionService: onUserUnlocked: userId=0 instance=127762469
+10-19 07:51:42.218  3082  3082 D TouchInteractionService: onDestroy: user=0 instance=127762469
+10-19 07:51:42.219  3082  3082 D TouchInteractionService: disposeEventHandlers: Reason: TouchInteractionService onDestroy() instance=127762469
+10-19 07:51:42.246  3082  3082 D TouchInteractionService: onCreate: user=0 instance=218305412
+10-19 07:51:42.246  3082  3082 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=218305412
+10-19 07:51:42.247  3082  3082 D TouchInteractionService: onUserUnlocked: userId=0 instance=218305412
+10-19 07:51:46.379  4858  4858 W BatteryControllerGoogle: java.lang.SecurityException: Failed to find provider com.google.android.flipendo.api for user 0; expected to find a valid ContentProvider for this authority
+10-19 07:51:46.394  4858  4858 W BatteryControllerGoogle: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:51:47.058  4548  4776 E Binder  : 	at android.bluetooth.BluetoothUtils$RemoteExceptionIgnoringFunction.apply(BluetoothUtils.java:411)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: disconnectFromLauncherService bound?: false currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: java.lang.Throwable
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.updateEnabledAndBinding(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:29)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.<init>(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:462)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get3(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:1309)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4566)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at dagger.internal.DelegateFactory.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get14(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:2584)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4511)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl$$ExternalSyntheticLambda1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:46)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.timeInitialization(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:27)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:232)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startSystemUserServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:69)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.systemui.SystemUIService.onCreate(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:9)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5644)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(ActivityThread.java:0)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2804)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 07:51:52.503  4858  4858 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 07:51:53.105  4858  5027 E AmbientCueCoreStartable: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:51:54.268  4858  4858 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:54.279  5515  5691 E PackagePolicyHandler: java.lang.SecurityException: Caller does not have the required permissions for this user. Permission required: android.permission.MANAGE_DEVICE_POLICY_APPS_CONTROL.
+10-19 07:51:54.279  5515  5691 E PackagePolicyHandler: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:51:54.419  4858  4858 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:55.926  4858  4858 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:57.374  4983  4983 D TouchInteractionService: onCreate: user=0 instance=58174755
+10-19 07:51:57.374  4983  4983 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=58174755
+10-19 07:51:58.611  4858  4858 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:51:58.779  4858  4858 E BatteryInfoBroadcast: java.lang.SecurityException: Failed to find provider com.google.android.apps.turbo.estimated_time_remaining for user 0; expected to find a valid ContentProvider for this authority
+10-19 07:51:58.779  4858  4858 E BatteryInfoBroadcast: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:51:58.871  4858  4858 E LauncherProxyService: Failed to get launcher proxy for system bar attr change.
+10-19 07:51:58.899  4983  4983 D TouchInteractionService: onUserUnlocked: userId=0 instance=58174755
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: disconnectFromLauncherService bound?: true currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: java.lang.Throwable
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService$2.onReceive(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:118)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at com.android.systemui.broadcast.ActionReceiver$onReceive$1$1$1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 07:51:59.702  4858  4858 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 07:52:02.864  6799  6799 W BatteryControllerGoogle: java.lang.SecurityException: Failed to find provider com.google.android.flipendo.api for user 0; expected to find a valid ContentProvider for this authority
+10-19 07:52:02.865  6799  6799 W BatteryControllerGoogle: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:52:03.505  6500  6726 E Binder  : 	at android.bluetooth.BluetoothUtils$RemoteExceptionIgnoringFunction.apply(BluetoothUtils.java:411)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: disconnectFromLauncherService bound?: false currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: java.lang.Throwable
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.updateEnabledAndBinding(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:29)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.<init>(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:462)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get3(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:1309)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4566)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at dagger.internal.DelegateFactory.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get14(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:2584)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4511)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl$$ExternalSyntheticLambda1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:46)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.timeInitialization(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:27)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:232)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startSystemUserServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:69)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.systemui.SystemUIService.onCreate(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:9)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5644)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(ActivityThread.java:0)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2804)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 07:52:09.068  6799  6799 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 07:52:09.608  6799  6891 E AmbientCueCoreStartable: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:52:10.009  6799  6799 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:52:10.039  6799  6799 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:52:10.817  7448  7640 E PackagePolicyHandler: java.lang.SecurityException: Caller does not have the required permissions for this user. Permission required: android.permission.MANAGE_DEVICE_POLICY_APPS_CONTROL.
+10-19 07:52:10.817  7448  7640 E PackagePolicyHandler: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:52:11.011  6799  6799 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:52:12.362  6799  6799 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-19 07:52:12.443  6799  6799 E BatteryInfoBroadcast: java.lang.SecurityException: Failed to find provider com.google.android.apps.turbo.estimated_time_remaining for user 0; expected to find a valid ContentProvider for this authority
+10-19 07:52:12.443  6799  6799 E BatteryInfoBroadcast: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:52:12.450  6799  6799 E LauncherProxyService: Failed to get launcher proxy for system bar attr change.
+10-19 07:52:13.712  6799  6962 W DL2025Feature: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: disconnectFromLauncherService bound?: true currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: java.lang.Throwable
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService$2.onReceive(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:118)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at com.android.systemui.broadcast.ActionReceiver$onReceive$1$1$1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 07:52:13.713  6799  6799 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 07:52:15.990  6916  6916 D TouchInteractionService: onCreate: user=0 instance=131168493
+10-19 07:52:15.991  6916  6916 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=131168493
+10-19 07:52:17.646  6916  6916 D TouchInteractionService: onUserUnlocked: userId=0 instance=131168493
+10-19 07:52:17.653  6916  6916 D TouchInteractionService: onDestroy: user=0 instance=131168493
+10-19 07:52:17.653  6916  6916 D TouchInteractionService: disposeEventHandlers: Reason: TouchInteractionService onDestroy() instance=131168493
+10-19 07:52:17.687  6916  6916 D TouchInteractionService: onCreate: user=0 instance=132088003
+10-19 07:52:17.687  6916  6916 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=132088003
+10-19 07:52:17.687  6916  6916 D TouchInteractionService: onUserUnlocked: userId=0 instance=132088003
+10-19 07:52:17.801  6799  6799 D LauncherProxyService: Launcher proxy service connected
+10-19 07:52:17.805  6799  6799 D LauncherProxyService: LauncherProxyService connected, initializing launcher proxy
+10-19 07:52:18.327  6916  6916 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: TISBinder#onInitialize() instance=132088003
+10-19 07:52:22.240  9019  9019 W BatteryControllerGoogle: java.lang.SecurityException: Failed to find provider com.google.android.flipendo.api for user 0; expected to find a valid ContentProvider for this authority
+10-19 07:52:22.240  9019  9019 W BatteryControllerGoogle: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 07:52:22.967  8710  8948 E Binder  : 	at android.bluetooth.BluetoothUtils$RemoteExceptionIgnoringFunction.apply(BluetoothUtils.java:411)
+10-19 07:52:28.058  2306  2306 I adbd    : adbd service requested 'shell,v2,raw:dumpsys activity services app.nexus.launcher/com.android.quickstep.TouchInteractionService'
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: disconnectFromLauncherService bound?: false currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: java.lang.Throwable
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.updateEnabledAndBinding(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:29)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.<init>(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:462)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get3(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:1309)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4566)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at dagger.internal.DelegateFactory.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get14(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:2584)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4511)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl$$ExternalSyntheticLambda1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:46)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.timeInitialization(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:27)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:232)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startSystemUserServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:69)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.systemui.SystemUIService.onCreate(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:9)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5644)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(ActivityThread.java:0)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2804)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 07:52:28.136  9019  9019 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)

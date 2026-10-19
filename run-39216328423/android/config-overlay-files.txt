@@ -1,0 +1,5 @@
+<config>
+    <overlay package="app.nexus.launcher.overlay.recents" enabled="true" mutable="false" />
+</config>
+total 0
+-rw-rw-rw- 1 root root u:object_r:system_file:s0  111 2026-10-19 07:52 config.xml

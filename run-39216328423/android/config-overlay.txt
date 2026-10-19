@@ -1,0 +1,4 @@
+/tmp/tmp.z4OvdmzvUw/module/system/product/overlay/NexusRecentsOverlay.apk: 1 file pushed, 0 skipped. 25.5 MB/s (8538 bytes in 0.000s)
+!! el arranque no terminó en 10 min
+grep: write error: Broken pipe
+tr: write error: Broken pipe

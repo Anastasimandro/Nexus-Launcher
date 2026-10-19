@@ -1,0 +1,1 @@
+Component {app.nexus.launcher/com.android.quickstep.TouchInteractionService} new state: disabled

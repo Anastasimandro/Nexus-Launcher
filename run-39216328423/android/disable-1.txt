@@ -1,0 +1,2 @@
+Overlay desactivado y SystemUI reiniciado: el gesto vuelve al launcher del sistema.
+Reinicia cuando puedas para que todo el sistema lo asuma.

@@ -1,0 +1,18 @@
+pantalla x
+=== A. Inicio con gesto rápido
+antes: 
+después: 
+=== B. Inicio con gesto lento: captura a mitad del gesto (la ventana debe seguir el dedo)
+después: 
+=== C. Cancelación: subir y volver al punto de partida (debe quedarse en la app)
+después: 
+=== D. Cancelación con ACTION_CANCEL a mitad del gesto
+después: 
+=== E. Atrás
+después: 
+=== F. Recientes: subir y mantener
+después: 
+=== G. Rotación (horizontal) y gesto de Inicio
+después (apaisado): 
+=== H. Bloqueo y desbloqueo, y gesto de Inicio
+después: 
