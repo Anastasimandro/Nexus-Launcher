@@ -57,7 +57,27 @@ wait_boot() {
     (( SECONDS > sdeadline )) && { say "!! los servicios no respondieron en 5 min"; break; }
     sleep 4
   done
-  sleep 3
+  wait_stable
+}
+# El emulador a veces aborta surfaceflinger (RegionSampling) ~25 s después del arranque y el framework
+# se reinicia: se espera a que system_server conserve el mismo pid 40 s con los servicios respondiendo.
+wait_stable() {
+  local deadline=$((SECONDS + 300)) last="" since=$SECONDS pid ok
+  while (( SECONDS < deadline )); do
+    pid="$(adb shell pidof system_server 2>/dev/null | tr -d '\r')"
+    ok=0
+    if adb shell cmd overlay list --user 0 2>/dev/null | grep -q "^android" \
+       && adb shell service check package 2>/dev/null | grep -q found \
+       && [[ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == 1 ]]; then ok=1; fi
+    if [[ $ok == 1 && -n $pid && $pid == "$last" ]]; then
+      (( SECONDS - since >= 40 )) && return 0
+    else
+      since=$SECONDS; last="$pid"
+    fi
+    sleep 4
+  done
+  say "!! el sistema no se estabilizó en 5 min (pid system_server: ${last:-ninguno})"
+  return 1
 }
 REBOOTS=0
 reboot_device() {
@@ -411,7 +431,7 @@ settle_overlay() {
     (( SECONDS > until_ )) && { echo "!! cmd overlay no respondió en 4 min" >> "$out/summary.md"; break; }
     sleep 5
   done
-  sleep 45
+  wait_stable
 }
 collect_overlay() {
   local tag="$1"
