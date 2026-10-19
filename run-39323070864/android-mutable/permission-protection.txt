@@ -1,0 +1,19 @@
++ permission:android.permission.ACCESS_HIDDEN_PROFILES_FULL   protectionLevel:signature|privileged + permission:android.permission.BIND_KEYGUARD_APPWIDGET + permission:android.permission.ACCESS_HIDDEN_PROFILES   protectionLevel:normal + permission:android.permission.WIFI_UPDATE_COEX_UNSAFE_CHANNELS
++ permission:android.permission.ACCESS_HIDDEN_PROFILES_FULL   protectionLevel:signature|privileged + permission:android.permission.BIND_KEYGUARD_APPWIDGET
+
+
+
+
++ permission:android.permission.INTERNAL_SYSTEM_WINDOW   protectionLevel:signature|recents|module + permission:android.permission.BIND_AMBIENT_CONTEXT_DETECTION_SERVICE
+
++ permission:android.permission.MANAGE_ACTIVITY_TASKS   protectionLevel:signature|recents + permission:android.permission.MONITOR_DEVICE_CONFIG_ACCESS
+
++ permission:android.permission.MONITOR_INPUT   protectionLevel:signature|recents + permission:android.permission.SET_VOLUME_KEY_LONG_PRESS_LISTENER
+
+
+
++ permission:android.permission.START_TASKS_FROM_RECENTS   protectionLevel:signature|privileged|recents + permission:android.permission.ACCESS_SMARTSPACE
+
+
+
+

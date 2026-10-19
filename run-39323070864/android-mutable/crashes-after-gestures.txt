@@ -1,0 +1,30 @@
+10-19 21:10:55.202  1458  1458 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:10:55.202  1458  1458 E AndroidRuntime: Process: app.nexus.launcher, PID: 1458
+10-19 21:11:05.375  2281  2281 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:11:05.375  2281  2281 E AndroidRuntime: Process: app.nexus.launcher, PID: 2281
+10-19 21:11:31.892  3363  3363 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:11:31.892  3363  3363 E AndroidRuntime: Process: app.nexus.launcher, PID: 3363
+10-19 21:11:33.192  3389  3389 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:11:33.192  3389  3389 E AndroidRuntime: Process: app.nexus.launcher, PID: 3389
+10-19 21:11:52.756  3518  3518 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:11:52.756  3518  3518 E AndroidRuntime: Process: app.nexus.launcher, PID: 3518
+10-19 21:11:54.053  3547  3547 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:11:54.053  3547  3547 E AndroidRuntime: Process: app.nexus.launcher, PID: 3547
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: Process: app.nexus.launcher, PID: 4423
+10-19 21:12:20.674  4389  4473 E AndroidRuntime: FATAL EXCEPTION: lowpool[3]
+10-19 21:12:20.674  4389  4473 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 4389
+10-19 21:12:20.680  4389  4452 E AndroidRuntime: FATAL EXCEPTION: lowpool[0]
+10-19 21:12:20.680  4389  4452 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 4389
+10-19 21:12:20.684  4389  4472 E AndroidRuntime: FATAL EXCEPTION: lowpool[2]
+10-19 21:12:20.684  4389  4472 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 4389
+10-19 21:12:20.685  4389  4454 E AndroidRuntime: FATAL EXCEPTION: lowpool[1]
+10-19 21:12:20.685  4389  4454 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 4389
+10-19 21:12:20.695  4389  4817 E AndroidRuntime: FATAL EXCEPTION: lowpool[6]
+10-19 21:12:20.695  4389  4817 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 4389
+10-19 21:12:20.995  4774  4774 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:20.996  4274  4274 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:20.996  4274  4274 E AndroidRuntime: Process: com.android.phone, PID: 4274
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: Process: com.google.android.inputmethod.latin, PID: 4647
+10-19 21:12:21.002  4138  4320 E AndroidRuntime: FATAL EXCEPTION: pool-7-thread-1

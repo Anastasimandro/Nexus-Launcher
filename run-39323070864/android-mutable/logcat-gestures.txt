@@ -1,0 +1,250 @@
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.provideRecentsAnimationDeviceStateRepo(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:25)
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:30)
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: 	at d81.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:14)
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: 	at com.android.launcher3.dagger.DaggerLauncherAppComponent$LauncherAppComponentImpl.getRecentsAnimationDeviceStateRepository(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: 	at o03.apply(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:36)
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: 	at com.android.launcher3.util.DaggerSingletonObject.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:7)
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: 	at com.android.quickstep.TouchInteractionService.onCreate(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:53)
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5644)
+10-19 21:12:15.166  4423  4423 E AndroidRuntime: 	... 10 more
+10-19 21:12:19.602  3806  3829 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:19.602  3806  3829 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:19.602  3806  3829 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:19.602  3806  3829 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:19.602  3806  3829 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:19.602  3806  3829 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:19.602  3806  3829 F system_server: runtime.cc:761]   native: #04 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:19.602  3806  3829 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:19.602  3806  3829 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:20.674  4389  4473 E AndroidRuntime: FATAL EXCEPTION: lowpool[3]
+10-19 21:12:20.674  4389  4473 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 4389
+10-19 21:12:20.674  4389  4473 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:20.680  4389  4452 E AndroidRuntime: FATAL EXCEPTION: lowpool[0]
+10-19 21:12:20.680  4389  4452 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 4389
+10-19 21:12:20.680  4389  4452 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:20.684  4389  4472 E AndroidRuntime: FATAL EXCEPTION: lowpool[2]
+10-19 21:12:20.684  4389  4472 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 4389
+10-19 21:12:20.684  4389  4472 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:20.685  4389  4454 E AndroidRuntime: FATAL EXCEPTION: lowpool[1]
+10-19 21:12:20.685  4389  4454 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 4389
+10-19 21:12:20.685  4389  4454 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:20.695  4389  4817 E AndroidRuntime: FATAL EXCEPTION: lowpool[6]
+10-19 21:12:20.695  4389  4817 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 4389
+10-19 21:12:20.695  4389  4817 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:20.995  4774  4774 D AndroidRuntime: Shutting down VM
+10-19 21:12:20.995  4774  4774 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:20.995  4774  4774 E AndroidRuntime: PID: 4774
+10-19 21:12:20.995  4774  4774 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:20.995  4274  4274 D AndroidRuntime: Shutting down VM
+10-19 21:12:20.996  4274  4274 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:20.996  4274  4274 E AndroidRuntime: Process: com.android.phone, PID: 4274
+10-19 21:12:20.996  4274  4274 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:21.000  4647  4647 D AndroidRuntime: Shutting down VM
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: Process: com.google.android.inputmethod.latin, PID: 4647
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: java.lang.RuntimeException: Adding window failed
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.view.ViewRootImpl.setView(ViewRootImpl.java:1805)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.view.WindowManagerGlobal.addView(WindowManagerGlobal.java:516)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.view.WindowManagerImpl.addView(WindowManagerImpl.java:188)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.app.Dialog.show(Dialog.java:352)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.inputmethodservice.SoftInputWindow.show(SoftInputWindow.java:157)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.inputmethodservice.SoftInputWindow.setToken(SoftInputWindow.java:105)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.attachToken(InputMethodService.java:768)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at niw.attachToken(PG:26)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.initializeInternal(InputMethodService.java:737)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.inputmethodservice.IInputMethodWrapper.executeMessage(IInputMethodWrapper.java:180)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at com.android.internal.os.HandlerCaller$MyHandler.handleMessage(HandlerCaller.java:44)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:397)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: Caused by: android.os.DeadObjectException
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.os.BinderProxy.transactNative(Native Method)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.os.BinderProxy.transact(BinderProxy.java:626)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.view.IWindowSession$Stub$Proxy.addToDisplayAsUser(IWindowSession.java:1222)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	at android.view.ViewRootImpl.setView(ViewRootImpl.java:1784)
+10-19 21:12:21.000  4647  4647 E AndroidRuntime: 	... 18 more
+10-19 21:12:21.002  4138  4320 E AndroidRuntime: FATAL EXCEPTION: pool-7-thread-1
+10-19 21:12:21.002  4138  4320 E AndroidRuntime: Process: com.android.systemui, PID: 4138
+10-19 21:12:21.002  4138  4320 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:21.003  4138  4158 E AndroidRuntime: FATAL EXCEPTION: wmshell.main
+10-19 21:12:21.003  4138  4158 E AndroidRuntime: Process: com.android.systemui, PID: 4138
+10-19 21:12:21.003  4138  4158 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:21.004  4647  4801 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-19 21:12:21.004  4647  4801 E AndroidRuntime: Process: com.google.android.inputmethod.latin, PID: 4647
+10-19 21:12:21.004  4647  4801 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:21.010  4647  4802 F chromium: [1019/211221.010791:FATAL:base/android/jni_android.cc:219] Uncaught Java exception in native code and the Java uncaught exception handler did not terminate the process. Please include the Java exception stack from the Android log in your crash report.
+10-19 21:12:21.723  4849  4849 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 21:12:21.727  4849  4849 I AndroidRuntime: Using default boot image
+10-19 21:12:21.727  4849  4849 I AndroidRuntime: Leaving lock profiling enabled
+10-19 21:12:24.159  5170  5170 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-19 21:12:25.292  4918  4948 I ActivityManager: Start proc 5469:app.nexus.launcher/u0a235 for bound-service {app.nexus.launcher/com.android.quickstep.TouchInteractionService}
+10-19 21:12:27.163  5469  5469 D TouchInteractionService: onCreate: user=0 instance=55344912
+10-19 21:12:27.324  5469  5469 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:19)
+10-19 21:12:27.324  5469  5469 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:30)
+10-19 21:12:27.324  5469  5469 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.DaggerLauncherAppComponent$LauncherAppComponentImpl.getRecentsAnimationDeviceStateRepository(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:27.324  5469  5469 W QuickstepProtoLogGroup: 	at com.android.quickstep.TouchInteractionService.onCreate(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:53)
+10-19 21:12:27.344  5469  5469 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:19)
+10-19 21:12:27.344  5469  5469 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:30)
+10-19 21:12:27.344  5469  5469 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.DaggerLauncherAppComponent$LauncherAppComponentImpl.getRecentsAnimationDeviceStateRepository(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:27.344  5469  5469 W TaskStackChangeListeners: 	at com.android.quickstep.TouchInteractionService.onCreate(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:53)
+10-19 21:12:27.413  5469  5469 W TaskStackChangeListeners: 	at com.android.quickstep.RecentsAnimationDeviceState_Factory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:30)
+10-19 21:12:27.413  5469  5469 W TaskStackChangeListeners: 	at com.android.quickstep.RecentsAnimationDeviceState_Factory_Impl.create(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:27.413  5469  5469 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule.provideRecentsAnimationDeviceStateRepo(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:28)
+10-19 21:12:27.413  5469  5469 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.provideRecentsAnimationDeviceStateRepo(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:27.413  5469  5469 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:25)
+10-19 21:12:27.413  5469  5469 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:30)
+10-19 21:12:27.413  5469  5469 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.DaggerLauncherAppComponent$LauncherAppComponentImpl.getRecentsAnimationDeviceStateRepository(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:27.413  5469  5469 W TaskStackChangeListeners: 	at com.android.quickstep.TouchInteractionService.onCreate(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:53)
+10-19 21:12:27.535  5469  5469 D AndroidRuntime: Shutting down VM
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: Process: app.nexus.launcher, PID: 5469
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: java.lang.RuntimeException: Unable to create service com.android.quickstep.TouchInteractionService
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5655)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(ActivityThread.java:0)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2804)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:397)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: Caused by: java.lang.SecurityException: Permission Denial: getRootTaskInfo() from pid=5469, uid=10235 requires android.permission.MANAGE_ACTIVITY_TASKS
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3392)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.os.Parcel.createException(Parcel.java:3376)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.os.Parcel.readException(Parcel.java:3359)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.os.Parcel.readException(Parcel.java:3301)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.app.IActivityTaskManager$Stub$Proxy.getRootTaskInfo(IActivityTaskManager.java:3209)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.quickstep.RecentsAnimationDeviceState.<init>(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:234)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.quickstep.RecentsAnimationDeviceState_Factory.newInstance(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:12)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.quickstep.RecentsAnimationDeviceState_Factory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:57)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.quickstep.RecentsAnimationDeviceState_Factory_Impl.create(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule.provideRecentsAnimationDeviceStateRepo(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:28)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.provideRecentsAnimationDeviceStateRepo(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:25)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:30)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at d81.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:14)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.launcher3.dagger.DaggerLauncherAppComponent$LauncherAppComponentImpl.getRecentsAnimationDeviceStateRepository(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at o03.apply(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:36)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.launcher3.util.DaggerSingletonObject.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:7)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at com.android.quickstep.TouchInteractionService.onCreate(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:53)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5644)
+10-19 21:12:27.535  5469  5469 E AndroidRuntime: 	... 10 more
+10-19 21:12:31.218  4918  4941 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:31.218  4918  4941 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:31.218  4918  4941 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:31.218  4918  4941 F system_server: runtime.cc:761]   native: #04 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:31.219  4918  4941 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:31.219  4918  4941 F system_server: runtime.cc:761]   native: #05 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:33.386  5267  5267 D AndroidRuntime: Shutting down VM
+10-19 21:12:33.386  5267  5267 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:33.386  5267  5267 E AndroidRuntime: Process: com.android.phone, PID: 5267
+10-19 21:12:33.386  5267  5267 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:33.412  5771  5771 D AndroidRuntime: Shutting down VM
+10-19 21:12:33.412  5771  5771 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:33.412  5771  5771 E AndroidRuntime: PID: 5771
+10-19 21:12:33.412  5771  5771 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:33.459  5153  5153 D AndroidRuntime: Shutting down VM
+10-19 21:12:33.459  5153  5153 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:33.459  5153  5153 E AndroidRuntime: Process: com.android.systemui, PID: 5153
+10-19 21:12:33.459  5153  5153 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:33.473  5380  5436 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-19 21:12:33.473  5380  5436 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 5380
+10-19 21:12:33.473  5380  5436 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-19 21:12:33.473  5643  5643 D AndroidRuntime: Shutting down VM
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: Process: com.google.android.inputmethod.latin, PID: 5643
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: java.lang.RuntimeException: Adding window failed
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.view.ViewRootImpl.setView(ViewRootImpl.java:1805)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.view.WindowManagerGlobal.addView(WindowManagerGlobal.java:516)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.view.WindowManagerImpl.addView(WindowManagerImpl.java:188)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.app.Dialog.show(Dialog.java:352)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.inputmethodservice.SoftInputWindow.show(SoftInputWindow.java:157)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.inputmethodservice.SoftInputWindow.setToken(SoftInputWindow.java:105)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.attachToken(InputMethodService.java:768)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at niw.attachToken(PG:26)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.initializeInternal(InputMethodService.java:737)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.inputmethodservice.IInputMethodWrapper.executeMessage(IInputMethodWrapper.java:180)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at com.android.internal.os.HandlerCaller$MyHandler.handleMessage(HandlerCaller.java:44)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:397)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: Caused by: android.os.DeadObjectException
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.os.BinderProxy.transactNative(Native Method)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.os.BinderProxy.transact(BinderProxy.java:626)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.view.IWindowSession$Stub$Proxy.addToDisplayAsUser(IWindowSession.java:1222)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	at android.view.ViewRootImpl.setView(ViewRootImpl.java:1784)
+10-19 21:12:33.474  5643  5643 E AndroidRuntime: 	... 18 more
+10-19 21:12:34.113  5845  5845 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-19 21:12:34.116  5845  5845 I AndroidRuntime: Using default boot image
+10-19 21:12:34.116  5845  5845 I AndroidRuntime: Leaving lock profiling enabled
+10-19 21:12:36.642  6180  6180 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-19 21:12:37.769  5910  5940 I ActivityManager: Start proc 6478:app.nexus.launcher/u0a235 for bound-service {app.nexus.launcher/com.android.quickstep.TouchInteractionService}
+10-19 21:12:38.662  6478  6478 D TouchInteractionService: onCreate: user=0 instance=264997237
+10-19 21:12:39.217  6478  6478 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:19)
+10-19 21:12:39.217  6478  6478 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:30)
+10-19 21:12:39.217  6478  6478 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.DaggerLauncherAppComponent$LauncherAppComponentImpl.getRecentsAnimationDeviceStateRepository(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:39.217  6478  6478 W QuickstepProtoLogGroup: 	at com.android.quickstep.TouchInteractionService.onCreate(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:53)
+10-19 21:12:39.243  6478  6478 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:19)
+10-19 21:12:39.243  6478  6478 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:30)
+10-19 21:12:39.243  6478  6478 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.DaggerLauncherAppComponent$LauncherAppComponentImpl.getRecentsAnimationDeviceStateRepository(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:39.243  6478  6478 W TaskStackChangeListeners: 	at com.android.quickstep.TouchInteractionService.onCreate(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:53)
+10-19 21:12:39.311  6478  6478 W TaskStackChangeListeners: 	at com.android.quickstep.RecentsAnimationDeviceState_Factory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:30)
+10-19 21:12:39.311  6478  6478 W TaskStackChangeListeners: 	at com.android.quickstep.RecentsAnimationDeviceState_Factory_Impl.create(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:39.311  6478  6478 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule.provideRecentsAnimationDeviceStateRepo(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:28)
+10-19 21:12:39.311  6478  6478 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.provideRecentsAnimationDeviceStateRepo(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:39.311  6478  6478 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:25)
+10-19 21:12:39.311  6478  6478 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:30)
+10-19 21:12:39.311  6478  6478 W TaskStackChangeListeners: 	at com.android.launcher3.dagger.DaggerLauncherAppComponent$LauncherAppComponentImpl.getRecentsAnimationDeviceStateRepository(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:39.311  6478  6478 W TaskStackChangeListeners: 	at com.android.quickstep.TouchInteractionService.onCreate(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:53)
+10-19 21:12:39.368  6478  6478 D AndroidRuntime: Shutting down VM
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: Process: app.nexus.launcher, PID: 6478
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: java.lang.RuntimeException: Unable to create service com.android.quickstep.TouchInteractionService
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5655)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(ActivityThread.java:0)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2804)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:397)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: Caused by: java.lang.SecurityException: Permission Denial: getRootTaskInfo() from pid=6478, uid=10235 requires android.permission.MANAGE_ACTIVITY_TASKS
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3392)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.os.Parcel.createException(Parcel.java:3376)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.os.Parcel.readException(Parcel.java:3359)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.os.Parcel.readException(Parcel.java:3301)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.app.IActivityTaskManager$Stub$Proxy.getRootTaskInfo(IActivityTaskManager.java:3209)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.quickstep.RecentsAnimationDeviceState.<init>(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:234)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.quickstep.RecentsAnimationDeviceState_Factory.newInstance(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:12)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.quickstep.RecentsAnimationDeviceState_Factory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:57)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.quickstep.RecentsAnimationDeviceState_Factory_Impl.create(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule.provideRecentsAnimationDeviceStateRepo(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:28)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.provideRecentsAnimationDeviceStateRepo(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:25)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:30)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at d81.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:14)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.launcher3.dagger.DaggerLauncherAppComponent$LauncherAppComponentImpl.getRecentsAnimationDeviceStateRepository(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:3)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at o03.apply(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:36)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.launcher3.util.DaggerSingletonObject.get(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:7)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at com.android.quickstep.TouchInteractionService.onCreate(r8-map-id-dfee55ad969c09b5c934f42e9a5f09cd999459a567a084813ec440f068b945e3:53)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5644)
+10-19 21:12:39.369  6478  6478 E AndroidRuntime: 	... 10 more
+10-19 21:12:49.720  2165  2165 I adbd    : adbd service requested 'shell,v2,raw:dumpsys activity service app.nexus.launcher/com.android.quickstep.TouchInteractionService'
+10-19 21:12:55.004  5910  6135 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)
+10-19 21:12:55.004  5910  6135 F system_server: runtime.cc:761]   native: #06 pc 001b6e72  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell+98) (BuildId: e2564b9361f25203d4d8bb218bfef57e)

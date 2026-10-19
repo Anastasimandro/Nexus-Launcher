@@ -1,0 +1,77 @@
+222-    CRITICAL dump took 0ms -- KeyguardStateControllerImpl
+223-
+224:    LauncherProxyService:
+225-    ----------------------------------------------------------------------------
+226:    LauncherProxyService state:
+227-      isConnected=false
+228-      mIsEnabled=true
+229-      mRecentsComponentName=ComponentInfo{app.nexus.launcher/com.android.quickstep.RecentsActivity}
+230-      mQuickStepIntent=Intent { act=android.intent.action.QUICKSTEP_SERVICE xflg=0x4 pkg=app.nexus.launcher }
+231-      mBound=true
+232-      mCurrentBoundedUserId=0
+233-      mConnectionBackoffAttempts=6
+234-      mActiveNavBarRegion=null
+235-      mNavBarMode=2
+236-      mIsPrevServiceCleanedUp=false
+237-    SysUiState state:
+238-      mSysUiStateFlags=268566528
+239-        allow_gesture|awake
+240-        backGestureDisabled=false
+241-        assistantGestureDisabled=false
+242-        pendingStateChanges=StateChange(flagsToSet=, flagsToClear=)
+243-
+244:    CRITICAL dump took 1ms -- LauncherProxyService
+245-
+246-    LeakDetector:
+247-    ----------------------------------------------------------------------------
+248-    SYSUI LEAK DETECTOR
+249-      TrackedCollections:
+250-        TunerService.mTunables: NaN (start-30min) / NaN (30min-now) / 351.19 (start-now) (growth rate in #/hour); 11 (current size)
+251-      
+252-      TrackedObjects:
+253-      
+254-      TrackedGarbage:
+255-
+256-    CRITICAL dump took 0ms -- LeakDetector
+257-
+258-    LightBarControllerImpl:
+259-    ----------------------------------------------------------------------------
+260-    LightBarController: 
+261-     mAppearance=
+262-     stack #0: AppearanceRegion{ bounds=[0,0][1080,2400]} isLight=false
+263-     mNavigationLight=false
+264-     mHasLightNavigationBar=false
+265-
+266-     mStatusBarMode=0 mNavigationBarMode=0
+267-
+268-     mForceDarkForScrim=false
+269-     mForceLightForScrim=false
+--
+1500-            com.android.keyguard.KeyguardUpdateMonitor$7@eb38d89
+1501-            com.google.android.systemui.dreamliner.kitt.KittFeatureStateRepository$registerUserUnlockedReceiver$receiver$1@967636f
+1502:            com.android.systemui.LauncherProxyService$2@578d7e5
+1503-            com.android.systemui.statusbar.policy.SecurityControllerImpl$3@514322b
+1504-            com.android.systemui.media.controls.domain.resume.MediaResumeListener$userUnlockReceiver$1@fbffd46
+1505-            com.google.android.systemui.dreamliner.kitt.DreamComponentMigrator$registerUserUnlockedReceiver$receiver$1@755f95a
+1506-            com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl$1@715f893
+1507-          Categories: 
+1508-        (systemui.power.action.dismissIncompatibleChargerWarning: exported):
+1509-          Registered: true
+1510-          Receivers:
+1511-            com.google.android.systemui.power.PowerNotificationWarningsGoogleImpl$1@b2356a8
+1512-          Categories: 
+1513-        (android.intent.action.CONFIGURATION_CHANGED: exported):
+1514-          Registered: true
+1515-          Receivers:
+1516-            com.android.systemui.statusbar.policy.Clock$2@e67112
+1517-            com.android.systemui.statusbar.policy.Clock$2@90d8a6
+1518-          Categories: 
+1519-        (PNW.acChargeNormally: exported):
+1520-          Registered: true
+1521-          Receivers:
+1522-            com.google.android.systemui.power.PowerNotificationWarningsGoogleImpl$1@b2356a8
+1523-          Categories: 
+1524-        (android.media.INTERNAL_RINGER_MODE_CHANGED_ACTION: exported):
+1525-          Registered: true
+1526-          Receivers:
+1527-            com.android.systemui.util.RingerModeLiveData$receiver$1@5f8c078

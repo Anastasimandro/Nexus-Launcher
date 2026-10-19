@@ -1,0 +1,1 @@
+SERVICE app.nexus.launcher/com.android.quickstep.TouchInteractionService 4a0d9b1 pid=(not running)

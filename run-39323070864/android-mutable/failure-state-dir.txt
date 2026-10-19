@@ -1,0 +1,7 @@
+total 40
+drwxrwxrwx 2 root root 4096 2026-10-19 21:15 .
+drwx------ 3 root root 4096 2026-10-19 21:08 ..
+-rw-rw-rw- 1 root root   72 2026-10-19 21:15 tripped
+-rw-rw-rw- 1 root root   19 2026-10-19 21:15 tripped.meta
+-rw-rw-rw- 1 root root  436 2026-10-19 21:15 watchdog.log
+2026-10-19 21:15:03 SystemUI no se enlazó al servicio de Nexus en 60 s
