@@ -22,6 +22,9 @@ work="$(mktemp -d)"
 apk="$(ls "$dist"/Nexus-v*.apk | head -n 1)"
 zip="$(ls "$dist"/Nexus-MagiskModule-v*.zip | head -n 1)"
 PKG=app.nexus.launcher
+# mutable: fases 1 y 4-7 (overlay mutable). static / config: solo la fase 8 correspondiente, cada una
+# en su propio emulador para que un remount anterior no contamine el resultado.
+VARIANT="${VARIANT:-mutable}"
 OVERLAY=app.nexus.launcher.overlay.recents
 SERVICE=$PKG/com.android.quickstep.TouchInteractionService
 TOOL=/data/local/tmp/nexus-quickstep
@@ -50,7 +53,7 @@ wait_boot() {
   local sdeadline=$((SECONDS + 300))
   until adb shell service check role 2>/dev/null | grep -q "found" \
       && adb shell pm path com.android.systemui 2>/dev/null | grep -q "^package:" \
-      && adb shell cmd overlay list --user 0 > /dev/null 2>&1; do
+      && adb shell cmd overlay list --user 0 2>/dev/null | grep -q "^android"; do
     (( SECONDS > sdeadline )) && { say "!! los servicios no respondieron en 5 min"; break; }
     sleep 4
   done
@@ -98,6 +101,7 @@ say ""
 adb push "$here/../../magisk-module/tools/nexus-quickstep" "$TOOL" > /dev/null 2>&1
 adb shell chmod 755 "$TOOL"
 
+if [[ $VARIANT == mutable ]]; then
 # ---------------------------------------------------------------------------------------------
 say "## Fase 1: auditoría estática contra los binarios del sistema (sin módulo)"
 phase_static() {
@@ -136,13 +140,14 @@ phase_static() {
     --dump 'Landroid/window/DesktopModeFlags;' 'Landroid/window/DesktopExperienceFlags;' \
            'Landroid/view/IWindowManager;' 'Landroid/window/ScreenCapture;' 'Landroid/window/ScreenCaptureInternal;' \
            'Landroid/app/IActivityTaskManager;' 'Landroid/app/ActivityOptions;' \
-           'Landroid/window/ITaskSnapshotManager;' 'Landroid/window/TaskSnapshot;' 'Lcom/android/internal/protolog/common/IProtoLog;' \
+           'Landroid/window/ITaskSnapshotManager;' 'Landroid/window/TaskSnapshotManager;' 'Landroid/window/TaskSnapshot;' 'Lcom/android/internal/protolog/common/IProtoLog;' \
            'Lcom/android/internal/protolog/ProtoLog;' 'Lcom/android/internal/protolog/ProtoLogImpl;' \
     > "$out/static-audit.txt" 2>&1
 }
 cap static-audit-run phase_static
 grep -E "^== (ENLACE|AIDL|ESCANEO|BUSCAR)|^app:|^  (DIFERENCIA|AUSENTE)" "$out/static-audit.txt" | tee -a "$out/summary.md"
 say ""
+fi
 
 # ---------------------------------------------------------------------------------------------
 say "## Fase 2: instalar el módulo como lo hace Magisk (remount)"
@@ -205,6 +210,7 @@ cap module-evidence phase_module
   echo "probe:"; cat "$out/probe-file.txt"; echo "permisos permitidos y NO concedidos:"; cat "$out/allowed-but-NOT-granted.txt"; } | tee -a "$out/summary.md"
 say ""
 
+if [[ $VARIANT == mutable ]]; then
 # ---------------------------------------------------------------------------------------------
 say "## Fase 4: activar el overlay y comprobar que SystemUI se enlaza a Nexus"
 phase_enable() {
@@ -386,76 +392,94 @@ phase_failure() {
 cap failure-recovery phase_failure
 cat "$out/failure-status.txt" "$out/failure-lookup.txt" "$out/failure-watchdog-log.txt" "$out/failure-gesture.txt" "$out/failure-enable-again.txt" | tee -a "$out/summary.md"
 say ""
+fi
 
 # ---------------------------------------------------------------------------------------------
-say "## Fase 8: overlay estático (aplicado desde el arranque), solo si el mutable no recibió los permisos"
+say "## Fase 8 ($VARIANT): overlay inmutable aplicado desde el arranque (Nexus recibe los permisos 'recents' en el arranque de PMS)"
 static_apk="$dist/NexusRecentsOverlayStatic.apk"
-granted_somewhere() { grep -qx "android.permission.MANAGE_ACTIVITY_TASKS" "$out/granted-after-enable.txt" "$out/granted-second-boot.txt" 2>/dev/null; }
+# Las consultas a overlay/permisos se hacen con el sistema ya asentado: en la prueba anterior se lanzaron
+# antes de que `overlay` estuviera registrado y no valían como evidencia.
+settle_overlay() {
+  local until_=$((SECONDS + 240))
+  until dsh cmd overlay list --user 0 | grep -q "^android"; do
+    (( SECONDS > until_ )) && { echo "!! cmd overlay no respondió en 4 min" >> "$out/summary.md"; break; }
+    sleep 5
+  done
+  sleep 45
+}
+collect_overlay() {
+  local tag="$1"
+  dsh df -h /data /product /system_ext > "$out/df-$tag.txt"
+  dsh cmd overlay list --user 0 > "$out/$tag-overlay-list-all.txt"
+  dsh cmd overlay list --user 0 "$OVERLAY" > "$out/$tag-overlay-list.txt"
+  dsh dumpsys overlay "$OVERLAY" > "$out/$tag-overlay-dumpsys.txt"
+  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/$tag-overlay-lookup.txt"
+  perm_state "$tag-overlay" > "$out/perm-state-$tag-overlay.txt"
+  dsh "$TOOL bound" > "$out/tool-bound-$tag-overlay.txt"
+  dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-$tag-overlay.txt"
+  crashes > "$out/crashes-$tag-overlay.txt"
+  dsh logcat -d -b crash > "$out/crash-buffer-$tag.txt"
+  dsh logcat -d | grep -E "SystemUiProxy|TouchInteraction|OverviewProxy|LauncherProxy|NoSuchMethod|NoSuchField|NoClassDef|RemoteException|SecurityException|AbsSwipeUpHandler" | tail -n 300 > "$out/logcat-$tag-overlay.txt"
+}
+remount_rw() {
+  adb root > /dev/null 2>&1; adb wait-for-device
+  adb remount > "$out/remount-$1.txt" 2>&1
+  # `adb remount` tras desactivar verity pide reiniciar: se repite hasta que quede en rw.
+  if grep -qi "reboot" "$out/remount-$1.txt"; then
+    reboot_device; adb root > /dev/null 2>&1; adb wait-for-device
+    adb remount >> "$out/remount-$1.txt" 2>&1
+  fi
+}
 phase_static_overlay() {
   dsh cmd overlay disable --user 0 "$OVERLAY" > /dev/null
-  adb root > /dev/null 2>&1; adb wait-for-device
-  adb remount > "$out/remount-static.txt" 2>&1
+  remount_rw static
   # Mismo paquete: el APK mutable se quita antes de poner el estático.
   adb shell rm -f /product/overlay/NexusRecentsOverlay.apk
   adb push "$static_apk" /product/overlay/NexusRecentsOverlay.apk > "$out/static-push.txt" 2>&1
   adb shell 'restorecon -RF /product/overlay' > /dev/null 2>&1
   { echo "host:   $(sha256sum "$static_apk" | cut -d' ' -f1)"
     echo "device: $(dsh sha256sum /product/overlay/NexusRecentsOverlay.apk)"
-    dsh ls -lZ /product/overlay/; } > "$out/static-push-check.txt"
+    dsh ls -lZ /product/overlay/ | grep -i nexus; } > "$out/static-push-check.txt"
   reboot_device
-  dsh cmd overlay list --user 0 "$OVERLAY" > "$out/static-overlay-list.txt"
-  dsh dumpsys overlay "$OVERLAY" > "$out/static-overlay-dumpsys.txt"
-  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/static-overlay-lookup.txt"
-  sleep 60
-  perm_state static-overlay > "$out/perm-state-static-overlay.txt"
-  dsh "$TOOL bound" > "$out/tool-bound-static-overlay.txt"
-  dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-static-overlay.txt"
-  crashes > "$out/crashes-static-overlay.txt"
-  dsh logcat -d | grep -E "SystemUiProxy|TouchInteraction|OverviewProxy|LauncherProxy|NoSuchMethod|NoSuchField|NoClassDef|RemoteException|SecurityException|AbsSwipeUpHandler" | tail -n 300 > "$out/logcat-static-overlay.txt"
+  settle_overlay
+  collect_overlay static
 }
 # 8b: el APK mutable de siempre, pero declarado inmutable y activo por defecto en overlay/config/config.xml.
 phase_config_overlay() {
-  adb root > /dev/null 2>&1; adb wait-for-device
-  adb remount > "$out/remount-config.txt" 2>&1
-  adb shell rm -f /product/overlay/NexusRecentsOverlay.apk
-  adb push "$work/module/system/product/overlay/NexusRecentsOverlay.apk" /product/overlay/NexusRecentsOverlay.apk > /dev/null
+  dsh cmd overlay disable --user 0 "$OVERLAY" > /dev/null
+  remount_rw config
   adb shell mkdir -p /product/overlay/config
   adb shell 'printf "%s\n" "<config>" "    <overlay package=\"app.nexus.launcher.overlay.recents\" enabled=\"true\" mutable=\"false\" />" "</config>" > /product/overlay/config/config.xml'
   adb shell 'restorecon -RF /product/overlay' > /dev/null 2>&1
-  dsh "cat /product/overlay/config/config.xml; ls -lZ /product/overlay/config" > "$out/config-overlay-files.txt"
+  dsh "cat /product/overlay/config/config.xml; ls -lZ /product/overlay /product/overlay/config | grep -iE 'nexus|config'" > "$out/config-overlay-files.txt"
+  dsh df -h /data /product /system_ext > "$out/df-config-before-reboot.txt"
   reboot_device
-  dsh cmd overlay list --user 0 "$OVERLAY" > "$out/config-overlay-list.txt"
-  dsh dumpsys overlay "$OVERLAY" > "$out/config-overlay-dumpsys.txt"
-  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/config-overlay-lookup.txt"
-  sleep 60
-  perm_state config-overlay > "$out/perm-state-config-overlay.txt"
-  dsh "$TOOL bound" > "$out/tool-bound-config-overlay.txt"
-  dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-config-overlay.txt"
-  crashes > "$out/crashes-config-overlay.txt"
+  settle_overlay
+  collect_overlay config
 }
 effective() { grep -q "app.nexus.launcher/" "$1" 2>/dev/null; }
 
-if granted_somewhere; then
-  say "No hace falta: el overlay mutable ya recibió los permisos."
-elif [[ ! -f $static_apk ]]; then
-  say "No hay APK de overlay estático en dist: no se prueba."
-else
-  cap static-overlay phase_static_overlay
-  { cat "$out/static-overlay-list.txt" "$out/static-overlay-lookup.txt" "$out/perm-state-static-overlay.txt" "$out/tool-bound-static-overlay.txt"
-    echo "--- caídas:"; cat "$out/crashes-static-overlay.txt"; } | tee -a "$out/summary.md"
-  if ! effective "$out/static-overlay-lookup.txt"; then
-    say "El overlay estático no llegó a aplicarse. 8b: overlay inmutable por overlay/config/config.xml."
-    cap config-overlay phase_config_overlay
-    { cat "$out/config-overlay-list.txt" "$out/config-overlay-lookup.txt" "$out/perm-state-config-overlay.txt" "$out/tool-bound-config-overlay.txt"
-      echo "--- caídas:"; cat "$out/crashes-config-overlay.txt"; } | tee -a "$out/summary.md"
-    S="-config"
-  else
-    S="-static"
-  fi
-  cap gestures-final phase_gestures
-  cat "$out/gesture-notes$S.txt" | tee -a "$out/summary.md"
-  S=""
-fi
+case "$VARIANT" in
+  static|config)
+    if [[ ! -f $static_apk ]]; then
+      say "No hay APK de overlay estático en dist: no se prueba."
+    else
+      if [[ $VARIANT == static ]]; then cap static-overlay phase_static_overlay; else cap config-overlay phase_config_overlay; fi
+      t=$VARIANT
+      { cat "$out/$t-overlay-list-all.txt" 2>/dev/null | grep -iE "^android|nexus" ; cat "$out/$t-overlay-list.txt" "$out/$t-overlay-lookup.txt" "$out/perm-state-$t-overlay.txt" "$out/tool-bound-$t-overlay.txt" 2>/dev/null
+        echo "--- caídas:"; cat "$out/crashes-$t-overlay.txt" 2>/dev/null; } | tee -a "$out/summary.md"
+      if effective "$out/$t-overlay-lookup.txt"; then
+        say "El overlay inmutable ($t) se aplicó: config_recentsComponentName apunta a Nexus."
+        S="-$t"
+        cap gestures-final phase_gestures
+        cat "$out/gesture-notes$S.txt" | tee -a "$out/summary.md"
+        S=""
+      else
+        say "El overlay inmutable ($t) NO se aplicó a config_recentsComponentName."
+      fi
+    fi ;;
+  *) say "(variante mutable: la fase 8 se prueba en los trabajos static y config)" ;;
+esac
 say ""
 
 adb logcat -d -b main,system,crash 2>/dev/null | gzip -9 > "$out/logcat-full.txt.gz"

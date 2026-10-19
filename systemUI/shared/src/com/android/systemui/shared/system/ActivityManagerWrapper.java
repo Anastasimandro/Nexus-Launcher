@@ -140,6 +140,9 @@ public class ActivityManagerWrapper {
             snapshot = getService().getTaskSnapshot(taskId, isLowResolution);
         } catch (RemoteException e) {
             Log.w(TAG, "Failed to retrieve task snapshot", e);
+        } catch (NoSuchMethodError | AbstractMethodError e) {
+            // Android 17 (API 37) quitó getTaskSnapshot de IActivityTaskManager.
+            snapshot = SnapshotManagerCompat.getTaskSnapshot(taskId, isLowResolution);
         }
         if (snapshot != null) {
             return ThumbnailData.fromSnapshot(snapshot);
@@ -160,6 +163,8 @@ public class ActivityManagerWrapper {
             snapshot = getService().takeTaskSnapshot(taskId, /* updateCache= */ true);
         } catch (RemoteException e) {
             Log.w(TAG, "Failed to take task snapshot", e);
+        } catch (NoSuchMethodError | AbstractMethodError e) {
+            snapshot = SnapshotManagerCompat.takeTaskSnapshot(taskId, /* updateCache= */ true);
         }
         if (snapshot != null) {
             return ThumbnailData.fromSnapshot(snapshot);
