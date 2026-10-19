@@ -41,6 +41,9 @@ cap() {
   echo "- $name: exit $rc" >> "$out/summary.md"
   return $rc
 }
+# `grep -q` cierra la tubería en cuanto encuentra algo y, con pipefail, hace fallar a adb por SIGPIPE
+# cuando la salida es larga (cmd overlay list): se guarda la salida y se busca después.
+overlay_up() { local o; o="$(adb shell cmd overlay list --user 0 2>/dev/null)"; [[ $o == android* || $o == *$'\nandroid'* ]]; }
 wait_boot() {
   adb wait-for-device
   local deadline=$((SECONDS + ${BOOT_DEADLINE:-600}))
@@ -53,7 +56,7 @@ wait_boot() {
   local sdeadline=$((SECONDS + 300))
   until adb shell service check role 2>/dev/null | grep -q "found" \
       && adb shell pm path com.android.systemui 2>/dev/null | grep -q "^package:" \
-      && adb shell cmd overlay list --user 0 2>/dev/null | grep -q "^android"; do
+      && overlay_up; do
     (( SECONDS > sdeadline )) && { say "!! los servicios no respondieron en 5 min"; break; }
     sleep 4
   done
@@ -66,7 +69,7 @@ wait_stable() {
   while (( SECONDS < deadline )); do
     pid="$(adb shell pidof system_server 2>/dev/null | tr -d '\r')"
     ok=0
-    if adb shell cmd overlay list --user 0 2>/dev/null | grep -q "^android" \
+    if overlay_up \
        && adb shell service check package 2>/dev/null | grep -q found \
        && [[ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == 1 ]]; then ok=1; fi
     if [[ $ok == 1 && -n $pid && $pid == "$last" ]]; then
@@ -435,7 +438,7 @@ static_apk="$dist/NexusRecentsOverlayStatic.apk"
 # antes de que `overlay` estuviera registrado y no valían como evidencia.
 settle_overlay() {
   local until_=$((SECONDS + 240))
-  until dsh cmd overlay list --user 0 | grep -q "^android"; do
+  until overlay_up; do
     (( SECONDS > until_ )) && { echo "!! cmd overlay no respondió en 4 min" >> "$out/summary.md"; break; }
     sleep 5
   done
