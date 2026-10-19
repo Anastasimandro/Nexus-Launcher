@@ -63,7 +63,7 @@ trap 'rm -rf "$work"' EXIT
 # empareja por nombre al aplicarlo, así que no hace falta que el recurso sea público en android.jar.
 "$AAPT2" link -o "$work/unsigned.apk" -I "$ANDROID_JAR" \
   --manifest "$overlay_dir/AndroidManifest.xml" \
-  --min-sdk-version 34 --target-sdk-version 34 \
+  --min-sdk-version 34 --target-sdk-version "${OVERLAY_TARGET_SDK:-37}" \
   --version-code 1 --version-name 1 \
   "$work/res.zip" || fail "aapt2 link falló."
 "$ZIPALIGN" -f -p 4 "$work/unsigned.apk" "$work/aligned.apk" || fail "zipalign falló."

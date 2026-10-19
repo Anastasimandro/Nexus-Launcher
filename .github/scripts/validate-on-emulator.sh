@@ -56,7 +56,11 @@ wait_boot() {
   done
   sleep 3
 }
+REBOOTS=0
 reboot_device() {
+  # El logcat solo conserva el último arranque: se guarda el de cada fase antes de reiniciar.
+  REBOOTS=$((REBOOTS + 1))
+  adb logcat -d -b all 2>/dev/null | tail -n 30000 | gzip -9 > "$out/logcat-before-reboot-$REBOOTS.txt.gz"
   adb reboot
   sleep 12
   wait_boot
@@ -333,6 +337,11 @@ say ""
 # ---------------------------------------------------------------------------------------------
 say "## Fase 6: recuperación manual (nexus-quickstep disable)"
 phase_disable() {
+  { echo "--- cmd overlay list:"; dsh cmd overlay list --user 0 "$OVERLAY"
+    echo "--- pm path:"; dsh pm path "$OVERLAY"
+    echo "--- service check overlay:"; dsh service check overlay
+    echo "--- lookup:"; dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName; } > "$out/disable-pre.txt" 2>&1
+  dsh "sh -x $TOOL disable" > "$out/disable-trace.txt" 2>&1
   dsh "$TOOL disable" > "$out/disable-1.txt"
   sleep 15
   dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/lookup-after-disable.txt"
@@ -386,8 +395,11 @@ phase_static_overlay() {
   adb remount > "$out/remount-static.txt" 2>&1
   # Mismo paquete: el APK mutable se quita antes de poner el estático.
   adb shell rm -f /product/overlay/NexusRecentsOverlay.apk
-  adb push "$static_apk" /product/overlay/NexusRecentsOverlay.apk > /dev/null
+  adb push "$static_apk" /product/overlay/NexusRecentsOverlay.apk > "$out/static-push.txt" 2>&1
   adb shell 'restorecon -RF /product/overlay' > /dev/null 2>&1
+  { echo "host:   $(sha256sum "$static_apk" | cut -d' ' -f1)"
+    echo "device: $(dsh sha256sum /product/overlay/NexusRecentsOverlay.apk)"
+    dsh ls -lZ /product/overlay/; } > "$out/static-push-check.txt"
   reboot_device
   dsh cmd overlay list --user 0 "$OVERLAY" > "$out/static-overlay-list.txt"
   dsh dumpsys overlay "$OVERLAY" > "$out/static-overlay-dumpsys.txt"
@@ -397,6 +409,7 @@ phase_static_overlay() {
   dsh "$TOOL bound" > "$out/tool-bound-static-overlay.txt"
   dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-static-overlay.txt"
   crashes > "$out/crashes-static-overlay.txt"
+  dsh logcat -d | grep -E "SystemUiProxy|TouchInteraction|OverviewProxy|LauncherProxy|NoSuchMethod|NoSuchField|NoClassDef|RemoteException|SecurityException|AbsSwipeUpHandler" | tail -n 300 > "$out/logcat-static-overlay.txt"
 }
 if granted_somewhere; then
   say "No hace falta: el overlay mutable ya recibió los permisos."
