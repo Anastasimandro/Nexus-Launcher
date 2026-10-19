@@ -1,1 +1,5 @@
 adbd is already running as root
+!! el sistema no se estabilizó en 5 min (pid system_server: 20780)
+/tmp/tmp.KFKsrZrs3S/module/system/product/priv-app/Nexus/Nexus.apk: 1 file pushed, 0 skipped. 47.5 MB/s (17767144 bytes in 0.356s)
+/tmp/tmp.KFKsrZrs3S/module/system/product/etc/permissions/privapp-permissions-nexus.xml: 1 file pushed, 0 skipped. 11.1 MB/s (3259 bytes in 0.000s)
+/tmp/tmp.KFKsrZrs3S/module/system/product/overlay/NexusRecentsOverlay.apk: 1 file pushed, 0 skipped. 5.2 MB/s (8538 bytes in 0.002s)

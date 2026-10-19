@@ -1,0 +1,7 @@
+Successfully disabled verity
+Remounted /system as RW
+Remounted /vendor as RW
+Remounted /product as RW
+Remounted /system_dlkm as RW
+Remounted /system_ext as RW
+Remount succeeded
