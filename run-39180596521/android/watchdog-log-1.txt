@@ -1,0 +1,2 @@
+2026-10-19 00:36:32 arranque con el overlay activo: vigilando (espera 150s, vigilancia 300s)
+2026-10-19 00:36:32 SystemUI enlazado al servicio de Nexus tras 0s

@@ -1,0 +1,6 @@
+2026-10-19 00:36:32 arranque con el overlay activo: vigilando (espera 150s, vigilancia 300s)
+2026-10-19 00:36:32 SystemUI enlazado al servicio de Nexus tras 0s
+2026-10-19 00:38:54 el overlay se desactivó durante la vigilancia
+2026-10-19 00:40:42 arranque con el overlay activo: vigilando (espera 60s, vigilancia 30s)
+2026-10-19 00:40:42 SystemUI enlazado al servicio de Nexus tras 0s
+2026-10-19 00:41:13 vigilancia terminada: enlace estable

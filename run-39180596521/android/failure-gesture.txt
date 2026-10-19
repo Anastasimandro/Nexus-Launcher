@@ -1,0 +1,1 @@
+tras el gesto, con el vigilante ya disparado:     topResumedActivity=ActivityRecord{131229025 u0 com.android.settings/.homepage.SettingsHomepageActivity t11}

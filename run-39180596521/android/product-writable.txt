@@ -1,0 +1,4 @@
+PRODUCT_WRITABLE
+/dev/block/dm-3 on /product type ext4 (ro,seclabel,relatime)
+overlay on /system type overlay (rw,seclabel,noatime,lowerdir=/system,upperdir=/mnt/scratch/overlay/system/upper,workdir=/mnt/scratch/overlay/system/work,redirect_dir=nofollow,uuid=on,userxattr)
+overlay on /product type overlay (rw,seclabel,noatime,lowerdir=/product,upperdir=/mnt/scratch/overlay/product/upper,workdir=/mnt/scratch/overlay/product/work,redirect_dir=nofollow,uuid=on,userxattr)

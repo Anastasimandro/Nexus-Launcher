@@ -1,0 +1,2 @@
+nexus-quickstep: Nexus aún no ha comprobado la compatibilidad: ábrelo una vez (o usa --force).
+exit del primer enable (sin --force): 1

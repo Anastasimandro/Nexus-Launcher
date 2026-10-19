@@ -1,0 +1,1 @@
+app.nexus.launcher/com.android.quickstep.RecentsActivity

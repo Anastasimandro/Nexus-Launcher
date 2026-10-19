@@ -1,0 +1,14 @@
+10-19 00:36:22.240  1429  1429 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 00:36:22.240  1429  1429 E AndroidRuntime: Process: app.nexus.launcher, PID: 1429
+10-19 00:36:29.104  2043  2043 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 00:36:29.104  2043  2043 E AndroidRuntime: Process: app.nexus.launcher, PID: 2043
+10-19 00:38:52.471   994   994 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 00:38:52.471   994   994 E AndroidRuntime: Process: com.android.phone, PID: 994
+10-19 00:38:57.638  5199  5199 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 00:38:57.638  5199  5199 E AndroidRuntime: Process: app.nexus.launcher, PID: 5199
+10-19 00:39:23.290  7842  7842 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 00:39:23.290  7842  7842 E AndroidRuntime: Process: app.nexus.launcher, PID: 7842
+10-19 00:39:43.313  8331  8441 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-19 00:39:43.313  8331  8441 E AndroidRuntime: Process: com.google.android.gms, PID: 8331
+10-19 00:39:43.339  7545  7603 E AndroidRuntime: FATAL EXCEPTION: SysUiBg
+10-19 00:39:43.339  7545  7603 E AndroidRuntime: Process: com.android.systemui, PID: 7545

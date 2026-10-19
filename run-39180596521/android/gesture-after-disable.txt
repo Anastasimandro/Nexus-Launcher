@@ -1,0 +1,1 @@
+tras el gesto, con el overlay desactivado:     topResumedActivity=ActivityRecord{209651578 u0 com.android.settings/.SubSettings t10}

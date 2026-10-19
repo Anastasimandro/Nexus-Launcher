@@ -1,0 +1,3 @@
+SERVICE app.nexus.launcher/com.android.quickstep.TouchInteractionService 3c01fca pid=7842 user=0
+  Client:
+Error with service 'activity' while dumping: DEAD_OBJECT

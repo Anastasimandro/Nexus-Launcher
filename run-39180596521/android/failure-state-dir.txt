@@ -1,0 +1,7 @@
+total 40
+drwxrwxrwx 2 root root 4096 2026-10-19 00:40 .
+drwx------ 3 root root 4096 2026-10-19 00:36 ..
+-rw-rw-rw- 1 root root   39 2026-10-19 00:40 armed
+-rw-rw-rw- 1 root root   20 2026-10-19 00:40 healthy
+-rw-rw-rw- 1 root root  442 2026-10-19 00:41 watchdog.log
+cat: /data/adb/nexus_quickstep/tripped: No such file or directory

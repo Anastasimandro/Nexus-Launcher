@@ -1,0 +1,3 @@
+SystemUI enlazado al servicio de Quickstep de Nexus: sí
+      * Client AppBindRecord{49e228c ProcessRecord{c677c08 10362:com.android.systemui/u0a201}}
+    binding=AppBindRecord{49e228c app.nexus.launcher/com.android.quickstep.TouchInteractionService:com.android.systemui}

@@ -1,0 +1,6 @@
+total 40
+drwxrwxrwx 2 root root 4096 2026-10-19 00:36 .
+drwx------ 3 root root 4096 2026-10-19 00:36 ..
+-rw-rw-rw- 1 root root   39 2026-10-19 00:36 armed
+-rw-rw-rw- 1 root root   20 2026-10-19 00:36 healthy
+-rw-rw-rw- 1 root root  160 2026-10-19 00:36 watchdog.log
