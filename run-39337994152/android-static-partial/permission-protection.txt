@@ -1,0 +1,19 @@
++ permission:android.permission.ACCESS_HIDDEN_PROFILES_FULL   protectionLevel:signature|privileged + permission:android.permission.BIND_KEYGUARD_APPWIDGET + permission:android.permission.ACCESS_HIDDEN_PROFILES   protectionLevel:normal + permission:android.permission.WIFI_UPDATE_COEX_UNSAFE_CHANNELS
++ permission:android.permission.ACCESS_HIDDEN_PROFILES_FULL   protectionLevel:signature|privileged + permission:android.permission.BIND_KEYGUARD_APPWIDGET
++ permission:android.permission.ACCESS_SHORTCUTS   protectionLevel:signature|recents|role + permission:com.google.android.gms.appevents.permission.SEND_APP_IMPORTANCE_UPDATES
++ permission:android.permission.ALLOW_SLIPPERY_TOUCHES   protectionLevel:signature|privileged|recents|role + permission:android.permission.WRITE_ALLOWLISTED_DEVICE_CONFIG
++ permission:android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS   protectionLevel:signature|privileged|recents + permission:android.permission.SYNC_FLAGS
++ permission:android.permission.CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS   protectionLevel:signature|privileged|recents + permission:android.permission.LAUNCH_TRUST_AGENT_SETTINGS
++ permission:android.permission.INTERNAL_SYSTEM_WINDOW   protectionLevel:signature|recents|module + permission:android.permission.BIND_AMBIENT_CONTEXT_DETECTION_SERVICE
++ permission:android.permission.MANAGE_ACCESSIBILITY   protectionLevel:signature|setup|recents|role + permission:android.permission.MODIFY_HDR_CONVERSION_MODE
++ permission:android.permission.MANAGE_ACTIVITY_TASKS   protectionLevel:signature|recents + permission:android.permission.MONITOR_DEVICE_CONFIG_ACCESS
++ permission:android.permission.MANAGE_KEY_GESTURES   protectionLevel:signature|recents + permission:android.permission.BLUETOOTH_MAP
++ permission:android.permission.MONITOR_INPUT   protectionLevel:signature|recents + permission:android.permission.SET_VOLUME_KEY_LONG_PRESS_LISTENER
++ permission:android.permission.READ_FRAME_BUFFER   protectionLevel:signature|recents|role + permission:android.permission.QUERY_ALL_PACKAGES
++ permission:android.permission.REMOVE_TASKS   protectionLevel:signature|recents|role + permission:android.permission.FOREGROUND_SERVICE_LOCATION
++ permission:android.permission.SET_ORIENTATION   protectionLevel:signature|recents + permission:android.permission.REVOKE_RUNTIME_PERMISSIONS
++ permission:android.permission.START_TASKS_FROM_RECENTS   protectionLevel:signature|privileged|recents + permission:android.permission.ACCESS_SMARTSPACE
++ permission:android.permission.STATUS_BAR_SERVICE   protectionLevel:signature|recents + permission:android.permission.MANAGE_AISEAL_VIRTUAL_MACHINE + permission:android.permission.STATUS_BAR   protectionLevel:signature|privileged|recents + permission:android.permission.READ_FRAME_BUFFER
++ permission:android.permission.STATUS_BAR_SERVICE   protectionLevel:signature|recents + permission:android.permission.MANAGE_AISEAL_VIRTUAL_MACHINE
++ permission:android.permission.STOP_APP_SWITCHES   protectionLevel:signature|privileged|recents + permission:android.permission.RECEIVE_MEDIA_RESOURCE_USAGE
++ permission:android.permission.SYSTEM_APPLICATION_OVERLAY   protectionLevel:signature|appop|installer|recents|role + permission:android.permission.MODIFY_DAY_NIGHT_MODE

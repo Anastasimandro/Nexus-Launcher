@@ -14,3 +14,32 @@ wm_size=Physical size: 1080x2400
 
 ## Fase 2: instalar el módulo como lo hace Magisk (remount)
 !! el sistema no se estabilizó en 5 min (pid system_server: 20780)
+!! el sistema no se estabilizó en 5 min (pid system_server: 23267)
+- install-module: exit 0
+
+## Fase 3: el módulo en Android real (app privilegiada y overlay)
+- module-evidence: exit 0
+overlay (nuestro):
+[ ] app.nexus.launcher.overlay.recents
+lookup antes:
+com.google.android.apps.nexuslauncher/com.android.quickstep.RecentsActivity
+probe:
+sdk=37
+passed=true
+missing=
+tolerated=DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_ALTTAB_TRANSITIONS_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_TRANSITIONS_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_TRAMPOLINE_CLOSE_ANIMATION_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_EXIT_BY_MINIMIZE_TRANSITION_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_QUICK_SWITCH,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_TASKBAR_RUNNING_APPS,DesktopModeFlags.ENABLE_QUICKSWITCH_DESKTOP_SPLIT_BUGFIX,DesktopModeFlags.ENABLE_START_LAUNCH_TRANSITION_FROM_TASKBAR_BUGFIX,DesktopModeFlags.ENABLE_TASKBAR_RECENTS_LAYOUT_TRANSITION,DesktopExperienceFlags.ENABLE_DESKTOP_APP_LAUNCH_BUGFIX,DesktopExperienceFlags.ENABLE_DESKTOP_FIRST_FULLSCREEN_REFOCUS_BUGFIX,DesktopExperienceFlags.ENABLE_DESKTOP_WINDOWING_PIP,DesktopExperienceFlags.ENABLE_FREEFORM_DISPLAY_LAUNCH_PARAMS,DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND,DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_FRONTEND,DesktopExperienceFlags.ENABLE_PINNING_APP_WITH_CONTEXT_MENU,DesktopExperienceFlags.ENABLE_REJECT_HOME_TRANSITION,DesktopExperienceFlags.ENABLE_TASKBAR_RECENT_TASKS_THROTTLE_BUGFIX
+denied=android.permission.MANAGE_ACTIVITY_TASKS,android.permission.MONITOR_INPUT,android.permission.READ_FRAME_BUFFER,android.permission.REMOVE_TASKS
+permisos permitidos y NO concedidos:
+android.permission.ACCESS_SHORTCUTS
+android.permission.INTERNAL_SYSTEM_WINDOW
+android.permission.MANAGE_ACCESSIBILITY
+android.permission.MANAGE_ACTIVITY_TASKS
+android.permission.MANAGE_KEY_GESTURES
+android.permission.MONITOR_INPUT
+android.permission.READ_FRAME_BUFFER
+android.permission.REMOVE_TASKS
+android.permission.SET_ORIENTATION
+android.permission.STATUS_BAR_SERVICE
+android.permission.SYSTEM_APPLICATION_OVERLAY
+
+## Fase 8 (static): overlay inmutable aplicado desde el arranque (Nexus recibe los permisos 'recents' en el arranque de PMS)

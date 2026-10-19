@@ -92,3 +92,7 @@ INFO         | Boot completed in 59758 ms
 INFO         | Increasing screen off timeout, logcat buffer size to 2M.
 INFO         | Boot completed in 24222 ms
 INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+INFO         | Boot completed in 24799 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+ERROR        | Failed to find ColorBuffer: 1785
+ERROR        | Failed to bind to texture: invalid color buffer.
