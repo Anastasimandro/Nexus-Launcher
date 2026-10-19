@@ -1,0 +1,6 @@
+tr: write error: Broken pipe
+tr: write error: Broken pipe
+tr: write error: Broken pipe
+tr: write error: Broken pipe
+tr: write error: Broken pipe
+tr: write error: Broken pipe

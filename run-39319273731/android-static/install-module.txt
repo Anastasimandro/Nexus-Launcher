@@ -1,0 +1,4 @@
+adbd is already running as root
+/tmp/tmp.7iU3LKdd8R/module/system/product/priv-app/Nexus/Nexus.apk: 1 file pushed, 0 skipped. 15.5 MB/s (17767144 bytes in 1.093s)
+/tmp/tmp.7iU3LKdd8R/module/system/product/etc/permissions/privapp-permissions-nexus.xml: 1 file pushed, 0 skipped. 23.6 MB/s (3259 bytes in 0.000s)
+/tmp/tmp.7iU3LKdd8R/module/system/product/overlay/NexusRecentsOverlay.apk: 1 file pushed, 0 skipped. 117.7 MB/s (8538 bytes in 0.000s)
