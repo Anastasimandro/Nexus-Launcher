@@ -1,0 +1,11 @@
+android.permission.ACCESS_SHORTCUTS
+android.permission.INTERNAL_SYSTEM_WINDOW
+android.permission.MANAGE_ACCESSIBILITY
+android.permission.MANAGE_ACTIVITY_TASKS
+android.permission.MANAGE_KEY_GESTURES
+android.permission.MONITOR_INPUT
+android.permission.READ_FRAME_BUFFER
+android.permission.REMOVE_TASKS
+android.permission.SET_ORIENTATION
+android.permission.STATUS_BAR_SERVICE
+android.permission.SYSTEM_APPLICATION_OVERLAY
