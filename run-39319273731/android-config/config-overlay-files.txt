@@ -1,0 +1,12 @@
+<config>
+    <overlay package="app.nexus.launcher.overlay.recents" enabled="true" mutable="false" />
+</config>
+-rw-r--r-- 1 root root u:object_r:system_file:s0    8415 2026-06-11 00:20 CarrierConfig__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+-rw-r--r-- 1 root root u:object_r:system_file:s0    8351 2026-06-11 00:20 EmulatorTetheringGoogleConfigOverlay.apk
+-rw-r--r-- 1 root root u:object_r:system_file:s0  176514 2026-06-11 00:20 GoogleConfigOverlay.apk
+-rw-r--r-- 1 root root u:object_r:system_file:s0    8351 2026-06-11 00:20 LargeScreenConfigOverlay.apk
+-rw-rw-rw- 1 root root u:object_r:system_file:s0    8538 2026-10-19 20:31 NexusRecentsOverlay.apk
+-rw-r--r-- 1 root root u:object_r:system_file:s0   48546 2026-06-11 00:20 PixelConfigOverlayCommon.apk
+drwxrwxrwx 2 root root u:object_r:system_file:s0    3452 2026-10-19 20:37 config
+/product/overlay/config:
+-rw-rw-rw- 1 root root u:object_r:system_file:s0  111 2026-10-19 20:37 config.xml
