@@ -43,9 +43,9 @@ cap() {
 }
 wait_boot() {
   adb wait-for-device
-  local deadline=$((SECONDS + 600))
+  local deadline=$((SECONDS + ${BOOT_DEADLINE:-600}))
   until [[ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == "1" ]]; do
-    (( SECONDS > deadline )) && { say "!! el arranque no terminó en 10 min"; return 1; }
+    (( SECONDS > deadline )) && { say "!! el arranque no terminó en $(( ${BOOT_DEADLINE:-600} / 60 )) min ($((${BOOT_DEADLINE:-600})) s)"; return 1; }
     sleep 4
   done
   # sys.boot_completed llega antes de que estén los servicios (en la primera prueba, `cmd role` y
@@ -66,6 +66,12 @@ reboot_device() {
   adb logcat -d -b all 2>/dev/null | tail -n 30000 | gzip -9 > "$out/logcat-before-reboot-$REBOOTS.txt.gz"
   adb reboot
   sleep 12
+  if [[ -n ${EARLY_LOG:-} ]]; then
+    # Si system_server cae en bucle, el logcat del primer intento se pierde: se guarda desde el principio.
+    adb wait-for-device
+    ( timeout 90 adb logcat -b all -v threadtime > "$EARLY_LOG" 2>&1 ) &
+    sleep 1
+  fi
   wait_boot
   adb root > /dev/null 2>&1
   adb wait-for-device
@@ -449,23 +455,27 @@ phase_config_overlay() {
   dsh cmd overlay disable --user 0 "$OVERLAY" > /dev/null
   remount_rw config
   adb shell mkdir -p /product/overlay/config
-  adb shell 'printf "%s\n" "<config>" "    <overlay package=\"app.nexus.launcher.overlay.recents\" enabled=\"true\" mutable=\"false\" />" "</config>" > /product/overlay/config/config.xml'
+  case "$VARIANT" in
+    configdir) : ;;   # solo el directorio, sin config.xml
+    configempty) adb shell 'printf "%s\n" "<config>" "</config>" > /product/overlay/config/config.xml' ;;
+    *) adb shell 'printf "%s\n" "<config>" "    <overlay package=\"app.nexus.launcher.overlay.recents\" enabled=\"true\" mutable=\"false\" />" "</config>" > /product/overlay/config/config.xml' ;;
+  esac
   adb shell 'restorecon -RF /product/overlay' > /dev/null 2>&1
   dsh "cat /product/overlay/config/config.xml; ls -lZ /product/overlay /product/overlay/config | grep -iE 'nexus|config'" > "$out/config-overlay-files.txt"
   dsh df -h /data /product /system_ext > "$out/df-config-before-reboot.txt"
-  reboot_device
+  BOOT_DEADLINE=150 EARLY_LOG="$out/early-boot-config.txt" reboot_device
   settle_overlay
   collect_overlay config
 }
 effective() { grep -q "app.nexus.launcher/" "$1" 2>/dev/null; }
 
 case "$VARIANT" in
-  static|config)
+  static|config|configempty|configdir)
     if [[ ! -f $static_apk ]]; then
       say "No hay APK de overlay estático en dist: no se prueba."
     else
       if [[ $VARIANT == static ]]; then cap static-overlay phase_static_overlay; else cap config-overlay phase_config_overlay; fi
-      t=$VARIANT
+      t=$VARIANT; [[ $t == config* ]] && t=config
       { cat "$out/$t-overlay-list-all.txt" 2>/dev/null | grep -iE "^android|nexus" ; cat "$out/$t-overlay-list.txt" "$out/$t-overlay-lookup.txt" "$out/perm-state-$t-overlay.txt" "$out/tool-bound-$t-overlay.txt" 2>/dev/null
         echo "--- caídas:"; cat "$out/crashes-$t-overlay.txt" 2>/dev/null; } | tee -a "$out/summary.md"
       if effective "$out/$t-overlay-lookup.txt"; then
