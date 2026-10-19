@@ -1,0 +1,3 @@
+!! el arranque no terminó en 2 min (150 s)
+grep: write error: Broken pipe
+tr: write error: Broken pipe

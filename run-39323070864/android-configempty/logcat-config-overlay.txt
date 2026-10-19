@@ -1,0 +1,1 @@
+10-19 21:15:15.558  4847  4847 I adbd    : adbd service requested 'shell,v2,raw:dumpsys activity services app.nexus.launcher/com.android.quickstep.TouchInteractionService'
