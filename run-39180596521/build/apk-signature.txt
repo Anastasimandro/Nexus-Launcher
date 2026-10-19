@@ -1,0 +1,18 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+V2 Signer: certificate DN: C=US, O=Android, CN=Android Debug
+V2 Signer: certificate SHA-256 digest: 5cb5ef5d4d40086a2190a6369b21303720e34c066caf7ae97a0bdaf945082181
+V2 Signer: certificate SHA-1 digest: dcd2a7b313b4fb10f682c08e6d2b7de86a2b1081
+V2 Signer: certificate MD5 digest: da1e7717519cdf9e0bc7ef1f93ffb21f
+V2 Signer: key algorithm: RSA
+V2 Signer: key size (bits): 2048
+V2 Signer: public key SHA-256 digest: ce5eb7e83906eb15017b575bca91ad2027808aec043ad05dd92747400401fc1b
+V2 Signer: public key SHA-1 digest: 16484bac0ee85972bcb13f8c7ff415d56eb698ff
+V2 Signer: public key MD5 digest: 20e746e0a50c4759b99fac0a2fd9684d
