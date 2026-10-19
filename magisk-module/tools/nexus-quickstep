@@ -53,7 +53,21 @@ need_root() {
 
 # Línea de `cmd overlay list` de nuestro overlay ("[x] paquete", "[ ] paquete" o "--- paquete").
 overlay_line() {
-  cmd overlay list --user "$USER_ID" "$OVERLAY" 2>/dev/null | grep -F "$OVERLAY" | head -n 1
+  n=0
+  out=""
+  while [ "$n" -lt 3 ]; do
+    out=$(cmd overlay list --user "$USER_ID" "$OVERLAY" 2>&1)
+    line=$(echo "$out" | grep -F "$OVERLAY" | head -n 1)
+    if [ -n "$line" ]; then
+      echo "$line"
+      return 0
+    fi
+    n=$((n + 1))
+    sleep 1
+  done
+  # Sin línea: o no está instalado o el servicio de overlays no respondió. Se deja constancia.
+  log "cmd overlay list no devolvió el overlay: $(echo "$out" | head -n 3 | tr '\n' ' ')"
+  return 0
 }
 
 # Estado del overlay: enabled, disabled, unavailable (instalado pero sin aprobar) o missing.
@@ -79,9 +93,14 @@ nexus_version_code() {
 }
 
 # Líneas del volcado del servicio que muestran a SystemUI enlazado (vacío si no lo está).
+# Solo cuenta si el servicio llegó a entregar su binder ("received=true"): con el servicio caído al
+# crearse, SystemUI sigue figurando como cliente pero con "binder=null received=false" (se vio en
+# Android 17 cuando Nexus no tenía MANAGE_ACTIVITY_TASKS). Se ignora la sección de servicios en
+# destrucción, que conserva registros viejos.
 bound_lines() {
-  dumpsys activity services "$SERVICE" 2>/dev/null |
-    grep -E "(AppBindRecord|ConnectionRecord).*com\.android\.systemui"
+  dump=$(dumpsys activity services "$SERVICE" 2>/dev/null | sed '/Destroying services:/,$d')
+  echo "$dump" | grep -q "received=true" || return 0
+  echo "$dump" | grep -E "(AppBindRecord|ConnectionRecord).*com\.android\.systemui"
 }
 
 is_bound() {
@@ -112,6 +131,10 @@ show_status() {
     say "Comprobación de Nexus: sdk=$(probe_value sdk) compatible=$(probe_value passed)"
     missing=$(probe_value missing)
     [ -n "$missing" ] && say "  Falta en este Android: $missing"
+    tolerated=$(probe_value tolerated)
+    [ -n "$tolerated" ] && say "  Ausente pero tolerado por Nexus: $tolerated"
+    denied=$(probe_value denied)
+    [ -n "$denied" ] && say "  Permisos de sistema aún no concedidos a Nexus: $denied"
   else
     say "Comprobación de Nexus: sin datos (abre Nexus una vez)."
   fi
@@ -156,8 +179,12 @@ do_enable() {
 
 do_disable() {
   need_root
-  [ "$(overlay_state)" = "missing" ] && die "el overlay no está instalado."
-  cmd overlay disable --user "$USER_ID" "$OVERLAY" >/dev/null 2>&1 || die "'cmd overlay disable' falló."
+  # Se intenta desactivar aunque el estado no se lea: es la vía de recuperación y no debe
+  # rendirse porque `cmd overlay list` no respondiera a la primera.
+  if ! cmd overlay disable --user "$USER_ID" "$OVERLAY" >/dev/null 2>&1; then
+    pm path "$OVERLAY" >/dev/null 2>&1 || die "el overlay no está instalado."
+    die "'cmd overlay disable' falló."
+  fi
   [ "$(overlay_state)" = "disabled" ] || die "el overlay no quedó desactivado."
   rm -f "$STATE_DIR/armed" "$STATE_DIR/healthy"
   if [ "$1" = "--no-restart" ]; then

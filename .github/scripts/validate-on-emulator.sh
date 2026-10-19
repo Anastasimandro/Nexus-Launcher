@@ -45,6 +45,15 @@ wait_boot() {
     (( SECONDS > deadline )) && { say "!! el arranque no terminó en 10 min"; return 1; }
     sleep 4
   done
+  # sys.boot_completed llega antes de que estén los servicios (en la primera prueba, `cmd role` y
+  # `pm path com.android.systemui` fallaban): se espera a que respondan.
+  local sdeadline=$((SECONDS + 300))
+  until adb shell service check role 2>/dev/null | grep -q "found" \
+      && adb shell pm path com.android.systemui 2>/dev/null | grep -q "^package:" \
+      && adb shell cmd overlay list --user 0 > /dev/null 2>&1; do
+    (( SECONDS > sdeadline )) && { say "!! los servicios no respondieron en 5 min"; break; }
+    sleep 4
+  done
   sleep 3
 }
 reboot_device() {
@@ -56,6 +65,15 @@ reboot_device() {
   sleep 4
 }
 fg() { dsh dumpsys activity activities | grep -E "topResumedActivity|mResumedActivity" | head -n 2; }
+# Permisos de Nexus ahora mismo: concedidos / permitidos en la lista blanca pero no concedidos.
+perm_state() {
+  local tag="$1"
+  dsh dumpsys package "$PKG" > "$out/dumpsys-package-nexus-$tag.txt"
+  sed -n '/install permissions:/,/User 0:/p' "$out/dumpsys-package-nexus-$tag.txt" | grep -E "granted=true" \
+    | sed -E 's/^[[:space:]]*([A-Za-z0-9_.]+): granted=true.*/\1/' | sort -u > "$out/granted-$tag.txt"
+  comm -23 "$out/allow-list.txt" "$out/granted-$tag.txt" > "$out/not-granted-$tag.txt"
+  echo "[$tag] permisos permitidos y no concedidos: $(wc -l < "$out/not-granted-$tag.txt") ($(paste -sd' ' "$out/not-granted-$tag.txt" | sed 's/android.permission.//g'))"
+}
 crashes() { dsh logcat -d -b crash | grep -E "FATAL|Process:|NoSuchMethodError|NoSuchFieldError|NoClassDefFoundError|UnsatisfiedLinkError" | head -n 30; }
 
 # ---------------------------------------------------------------------------------------------
@@ -92,6 +110,14 @@ phase_static() {
     [[ -z $f ]] && continue
     adb pull "$f" "$sys/$(tr '/' '_' <<<"$f")" > /dev/null 2>&1 || echo "no se pudo bajar $f" >> "$out/static-pull-errors.txt"
   done < "$out/bootclasspath.txt"
+  # Otros jar del framework que no están en BOOTCLASSPATH (donde puede vivir WM Shell en Android 17).
+  adb shell 'ls /system/framework/*.jar /system_ext/framework/*.jar /system_ext/priv-app/*/*.apk 2>/dev/null' \
+    | tr -d '\r' | sort -u > "$out/extra-binaries.txt"
+  while IFS= read -r f; do
+    [[ -z $f ]] && continue
+    grep -qxF "$f" "$out/bootclasspath.txt" && continue
+    adb pull "$f" "$sysui/$(tr '/' '_' <<<"$f")" > /dev/null 2>&1 || echo "no se pudo bajar $f" >> "$out/static-pull-errors.txt"
+  done < "$out/extra-binaries.txt"
   local ui
   ui="$(adb shell pm path com.android.systemui | head -n 1 | tr -d '\r' | sed 's/^package://')"
   echo "SystemUI: $ui" > "$out/systemui-path.txt"
@@ -152,6 +178,11 @@ phase_module() {
   grep -E '^android\.permission\.' "$here/../../magisk-module/permissions/allow.txt" | sort -u > "$out/allow-list.txt"
   comm -23 "$out/allow-list.txt" "$out/granted-permissions.txt" > "$out/allowed-but-NOT-granted.txt"
   dsh logcat -d -s PackageManager | grep -iE "privapp|Privileged permission|allowlist" | head -n 40 > "$out/privapp-log.txt"
+  # Nivel de protección de cada permiso que Quickstep necesita (¿lleva el indicador "recents"?).
+  dsh pm list permissions -f > "$out/permissions-all.txt"
+  for perm in $(cat "$out/allow-list.txt"); do
+    grep -A6 -F "permission:$perm" "$out/permissions-all.txt" | grep -E "permission:|protectionLevel" | paste -sd' ' -
+  done > "$out/permission-protection.txt"
   dsh cmd overlay list --user 0 > "$out/overlay-list-all.txt"
   dsh cmd overlay list --user 0 "$OVERLAY" > "$out/overlay-list-ours.txt"
   dsh dumpsys overlay "$OVERLAY" > "$out/dumpsys-overlay-ours.txt"
@@ -190,6 +221,7 @@ phase_enable() {
   grep -n -i -B2 -A25 -E "OverviewProxyService|LauncherProxyService" "$out/dumpsys-systemui-full.txt" | head -n 120 > "$out/dumpsys-systemui-proxy.txt"
   rm -f "$out/dumpsys-systemui-full.txt"
   crashes > "$out/crashes-after-enable.txt"
+  perm_state after-enable > "$out/perm-state-after-enable.txt"
   dsh logcat -d | grep -E "TouchInteraction|OverviewProxy|LauncherProxy|NexusQuickstep|InputConsumerCompat|QuickStep|AndroidRuntime" | tail -n 250 > "$out/logcat-quickstep.txt"
   dsh "cat /data/adb/nexus_quickstep/watchdog.log" > "$out/watchdog-log-1.txt"
   dsh "ls -la /data/adb/nexus_quickstep" > "$out/state-dir-1.txt"
@@ -199,53 +231,80 @@ cap enable-overlay phase_enable
 say ""
 
 # ---------------------------------------------------------------------------------------------
+say "## Fase 4b: ¿concede el sistema a Nexus los permisos 'signature' al ser el proveedor de recientes?"
+{ echo "protección de los permisos que pide Nexus:"; cat "$out/permission-protection.txt"; echo; cat "$out/perm-state-after-enable.txt"; } | tee -a "$out/summary.md"
+phase_perms_second_boot() {
+  reboot_device
+  perm_state second-boot > "$out/perm-state-second-boot.txt"
+  dsh "$TOOL bound" > "$out/tool-bound-second-boot.txt"
+}
+if grep -qx "android.permission.MANAGE_ACTIVITY_TASKS" "$out/granted-after-enable.txt"; then
+  say "H0: MANAGE_ACTIVITY_TASKS concedido tras activar el overlay mutable y reiniciar."
+else
+  say "H0: NO concedido tras activar el overlay mutable y reiniciar. H1: un segundo reinicio."
+  cap perms-second-boot phase_perms_second_boot
+  cat "$out/perm-state-second-boot.txt" "$out/tool-bound-second-boot.txt" | tee -a "$out/summary.md"
+fi
+say ""
+
+# Nexus tiene que ser el launcher de inicio para que los gestos de Inicio lo lleven a él.
+ensure_home() {
+  dsh "cmd role add-role-holder --user 0 android.app.role.HOME $PKG" > "$out/set-home$S.txt"
+  dsh am start -a android.intent.action.MAIN -c android.intent.category.HOME > "$out/start-home$S.txt"
+  sleep 8
+  { echo "inicio resuelto: $(dsh cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME | tail -n 1)"
+    echo "actividad en primer plano: $(fg)"; } >> "$out/set-home$S.txt"
+}
+# ---------------------------------------------------------------------------------------------
 say "## Fase 5: gestos con el overlay activo (inyectados con 'input')"
+S=""   # sufijo de los archivos de la fase de gestos (la repetición con el overlay estático usa "-static")
 phase_gestures() {
-  dsh cmd overlay enable-exclusive --category com.android.internal.systemui.navbar.gestural > "$out/gestural-nav.txt"
+  ensure_home
+  dsh cmd overlay enable-exclusive --category com.android.internal.systemui.navbar.gestural > "$out/gestural-nav$S.txt"
   sleep 12
   local size w h x ybot
   size="$(dsh wm size | grep -oE '[0-9]+x[0-9]+' | tail -n 1)"; w="${size%x*}"; h="${size#*x}"
   x=$((w / 2)); ybot=$((h - 8))
-  echo "pantalla ${w}x${h}" > "$out/gesture-notes.txt"
+  echo "pantalla ${w}x${h}" > "$out/gesture-notes$S.txt"
 
   open_app() { dsh am start -a android.settings.SETTINGS > /dev/null; sleep 4; }
-  step() { echo "=== $1" >> "$out/gesture-notes.txt"; }
+  step() { echo "=== $1" >> "$out/gesture-notes$S.txt"; }
 
   step "A. Inicio con gesto rápido"
-  open_app; echo "antes: $(fg)" >> "$out/gesture-notes.txt"
+  open_app; echo "antes: $(fg)" >> "$out/gesture-notes$S.txt"
   dsh input swipe $x $ybot $x $((h / 3)) 180; sleep 3
-  echo "después: $(fg)" >> "$out/gesture-notes.txt"
-  dsh dumpsys activity service "$SERVICE" > "$out/dumpsys-tis-after-home.txt"
+  echo "después: $(fg)" >> "$out/gesture-notes$S.txt"
+  dsh dumpsys activity service "$SERVICE" > "$out/dumpsys-tis-after-home$S.txt"
 
   step "B. Inicio con gesto lento: captura a mitad del gesto (la ventana debe seguir el dedo)"
-  open_app; adb exec-out screencap -p > "$out/shot-before.png" 2>/dev/null
+  open_app; adb exec-out screencap -p > "$out/shot-before$S.png" 2>/dev/null
   (adb shell input swipe $x $ybot $x $((h / 2)) 4000 > /dev/null 2>&1 &)
-  sleep 2.5; adb exec-out screencap -p > "$out/shot-mid-gesture.png" 2>/dev/null
-  sleep 3; adb exec-out screencap -p > "$out/shot-after.png" 2>/dev/null
-  echo "después: $(fg)" >> "$out/gesture-notes.txt"
+  sleep 2.5; adb exec-out screencap -p > "$out/shot-mid-gesture$S.png" 2>/dev/null
+  sleep 3; adb exec-out screencap -p > "$out/shot-after$S.png" 2>/dev/null
+  echo "después: $(fg)" >> "$out/gesture-notes$S.txt"
 
   step "C. Cancelación: subir y volver al punto de partida (debe quedarse en la app)"
   open_app
   dsh input motionevent DOWN $x $ybot; dsh input motionevent MOVE $x $((h / 2)); sleep 0.3
   dsh input motionevent MOVE $x $((h - 40)); dsh input motionevent MOVE $x $ybot; dsh input motionevent UP $x $ybot; sleep 3
-  echo "después: $(fg)" >> "$out/gesture-notes.txt"
+  echo "después: $(fg)" >> "$out/gesture-notes$S.txt"
 
   step "D. Cancelación con ACTION_CANCEL a mitad del gesto"
   open_app
   dsh input motionevent DOWN $x $ybot; dsh input motionevent MOVE $x $((h / 2)); dsh input motionevent CANCEL $x $((h / 2)); sleep 3
-  echo "después: $(fg)" >> "$out/gesture-notes.txt"
+  echo "después: $(fg)" >> "$out/gesture-notes$S.txt"
 
   step "E. Atrás"
   open_app; dsh input keyevent KEYCODE_BACK; sleep 2
-  echo "después: $(fg)" >> "$out/gesture-notes.txt"
+  echo "después: $(fg)" >> "$out/gesture-notes$S.txt"
 
   step "F. Recientes: subir y mantener"
   open_app
   dsh input motionevent DOWN $x $ybot; dsh input motionevent MOVE $x $((h * 55 / 100)); sleep 1.5
-  adb exec-out screencap -p > "$out/shot-recents-hold.png" 2>/dev/null
+  adb exec-out screencap -p > "$out/shot-recents-hold$S.png" 2>/dev/null
   dsh input motionevent UP $x $((h * 55 / 100)); sleep 3
-  adb exec-out screencap -p > "$out/shot-recents.png" 2>/dev/null
-  echo "después: $(fg)" >> "$out/gesture-notes.txt"
+  adb exec-out screencap -p > "$out/shot-recents$S.png" 2>/dev/null
+  echo "después: $(fg)" >> "$out/gesture-notes$S.txt"
   dsh input keyevent KEYCODE_HOME; sleep 2
 
   step "G. Rotación (horizontal) y gesto de Inicio"
@@ -253,7 +312,7 @@ phase_gestures() {
   open_app
   size="$(dsh wm size | grep -oE '[0-9]+x[0-9]+' | tail -n 1)"
   dsh input swipe $((h / 2)) $((w - 8)) $((h / 2)) $((w / 3)) 180 ; sleep 3
-  echo "después (apaisado): $(fg)" >> "$out/gesture-notes.txt"
+  echo "después (apaisado): $(fg)" >> "$out/gesture-notes$S.txt"
   dsh settings put system user_rotation 0; sleep 2
 
   step "H. Bloqueo y desbloqueo, y gesto de Inicio"
@@ -261,14 +320,14 @@ phase_gestures() {
   dsh wm dismiss-keyguard; sleep 2; dsh input swipe $x $((h * 3 / 4)) $x $((h / 4)) 200; sleep 2
   open_app
   dsh input swipe $x $ybot $x $((h / 3)) 180; sleep 3
-  echo "después: $(fg)" >> "$out/gesture-notes.txt"
+  echo "después: $(fg)" >> "$out/gesture-notes$S.txt"
 
-  dsh dumpsys activity service "$SERVICE" > "$out/dumpsys-tis-after-all-gestures.txt"
-  crashes > "$out/crashes-after-gestures.txt"
-  dsh logcat -d | grep -E "AbsSwipeUpHandler|RecentsAnimation|TaskAnimationManager|TouchInteraction|AndroidRuntime|FATAL" | tail -n 250 > "$out/logcat-gestures.txt"
+  dsh dumpsys activity service "$SERVICE" > "$out/dumpsys-tis-after-all-gestures$S.txt"
+  crashes > "$out/crashes-after-gestures$S.txt"
+  dsh logcat -d | grep -E "AbsSwipeUpHandler|RecentsAnimation|TaskAnimationManager|TouchInteraction|AndroidRuntime|FATAL" | tail -n 250 > "$out/logcat-gestures$S.txt"
 }
 cap gestures phase_gestures
-cat "$out/gesture-notes.txt" | tee -a "$out/summary.md"
+cat "$out/gesture-notes$S.txt" | tee -a "$out/summary.md"
 say ""
 
 # ---------------------------------------------------------------------------------------------
@@ -315,6 +374,43 @@ phase_failure() {
 }
 cap failure-recovery phase_failure
 cat "$out/failure-status.txt" "$out/failure-lookup.txt" "$out/failure-watchdog-log.txt" "$out/failure-gesture.txt" "$out/failure-enable-again.txt" | tee -a "$out/summary.md"
+say ""
+
+# ---------------------------------------------------------------------------------------------
+say "## Fase 8: overlay estático (aplicado desde el arranque), solo si el mutable no recibió los permisos"
+static_apk="$dist/NexusRecentsOverlayStatic.apk"
+granted_somewhere() { grep -qx "android.permission.MANAGE_ACTIVITY_TASKS" "$out/granted-after-enable.txt" "$out/granted-second-boot.txt" 2>/dev/null; }
+phase_static_overlay() {
+  dsh cmd overlay disable --user 0 "$OVERLAY" > /dev/null
+  adb root > /dev/null 2>&1; adb wait-for-device
+  adb remount > "$out/remount-static.txt" 2>&1
+  # Mismo paquete: el APK mutable se quita antes de poner el estático.
+  adb shell rm -f /product/overlay/NexusRecentsOverlay.apk
+  adb push "$static_apk" /product/overlay/NexusRecentsOverlay.apk > /dev/null
+  adb shell 'restorecon -RF /product/overlay' > /dev/null 2>&1
+  reboot_device
+  dsh cmd overlay list --user 0 "$OVERLAY" > "$out/static-overlay-list.txt"
+  dsh dumpsys overlay "$OVERLAY" > "$out/static-overlay-dumpsys.txt"
+  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/static-overlay-lookup.txt"
+  sleep 60
+  perm_state static-overlay > "$out/perm-state-static-overlay.txt"
+  dsh "$TOOL bound" > "$out/tool-bound-static-overlay.txt"
+  dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-static-overlay.txt"
+  crashes > "$out/crashes-static-overlay.txt"
+}
+if granted_somewhere; then
+  say "No hace falta: el overlay mutable ya recibió los permisos."
+elif [[ ! -f $static_apk ]]; then
+  say "No hay APK de overlay estático en dist: no se prueba."
+else
+  cap static-overlay phase_static_overlay
+  { cat "$out/static-overlay-list.txt" "$out/static-overlay-lookup.txt" "$out/perm-state-static-overlay.txt" "$out/tool-bound-static-overlay.txt"
+    echo "--- caídas:"; cat "$out/crashes-static-overlay.txt"; } | tee -a "$out/summary.md"
+  S="-static"
+  cap gestures-static phase_gestures
+  cat "$out/gesture-notes$S.txt" | tee -a "$out/summary.md"
+  S=""
+fi
 say ""
 
 adb logcat -d -b main,system,crash 2>/dev/null | gzip -9 > "$out/logcat-full.txt.gz"

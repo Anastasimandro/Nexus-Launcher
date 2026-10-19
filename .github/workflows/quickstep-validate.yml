@@ -73,6 +73,15 @@ jobs:
           .github/scripts/build-magisk-module.sh "dist/Nexus-v${VALIDATION_VERSION}.apk" \
             "$VALIDATION_VERSION" "$VALIDATION_VERSION_CODE" "dist/Nexus-MagiskModule-v${VALIDATION_VERSION}.zip"
 
+      # Variante estática del overlay, solo para la prueba del emulador (nunca va en el módulo).
+      - name: Overlay estático de prueba
+        run: |
+          tmp="$(mktemp -d)"
+          cp -R magisk-module/overlay/. "$tmp"/
+          sed -i 's#<overlay android:targetPackage="android" />#<overlay android:targetPackage="android" android:isStatic="true" android:priority="1" />#' "$tmp/AndroidManifest.xml"
+          grep -q 'isStatic' "$tmp/AndroidManifest.xml"
+          ALLOW_STATIC_OVERLAY=1 OVERLAY_DIR="$tmp" .github/scripts/build-recents-overlay.sh dist/NexusRecentsOverlayStatic.apk
+
       - name: Inspeccionar con aapt2 y apksigner reales
         run: .github/scripts/inspect-build.sh dist results "$VALIDATION_VERSION"
 

@@ -22,7 +22,11 @@ import java.io.File
  *   servicio de Quickstep se caía en bucle al desbloquear. [InputConsumerCompat] ya cubre las dos
  *   formas; aquí se verifica que el sistema tiene alguna.
  * - Las constantes de `DesktopModeFlags` y `DesktopExperienceFlags` que lee Quickstep. Android 17
- *   quitó algunas, y leer una que no existe lanza `NoSuchFieldError` en el proceso del launcher.
+ *   quitó algunas. Quickstep las lee con `DesktopFlagsCompat`, que toma una ausente como
+ *   desactivada, así que ya no impiden arrancar: se anotan como `tolerated` y no bloquean.
+ * - Permisos de sistema que Quickstep necesita (`denied`). Solo informativo: los `signature` puros
+ *   (por ejemplo MANAGE_ACTIVITY_TASKS) no los concede la lista blanca de apps privilegiadas, y
+ *   hasta que Nexus es el proveedor de recientes pueden figurar como no concedidos.
  *
  * No prueba que todo lo demás funcione (por ejemplo las transacciones AIDL de WM Shell): solo
  * detecta lo que ya se conoce. Un resultado correcto no es una garantía; uno incorrecto sí es un
@@ -68,31 +72,69 @@ object QuickstepProbe {
         "ENABLE_TASKBAR_RECENT_TASKS_THROTTLE_BUGFIX",
     )
 
+    /** Permisos de sistema sin los que el servicio de Quickstep no llega a crearse. */
+    private val QUICKSTEP_PERMISSIONS = listOf(
+        "android.permission.MANAGE_ACTIVITY_TASKS",
+        "android.permission.MONITOR_INPUT",
+        "android.permission.READ_FRAME_BUFFER",
+        "android.permission.REMOVE_TASKS",
+        "android.permission.START_TASKS_FROM_RECENTS",
+        "android.permission.CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS",
+    )
+
     data class Result(
         val sdk: Int,
-        /** Lo que falta en este Android; vacío si no se echó nada en falta. */
+        /** Lo que falta en este Android y no tiene remedio en el código; vacío si no falta nada. */
         val missing: List<String>,
+        /** Constantes de indicadores de escritorio ausentes que `DesktopFlagsCompat` ya tolera. */
+        val tolerated: List<String> = emptyList(),
+        /** Permisos de [QUICKSTEP_PERMISSIONS] no concedidos ahora. Informativo, no bloquea. */
+        val denied: List<String> = emptyList(),
     ) {
         val passed: Boolean get() = missing.isEmpty()
     }
 
     /** Hace la comprobación. No escribe nada. */
-    fun evaluate(): Result {
+    fun evaluate(context: Context? = null): Result {
         val missing = ArrayList<String>()
 
         if (!runCatching { InputConsumerCompat.isSupported() }.getOrDefault(false)) {
             missing += "IWindowManager.createInputConsumer"
         }
-        missing += missingConstants(DESKTOP_MODE_FLAGS_CLASS, DESKTOP_MODE_FLAGS)
-        missing += missingConstants(DESKTOP_EXPERIENCE_FLAGS_CLASS, DESKTOP_EXPERIENCE_FLAGS)
+        // Si la clase entera no existe, no hay constantes que tolerar: eso sí bloquea.
+        val tolerated = ArrayList<String>()
+        for ((cls, names) in listOf(
+            DESKTOP_MODE_FLAGS_CLASS to DESKTOP_MODE_FLAGS,
+            DESKTOP_EXPERIENCE_FLAGS_CLASS to DESKTOP_EXPERIENCE_FLAGS,
+        )) {
+            for (item in missingConstants(cls, names)) {
+                if (item.contains('.') && item.substringBefore('.') == cls.substringAfterLast('.')) {
+                    tolerated += item
+                } else {
+                    missing += item
+                }
+            }
+        }
 
-        return Result(sdk = Build.VERSION.SDK_INT, missing = missing)
+        val denied = if (context == null) {
+            emptyList()
+        } else {
+            QUICKSTEP_PERMISSIONS.filter {
+                context.checkSelfPermission(it) != android.content.pm.PackageManager.PERMISSION_GRANTED
+            }
+        }
+
+        return Result(sdk = Build.VERSION.SDK_INT, missing = missing, tolerated = tolerated, denied = denied)
     }
 
     /** Hace la comprobación y deja el resultado en `files/quickstep-probe.txt`. */
     fun run(context: Context): Result {
-        val result = evaluate()
-        Log.i(TAG, "sdk=${result.sdk} passed=${result.passed} missing=${result.missing}")
+        val result = evaluate(context)
+        Log.i(
+            TAG,
+            "sdk=${result.sdk} passed=${result.passed} missing=${result.missing} " +
+                "tolerated=${result.tolerated} denied=${result.denied}",
+        )
         runCatching {
             // Se escribe en un archivo temporal y se renombra, para que root nunca lea uno a medias.
             val target = File(context.filesDir, FILE_NAME)
@@ -108,6 +150,8 @@ object QuickstepProbe {
         appendLine("sdk=${result.sdk}")
         appendLine("passed=${result.passed}")
         appendLine("missing=${result.missing.joinToString(",")}")
+        appendLine("tolerated=${result.tolerated.joinToString(",")}")
+        appendLine("denied=${result.denied.joinToString(",")}")
     }
 
     /**

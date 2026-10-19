@@ -101,8 +101,10 @@ got_pkg=$(sed -n "s/.*package: name='\([^']*\)'.*/\1/p" <<<"$badging")
 manifest=$("$AAPT2" dump xmltree --file AndroidManifest.xml "$work/signed.apk")
 grep -q 'E: overlay' <<<"$manifest" || fail "El manifiesto no tiene el elemento <overlay>."
 grep -qE 'targetPackage.*"android"' <<<"$manifest" || fail "El overlay no apunta al paquete 'android'."
-# Un overlay estático no se puede desactivar: este tiene que ser mutable.
-if grep -q 'isStatic' <<<"$manifest"; then
+# Un overlay estático no se puede desactivar: este tiene que ser mutable. (ALLOW_STATIC_OVERLAY=1
+# solo lo usa la validación en emulador para probar el efecto de un overlay aplicado desde el
+# arranque; esa variante nunca va en el módulo.)
+if grep -q 'isStatic' <<<"$manifest" && [[ ${ALLOW_STATIC_OVERLAY:-} != 1 ]]; then
   fail "El overlay declara isStatic: tiene que ser mutable para poder desactivarlo."
 fi
 
