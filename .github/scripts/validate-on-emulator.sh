@@ -451,6 +451,12 @@ phase_static_overlay() {
   { echo "host:   $(sha256sum "$static_apk" | cut -d' ' -f1)"
     echo "device: $(dsh sha256sum /product/overlay/NexusRecentsOverlay.apk)"
     dsh ls -lZ /product/overlay/ | grep -i nexus; } > "$out/static-push-check.txt"
+  # OMS guarda el estado de cada overlay (incluido si era mutable) en overlays.xml; el mismo paquete
+  # registrado antes como mutable conservaría ese estado aunque el APK nuevo sea estático.
+  dsh "grep -A3 'app.nexus.launcher.overlay.recents' /data/system/overlays.xml" > "$out/overlays-xml-before-wipe.txt"
+  if [[ ${WIPE_OVERLAY_STATE:-1} == 1 ]]; then
+    dsh "rm -f /data/system/overlays.xml; rm -rf /data/system/package_cache" > "$out/wipe-overlay-state.txt"
+  fi
   reboot_device
   settle_overlay
   collect_overlay static
