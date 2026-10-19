@@ -1,0 +1,6 @@
+com.google.android.overlay.googleconfig:0 {
+  mBaseCodePath..........: /product/overlay/GoogleConfigOverlay.apk
+  mState.................: STATE_ENABLED
+  mIsMutable.............: false
+  mPriority..............: 6
+--- dumpsys package (nuestro overlay):
