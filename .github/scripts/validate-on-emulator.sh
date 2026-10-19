@@ -76,14 +76,22 @@ wait_stable() {
     fi
     sleep 4
   done
+  echo "$(date +%T) wait_stable agotado" >> "$out/progress.log"
   say "!! el sistema no se estabilizó en 5 min (pid system_server: ${last:-ninguno})"
   return 1
+}
+# Si el ejecutor muere (ha pasado dos veces sin dejar rastro), lo ya medido queda en la rama de resultados.
+checkpoint() {
+  [[ -n ${GITHUB_TOKEN:-} ]] || return 0
+  echo "$(date +%T) checkpoint: $*" >> "$out/progress.log"
+  "$here/push-results.sh" "$out" "android-$VARIANT-partial" > /dev/null 2>&1 || true
 }
 REBOOTS=0
 reboot_device() {
   # El logcat solo conserva el último arranque: se guarda el de cada fase antes de reiniciar.
   REBOOTS=$((REBOOTS + 1))
   adb logcat -d -b all 2>/dev/null | tail -n 30000 | gzip -9 > "$out/logcat-before-reboot-$REBOOTS.txt.gz"
+  checkpoint "antes del reinicio $REBOOTS"
   adb reboot
   sleep 12
   if [[ -n ${EARLY_LOG:-} ]]; then

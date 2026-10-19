@@ -141,6 +141,8 @@ jobs:
       # sobrevivir al paso que lo lanzó.
       - name: Emulador Android y validación
         timeout-minutes: 50
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           mkdir -p results
           .github/scripts/emulator-up.sh "${{ inputs.api_level || '37' }}" results
