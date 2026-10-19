@@ -136,6 +136,8 @@ phase_static() {
     --dump 'Landroid/window/DesktopModeFlags;' 'Landroid/window/DesktopExperienceFlags;' \
            'Landroid/view/IWindowManager;' 'Landroid/window/ScreenCapture;' 'Landroid/window/ScreenCaptureInternal;' \
            'Landroid/app/IActivityTaskManager;' 'Landroid/app/ActivityOptions;' \
+           'Landroid/window/ITaskSnapshotManager;' 'Landroid/window/TaskSnapshot;' 'Lcom/android/internal/protolog/common/IProtoLog;' \
+           'Lcom/android/internal/protolog/ProtoLog;' 'Lcom/android/internal/protolog/ProtoLogImpl;' \
     > "$out/static-audit.txt" 2>&1
 }
 cap static-audit-run phase_static
