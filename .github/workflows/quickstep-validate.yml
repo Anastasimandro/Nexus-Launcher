@@ -81,6 +81,10 @@ jobs:
           sed -i 's#<overlay android:targetPackage="android" />#<overlay android:targetPackage="android" android:isStatic="true" android:priority="1" />#' "$tmp/AndroidManifest.xml"
           grep -q 'isStatic' "$tmp/AndroidManifest.xml"
           ALLOW_STATIC_OVERLAY=1 OVERLAY_DIR="$tmp" .github/scripts/build-recents-overlay.sh dist/NexusRecentsOverlayStatic.apk
+          mkdir -p results
+          bt="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -n 1)"
+          "$bt/aapt2" dump xmltree --file AndroidManifest.xml dist/NexusRecentsOverlayStatic.apk > results/static-overlay-manifest.txt 2>&1 || true
+          "$bt/aapt2" dump badging dist/NexusRecentsOverlayStatic.apk > results/static-overlay-badging.txt 2>&1 || true
 
       - name: Inspeccionar con aapt2 y apksigner reales
         run: .github/scripts/inspect-build.sh dist results "$VALIDATION_VERSION"
@@ -109,7 +113,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant: [mutable, config, configempty, configdir]
+        variant: [static]
     env:
       VARIANT: ${{ matrix.variant }}
     steps:

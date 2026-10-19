@@ -424,6 +424,11 @@ collect_overlay() {
   dsh "$TOOL bound" > "$out/tool-bound-$tag-overlay.txt"
   dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-$tag-overlay.txt"
   crashes > "$out/crashes-$tag-overlay.txt"
+  # Cómo ve el sistema un overlay estático real de la imagen frente al nuestro.
+  { for p in com.google.android.overlay.googleconfig com.google.android.overlay.pixelconfigcommon com.android.internal.ranchu.commonoverlay; do
+      dsh dumpsys overlay "$p" | grep -E "^[a-z].*:0 \{|mBaseCodePath|mState|mIsMutable|mPriority"; done
+    echo "--- dumpsys package (nuestro overlay):"; dsh dumpsys package "$OVERLAY" | grep -iE "overlay|static|codePath|flags=|pkgFlags|privateFlags"
+  } > "$out/real-static-overlays-$tag.txt"
   dsh logcat -d -b crash > "$out/crash-buffer-$tag.txt"
   dsh logcat -d | grep -E "SystemUiProxy|TouchInteraction|OverviewProxy|LauncherProxy|NoSuchMethod|NoSuchField|NoClassDef|RemoteException|SecurityException|AbsSwipeUpHandler" | tail -n 300 > "$out/logcat-$tag-overlay.txt"
 }
