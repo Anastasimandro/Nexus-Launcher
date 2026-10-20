@@ -1,0 +1,8 @@
+10-20 07:23:03.822  1054  1054 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 07:23:03.822  1054  1054 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1054
+10-20 07:23:06.133  1692  1692 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 07:23:06.133  1692  1692 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1692
+10-20 07:23:07.135  1418  1418 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 07:23:07.135  1418  1418 E AndroidRuntime: Process: app.nexus.launcher, PID: 1418
+10-20 07:23:13.702  2587  2587 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 07:23:13.702  2587  2587 E AndroidRuntime: Process: app.nexus.launcher, PID: 2587

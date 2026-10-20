@@ -1,0 +1,1 @@
+.github/scripts/validate-on-emulator.sh: line 39: phase_gestures: command not found
