@@ -47,7 +47,8 @@ overlay_up() { local o; o="$(adb shell cmd overlay list --user 0 2>/dev/null)"; 
 wait_boot() {
   adb wait-for-device
   local deadline=$((SECONDS + ${BOOT_DEADLINE:-600}))
-  until [[ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == "1" ]]; do
+  until [[ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == "1" \
+           && ( -z "${old_boot:-}" || "$(adb shell cat /proc/sys/kernel/random/boot_id 2>/dev/null | tr -d '\r')" != "$old_boot" ) ]]; do
     (( SECONDS > deadline )) && { say "!! el arranque no terminó en $(( ${BOOT_DEADLINE:-600} / 60 )) min ($((${BOOT_DEADLINE:-600})) s)"; return 1; }
     sleep 4
   done
@@ -95,8 +96,13 @@ reboot_device() {
   REBOOTS=$((REBOOTS + 1))
   adb logcat -d -b all 2>/dev/null | tail -n 30000 | gzip -9 > "$out/logcat-before-reboot-$REBOOTS.txt.gz"
   checkpoint "antes del reinicio $REBOOTS"
+  # Número de arranque anterior: sys.boot_completed seguiría en 1 mientras el dispositivo se apaga.
+  local old_boot; old_boot="$(adb shell cat /proc/sys/kernel/random/boot_id 2>/dev/null | tr -d '\r')"
   adb reboot
-  sleep 12
+  # Esperar a que el dispositivo caiga de verdad (el emulador puede tardar minutos).
+  local down=$((SECONDS + 240))
+  until [[ "$(adb get-state 2>/dev/null)" != device ]]; do (( SECONDS > down )) && break; sleep 2; done
+  sleep 3
   if [[ -n ${EARLY_LOG:-} ]]; then
     # Si system_server cae en bucle, el logcat del primer intento se pierde: se guarda desde el principio.
     adb wait-for-device
