@@ -1,0 +1,3 @@
+Successfully disabled verity
+enabling overlayfs
+Reboot the device for new settings to take effect
