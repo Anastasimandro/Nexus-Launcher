@@ -1,0 +1,19 @@
+OK    enable pide el overlay (archivo enabled)
+OK    antes de reiniciar el overlay aún no es efectivo
+OK    tras reiniciar config_recentsComponentName apunta a Nexus
+OK    tras reiniciar Nexus tiene los permisos de allow.txt (0 sin conceder)
+FALLA SystemUI enlazado al servicio de Nexus
+FALLA el vigilante dejó el arranque verificado (healthy)
+FALLA el marcador booting se borró
+OK    disable --reboot: post-fs-data.sh no monta el APK
+OK    tras disable el sistema vuelve a los recientes de serie
+OK    tras disable SystemUI ya no se enlaza a Nexus
+OK    el vigilante reinició el dispositivo
+OK    tras el fallo no queda archivo enabled
+OK    el vigilante dejó constancia (tripped)
+OK    tras el fallo los recientes vuelven a los de serie
+FALLA enable se niega tras el fallo con la misma versión
+OK    enable --force lo permite
+OK    bucle de arranque: post-fs-data.sh quita enabled
+OK    bucle de arranque: no copia el APK
+OK    bucle de arranque: enable exige --force
