@@ -1,0 +1,11 @@
+rc=0
+total 16
+-rw-r--r-- 1 root root 8538 2026-10-20 11:40 NexusRecentsOverlay.apk
+booting
+enabled
+watchdog.log
+2026-10-20 11:38:04 SystemUI enlazado al servicio de Nexus tras 145s
+2026-10-20 11:40:52 cmd overlay list no devolvió el overlay: cmd: Failure calling service overlay: Broken pipe (32) 
+2026-10-20 11:40:55 cmd overlay list no devolvió el overlay:  
+2026-10-20 11:40:57 post-fs-data: overlay copiado a /data/local/tmp/nexusmod/system/product/overlay/NexusRecentsOverlay.apk
+montado: sí

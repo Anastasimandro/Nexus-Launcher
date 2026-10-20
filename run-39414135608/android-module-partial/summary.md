@@ -168,3 +168,46 @@ después (apaisado):       topResumedActivity=ActivityRecord{62686616 u0 com.goo
 después:     topResumedActivity=ActivityRecord{266194235 u0 com.android.settings/.homepage.SettingsHomepageActivity t14}
 
 ## Fase 6: deshacer a mano ('nexus-quickstep disable --reboot')
+- manual-disable: exit 0
+Overlay desactivado. Reiniciando: el gesto vuelve al launcher del sistema.
+rc=0
+total 0
+watchdog.log
+2026-10-20 11:35:37 arranque con el overlay pedido: vigilando (espera 150s, vigilancia 60s)
+2026-10-20 11:36:40 cmd overlay list no devolvió el overlay:  
+2026-10-20 11:36:44 cmd overlay list no devolvió el overlay:  
+2026-10-20 11:38:04 SystemUI enlazado al servicio de Nexus tras 145s
+montado: no
+## disabled
+config_recentsComponentName: com.google.android.apps.nexuslauncher/com.android.quickstep.RecentsActivity
+[disabled] permisos permitidos y no concedidos: 11 (ACCESS_SHORTCUTS INTERNAL_SYSTEM_WINDOW MANAGE_ACCESSIBILITY MANAGE_ACTIVITY_TASKS MANAGE_KEY_GESTURES MONITOR_INPUT READ_FRAME_BUFFER REMOVE_TASKS SET_ORIENTATION STATUS_BAR_SERVICE SYSTEM_APPLICATION_OVERLAY)
+--- nexus-quickstep bound:
+SystemUI enlazado al servicio de Quickstep de Nexus: NO
+(overlay efectivo: no; estado: missing)
+--- nexus-quickstep status:
+Pedido (enabled): no. El módulo no aplica el overlay (estado de serie).
+Overlay app.nexus.launcher.overlay.recents en este arranque: missing
+  APK en /product/overlay: no
+config_recentsComponentName ahora: com.google.android.apps.nexuslauncher/com.android.quickstep.RecentsActivity
+Overlay efectivo: no
+Comprobación de Nexus: sdk=37 compatible=true
+  Ausente pero tolerado por Nexus: DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_ALTTAB_TRANSITIONS_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_TRANSITIONS_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_TRAMPOLINE_CLOSE_ANIMATION_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_EXIT_BY_MINIMIZE_TRANSITION_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_QUICK_SWITCH,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_TASKBAR_RUNNING_APPS,DesktopModeFlags.ENABLE_QUICKSWITCH_DESKTOP_SPLIT_BUGFIX,DesktopModeFlags.ENABLE_START_LAUNCH_TRANSITION_FROM_TASKBAR_BUGFIX,DesktopModeFlags.ENABLE_TASKBAR_RECENTS_LAYOUT_TRANSITION,DesktopExperienceFlags.ENABLE_DESKTOP_APP_LAUNCH_BUGFIX,DesktopExperienceFlags.ENABLE_DESKTOP_FIRST_FULLSCREEN_REFOCUS_BUGFIX,DesktopExperienceFlags.ENABLE_DESKTOP_WINDOWING_PIP,DesktopExperienceFlags.ENABLE_FREEFORM_DISPLAY_LAUNCH_PARAMS,DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND,DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_FRONTEND,DesktopExperienceFlags.ENABLE_PINNING_APP_WITH_CONTEXT_MENU,DesktopExperienceFlags.ENABLE_REJECT_HOME_TRANSITION,DesktopExperienceFlags.ENABLE_TASKBAR_RECENT_TASKS_THROTTLE_BUGFIX
+Vigilante: sin verificar todavía.
+Los cambios solo se aplican al reiniciar.
+--- /data/adb/nexus_quickstep:
+watchdog.log
+--- watchdog.log:
+2026-10-20 11:34:52 cmd overlay list no devolvió el overlay: cmd: Can't find service: overlay 
+2026-10-20 11:34:55 cmd overlay list no devolvió el overlay:  
+2026-10-20 11:34:56 post-fs-data: overlay copiado a /data/local/tmp/nexusmod/system/product/overlay/NexusRecentsOverlay.apk
+2026-10-20 11:35:37 arranque con el overlay pedido: vigilando (espera 150s, vigilancia 60s)
+2026-10-20 11:36:40 cmd overlay list no devolvió el overlay:  
+2026-10-20 11:36:44 cmd overlay list no devolvió el overlay:  
+2026-10-20 11:38:04 SystemUI enlazado al servicio de Nexus tras 145s
+2026-10-20 11:40:52 cmd overlay list no devolvió el overlay: cmd: Failure calling service overlay: Broken pipe (32) 
+2026-10-20 11:40:55 cmd overlay list no devolvió el overlay:  
+--- caídas:
+10-20 11:40:51.018  5491  5549 E AndroidRuntime: FATAL EXCEPTION: UiThreadHelper
+10-20 11:40:51.018  5491  5549 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 5491
+
+## Fase 7: recuperación automática (Nexus no consigue ofrecer el servicio de Quickstep)
