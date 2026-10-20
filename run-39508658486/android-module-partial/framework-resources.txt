@@ -1,0 +1,16 @@
+android.jar de compilación: /usr/local/lib/android/sdk/platforms/android-37.2/android.jar
+   android.jar de compilación: 15042 recursos
+== RECURSOS DEL FRAMEWORK: 860 referencias, 14793 recursos en el sistema
+  todas existen
+== IDs: 11 recursos distintos (11 referencias) entre el android.jar de compilación y el sistema
+  ID DISTINTO android:color/system_error_dim_dark compilado=0x010600e3 sistema=0x01960005  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values-v34/colors.xml:95
+  ID DISTINTO android:color/system_error_dim_light compilado=0x010600de sistema=0x01960000  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values-v34/colors.xml:40
+  ID DISTINTO android:color/system_palette_key_color_error_dark compilado=0x010600e4 sistema=0x01960006  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values-v34/colors.xml:112
+  ID DISTINTO android:color/system_palette_key_color_error_light compilado=0x010600df sistema=0x01960001  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values-v34/colors.xml:57
+  ID DISTINTO android:color/system_primary_dim_dark compilado=0x010600e5 sistema=0x01960007  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values-v34/colors.xml:120
+  ID DISTINTO android:color/system_primary_dim_light compilado=0x010600e0 sistema=0x01960002  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values-v34/colors.xml:65
+  ID DISTINTO android:color/system_secondary_dim_dark compilado=0x010600e6 sistema=0x01960008  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values-v34/colors.xml:124
+  ID DISTINTO android:color/system_secondary_dim_light compilado=0x010600e1 sistema=0x01960003  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values-v34/colors.xml:69
+  ID DISTINTO android:color/system_tertiary_dim_dark compilado=0x010600e7 sistema=0x01960009  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values-v34/colors.xml:138
+  ID DISTINTO android:color/system_tertiary_dim_light compilado=0x010600e2 sistema=0x01960004  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values-v34/colors.xml:83
+  ID DISTINTO android:dimen/navigation_bar_frame_height compilado=0x01050283 sistema=0x0105027b  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values/dimens.xml:437
