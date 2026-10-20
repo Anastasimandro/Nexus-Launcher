@@ -1,0 +1,16 @@
+N: android=http://schemas.android.com/apk/res/android (line=14)
+  E: manifest (line=14)
+    A: http://schemas.android.com/apk/res/android:versionCode(0x0101021b)=1
+    A: http://schemas.android.com/apk/res/android:versionName(0x0101021c)="1" (Raw: "1")
+    A: http://schemas.android.com/apk/res/android:compileSdkVersion(0x01010572)=37
+    A: http://schemas.android.com/apk/res/android:compileSdkVersionCodename(0x01010573)="DEV" (Raw: "DEV")
+    A: package="app.nexus.launcher.overlay.recents" (Raw: "app.nexus.launcher.overlay.recents")
+    A: platformBuildVersionCode=37
+    A: platformBuildVersionName="DEV" (Raw: "DEV")
+      E: uses-sdk (line=0)
+        A: http://schemas.android.com/apk/res/android:minSdkVersion(0x0101020c)=34
+        A: http://schemas.android.com/apk/res/android:targetSdkVersion(0x01010270)=37
+      E: overlay (line=17)
+        A: http://schemas.android.com/apk/res/android:targetPackage(0x01010021)="android" (Raw: "android")
+      E: application (line=19)
+        A: http://schemas.android.com/apk/res/android:hasCode(0x0101000c)=false
