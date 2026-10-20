@@ -189,6 +189,7 @@ check_framework_resources() {
 }
 cap framework-resources check_framework_resources > /dev/null 2>&1
 cat "$out/framework-resources.txt" | tee -a "$out/summary.md"
+gzip -9 < "$out/framework-res-dump.txt" > "$out/framework-res-dump.txt.gz"; gzip -9 < "$out/build-jar-dump.txt" > "$out/build-jar-dump.txt.gz"
 rm -f "$out/framework-res-dump.txt" "$out/build-jar-dump.txt"
 say ""
 
@@ -275,7 +276,12 @@ phase_gestures() {
   echo "pantalla ${w}x${h}" > "$out/gesture-notes$S.txt"
 
   open_app() { dsh am start -a android.settings.SETTINGS > /dev/null; sleep 4; }
-  step() { echo "=== $1" >> "$out/gesture-notes$S.txt"; }
+  # El emulador sin GPU tiene un fallo conocido que reinicia system_server: antes de cada paso se espera a que
+  # los servicios estén y se anota el pid de system_server para saber si el paso se hizo con el sistema vivo.
+  step() {
+    local i; for i in $(seq 1 60); do adb shell service check activity 2>/dev/null | grep -q found && adb shell service check input 2>/dev/null | grep -q found && break; sleep 5; done
+    echo "=== $1   [system_server pid $(dsh pidof system_server)]" >> "$out/gesture-notes$S.txt"
+  }
 
   step "A. Inicio con gesto rápido"
   open_app; echo "antes: $(fg)" >> "$out/gesture-notes$S.txt"
@@ -332,6 +338,10 @@ phase_gestures() {
   dsh dumpsys activity service "$SERVICE" > "$out/dumpsys-tis-after-all-gestures$S.txt"
   crashes > "$out/crashes-after-gestures$S.txt"
   dsh logcat -d | grep -E "AbsSwipeUpHandler|RecentsAnimation|TaskAnimationManager|TouchInteraction|AndroidRuntime|FATAL" | tail -n 250 > "$out/logcat-gestures$S.txt"
+  # Causa de una eventual caída de system_server durante los gestos, y el logcat completo de la fase.
+  adb logcat -d -b all -v threadtime 2>/dev/null > "$work/gestures-full.txt"
+  grep -nE "Abort message|Fatal signal|signal 6|system_server.*(died|exit)|Zygote.*(exit|died)|DeadSystemException|WATCHDOG|Watchdog.*(blocked|killing)|RegionSampling|SurfaceFlinger.*(abort|crash)" "$work/gestures-full.txt" | cut -c1-300 | head -n 40 > "$out/system-deaths$S.txt"
+  gzip -9 < "$work/gestures-full.txt" > "$out/logcat-gestures-full$S.txt.gz"
 }
 
 # =============================================================================================
