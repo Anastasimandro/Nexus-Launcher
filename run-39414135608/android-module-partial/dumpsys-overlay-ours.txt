@@ -1,0 +1,2317 @@
+IDMAP OF com.android.internal.emulation.pixel_9_pro_fold
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel9ProFold/EmulationPixel9ProFoldOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402a9 -> 0x7f050000 (string/config_display_features -> string/config_display_features)
+    0x010402d6 -> 0x7f050001 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f050002 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x01040304 -> 0x7f050003 (string/config_rearDisplayPhysicalAddress -> string/config_rearDisplayPhysicalAddress)
+    0x01040316 -> 0x7f050004 (string/config_secondaryBuiltInDisplayCutout -> string/config_secondaryBuiltInDisplayCutout)
+    0x01040317 -> 0x7f050005 (string/config_secondaryBuiltInDisplayCutoutRectApproximation -> string/config_secondaryBuiltInDisplayCutoutRectApproximation)
+    0x01050121 -> 0x7f030000 (dimen/config_letterboxThinLetterboxHeightDp -> dimen/config_letterboxThinLetterboxHeightDp)
+    0x01050122 -> 0x7f030001 (dimen/config_letterboxThinLetterboxWidthDp -> dimen/config_letterboxThinLetterboxWidthDp)
+    0x0105033d -> 0x7f030002 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105033e -> 0x7f030003 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x0105033f -> 0x7f030004 (dimen/rounded_corner_radius_adjustment -> dimen/rounded_corner_radius_adjustment)
+    0x01050340 -> 0x7f030005 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f030006 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050352 -> 0x7f030007 (dimen/secondary_rounded_corner_radius_bottom -> dimen/secondary_rounded_corner_radius_bottom)
+    0x01050354 -> 0x7f030008 (dimen/secondary_rounded_corner_radius_top -> dimen/secondary_rounded_corner_radius_top)
+    0x01050369 -> 0x7f030009 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f03000a (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f03000b (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x01050377 -> 0x7f03000c (dimen/taskbar_frame_height -> dimen/taskbar_frame_height)
+    0x01070047 -> 0x7f010000 (array/config_concurrentDisplayDeviceStates -> array/config_concurrentDisplayDeviceStates)
+    0x01070058 -> 0x7f010001 (array/config_deviceStatesAvailableForAppRequests -> array/config_deviceStatesAvailableForAppRequests)
+    0x01070059 -> 0x7f010002 (array/config_deviceStatesOnWhichToSleep -> array/config_deviceStatesOnWhichToSleep)
+    0x0107005a -> 0x7f010003 (array/config_deviceStatesOnWhichToWakeUp -> array/config_deviceStatesOnWhichToWakeUp)
+    0x0107005c -> 0x7f010004 (array/config_deviceTabletopRotations -> array/config_deviceTabletopRotations)
+    0x0107005d -> 0x7f010005 (array/config_device_state_postures -> array/config_device_state_postures)
+    0x01070066 -> 0x7f010006 (array/config_displayUniqueIdArray -> array/config_displayUniqueIdArray)
+    0x0107008b -> 0x7f010007 (array/config_foldedDeviceStates -> array/config_foldedDeviceStates)
+    0x01070093 -> 0x7f010008 (array/config_halfFoldedDeviceStates -> array/config_halfFoldedDeviceStates)
+    0x010700a7 -> 0x7f010009 (array/config_mainBuiltInDisplayCutoutSideOverride -> array/config_mainBuiltInDisplayCutoutSideOverride)
+    0x010700be -> 0x7f01000a (array/config_openDeviceStates -> array/config_openDeviceStates)
+    0x010700c0 -> 0x7f01000b (array/config_perDeviceStateRotationLockDefaults -> array/config_perDeviceStateRotationLockDefaults)
+    0x010700c9 -> 0x7f01000c (array/config_rearDisplayDeviceStates -> array/config_rearDisplayDeviceStates)
+    0x010e0088 -> 0x7f040000 (integer/config_deviceStateConcurrentRearDisplay -> integer/config_deviceStateConcurrentRearDisplay)
+    0x010e0089 -> 0x7f040001 (integer/config_deviceStateRearDisplay -> integer/config_deviceStateRearDisplay)
+    0x010e00c7 -> 0x7f040002 (integer/config_letterboxActivityCornersRadius -> integer/config_letterboxActivityCornersRadius)
+    0x010e0118 -> 0x7f040003 (integer/config_pauseRotationWhenUnfolding_displaySwitchTimeout -> integer/config_pauseRotationWhenUnfolding_displaySwitchTimeout)
+    0x010e0119 -> 0x7f040004 (integer/config_pauseRotationWhenUnfolding_hingeEventTimeout -> integer/config_pauseRotationWhenUnfolding_hingeEventTimeout)
+    0x010e011a -> 0x7f040005 (integer/config_pauseRotationWhenUnfolding_maxHingeAngle -> integer/config_pauseRotationWhenUnfolding_maxHingeAngle)
+    0x01110133 -> 0x7f020000 (bool/config_decoupleStatusBarAndDisplayCutoutFromScreenSize -> bool/config_decoupleStatusBarAndDisplayCutoutFromScreenSize)
+    0x011101cb -> 0x7f020001 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+    0x011101cc -> 0x7f020002 (bool/config_fillSecondaryBuiltInDisplayCutout -> bool/config_fillSecondaryBuiltInDisplayCutout)
+    0x01110200 -> 0x7f020003 (bool/config_keyguardUserSwitcher -> bool/config_keyguardUserSwitcher)
+    0x01110203 -> 0x7f020004 (bool/config_leftRightSplitInPortrait -> bool/config_leftRightSplitInPortrait)
+    0x01110205 -> 0x7f020005 (bool/config_letterboxIsDisplayAspectRatioForFixedOrientationLetterboxEnabled -> bool/config_letterboxIsDisplayAspectRatioForFixedOrientationLetterboxEnabled)
+    0x0111021f -> 0x7f020006 (bool/config_matchSecondaryInternalDisplaysOrientationToReverseDefaultDisplay -> bool/config_matchSecondaryInternalDisplaysOrientationToReverseDefaultDisplay)
+    0x01110278 -> 0x7f020007 (bool/config_showUserSwitcherByDefault -> bool/config_showUserSwitcherByDefault)
+    0x011102a8 -> 0x7f020008 (bool/config_supportsConcurrentInternalDisplays -> bool/config_supportsConcurrentInternalDisplays)
+    0x011102c1 -> 0x7f020009 (bool/config_unfoldTransitionEnabled -> bool/config_unfoldTransitionEnabled)
+    0x011102c3 -> 0x7f02000a (bool/config_unfoldTransitionHingeAngle -> bool/config_unfoldTransitionHingeAngle)
+    0x011102f5 -> 0x7f02000b (bool/config_windowManagerHalfFoldAutoRotateOverride -> bool/config_windowManagerHalfFoldAutoRotateOverride)
+    0x011102f6 -> 0x7f02000c (bool/config_windowManagerPauseRotationWhenUnfolding -> bool/config_windowManagerPauseRotationWhenUnfolding)
+
+IDMAP OF com.android.internal.emulation.pixel_2_xl
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel2XL/EmulationPixel2XLOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x0105033d -> 0x7f010000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105036b -> 0x7f010001 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+
+IDMAP OF com.android.carrierconfig.auto_generated_rro_product__
+Paths:
+    target path  : /system_ext/priv-app/CarrierConfig/CarrierConfig.apk
+    overlay path : /product/overlay/CarrierConfig__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Constraints:
+    None
+Mapping:
+    0x7f020000 -> 0x7f010000 (xml/vendor -> xml/vendor)
+
+IDMAP OF com.android.systemui.emulation.pixel_4a
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel4a/SystemUIEmulationPixel4aOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f070ace -> 0x7f020000 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c46 -> 0x7f020003 (dimen/status_bar_header_height_keyguard -> dimen/status_bar_header_height_keyguard)
+    0x7f070c67 -> 0x7f020004 (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f13039f -> 0x7f030000 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303bc -> 0x7f030001 (string/config_rounded_mask -> string/config_rounded_mask)
+
+IDMAP OF com.android.systemui.emulation.pixel_7
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel7/SystemUIEmulationPixel7Overlay.apk
+Debug info:
+    W failed to find resource 'dimen/multi_user_switch_keyguard_margin'
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/system_icons_super_container_avatarless_margin_end'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f070219 -> 0x7f020000 (dimen/config_rounded_mask_size -> dimen/config_rounded_mask_size)
+    0x7f07021a -> 0x7f020001 (dimen/config_rounded_mask_size_bottom -> dimen/config_rounded_mask_size_bottom)
+    0x7f07021b -> 0x7f020002 (dimen/config_rounded_mask_size_top -> dimen/config_rounded_mask_size_top)
+    0x7f070431 -> 0x7f020003 (dimen/keyguard_carrier_text_margin -> dimen/keyguard_carrier_text_margin)
+    0x7f07059a -> 0x7f020004 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070ace -> 0x7f020006 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c46 -> 0x7f020009 (dimen/status_bar_header_height_keyguard -> dimen/status_bar_header_height_keyguard)
+    0x7f070c66 -> 0x7f02000a (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f070c67 -> 0x7f02000b (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f070e16 -> 0x7f02000d (dimen/udfps_burn_in_offset_y -> dimen/udfps_burn_in_offset_y)
+    0x7f130397 -> 0x7f030000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f030001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f030002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+    0x7f1303bc -> 0x7f030003 (string/config_rounded_mask -> string/config_rounded_mask)
+
+IDMAP OF com.android.systemui.emulation.pixel_9_pro_xl
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel9ProXL/SystemUIEmulationPixel9ProXLOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07011a -> 0x7f020000 (dimen/bottom_sheet_corner_radius -> dimen/bottom_sheet_corner_radius)
+    0x7f07059a -> 0x7f020001 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070af7 -> 0x7f020002 (dimen/pixel_pitch -> dimen/pixel_pitch)
+    0x7f070c66 -> 0x7f020003 (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.providers.settings.auto_generated_rro_product__
+Paths:
+    target path  : /system/priv-app/SettingsProvider/SettingsProvider.apk
+    overlay path : /product/overlay/SettingsProvider__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Constraints:
+    None
+Mapping:
+    0x7f020014 -> 0x7f010000 (bool/def_double_tap_to_sleep -> bool/def_double_tap_to_sleep)
+    0x7f080006 -> 0x7f020000 (string/def_backup_transport -> string/def_backup_transport)
+    0x7f080019 -> 0x7f020001 (string/def_wireless_charging_started_sound -> string/def_wireless_charging_started_sound)
+
+IDMAP OF com.android.systemui.emulation.pixel_9
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel9/SystemUIEmulationPixel9Overlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07011a -> 0x7f020000 (dimen/bottom_sheet_corner_radius -> dimen/bottom_sheet_corner_radius)
+    0x7f07059a -> 0x7f020001 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070af7 -> 0x7f020002 (dimen/pixel_pitch -> dimen/pixel_pitch)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.devicediagnostics.auto_generated_rro_product__
+Paths:
+    target path  : /system/priv-app/DeviceDiagnostics/DeviceDiagnostics.apk
+    overlay path : /product/overlay/DeviceDiagnostics__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Debug info:
+    W failed to find resource 'bool/config_hspa_data_distinguishable'
+    W failed to find resource 'drawable/ic_5g_plus_mobiledata'
+    W failed to find resource 'drawable/ic_5g_plus_mobiledata_updated'
+    W failed to find resource 'string/data_connection_5g_plus'
+Constraints:
+    None
+Mapping:
+    0x7f11016c -> 0x7f030000 (string/config_avatar_picker_package -> string/config_avatar_picker_package)
+
+IDMAP OF com.android.internal.emulation.pixel_9_pro
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel9Pro/EmulationPixel9ProOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f040000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f040001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033e -> 0x7f020000 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x01050340 -> 0x7f020001 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020002 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020003 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x010e0163 -> 0x7f030000 (integer/config_stableDeviceDisplayHeight -> integer/config_stableDeviceDisplayHeight)
+    0x010e0164 -> 0x7f030001 (integer/config_stableDeviceDisplayWidth -> integer/config_stableDeviceDisplayWidth)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.systemui.emulation.pixel_3_xl
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel3XL/SystemUIEmulationPixel3XLOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/multi_user_switch_keyguard_margin'
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/system_icons_super_container_avatarless_margin_end'
+Constraints:
+    None
+Mapping:
+    0x7f070323 -> 0x7f010000 (dimen/display_cutout_margin_consumption -> dimen/display_cutout_margin_consumption)
+    0x7f070ace -> 0x7f010002 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c46 -> 0x7f010005 (dimen/status_bar_header_height_keyguard -> dimen/status_bar_header_height_keyguard)
+
+IDMAP OF com.google.android.overlay.largescreensettingsprovider
+Paths:
+    target path  : /system/priv-app/SettingsProvider/SettingsProvider.apk
+    overlay path : /product/overlay/LargeScreenSettingsProviderOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f020002 -> 0x7f010000 (bool/def_accelerometer_rotation -> bool/def_accelerometer_rotation)
+
+IDMAP OF com.android.systemui.emulation.pixel_3
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel3/SystemUIEmulationPixel3Overlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+Constraints:
+    None
+Mapping:
+    0x7f070ace -> 0x7f010000 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+
+IDMAP OF com.google.android.overlay.pixelconfigcommon
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/PixelConfigOverlayCommon.apk
+Debug info:
+    W failed to find resource 'color/system_error'
+Constraints:
+    None
+Mapping:
+    0x0104001b -> 0x7f070031 (string/config_helpPackageNameKey -> string/config_helpPackageNameKey)
+    0x0104001c -> 0x7f070032 (string/config_helpPackageNameValue -> string/config_helpPackageNameValue)
+    0x0104001d -> 0x7f07002f (string/config_helpIntentExtraKey -> string/config_helpIntentExtraKey)
+    0x0104001e -> 0x7f070030 (string/config_helpIntentNameKey -> string/config_helpIntentNameKey)
+    0x0104001f -> 0x7f07002a (string/config_feedbackIntentExtraKey -> string/config_feedbackIntentExtraKey)
+    0x01040020 -> 0x7f07002b (string/config_feedbackIntentNameKey -> string/config_feedbackIntentNameKey)
+    0x01040030 -> 0x7f070044 (string/config_systemWellbeing -> string/config_systemWellbeing)
+    0x01040032 -> 0x7f070042 (string/config_systemUiIntelligence -> string/config_systemUiIntelligence)
+    0x01040033 -> 0x7f07003b (string/config_systemAmbientAudioIntelligence -> string/config_systemAmbientAudioIntelligence)
+    0x01040034 -> 0x7f07003d (string/config_systemAudioIntelligence -> string/config_systemAudioIntelligence)
+    0x01040035 -> 0x7f07003f (string/config_systemNotificationIntelligence -> string/config_systemNotificationIntelligence)
+    0x01040036 -> 0x7f070041 (string/config_systemTextIntelligence -> string/config_systemTextIntelligence)
+    0x01040037 -> 0x7f070043 (string/config_systemVisualIntelligence -> string/config_systemVisualIntelligence)
+    0x0104003c -> 0x7f070040 (string/config_systemSupervision -> string/config_systemSupervision)
+    0x0104003e -> 0x7f07003c (string/config_systemAppProtectionService -> string/config_systemAppProtectionService)
+    0x01040048 -> 0x7f07001f (string/config_defaultRetailDemo -> string/config_defaultRetailDemo)
+    0x0104015f -> 0x7f070000 (string/android_start_title -> string/android_start_title)
+    0x01040164 -> 0x7f070001 (string/android_upgrading_title -> string/android_upgrading_title)
+    0x0104023a -> 0x7f070002 (string/config_ambientContextEventArrayExtraKey -> string/config_ambientContextEventArrayExtraKey)
+    0x0104023b -> 0x7f070003 (string/config_ambientContextPackageNameExtraKey -> string/config_ambientContextPackageNameExtraKey)
+    0x01040248 -> 0x7f070004 (string/config_bodyFontFamily -> string/config_bodyFontFamily)
+    0x01040249 -> 0x7f070005 (string/config_bodyFontFamilyMedium -> string/config_bodyFontFamilyMedium)
+    0x01040251 -> 0x7f070006 (string/config_clockFontFamily -> string/config_clockFontFamily)
+    0x01040263 -> 0x7f070007 (string/config_defaultAmbientContextConsentComponent -> string/config_defaultAmbientContextConsentComponent)
+    0x01040264 -> 0x7f070008 (string/config_defaultAmbientContextDetectionService -> string/config_defaultAmbientContextDetectionService)
+    0x01040265 -> 0x7f070009 (string/config_defaultAppPredictionService -> string/config_defaultAppPredictionService)
+    0x01040266 -> 0x7f07000a (string/config_defaultAssistantAccessComponent -> string/config_defaultAssistantAccessComponent)
+    0x01040268 -> 0x7f07000b (string/config_defaultAugmentedAutofillService -> string/config_defaultAugmentedAutofillService)
+    0x0104026a -> 0x7f07000c (string/config_defaultBugReportHandlerApp -> string/config_defaultBugReportHandlerApp)
+    0x0104026c -> 0x7f07000d (string/config_defaultContentCaptureService -> string/config_defaultContentCaptureService)
+    0x0104026d -> 0x7f07000e (string/config_defaultContentProtectionService -> string/config_defaultContentProtectionService)
+    0x01040272 -> 0x7f07000f (string/config_defaultContentSuggestionsService -> string/config_defaultContentSuggestionsService)
+    0x01040273 -> 0x7f070010 (string/config_defaultContextualSearchEnabled -> string/config_defaultContextualSearchEnabled)
+    0x01040274 -> 0x7f070011 (string/config_defaultContextualSearchKey -> string/config_defaultContextualSearchKey)
+    0x01040275 -> 0x7f070012 (string/config_defaultContextualSearchLegacyEnabled -> string/config_defaultContextualSearchLegacyEnabled)
+    0x01040276 -> 0x7f070013 (string/config_defaultContextualSearchPackageName -> string/config_defaultContextualSearchPackageName)
+    0x01040279 -> 0x7f070014 (string/config_defaultDndAccessPackages -> string/config_defaultDndAccessPackages)
+    0x0104027c -> 0x7f070015 (string/config_defaultFieldClassificationService -> string/config_defaultFieldClassificationService)
+    0x0104027f -> 0x7f070016 (string/config_defaultListenerAccessPackages -> string/config_defaultListenerAccessPackages)
+    0x01040280 -> 0x7f070017 (string/config_defaultModuleMetadataProvider -> string/config_defaultModuleMetadataProvider)
+    0x01040281 -> 0x7f070018 (string/config_defaultMusicRecognitionService -> string/config_defaultMusicRecognitionService)
+    0x01040287 -> 0x7f07001c (string/config_defaultOnDeviceSpeechRecognitionService -> string/config_defaultOnDeviceSpeechRecognitionService)
+    0x01040288 -> 0x7f07001d (string/config_defaultProfcollectReportUploaderAction -> string/config_defaultProfcollectReportUploaderAction)
+    0x01040289 -> 0x7f07001e (string/config_defaultProfcollectReportUploaderApp -> string/config_defaultProfcollectReportUploaderApp)
+    0x0104028e -> 0x7f070020 (string/config_defaultSearchUiService -> string/config_defaultSearchUiService)
+    0x01040291 -> 0x7f070021 (string/config_defaultSmartspaceService -> string/config_defaultSmartspaceService)
+    0x01040292 -> 0x7f070022 (string/config_defaultSupervisionProfileOwnerComponent -> string/config_defaultSupervisionProfileOwnerComponent)
+    0x01040293 -> 0x7f070023 (string/config_defaultSystemCaptionsManagerService -> string/config_defaultSystemCaptionsManagerService)
+    0x01040294 -> 0x7f070024 (string/config_defaultTextClassifierPackage -> string/config_defaultTextClassifierPackage)
+    0x01040295 -> 0x7f070025 (string/config_defaultTranslationService -> string/config_defaultTranslationService)
+    0x01040298 -> 0x7f070026 (string/config_defaultWallpaperEffectsGenerationService -> string/config_defaultWallpaperEffectsGenerationService)
+    0x0104029b -> 0x7f070027 (string/config_defaultWellbeingPackage -> string/config_defaultWellbeingPackage)
+    0x010402b2 -> 0x7f070028 (string/config_dynamicInstrumentationEventConsumer -> string/config_dynamicInstrumentationEventConsumer)
+    0x010402b4 -> 0x7f070029 (string/config_emergency_dialer_package -> string/config_emergency_dialer_package)
+    0x010402c7 -> 0x7f07002c (string/config_headlineFontFamily -> string/config_headlineFontFamily)
+    0x010402c8 -> 0x7f07002d (string/config_headlineFontFamilyMedium -> string/config_headlineFontFamilyMedium)
+    0x010402c9 -> 0x7f07002e (string/config_headlineFontFeatureSettings -> string/config_headlineFontFeatureSettings)
+    0x010402cd -> 0x7f070033 (string/config_icon_mask -> string/config_icon_mask)
+    0x010402cf -> 0x7f070034 (string/config_incidentReportApproverPackage -> string/config_incidentReportApproverPackage)
+    0x010402f9 -> 0x7f070035 (string/config_powerSaveModeChangedListenerPackage -> string/config_powerSaveModeChangedListenerPackage)
+    0x010402fb -> 0x7f070036 (string/config_preferredSystemImageEditor -> string/config_preferredSystemImageEditor)
+    0x01040305 -> 0x7f070037 (string/config_recentsComponentName -> string/config_recentsComponentName)
+    0x01040306 -> 0x7f070038 (string/config_retailDemoPackage -> string/config_retailDemoPackage)
+    0x01040307 -> 0x7f070039 (string/config_retailDemoPackageSignature -> string/config_retailDemoPackageSignature)
+    0x01040319 -> 0x7f07003a (string/config_secondaryHomePackage -> string/config_secondaryHomePackage)
+    0x01040326 -> 0x7f07003e (string/config_systemImageEditor -> string/config_systemImageEditor)
+    0x01050108 -> 0x7f040000 (dimen/config_bottomDialogCornerRadius -> dimen/config_bottomDialogCornerRadius)
+    0x01050109 -> 0x7f040001 (dimen/config_buttonCornerRadius -> dimen/config_buttonCornerRadius)
+    0x0105010d -> 0x7f040002 (dimen/config_dialogCornerRadius -> dimen/config_dialogCornerRadius)
+    0x01050116 -> 0x7f040003 (dimen/config_highResTaskSnapshotScale -> dimen/config_highResTaskSnapshotScale)
+    0x01050131 -> 0x7f040004 (dimen/config_progressBarCornerRadius -> dimen/config_progressBarCornerRadius)
+    0x01060209 -> 0x7f030000 (color/config_progress_background_tint -> color/config_progress_background_tint)
+    0x01060250 -> 0x7f030001 (color/error_color_device_default_dark -> color/error_color_device_default_dark)
+    0x01060251 -> 0x7f030002 (color/error_color_device_default_light -> color/error_color_device_default_light)
+    0x010604b2 -> 0x7f030004 (color/user_icon_1 -> color/user_icon_1)
+    0x0107002e -> 0x7f010000 (array/config_batteryPackageTypeService -> array/config_batteryPackageTypeService)
+    0x0107004c -> 0x7f010001 (array/config_defaultCloudSearchServices -> array/config_defaultCloudSearchServices)
+    0x0107009d -> 0x7f010002 (array/config_listenerHintsExemptPackages -> array/config_listenerHintsExemptPackages)
+    0x010700b8 -> 0x7f010003 (array/config_notificationMsgPkgsAllowedAsConvos -> array/config_notificationMsgPkgsAllowedAsConvos)
+    0x010700bf -> 0x7f010004 (array/config_packagesExemptFromSuspension -> array/config_packagesExemptFromSuspension)
+    0x010700c4 -> 0x7f010005 (array/config_priorityOnlyDndExemptPackages -> array/config_priorityOnlyDndExemptPackages)
+    0x010700c6 -> 0x7f010006 (array/config_profcollectOnCameraOpenedSkipPackages -> array/config_profcollectOnCameraOpenedSkipPackages)
+    0x010700c8 -> 0x7f010007 (array/config_rawContactsEligibleDefaultAccountTypes -> array/config_rawContactsEligibleDefaultAccountTypes)
+    0x010700e2 -> 0x7f010008 (array/config_setContactsDefaultAccountKnownSigners -> array/config_setContactsDefaultAccountKnownSigners)
+    0x0108042f -> 0x7f050000 (drawable/ic_doc_apk -> drawable/ic_doc_apk)
+    0x01080430 -> 0x7f050001 (drawable/ic_doc_audio -> drawable/ic_doc_audio)
+    0x01080431 -> 0x7f050002 (drawable/ic_doc_certificate -> drawable/ic_doc_certificate)
+    0x01080432 -> 0x7f050003 (drawable/ic_doc_codes -> drawable/ic_doc_codes)
+    0x01080433 -> 0x7f050004 (drawable/ic_doc_compressed -> drawable/ic_doc_compressed)
+    0x01080434 -> 0x7f050005 (drawable/ic_doc_contact -> drawable/ic_doc_contact)
+    0x01080435 -> 0x7f050006 (drawable/ic_doc_document -> drawable/ic_doc_document)
+    0x01080436 -> 0x7f050007 (drawable/ic_doc_event -> drawable/ic_doc_event)
+    0x01080437 -> 0x7f050008 (drawable/ic_doc_excel -> drawable/ic_doc_excel)
+    0x01080438 -> 0x7f050009 (drawable/ic_doc_folder -> drawable/ic_doc_folder)
+    0x01080439 -> 0x7f05000a (drawable/ic_doc_font -> drawable/ic_doc_font)
+    0x0108043a -> 0x7f05000b (drawable/ic_doc_generic -> drawable/ic_doc_generic)
+    0x0108043b -> 0x7f05000c (drawable/ic_doc_image -> drawable/ic_doc_image)
+    0x0108043c -> 0x7f05000d (drawable/ic_doc_pdf -> drawable/ic_doc_pdf)
+    0x0108043d -> 0x7f05000e (drawable/ic_doc_powerpoint -> drawable/ic_doc_powerpoint)
+    0x0108043e -> 0x7f05000f (drawable/ic_doc_presentation -> drawable/ic_doc_presentation)
+    0x0108043f -> 0x7f050010 (drawable/ic_doc_spreadsheet -> drawable/ic_doc_spreadsheet)
+    0x01080440 -> 0x7f050011 (drawable/ic_doc_text -> drawable/ic_doc_text)
+    0x01080441 -> 0x7f050012 (drawable/ic_doc_video -> drawable/ic_doc_video)
+    0x01080442 -> 0x7f050013 (drawable/ic_doc_word -> drawable/ic_doc_word)
+    0x010e00d3 -> 0x7f060000 (integer/config_longPressOnHomeBehavior -> integer/config_longPressOnHomeBehavior)
+    0x010e00e9 -> 0x7f060001 (integer/config_maximumCallLogEntriesPerSim -> integer/config_maximumCallLogEntriesPerSim)
+    0x010e0165 -> 0x7f060002 (integer/config_storageManagerDaystoRetainDefault -> integer/config_storageManagerDaystoRetainDefault)
+    0x01110000 -> 0x7f020006 (bool/config_sendPackageName -> bool/config_sendPackageName)
+    0x01110009 -> 0x7f020005 (bool/config_safetyProtectionEnabled -> bool/config_safetyProtectionEnabled)
+    0x01110067 -> 0x7f020000 (bool/config_bugReportHandlerEnabled -> bool/config_bugReportHandlerEnabled)
+    0x01110069 -> 0x7f020001 (bool/config_buttonTextAllCaps -> bool/config_buttonTextAllCaps)
+    0x0111013c -> 0x7f020002 (bool/config_defaultRingtonePickerEnabled -> bool/config_defaultRingtonePickerEnabled)
+    0x011101cd -> 0x7f020003 (bool/config_fingerprintSupportsGestures -> bool/config_fingerprintSupportsGestures)
+    0x01110248 -> 0x7f020004 (bool/config_profcollectReportUploaderEnabled -> bool/config_profcollectReportUploaderEnabled)
+    0x01110282 -> 0x7f020007 (bool/config_smart_battery_available -> bool/config_smart_battery_available)
+    0x01110299 -> 0x7f020008 (bool/config_supportDoubleTapSleep -> bool/config_supportDoubleTapSleep)
+    0x0111029c -> 0x7f020009 (bool/config_supportLongPressPowerWhenNonInteractive -> bool/config_supportLongPressPowerWhenNonInteractive)
+    0x011102a7 -> 0x7f02000a (bool/config_supportsCamToggle -> bool/config_supportsCamToggle)
+    0x011102ac -> 0x7f02000b (bool/config_supportsMicToggle -> bool/config_supportsMicToggle)
+    0x011102b6 -> 0x7f02000c (bool/config_swipe_up_gesture_setting_available -> bool/config_swipe_up_gesture_setting_available)
+    0x011102b9 -> 0x7f02000d (bool/config_systemCaptionsServiceCallsEnabled -> bool/config_systemCaptionsServiceCallsEnabled)
+    0x01980000 -> 0x7f07001a (string/config_defaultOnDeviceIntelligenceService -> string/config_defaultOnDeviceIntelligenceService)
+    0x01980001 -> 0x7f07001b (string/config_defaultOnDeviceSandboxedInferenceService -> string/config_defaultOnDeviceSandboxedInferenceService)
+    0x01980002 -> 0x7f070019 (string/config_defaultOnDeviceIntelligenceDeviceConfigNamespace -> string/config_defaultOnDeviceIntelligenceDeviceConfigNamespace)
+
+IDMAP OF com.google.android.overlay.googleconfig
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/GoogleConfigOverlay.apk
+Debug info:
+    W failed to find resource 'string/config_defaultGallery'
+    W failed to find resource 'string/config_defaultMusic'
+Constraints:
+    None
+Mapping:
+    0x01040021 -> 0x7f050008 (string/config_defaultAssistant -> string/config_defaultAssistant)
+    0x01040023 -> 0x7f05000e (string/config_defaultDialer -> string/config_defaultDialer)
+    0x01040024 -> 0x7f05001a (string/config_defaultSms -> string/config_defaultSms)
+    0x01040027 -> 0x7f050033 (string/config_systemGallery -> string/config_systemGallery)
+    0x01040029 -> 0x7f05002c (string/config_systemAutomotiveProjection -> string/config_systemAutomotiveProjection)
+    0x0104002b -> 0x7f050030 (string/config_systemContacts -> string/config_systemContacts)
+    0x0104002e -> 0x7f050036 (string/config_systemSpeechRecognizer -> string/config_systemSpeechRecognizer)
+    0x01040030 -> 0x7f050037 (string/config_systemWellbeing -> string/config_systemWellbeing)
+    0x01040038 -> 0x7f05002b (string/config_systemActivityRecognizer -> string/config_systemActivityRecognizer)
+    0x01040039 -> 0x7f05002f (string/config_systemCompanionDeviceProvider -> string/config_systemCompanionDeviceProvider)
+    0x0104003d -> 0x7f05001e (string/config_devicePolicyManagement -> string/config_devicePolicyManagement)
+    0x01040041 -> 0x7f050040 (string/safety_protection_display_text -> string/safety_protection_display_text)
+    0x01040042 -> 0x7f050035 (string/config_systemSettingsIntelligence -> string/config_systemSettingsIntelligence)
+    0x01040043 -> 0x7f05002d (string/config_systemBluetoothStack -> string/config_systemBluetoothStack)
+    0x01040046 -> 0x7f050032 (string/config_systemFinancedDeviceController -> string/config_systemFinancedDeviceController)
+    0x01040047 -> 0x7f05002e (string/config_systemCallStreaming -> string/config_systemCallStreaming)
+    0x01040049 -> 0x7f05001c (string/config_defaultWallet -> string/config_defaultWallet)
+    0x0104004a -> 0x7f050031 (string/config_systemDependencyInstaller -> string/config_systemDependencyInstaller)
+    0x010401d8 -> 0x7f050000 (string/biometric_app_setting_name -> string/biometric_app_setting_name)
+    0x010401db -> 0x7f050001 (string/biometric_dialog_default_subtitle -> string/biometric_dialog_default_subtitle)
+    0x010401e5 -> 0x7f050002 (string/biometric_or_screen_lock_app_setting_name -> string/biometric_or_screen_lock_app_setting_name)
+    0x010401e6 -> 0x7f050003 (string/biometric_or_screen_lock_dialog_default_subtitle -> string/biometric_or_screen_lock_dialog_default_subtitle)
+    0x01040239 -> 0x7f050004 (string/config_allowlistProviderServicePackage -> string/config_allowlistProviderServicePackage)
+    0x0104023c -> 0x7f050005 (string/config_appsAuthorizedForSharedAccounts -> string/config_appsAuthorizedForSharedAccounts)
+    0x01040261 -> 0x7f050006 (string/config_defaultAccessibilityNotificationSound -> string/config_defaultAccessibilityNotificationSound)
+    0x01040262 -> 0x7f050007 (string/config_defaultAccessibilityService -> string/config_defaultAccessibilityService)
+    0x01040266 -> 0x7f050009 (string/config_defaultAssistantAccessComponent -> string/config_defaultAssistantAccessComponent)
+    0x01040269 -> 0x7f05000a (string/config_defaultAutofillService -> string/config_defaultAutofillService)
+    0x0104026b -> 0x7f05000b (string/config_defaultCaptivePortalLoginPackageName -> string/config_defaultCaptivePortalLoginPackageName)
+    0x01040277 -> 0x7f05000c (string/config_defaultCredentialManagerAutofillService -> string/config_defaultCredentialManagerAutofillService)
+    0x01040278 -> 0x7f05000d (string/config_defaultCredentialManagerHybridService -> string/config_defaultCredentialManagerHybridService)
+    0x0104027b -> 0x7f05000f (string/config_defaultDockManagerPackageName -> string/config_defaultDockManagerPackageName)
+    0x0104027f -> 0x7f050011 (string/config_defaultListenerAccessPackages -> string/config_defaultListenerAccessPackages)
+    0x01040282 -> 0x7f050013 (string/config_defaultNearbyFastPairSettingsDevicesComponent -> string/config_defaultNearbyFastPairSettingsDevicesComponent)
+    0x01040283 -> 0x7f050014 (string/config_defaultNearbySharingComponent -> string/config_defaultNearbySharingComponent)
+    0x01040285 -> 0x7f050015 (string/config_defaultNetworkRecommendationProviderPackage -> string/config_defaultNetworkRecommendationProviderPackage)
+    0x0104028a -> 0x7f050016 (string/config_defaultQrCodeComponent -> string/config_defaultQrCodeComponent)
+    0x0104028b -> 0x7f050017 (string/config_defaultQrCodeComponentIntentAction -> string/config_defaultQrCodeComponentIntentAction)
+    0x0104028d -> 0x7f050018 (string/config_defaultSearchSelectorPackageName -> string/config_defaultSearchSelectorPackageName)
+    0x0104028f -> 0x7f050019 (string/config_defaultSelectToSpeakService -> string/config_defaultSelectToSpeakService)
+    0x01040297 -> 0x7f05001b (string/config_defaultVoiceAccessService -> string/config_defaultVoiceAccessService)
+    0x0104029f -> 0x7f05001d (string/config_deviceConfiguratorPackageName -> string/config_deviceConfiguratorPackageName)
+    0x010402a0 -> 0x7f05001f (string/config_devicePolicyManagementUpdater -> string/config_devicePolicyManagementUpdater)
+    0x010402b1 -> 0x7f050020 (string/config_dreamsDefaultComponent -> string/config_dreamsDefaultComponent)
+    0x010402ca -> 0x7f050021 (string/config_healthConnectMigratorPackageName -> string/config_healthConnectMigratorPackageName)
+    0x010402cb -> 0x7f050022 (string/config_help_url_action_disabled_by_advanced_protection -> string/config_help_url_action_disabled_by_advanced_protection)
+    0x010402d1 -> 0x7f050023 (string/config_intrusionDetectionEventTransport -> string/config_intrusionDetectionEventTransport)
+    0x010402e7 -> 0x7f050024 (string/config_oemCredentialManagerDialogComponent -> string/config_oemCredentialManagerDialogComponent)
+    0x010402f2 -> 0x7f050025 (string/config_persistentDataPackageName -> string/config_persistentDataPackageName)
+    0x010402fc -> 0x7f050026 (string/config_primaryLocationTimeZoneProviderPackageName -> string/config_primaryLocationTimeZoneProviderPackageName)
+    0x0104031a -> 0x7f050027 (string/config_secondaryLocationTimeZoneProviderPackageName -> string/config_secondaryLocationTimeZoneProviderPackageName)
+    0x0104031e -> 0x7f050028 (string/config_servicesExtensionPackage -> string/config_servicesExtensionPackage)
+    0x0104031f -> 0x7f050029 (string/config_sharedConnectivityServiceIntentAction -> string/config_sharedConnectivityServiceIntentAction)
+    0x01040320 -> 0x7f05002a (string/config_sharedConnectivityServicePackage -> string/config_sharedConnectivityServicePackage)
+    0x01040325 -> 0x7f050034 (string/config_systemGameService -> string/config_systemGameService)
+    0x01040464 -> 0x7f050038 (string/face_recalibrate_notification_content -> string/face_recalibrate_notification_content)
+    0x01040465 -> 0x7f050039 (string/face_recalibrate_notification_name -> string/face_recalibrate_notification_name)
+    0x01040466 -> 0x7f05003a (string/face_recalibrate_notification_title -> string/face_recalibrate_notification_title)
+    0x010404ef -> 0x7f05003b (string/harmful_app_warning_title -> string/harmful_app_warning_title)
+    0x01040514 -> 0x7f05003c (string/identity_check_settings_action -> string/identity_check_settings_action)
+    0x01040515 -> 0x7f05003d (string/identity_check_settings_package_name -> string/identity_check_settings_package_name)
+    0x01040977 -> 0x7f05003e (string/proximity_provider_service_class_name -> string/proximity_provider_service_class_name)
+    0x01040978 -> 0x7f05003f (string/proximity_provider_service_package_name -> string/proximity_provider_service_package_name)
+    0x010409fe -> 0x7f050041 (string/scCellularNetworkSecurityLearnMore -> string/scCellularNetworkSecurityLearnMore)
+    0x01040ae1 -> 0x7f050042 (string/trusted_location_settings_action -> string/trusted_location_settings_action)
+    0x01040b2a -> 0x7f050043 (string/vendor_required_attestation_revocation_list_url -> string/vendor_required_attestation_revocation_list_url)
+    0x01040b79 -> 0x7f050044 (string/widget_default_class_name -> string/widget_default_class_name)
+    0x01040b7a -> 0x7f050045 (string/widget_default_package_name -> string/widget_default_package_name)
+    0x0107000e -> 0x7f010000 (array/config_allowedSecureInstantAppSettings -> array/config_allowedSecureInstantAppSettings)
+    0x0107001d -> 0x7f010001 (array/config_appInteractionDeviceAssistancePackages -> array/config_appInteractionDeviceAssistancePackages)
+    0x0107002d -> 0x7f010002 (array/config_backupHealthConnectDataAndSettingsKnownSigners -> array/config_backupHealthConnectDataAndSettingsKnownSigners)
+    0x01070042 -> 0x7f010003 (array/config_companionDeviceCerts -> array/config_companionDeviceCerts)
+    0x01070043 -> 0x7f010004 (array/config_companionDevicePackages -> array/config_companionDevicePackages)
+    0x0107004b -> 0x7f010005 (array/config_defaultAppFunctionAgentAllowlist -> array/config_defaultAppFunctionAgentAllowlist)
+    0x0107005f -> 0x7f010006 (array/config_disabledUntilUsedPreinstalledImes -> array/config_disabledUntilUsedPreinstalledImes)
+    0x01070080 -> 0x7f010007 (array/config_enabledCredentialProviderService -> array/config_enabledCredentialProviderService)
+    0x01070081 -> 0x7f010008 (array/config_ephemeralResolverPackage -> array/config_ephemeralResolverPackage)
+    0x01070084 -> 0x7f010009 (array/config_face_acquire_biometricprompt_ignorelist -> array/config_face_acquire_biometricprompt_ignorelist)
+    0x01070085 -> 0x7f01000a (array/config_face_acquire_enroll_ignorelist -> array/config_face_acquire_enroll_ignorelist)
+    0x01070086 -> 0x7f01000b (array/config_face_acquire_keyguard_ignorelist -> array/config_face_acquire_keyguard_ignorelist)
+    0x01070087 -> 0x7f01000c (array/config_face_acquire_vendor_biometricprompt_ignorelist -> array/config_face_acquire_vendor_biometricprompt_ignorelist)
+    0x01070088 -> 0x7f01000d (array/config_face_acquire_vendor_enroll_ignorelist -> array/config_face_acquire_vendor_enroll_ignorelist)
+    0x01070089 -> 0x7f01000e (array/config_face_acquire_vendor_keyguard_ignorelist -> array/config_face_acquire_vendor_keyguard_ignorelist)
+    0x0107008c -> 0x7f01000f (array/config_fontManagerServiceCerts -> array/config_fontManagerServiceCerts)
+    0x0107008d -> 0x7f010010 (array/config_forceInvertPackageBlocklist -> array/config_forceInvertPackageBlocklist)
+    0x0107008e -> 0x7f010011 (array/config_forceQueryablePackages -> array/config_forceQueryablePackages)
+    0x01070094 -> 0x7f010012 (array/config_healthConnectMigrationKnownSigners -> array/config_healthConnectMigrationKnownSigners)
+    0x01070095 -> 0x7f010013 (array/config_healthConnectRestoreKnownSigners -> array/config_healthConnectRestoreKnownSigners)
+    0x0107009a -> 0x7f010014 (array/config_integrityRuleProviderPackages -> array/config_integrityRuleProviderPackages)
+    0x010700a2 -> 0x7f010015 (array/config_locationProviderPackageNames -> array/config_locationProviderPackageNames)
+    0x010700a3 -> 0x7f010016 (array/config_loggable_dream_prefixes -> array/config_loggable_dream_prefixes)
+    0x010700b6 -> 0x7f010017 (array/config_notificationDefaultUnsupportedAdjustments -> array/config_notificationDefaultUnsupportedAdjustments)
+    0x010700c3 -> 0x7f010018 (array/config_primaryCredentialProviderService -> array/config_primaryCredentialProviderService)
+    0x010700cd -> 0x7f010019 (array/config_restoreHealthConnectDataAndSettingsKnownSigners -> array/config_restoreHealthConnectDataAndSettingsKnownSigners)
+    0x010700f6 -> 0x7f01001a (array/config_trustedAccessibilityServices -> array/config_trustedAccessibilityServices)
+    0x01070115 -> 0x7f01001b (array/face_acquired_vendor -> array/face_acquired_vendor)
+    0x01070116 -> 0x7f01001c (array/face_error_vendor -> array/face_error_vendor)
+    0x01070136 -> 0x7f01001d (array/vendor_cross_profile_apps -> array/vendor_cross_profile_apps)
+    0x01070137 -> 0x7f01001e (array/vendor_disallowed_apps_managed_device -> array/vendor_disallowed_apps_managed_device)
+    0x01070138 -> 0x7f01001f (array/vendor_disallowed_apps_managed_profile -> array/vendor_disallowed_apps_managed_profile)
+    0x01070139 -> 0x7f010020 (array/vendor_disallowed_apps_managed_user -> array/vendor_disallowed_apps_managed_user)
+    0x0107013b -> 0x7f010021 (array/vendor_required_apps_managed_device -> array/vendor_required_apps_managed_device)
+    0x0107013c -> 0x7f010022 (array/vendor_required_apps_managed_profile -> array/vendor_required_apps_managed_profile)
+    0x0107013d -> 0x7f010023 (array/vendor_required_apps_managed_user -> array/vendor_required_apps_managed_user)
+    0x0107013e -> 0x7f010024 (array/vendor_required_attestation_certificates -> array/vendor_required_attestation_certificates)
+    0x010800b5 -> 0x7f030000 (drawable/ic_safety_protection -> drawable/ic_safety_protection)
+    0x01100005 -> 0x7f040000 (raw/fallback_categories -> raw/fallback_categories)
+    0x01110063 -> 0x7f020000 (bool/config_biometricFrrNotificationEnabled -> bool/config_biometricFrrNotificationEnabled)
+    0x0111017e -> 0x7f020001 (bool/config_enableAutoPowerModes -> bool/config_enableAutoPowerModes)
+    0x0111018f -> 0x7f020002 (bool/config_enableGeolocationTimeZoneDetection -> bool/config_enableGeolocationTimeZoneDetection)
+    0x011101a3 -> 0x7f020003 (bool/config_enablePrimaryLocationTimeZoneProvider -> bool/config_enablePrimaryLocationTimeZoneProvider)
+    0x011101a8 -> 0x7f020004 (bool/config_enableSecondaryLocationTimeZoneProvider -> bool/config_enableSecondaryLocationTimeZoneProvider)
+    0x011101e9 -> 0x7f020005 (bool/config_hotspotNetworksEnabledForService -> bool/config_hotspotNetworksEnabledForService)
+    0x01110201 -> 0x7f020006 (bool/config_knownNetworksEnabledForService -> bool/config_knownNetworksEnabledForService)
+    0x0111026a -> 0x7f020007 (bool/config_settingsHelpLinksEnabled -> bool/config_settingsHelpLinksEnabled)
+    0x01170004 -> 0x7f060000 (xml/bookmarks -> xml/bookmarks)
+
+IDMAP OF com.android.systemui.emulation.pixel_10a
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel10a/SystemUIEmulationPixel10aOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07011a -> 0x7f020000 (dimen/bottom_sheet_corner_radius -> dimen/bottom_sheet_corner_radius)
+    0x7f07059a -> 0x7f020001 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070af7 -> 0x7f020002 (dimen/pixel_pitch -> dimen/pixel_pitch)
+    0x7f070b6b -> 0x7f020003 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x7f070c66 -> 0x7f020004 (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.systemui.emulation.pixel_5
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel5/SystemUIEmulationPixel5Overlay.apk
+Debug info:
+    W failed to find resource 'dimen/multi_user_switch_keyguard_margin'
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/system_icons_super_container_avatarless_margin_end'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f070219 -> 0x7f020000 (dimen/config_rounded_mask_size -> dimen/config_rounded_mask_size)
+    0x7f07021a -> 0x7f020001 (dimen/config_rounded_mask_size_bottom -> dimen/config_rounded_mask_size_bottom)
+    0x7f07021b -> 0x7f020002 (dimen/config_rounded_mask_size_top -> dimen/config_rounded_mask_size_top)
+    0x7f070431 -> 0x7f020003 (dimen/keyguard_carrier_text_margin -> dimen/keyguard_carrier_text_margin)
+    0x7f070ace -> 0x7f020005 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c46 -> 0x7f020008 (dimen/status_bar_header_height_keyguard -> dimen/status_bar_header_height_keyguard)
+    0x7f070c67 -> 0x7f020009 (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f130397 -> 0x7f030000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f030001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f030002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+    0x7f1303bc -> 0x7f030003 (string/config_rounded_mask -> string/config_rounded_mask)
+
+IDMAP OF com.android.systemui:neutral
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /data/resource-cache/com.android.systemui-neutral-U2S8.frro
+Overlay name: neutral
+Constraints:
+    None
+Mapping:
+    0x0106043d -> color 0xffffffff (color/system_neutral1_0_dark)
+    0x0106043e -> color 0xffffffff (color/system_neutral1_0_light)
+    0x0106043f -> color 0xff000000 (color/system_neutral1_1000_dark)
+    0x01060440 -> color 0xff000000 (color/system_neutral1_1000_light)
+    0x01060441 -> color 0xffe3e2e7 (color/system_neutral1_100_dark)
+    0x01060442 -> color 0xffe3e2e7 (color/system_neutral1_100_light)
+    0x01060443 -> color 0xfffefbff (color/system_neutral1_10_dark)
+    0x01060444 -> color 0xfffefbff (color/system_neutral1_10_light)
+    0x01060445 -> color 0xffc7c6cb (color/system_neutral1_200_dark)
+    0x01060446 -> color 0xffc7c6cb (color/system_neutral1_200_light)
+    0x01060447 -> color 0xffabaab0 (color/system_neutral1_300_dark)
+    0x01060448 -> color 0xffabaab0 (color/system_neutral1_300_light)
+    0x01060449 -> color 0xff919095 (color/system_neutral1_400_dark)
+    0x0106044a -> color 0xff919095 (color/system_neutral1_400_light)
+    0x0106044b -> color 0xff77777c (color/system_neutral1_500_dark)
+    0x0106044c -> color 0xff77777c (color/system_neutral1_500_light)
+    0x0106044d -> color 0xfff2f0f6 (color/system_neutral1_50_dark)
+    0x0106044e -> color 0xfff2f0f6 (color/system_neutral1_50_light)
+    0x0106044f -> color 0xff5e5e63 (color/system_neutral1_600_dark)
+    0x01060450 -> color 0xff5e5e63 (color/system_neutral1_600_light)
+    0x01060451 -> color 0xff46464b (color/system_neutral1_700_dark)
+    0x01060452 -> color 0xff46464b (color/system_neutral1_700_light)
+    0x01060453 -> color 0xff2f3035 (color/system_neutral1_800_dark)
+    0x01060454 -> color 0xff2f3035 (color/system_neutral1_800_light)
+    0x01060455 -> color 0xff1a1b20 (color/system_neutral1_900_dark)
+    0x01060456 -> color 0xff1a1b20 (color/system_neutral1_900_light)
+    0x01060457 -> color 0xffffffff (color/system_neutral2_0_dark)
+    0x01060458 -> color 0xffffffff (color/system_neutral2_0_light)
+    0x01060459 -> color 0xff000000 (color/system_neutral2_1000_dark)
+    0x0106045a -> color 0xff000000 (color/system_neutral2_1000_light)
+    0x0106045b -> color 0xffe1e2ed (color/system_neutral2_100_dark)
+    0x0106045c -> color 0xffe1e2ed (color/system_neutral2_100_light)
+    0x0106045d -> color 0xfffefbff (color/system_neutral2_10_dark)
+    0x0106045e -> color 0xfffefbff (color/system_neutral2_10_light)
+    0x0106045f -> color 0xffc5c6d1 (color/system_neutral2_200_dark)
+    0x01060460 -> color 0xffc5c6d1 (color/system_neutral2_200_light)
+    0x01060461 -> color 0xffa9aab5 (color/system_neutral2_300_dark)
+    0x01060462 -> color 0xffa9aab5 (color/system_neutral2_300_light)
+    0x01060463 -> color 0xff8f909a (color/system_neutral2_400_dark)
+    0x01060464 -> color 0xff8f909a (color/system_neutral2_400_light)
+    0x01060465 -> color 0xff757680 (color/system_neutral2_500_dark)
+    0x01060466 -> color 0xff757680 (color/system_neutral2_500_light)
+    0x01060467 -> color 0xfff0f0fb (color/system_neutral2_50_dark)
+    0x01060468 -> color 0xfff0f0fb (color/system_neutral2_50_light)
+    0x01060469 -> color 0xff5c5e67 (color/system_neutral2_600_dark)
+    0x0106046a -> color 0xff5c5e67 (color/system_neutral2_600_light)
+    0x0106046b -> color 0xff44464f (color/system_neutral2_700_dark)
+    0x0106046c -> color 0xff44464f (color/system_neutral2_700_light)
+    0x0106046d -> color 0xff2e3038 (color/system_neutral2_800_dark)
+    0x0106046e -> color 0xff2e3038 (color/system_neutral2_800_light)
+    0x0106046f -> color 0xff191b23 (color/system_neutral2_900_dark)
+    0x01060470 -> color 0xff191b23 (color/system_neutral2_900_light)
+
+IDMAP OF com.android.systemui.emulation.pixel_8a
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel8a/SystemUIEmulationPixel8aOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07059a -> 0x7f020000 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070ace -> 0x7f020001 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070af7 -> 0x7f020004 (dimen/pixel_pitch -> dimen/pixel_pitch)
+    0x7f070e15 -> 0x7f020005 (dimen/udfps_burn_in_offset_x -> dimen/udfps_burn_in_offset_x)
+    0x7f070e16 -> 0x7f020006 (dimen/udfps_burn_in_offset_y -> dimen/udfps_burn_in_offset_y)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.phone.auto_generated_characteristics_rro
+<missing idmap>
+IDMAP OF com.android.systemui.emulation.pixel_7_pro
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel7Pro/SystemUIEmulationPixel7ProOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/system_icons_keyguard_padding_end'
+    W failed to find resource 'dimen/system_icons_super_container_avatarless_margin_end'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07059a -> 0x7f020000 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070ace -> 0x7f020001 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c46 -> 0x7f020004 (dimen/status_bar_header_height_keyguard -> dimen/status_bar_header_height_keyguard)
+    0x7f070c67 -> 0x7f020005 (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f130397 -> 0x7f030000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f030001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f030002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.internal.emulation.pixel_4_xl
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel4XL/EmulationPixel4XLOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x0105033d -> 0x7f010000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105036b -> 0x7f010001 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+
+IDMAP OF com.android.internal.display.cutout.emulation.tall
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/DisplayCutoutEmulationTall/DisplayCutoutEmulationTallOverlay.apk
+Debug info:
+    W failed to find resource 'string/display_cutout_emulation_overlay'
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105036a -> 0x7f020000 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020001 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.systemui:accent
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /data/resource-cache/com.android.systemui-accent-uaDc.frro
+Overlay name: accent
+Constraints:
+    None
+Mapping:
+    0x010603c6 -> color 0xffffffff (color/system_accent1_0_dark)
+    0x010603c7 -> color 0xffffffff (color/system_accent1_0_light)
+    0x010603c8 -> color 0xff000000 (color/system_accent1_1000_dark)
+    0x010603c9 -> color 0xff000000 (color/system_accent1_1000_light)
+    0x010603ca -> color 0xffdae2ff (color/system_accent1_100_dark)
+    0x010603cb -> color 0xffdae2ff (color/system_accent1_100_light)
+    0x010603cc -> color 0xfffefbff (color/system_accent1_10_dark)
+    0x010603cd -> color 0xfffefbff (color/system_accent1_10_light)
+    0x010603ce -> color 0xffbac5ee (color/system_accent1_200_dark)
+    0x010603cf -> color 0xffb5c5f9 (color/system_accent1_200_light)
+    0x010603d0 -> color 0xff9eaad2 (color/system_accent1_300_dark)
+    0x010603d1 -> color 0xff9aaadd (color/system_accent1_300_light)
+    0x010603d2 -> color 0xff8490b6 (color/system_accent1_400_dark)
+    0x010603d3 -> color 0xff7f8fc0 (color/system_accent1_400_light)
+    0x010603d4 -> color 0xff6a769b (color/system_accent1_500_dark)
+    0x010603d5 -> color 0xff6676a5 (color/system_accent1_500_light)
+    0x010603d6 -> color 0xffeef0ff (color/system_accent1_50_dark)
+    0x010603d7 -> color 0xffeef0ff (color/system_accent1_50_light)
+    0x010603d8 -> color 0xff525d81 (color/system_accent1_600_dark)
+    0x010603d9 -> color 0xff4d5d8b (color/system_accent1_600_light)
+    0x010603da -> color 0xff3a4668 (color/system_accent1_700_dark)
+    0x010603db -> color 0xff354571 (color/system_accent1_700_light)
+    0x010603dc -> color 0xff232f50 (color/system_accent1_800_dark)
+    0x010603dd -> color 0xff1d2e59 (color/system_accent1_800_light)
+    0x010603de -> color 0xff0d1a3a (color/system_accent1_900_dark)
+    0x010603df -> color 0xff051944 (color/system_accent1_900_light)
+    0x010603e0 -> color 0xffffffff (color/system_accent2_0_dark)
+    0x010603e1 -> color 0xffffffff (color/system_accent2_0_light)
+    0x010603e2 -> color 0xff000000 (color/system_accent2_1000_dark)
+    0x010603e3 -> color 0xff000000 (color/system_accent2_1000_light)
+    0x010603e4 -> color 0xffdde2f9 (color/system_accent2_100_dark)
+    0x010603e5 -> color 0xffdde2f9 (color/system_accent2_100_light)
+    0x010603e6 -> color 0xfffefbff (color/system_accent2_10_dark)
+    0x010603e7 -> color 0xfffefbff (color/system_accent2_10_light)
+    0x010603e8 -> color 0xffc0c6dd (color/system_accent2_200_dark)
+    0x010603e9 -> color 0xffc0c6dd (color/system_accent2_200_light)
+    0x010603ea -> color 0xffa5aac1 (color/system_accent2_300_dark)
+    0x010603eb -> color 0xffa5aac1 (color/system_accent2_300_light)
+    0x010603ec -> color 0xff8b90a5 (color/system_accent2_400_dark)
+    0x010603ed -> color 0xff8b90a5 (color/system_accent2_400_light)
+    0x010603ee -> color 0xff71768b (color/system_accent2_500_dark)
+    0x010603ef -> color 0xff71768b (color/system_accent2_500_light)
+    0x010603f0 -> color 0xffeef0ff (color/system_accent2_50_dark)
+    0x010603f1 -> color 0xffeef0ff (color/system_accent2_50_light)
+    0x010603f2 -> color 0xff585e71 (color/system_accent2_600_dark)
+    0x010603f3 -> color 0xff585e71 (color/system_accent2_600_light)
+    0x010603f4 -> color 0xff414659 (color/system_accent2_700_dark)
+    0x010603f5 -> color 0xff414659 (color/system_accent2_700_light)
+    0x010603f6 -> color 0xff2a3042 (color/system_accent2_800_dark)
+    0x010603f7 -> color 0xff2a3042 (color/system_accent2_800_light)
+    0x010603f8 -> color 0xff151b2c (color/system_accent2_900_dark)
+    0x010603f9 -> color 0xff151b2c (color/system_accent2_900_light)
+    0x010603fa -> color 0xffffffff (color/system_accent3_0_dark)
+    0x010603fb -> color 0xffffffff (color/system_accent3_0_light)
+    0x010603fc -> color 0xff000000 (color/system_accent3_1000_dark)
+    0x010603fd -> color 0xff000000 (color/system_accent3_1000_light)
+    0x010603fe -> color 0xfff0dbff (color/system_accent3_100_dark)
+    0x010603ff -> color 0xfff0dbff (color/system_accent3_100_light)
+    0x01060400 -> color 0xfffffbff (color/system_accent3_10_dark)
+    0x01060401 -> color 0xfffffbff (color/system_accent3_10_light)
+    0x01060402 -> color 0xffd7bdec (color/system_accent3_200_dark)
+    0x01060403 -> color 0xffd7bdec (color/system_accent3_200_light)
+    0x01060404 -> color 0xffbba2cf (color/system_accent3_300_dark)
+    0x01060405 -> color 0xffbba2cf (color/system_accent3_300_light)
+    0x01060406 -> color 0xff9f87b3 (color/system_accent3_400_dark)
+    0x01060407 -> color 0xff9f87b3 (color/system_accent3_400_light)
+    0x01060408 -> color 0xff856e98 (color/system_accent3_500_dark)
+    0x01060409 -> color 0xff856e98 (color/system_accent3_500_light)
+    0x0106040a -> color 0xfffaecff (color/system_accent3_50_dark)
+    0x0106040b -> color 0xfffaecff (color/system_accent3_50_light)
+    0x0106040c -> color 0xff6b567e (color/system_accent3_600_dark)
+    0x0106040d -> color 0xff6b567e (color/system_accent3_600_light)
+    0x0106040e -> color 0xff533e65 (color/system_accent3_700_dark)
+    0x0106040f -> color 0xff533e65 (color/system_accent3_700_light)
+    0x01060410 -> color 0xff3b284d (color/system_accent3_800_dark)
+    0x01060411 -> color 0xff3b284d (color/system_accent3_800_light)
+    0x01060412 -> color 0xff251337 (color/system_accent3_900_dark)
+    0x01060413 -> color 0xff251337 (color/system_accent3_900_light)
+
+IDMAP OF com.android.carrierconfig.auto_generated_rro_vendor__
+Paths:
+    target path  : /system_ext/priv-app/CarrierConfig/CarrierConfig.apk
+    overlay path : /vendor/overlay/CarrierConfig__sdk_gphone64_x86_64__auto_generated_rro_vendor.apk
+Constraints:
+    None
+Mapping:
+    0x7f020000 -> 0x7f010000 (xml/vendor -> xml/vendor)
+
+IDMAP OF com.android.internal.emulation.pixel_3a
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel3a/EmulationPixel3aOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x0105033d -> 0x7f010000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+
+IDMAP OF com.android.internal.emulation.pixel_5
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel5/EmulationPixel5Overlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x01050327 -> 0x7f020000 (dimen/quick_qs_offset_height -> dimen/quick_qs_offset_height)
+    0x0105033d -> 0x7f020001 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105036a -> 0x7f020002 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020003 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.emulation.pixel_6
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel6/EmulationPixel6Overlay.apk
+Debug info:
+    W failed to find resource 'dimen/status_bar_height_height_default'
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033d -> 0x7f020000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105033e -> 0x7f020001 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x0105033f -> 0x7f020002 (dimen/rounded_corner_radius_adjustment -> dimen/rounded_corner_radius_adjustment)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.emulation.pixel_4a
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel4a/EmulationPixel4aOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/quick_qs_total_height'
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x01050327 -> 0x7f020000 (dimen/quick_qs_offset_height -> dimen/quick_qs_offset_height)
+    0x0105033d -> 0x7f020002 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105036a -> 0x7f020003 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020004 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.systemui.emulation.pixel_10
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel10/SystemUIEmulationPixel10Overlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07011a -> 0x7f020000 (dimen/bottom_sheet_corner_radius -> dimen/bottom_sheet_corner_radius)
+    0x7f07059a -> 0x7f020001 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070af7 -> 0x7f020002 (dimen/pixel_pitch -> dimen/pixel_pitch)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.internal.emulation.pixel_10a
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel10a/EmulationPixel10aOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f040000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f040001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033e -> 0x7f020000 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x01050340 -> 0x7f020001 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020002 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020003 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x010e0163 -> 0x7f030000 (integer/config_stableDeviceDisplayHeight -> integer/config_stableDeviceDisplayHeight)
+    0x010e0164 -> 0x7f030001 (integer/config_stableDeviceDisplayWidth -> integer/config_stableDeviceDisplayWidth)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.emulation.pixel_7
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel7/EmulationPixel7Overlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033d -> 0x7f020000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105033e -> 0x7f020001 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x0105033f -> 0x7f020002 (dimen/rounded_corner_radius_adjustment -> dimen/rounded_corner_radius_adjustment)
+    0x01050340 -> 0x7f020003 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020004 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020005 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020006 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020007 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.emulation.pixel_10_pro_xl
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel10ProXL/EmulationPixel10ProXLOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f040000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f040001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033e -> 0x7f020000 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x01050340 -> 0x7f020001 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020002 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020003 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x010e0163 -> 0x7f030000 (integer/config_stableDeviceDisplayHeight -> integer/config_stableDeviceDisplayHeight)
+    0x010e0164 -> 0x7f030001 (integer/config_stableDeviceDisplayWidth -> integer/config_stableDeviceDisplayWidth)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.systemui.emulation.pixel_6_pro
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel6Pro/SystemUIEmulationPixel6ProOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/system_icons_keyguard_padding_end'
+    W failed to find resource 'dimen/system_icons_super_container_avatarless_margin_end'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07059a -> 0x7f020000 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070ace -> 0x7f020001 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c46 -> 0x7f020004 (dimen/status_bar_header_height_keyguard -> dimen/status_bar_header_height_keyguard)
+    0x7f070c67 -> 0x7f020005 (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f130397 -> 0x7f030000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f030001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f030002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.internal.emulation.pixel_8
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel8/EmulationPixel8Overlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033e -> 0x7f020000 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x01050340 -> 0x7f020001 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020002 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020003 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.emulation.pixel_6_pro
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel6Pro/EmulationPixel6ProOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033d -> 0x7f020000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105033e -> 0x7f020001 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x0105033f -> 0x7f020002 (dimen/rounded_corner_radius_adjustment -> dimen/rounded_corner_radius_adjustment)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.systemui.emulation.pixel_4_xl
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel4XL/SystemUIEmulationPixel4XLOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+Constraints:
+    None
+Mapping:
+    0x7f070ace -> 0x7f010000 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c67 -> 0x7f010003 (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f1303bc -> 0x7f020000 (string/config_rounded_mask -> string/config_rounded_mask)
+
+IDMAP OF com.android.systemui.emulation.pixel_fold
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixelFold/SystemUIEmulationPixelFoldOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/system_icons_keyguard_padding_end'
+    W failed to find resource 'dimen/system_icons_super_container_avatarless_margin_end'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07059a -> 0x7f020000 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070ace -> 0x7f020001 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c46 -> 0x7f020004 (dimen/status_bar_header_height_keyguard -> dimen/status_bar_header_height_keyguard)
+    0x7f070c67 -> 0x7f020005 (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f130397 -> 0x7f030000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f030001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f030002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.internal.emulation.pixel_9
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel9/EmulationPixel9Overlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f040000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f040001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033e -> 0x7f020000 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x01050340 -> 0x7f020001 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020002 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020003 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x010e0163 -> 0x7f030000 (integer/config_stableDeviceDisplayHeight -> integer/config_stableDeviceDisplayHeight)
+    0x010e0164 -> 0x7f030001 (integer/config_stableDeviceDisplayWidth -> integer/config_stableDeviceDisplayWidth)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.google.android.connectivity.resources.goldfish.overlay
+Paths:
+    target path  : /apex/com.android.tethering/priv-app/ServiceConnectivityResourcesGoogle@370546200/ServiceConnectivityResourcesGoogle.apk
+    overlay path : /vendor/overlay/goldfish_overlay_connectivity_google.apk
+Constraints:
+    None
+Mapping:
+    0x7f030000 -> 0x7f010000 (array/config_ethernet_interfaces -> array/config_ethernet_interfaces)
+
+IDMAP OF com.google.android.uwb.resources.goldfish.overlay
+Paths:
+    target path  : /apex/com.android.uwb/priv-app/ServiceUwbResourcesGoogle@370546220/ServiceUwbResourcesGoogle.apk
+    overlay path : /product/overlay/UwbGoogleOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f020012 -> 0x7f010000 (bool/is_multicast_list_update_ntf_v2_supported -> bool/is_multicast_list_update_ntf_v2_supported)
+    0x7f020013 -> 0x7f010001 (bool/is_multicast_list_update_rsp_v2_supported -> bool/is_multicast_list_update_rsp_v2_supported)
+
+IDMAP OF com.android.internal.emulation.pixel_6a
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel6a/EmulationPixel6aOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033d -> 0x7f020000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105033e -> 0x7f020001 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x0105033f -> 0x7f020002 (dimen/rounded_corner_radius_adjustment -> dimen/rounded_corner_radius_adjustment)
+    0x01050340 -> 0x7f020003 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020004 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020005 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020006 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020007 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.emulation.pixel_fold
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixelFold/EmulationPixelFoldOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402a9 -> 0x7f040000 (string/config_display_features -> string/config_display_features)
+    0x01040316 -> 0x7f040001 (string/config_secondaryBuiltInDisplayCutout -> string/config_secondaryBuiltInDisplayCutout)
+    0x01040317 -> 0x7f040002 (string/config_secondaryBuiltInDisplayCutoutRectApproximation -> string/config_secondaryBuiltInDisplayCutoutRectApproximation)
+    0x01050369 -> 0x7f030000 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f030001 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f030002 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x0107005d -> 0x7f010000 (array/config_device_state_postures -> array/config_device_state_postures)
+    0x01070066 -> 0x7f010001 (array/config_displayUniqueIdArray -> array/config_displayUniqueIdArray)
+    0x0107008b -> 0x7f010002 (array/config_foldedDeviceStates -> array/config_foldedDeviceStates)
+    0x01070093 -> 0x7f010003 (array/config_halfFoldedDeviceStates -> array/config_halfFoldedDeviceStates)
+    0x010700be -> 0x7f010004 (array/config_openDeviceStates -> array/config_openDeviceStates)
+    0x010700c0 -> 0x7f010005 (array/config_perDeviceStateRotationLockDefaults -> array/config_perDeviceStateRotationLockDefaults)
+    0x010700c9 -> 0x7f010006 (array/config_rearDisplayDeviceStates -> array/config_rearDisplayDeviceStates)
+    0x01110004 -> 0x7f020002 (bool/config_perDisplayFocusEnabled -> bool/config_perDisplayFocusEnabled)
+    0x011101cc -> 0x7f020000 (bool/config_fillSecondaryBuiltInDisplayCutout -> bool/config_fillSecondaryBuiltInDisplayCutout)
+    0x0111020f -> 0x7f020001 (bool/config_localDisplaysMirrorContent -> bool/config_localDisplaysMirrorContent)
+    0x0111023f -> 0x7f020003 (bool/config_persistBrightnessNitsForDefaultDisplay -> bool/config_persistBrightnessNitsForDefaultDisplay)
+    0x0111029e -> 0x7f020004 (bool/config_supportMicNearUltrasound -> bool/config_supportMicNearUltrasound)
+    0x011102a2 -> 0x7f020005 (bool/config_supportSpeakerNearUltrasound -> bool/config_supportSpeakerNearUltrasound)
+    0x011102a8 -> 0x7f020006 (bool/config_supportsConcurrentInternalDisplays -> bool/config_supportsConcurrentInternalDisplays)
+    0x011102b2 -> 0x7f020007 (bool/config_supportsSystemDecorsOnSecondaryDisplays -> bool/config_supportsSystemDecorsOnSecondaryDisplays)
+
+IDMAP OF com.android.simappdialog.auto_generated_rro_product__
+Paths:
+    target path  : /system/app/SimAppDialog/SimAppDialog.apk
+    overlay path : /product/overlay/SimAppDialog__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Debug info:
+    W failed to find resource 'drawable/$illo_sim_app_dialog__0'
+    W failed to find resource 'drawable/$illo_sim_app_dialog__1'
+    W failed to find resource 'drawable/$illo_sim_app_dialog__2'
+    W failed to find resource 'drawable/$illo_sim_app_dialog__3'
+Constraints:
+    None
+Mapping:
+    0x7f040000 -> 0x7f010000 (bool/show_sim_app_dialog_illo -> bool/show_sim_app_dialog_illo)
+    0x7f070020 -> 0x7f020004 (drawable/illo_sim_app_dialog -> drawable/illo_sim_app_dialog)
+    0x7f0b000d -> 0x7f030000 (string/install_carrier_app_image_content_description -> string/install_carrier_app_image_content_description)
+
+IDMAP OF com.android.providers.telephony.auto_generated_rro_product__
+Paths:
+    target path  : /system/priv-app/TelephonyProvider/TelephonyProvider.apk
+    overlay path : /product/overlay/TelephonyProvider__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Constraints:
+    None
+Mapping:
+    0x7f020000 -> 0x7f010000 (mipmap/ic_launcher_phone -> mipmap/ic_launcher_phone)
+
+IDMAP OF com.android.systemui.emulation.pixel_9_pro
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel9Pro/SystemUIEmulationPixel9ProOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07011a -> 0x7f020000 (dimen/bottom_sheet_corner_radius -> dimen/bottom_sheet_corner_radius)
+    0x7f07059a -> 0x7f020001 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070af7 -> 0x7f020002 (dimen/pixel_pitch -> dimen/pixel_pitch)
+    0x7f070c66 -> 0x7f020003 (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.internal.emulation.pixel_7a
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel7a/EmulationPixel7aOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033d -> 0x7f020000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105033e -> 0x7f020001 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x0105033f -> 0x7f020002 (dimen/rounded_corner_radius_adjustment -> dimen/rounded_corner_radius_adjustment)
+    0x01050340 -> 0x7f020003 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020004 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020005 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020006 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020007 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.emulation.pixel_10_pro
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel10Pro/EmulationPixel10ProOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f040000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f040001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033e -> 0x7f020000 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x01050340 -> 0x7f020001 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020002 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020003 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x010e0163 -> 0x7f030000 (integer/config_stableDeviceDisplayHeight -> integer/config_stableDeviceDisplayHeight)
+    0x010e0164 -> 0x7f030001 (integer/config_stableDeviceDisplayWidth -> integer/config_stableDeviceDisplayWidth)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.emulation.pixel_8_pro
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel8Pro/EmulationPixel8ProOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f040000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f040001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033e -> 0x7f020000 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x01050340 -> 0x7f020001 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020002 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020003 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x010e0163 -> 0x7f030000 (integer/config_stableDeviceDisplayHeight -> integer/config_stableDeviceDisplayHeight)
+    0x010e0164 -> 0x7f030001 (integer/config_stableDeviceDisplayWidth -> integer/config_stableDeviceDisplayWidth)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.emulation.pixel_10
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel10/EmulationPixel10Overlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f040000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f040001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033e -> 0x7f020000 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x01050340 -> 0x7f020001 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020002 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020003 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x010e0163 -> 0x7f030000 (integer/config_stableDeviceDisplayHeight -> integer/config_stableDeviceDisplayHeight)
+    0x010e0164 -> 0x7f030001 (integer/config_stableDeviceDisplayWidth -> integer/config_stableDeviceDisplayWidth)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.phone.auto_generated_rro_product__
+Paths:
+    target path  : /system/priv-app/TeleService/TeleService.apk
+    overlay path : /product/overlay/TeleService__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Debug info:
+    W failed to find resource 'bool/vvm3_enabled'
+Constraints:
+    None
+Mapping:
+    0x7f03000c -> 0x7f010000 (array/config_countries_to_enable_shortcut_view -> array/config_countries_to_enable_shortcut_view)
+    0x7f03002f -> 0x7f010001 (array/thermal_mitigation_allowlisted_packages -> array/thermal_mitigation_allowlisted_packages)
+    0x7f0d0001 -> 0x7f030000 (mipmap/ic_launcher_phone -> mipmap/ic_launcher_phone)
+    0x7f0e0131 -> 0x7f040000 (string/dialer_default_class -> string/dialer_default_class)
+    0x7f0e01c3 -> 0x7f040001 (string/incall_error_promote_wfc -> string/incall_error_promote_wfc)
+    0x7f0e029f -> 0x7f040002 (string/platform_number_verification_package -> string/platform_number_verification_package)
+    0x7f0e0380 -> 0x7f040003 (string/status_hint_label_incoming_wifi_call -> string/status_hint_label_incoming_wifi_call)
+    0x7f0e0381 -> 0x7f040004 (string/status_hint_label_wifi_call -> string/status_hint_label_wifi_call)
+    0x7f0e0405 -> 0x7f040005 (string/wifi_calling -> string/wifi_calling)
+    0x7f0e0407 -> 0x7f040006 (string/wifi_calling_settings_title -> string/wifi_calling_settings_title)
+
+IDMAP OF com.google.android.overlay.permissioncontroller
+Paths:
+    target path  : /apex/com.android.permission/priv-app/GooglePermissionController@370546220/GooglePermissionController.apk
+    overlay path : /product/overlay/GooglePermissionControllerOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f130122 -> 0x7f010000 (string/config_headlineFontFamily -> string/config_headlineFontFamily)
+    0x7f130129 -> 0x7f010001 (string/data_sharing_help_center_link -> string/data_sharing_help_center_link)
+    0x7f13018c -> 0x7f010002 (string/help_app_permissions -> string/help_app_permissions)
+    0x7f130191 -> 0x7f010003 (string/help_url_action_disabled_by_restricted_settings -> string/help_url_action_disabled_by_restricted_settings)
+
+IDMAP OF com.android.internal.display.cutout.emulation.waterfall
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/DisplayCutoutEmulationWaterfall/DisplayCutoutEmulationWaterfallOverlay.apk
+Debug info:
+    W failed to find resource 'string/display_cutout_emulation_overlay'
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f020000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f020001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105036a -> 0x7f010000 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f010001 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x010503b8 -> 0x7f010002 (dimen/waterfall_display_bottom_edge_size -> dimen/waterfall_display_bottom_edge_size)
+    0x010503b9 -> 0x7f010003 (dimen/waterfall_display_left_edge_size -> dimen/waterfall_display_left_edge_size)
+    0x010503ba -> 0x7f010004 (dimen/waterfall_display_right_edge_size -> dimen/waterfall_display_right_edge_size)
+    0x010503bb -> 0x7f010005 (dimen/waterfall_display_top_edge_size -> dimen/waterfall_display_top_edge_size)
+
+IDMAP OF com.android.systemui.emulation.pixel_7a
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel7a/SystemUIEmulationPixel7aOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/multi_user_switch_keyguard_margin'
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/system_icons_super_container_avatarless_margin_end'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f070219 -> 0x7f020000 (dimen/config_rounded_mask_size -> dimen/config_rounded_mask_size)
+    0x7f07021a -> 0x7f020001 (dimen/config_rounded_mask_size_bottom -> dimen/config_rounded_mask_size_bottom)
+    0x7f07021b -> 0x7f020002 (dimen/config_rounded_mask_size_top -> dimen/config_rounded_mask_size_top)
+    0x7f070431 -> 0x7f020003 (dimen/keyguard_carrier_text_margin -> dimen/keyguard_carrier_text_margin)
+    0x7f070ace -> 0x7f020005 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c46 -> 0x7f020008 (dimen/status_bar_header_height_keyguard -> dimen/status_bar_header_height_keyguard)
+    0x7f070c65 -> 0x7f020009 (dimen/status_bar_padding_end -> dimen/status_bar_padding_end)
+    0x7f070c66 -> 0x7f02000a (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f070c67 -> 0x7f02000b (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+    0x7f1303bc -> 0x7f040003 (string/config_rounded_mask -> string/config_rounded_mask)
+
+IDMAP OF com.android.systemui.emulation.pixel_10_pro
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel10Pro/SystemUIEmulationPixel10ProOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07011a -> 0x7f020000 (dimen/bottom_sheet_corner_radius -> dimen/bottom_sheet_corner_radius)
+    0x7f07059a -> 0x7f020001 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070af7 -> 0x7f020002 (dimen/pixel_pitch -> dimen/pixel_pitch)
+    0x7f070c66 -> 0x7f020003 (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.theme.font.notoserifsource
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/FontNotoSerifSource/FontNotoSerifSourceOverlay.apk
+Debug info:
+    W failed to find resource 'string/font_notoserif_source_overlay'
+Constraints:
+    None
+Mapping:
+    0x01040248 -> 0x7f010000 (string/config_bodyFontFamily -> string/config_bodyFontFamily)
+    0x01040249 -> 0x7f010001 (string/config_bodyFontFamilyMedium -> string/config_bodyFontFamilyMedium)
+    0x010402c7 -> 0x7f010002 (string/config_headlineFontFamily -> string/config_headlineFontFamily)
+    0x010402c8 -> 0x7f010003 (string/config_headlineFontFamilyMedium -> string/config_headlineFontFamilyMedium)
+
+IDMAP OF com.android.systemui.auto_generated_rro_vendor__
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /vendor/overlay/SystemUIGoogle__sdk_gphone64_x86_64__auto_generated_rro_vendor.apk
+Debug info:
+    W failed to find resource 'bool/config_show4GForLTE'
+Constraints:
+    None
+Mapping:
+    0x7f070c41 -> 0x7f020000 (dimen/status_bar_clock_starting_padding -> dimen/status_bar_clock_starting_padding)
+
+IDMAP OF com.android.internal.emulation.pixel_8a
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel8a/EmulationPixel8aOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f040000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f040001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033e -> 0x7f020000 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x01050340 -> 0x7f020001 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020002 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020003 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x010e0163 -> 0x7f030000 (integer/config_stableDeviceDisplayHeight -> integer/config_stableDeviceDisplayHeight)
+    0x010e0164 -> 0x7f030001 (integer/config_stableDeviceDisplayWidth -> integer/config_stableDeviceDisplayWidth)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.display.cutout.emulation.emu01
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/DisplayCutoutEmulationEmu01/DisplayCutoutEmulationEmu01Overlay.apk
+Debug info:
+    W failed to find resource 'dimen/quick_qs_total_height'
+    W failed to find resource 'string/display_cutout_emulation_overlay'
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x01050327 -> 0x7f020000 (dimen/quick_qs_offset_height -> dimen/quick_qs_offset_height)
+    0x0105036a -> 0x7f020002 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020003 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.systemui.emulation.pixel_10_pro_fold
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel10ProFold/SystemUIEmulationPixel10ProFoldOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f050040 -> 0x7f010000 (bool/config_letterboxIsReachabilityEducationEnabled -> bool/config_letterboxIsReachabilityEducationEnabled)
+    0x7f050041 -> 0x7f010001 (bool/config_letterboxIsRestartDialogEnabled -> bool/config_letterboxIsRestartDialogEnabled)
+    0x7f070c66 -> 0x7f020000 (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f13039f -> 0x7f030000 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303a7 -> 0x7f030001 (string/config_innerBuiltInDisplayCutoutProtection -> string/config_innerBuiltInDisplayCutoutProtection)
+
+IDMAP OF com.android.internal.emulation.pixel_10_pro_fold
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel10ProFold/EmulationPixel10ProFoldOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402a9 -> 0x7f050000 (string/config_display_features -> string/config_display_features)
+    0x010402d6 -> 0x7f050001 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f050002 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x01040304 -> 0x7f050003 (string/config_rearDisplayPhysicalAddress -> string/config_rearDisplayPhysicalAddress)
+    0x01040316 -> 0x7f050004 (string/config_secondaryBuiltInDisplayCutout -> string/config_secondaryBuiltInDisplayCutout)
+    0x01040317 -> 0x7f050005 (string/config_secondaryBuiltInDisplayCutoutRectApproximation -> string/config_secondaryBuiltInDisplayCutoutRectApproximation)
+    0x01050121 -> 0x7f030000 (dimen/config_letterboxThinLetterboxHeightDp -> dimen/config_letterboxThinLetterboxHeightDp)
+    0x01050122 -> 0x7f030001 (dimen/config_letterboxThinLetterboxWidthDp -> dimen/config_letterboxThinLetterboxWidthDp)
+    0x0105033d -> 0x7f030002 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105033e -> 0x7f030003 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x0105033f -> 0x7f030004 (dimen/rounded_corner_radius_adjustment -> dimen/rounded_corner_radius_adjustment)
+    0x01050340 -> 0x7f030005 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f030006 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050352 -> 0x7f030007 (dimen/secondary_rounded_corner_radius_bottom -> dimen/secondary_rounded_corner_radius_bottom)
+    0x01050354 -> 0x7f030008 (dimen/secondary_rounded_corner_radius_top -> dimen/secondary_rounded_corner_radius_top)
+    0x01050369 -> 0x7f030009 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f03000a (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f03000b (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x01050377 -> 0x7f03000c (dimen/taskbar_frame_height -> dimen/taskbar_frame_height)
+    0x01070047 -> 0x7f010000 (array/config_concurrentDisplayDeviceStates -> array/config_concurrentDisplayDeviceStates)
+    0x01070058 -> 0x7f010001 (array/config_deviceStatesAvailableForAppRequests -> array/config_deviceStatesAvailableForAppRequests)
+    0x01070059 -> 0x7f010002 (array/config_deviceStatesOnWhichToSleep -> array/config_deviceStatesOnWhichToSleep)
+    0x0107005a -> 0x7f010003 (array/config_deviceStatesOnWhichToWakeUp -> array/config_deviceStatesOnWhichToWakeUp)
+    0x0107005c -> 0x7f010004 (array/config_deviceTabletopRotations -> array/config_deviceTabletopRotations)
+    0x0107005d -> 0x7f010005 (array/config_device_state_postures -> array/config_device_state_postures)
+    0x01070066 -> 0x7f010006 (array/config_displayUniqueIdArray -> array/config_displayUniqueIdArray)
+    0x0107008b -> 0x7f010007 (array/config_foldedDeviceStates -> array/config_foldedDeviceStates)
+    0x01070093 -> 0x7f010008 (array/config_halfFoldedDeviceStates -> array/config_halfFoldedDeviceStates)
+    0x010700a7 -> 0x7f010009 (array/config_mainBuiltInDisplayCutoutSideOverride -> array/config_mainBuiltInDisplayCutoutSideOverride)
+    0x010700be -> 0x7f01000a (array/config_openDeviceStates -> array/config_openDeviceStates)
+    0x010700c0 -> 0x7f01000b (array/config_perDeviceStateRotationLockDefaults -> array/config_perDeviceStateRotationLockDefaults)
+    0x010700c9 -> 0x7f01000c (array/config_rearDisplayDeviceStates -> array/config_rearDisplayDeviceStates)
+    0x010e0088 -> 0x7f040000 (integer/config_deviceStateConcurrentRearDisplay -> integer/config_deviceStateConcurrentRearDisplay)
+    0x010e0089 -> 0x7f040001 (integer/config_deviceStateRearDisplay -> integer/config_deviceStateRearDisplay)
+    0x010e00c7 -> 0x7f040002 (integer/config_letterboxActivityCornersRadius -> integer/config_letterboxActivityCornersRadius)
+    0x010e0118 -> 0x7f040003 (integer/config_pauseRotationWhenUnfolding_displaySwitchTimeout -> integer/config_pauseRotationWhenUnfolding_displaySwitchTimeout)
+    0x010e0119 -> 0x7f040004 (integer/config_pauseRotationWhenUnfolding_hingeEventTimeout -> integer/config_pauseRotationWhenUnfolding_hingeEventTimeout)
+    0x010e011a -> 0x7f040005 (integer/config_pauseRotationWhenUnfolding_maxHingeAngle -> integer/config_pauseRotationWhenUnfolding_maxHingeAngle)
+    0x01110133 -> 0x7f020000 (bool/config_decoupleStatusBarAndDisplayCutoutFromScreenSize -> bool/config_decoupleStatusBarAndDisplayCutoutFromScreenSize)
+    0x011101cb -> 0x7f020001 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+    0x011101cc -> 0x7f020002 (bool/config_fillSecondaryBuiltInDisplayCutout -> bool/config_fillSecondaryBuiltInDisplayCutout)
+    0x01110200 -> 0x7f020003 (bool/config_keyguardUserSwitcher -> bool/config_keyguardUserSwitcher)
+    0x01110203 -> 0x7f020004 (bool/config_leftRightSplitInPortrait -> bool/config_leftRightSplitInPortrait)
+    0x01110205 -> 0x7f020005 (bool/config_letterboxIsDisplayAspectRatioForFixedOrientationLetterboxEnabled -> bool/config_letterboxIsDisplayAspectRatioForFixedOrientationLetterboxEnabled)
+    0x0111021f -> 0x7f020006 (bool/config_matchSecondaryInternalDisplaysOrientationToReverseDefaultDisplay -> bool/config_matchSecondaryInternalDisplaysOrientationToReverseDefaultDisplay)
+    0x01110278 -> 0x7f020007 (bool/config_showUserSwitcherByDefault -> bool/config_showUserSwitcherByDefault)
+    0x011102a8 -> 0x7f020008 (bool/config_supportsConcurrentInternalDisplays -> bool/config_supportsConcurrentInternalDisplays)
+    0x011102c1 -> 0x7f020009 (bool/config_unfoldTransitionEnabled -> bool/config_unfoldTransitionEnabled)
+    0x011102c3 -> 0x7f02000a (bool/config_unfoldTransitionHingeAngle -> bool/config_unfoldTransitionHingeAngle)
+    0x011102f5 -> 0x7f02000b (bool/config_windowManagerHalfFoldAutoRotateOverride -> bool/config_windowManagerHalfFoldAutoRotateOverride)
+    0x011102f6 -> 0x7f02000c (bool/config_windowManagerPauseRotationWhenUnfolding -> bool/config_windowManagerPauseRotationWhenUnfolding)
+
+IDMAP OF com.android.systemui.emulation.pixel_6a
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel6a/SystemUIEmulationPixel6aOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/multi_user_switch_keyguard_margin'
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/system_icons_super_container_avatarless_margin_end'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f070219 -> 0x7f020000 (dimen/config_rounded_mask_size -> dimen/config_rounded_mask_size)
+    0x7f07021a -> 0x7f020001 (dimen/config_rounded_mask_size_bottom -> dimen/config_rounded_mask_size_bottom)
+    0x7f07021b -> 0x7f020002 (dimen/config_rounded_mask_size_top -> dimen/config_rounded_mask_size_top)
+    0x7f070431 -> 0x7f020003 (dimen/keyguard_carrier_text_margin -> dimen/keyguard_carrier_text_margin)
+    0x7f07059a -> 0x7f020004 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070ace -> 0x7f020006 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c46 -> 0x7f020009 (dimen/status_bar_header_height_keyguard -> dimen/status_bar_header_height_keyguard)
+    0x7f070c66 -> 0x7f02000a (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f070c67 -> 0x7f02000b (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f070e16 -> 0x7f02000d (dimen/udfps_burn_in_offset_y -> dimen/udfps_burn_in_offset_y)
+    0x7f130397 -> 0x7f030000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f030001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f030002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+    0x7f1303bc -> 0x7f030003 (string/config_rounded_mask -> string/config_rounded_mask)
+
+IDMAP OF android.auto_generated_characteristics_rro
+<missing idmap>
+IDMAP OF com.android.systemui.emulation.pixel_10_pro_xl
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel10ProXL/SystemUIEmulationPixel10ProXLOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07011a -> 0x7f020000 (dimen/bottom_sheet_corner_radius -> dimen/bottom_sheet_corner_radius)
+    0x7f07059a -> 0x7f020001 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070af7 -> 0x7f020002 (dimen/pixel_pitch -> dimen/pixel_pitch)
+    0x7f070c66 -> 0x7f020003 (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.google.android.overlay.googlewebview
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/GoogleWebViewOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x01170007 -> 0x7f010000 (xml/config_webview_packages -> xml/config_webview_packages)
+
+IDMAP OF com.android.internal.ranchu.commonoverlay
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/RanchuCommonOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x0117000d -> 0x7f010000 (xml/irq_device_map -> xml/irq_device_map)
+
+IDMAP OF com.android.internal.emulation.pixel_9a
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel9a/EmulationPixel9aOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f040000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f040001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033e -> 0x7f020000 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x01050340 -> 0x7f020001 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020002 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020003 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x010e0163 -> 0x7f030000 (integer/config_stableDeviceDisplayHeight -> integer/config_stableDeviceDisplayHeight)
+    0x010e0164 -> 0x7f030001 (integer/config_stableDeviceDisplayWidth -> integer/config_stableDeviceDisplayWidth)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.systemui.navbar.threebutton
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/NavigationBarMode3Button/NavigationBarMode3ButtonOverlay.apk
+Debug info:
+    W failed to find resource 'string/navigation_bar_mode_title'
+Constraints:
+    None
+Mapping:
+    0x0105027d -> 0x7f020000 (dimen/navigation_bar_gesture_height -> dimen/navigation_bar_gesture_height)
+    0x010e00fa -> 0x7f030000 (integer/config_navBarInteractionMode -> integer/config_navBarInteractionMode)
+    0x01110027 -> 0x7f010000 (bool/config_allowSeamlessRotationDespiteNavBarMoving -> bool/config_allowSeamlessRotationDespiteNavBarMoving)
+
+IDMAP OF com.android.systemui.emulation.pixel_6
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel6/SystemUIEmulationPixel6Overlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/system_icons_keyguard_padding_end'
+    W failed to find resource 'dimen/system_icons_super_container_avatarless_margin_end'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f070219 -> 0x7f020000 (dimen/config_rounded_mask_size -> dimen/config_rounded_mask_size)
+    0x7f07021a -> 0x7f020001 (dimen/config_rounded_mask_size_bottom -> dimen/config_rounded_mask_size_bottom)
+    0x7f07021b -> 0x7f020002 (dimen/config_rounded_mask_size_top -> dimen/config_rounded_mask_size_top)
+    0x7f070431 -> 0x7f020003 (dimen/keyguard_carrier_text_margin -> dimen/keyguard_carrier_text_margin)
+    0x7f07059a -> 0x7f020004 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070ace -> 0x7f020005 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c46 -> 0x7f020008 (dimen/status_bar_header_height_keyguard -> dimen/status_bar_header_height_keyguard)
+    0x7f070c66 -> 0x7f020009 (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f070c67 -> 0x7f02000a (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f070e16 -> 0x7f02000d (dimen/udfps_burn_in_offset_y -> dimen/udfps_burn_in_offset_y)
+    0x7f130397 -> 0x7f030000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f030001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f030002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+    0x7f1303bc -> 0x7f030003 (string/config_rounded_mask -> string/config_rounded_mask)
+
+IDMAP OF com.google.android.overlay.largescreenconfig
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/LargeScreenConfigOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x01050114 -> 0x7f020000 (dimen/config_fixedOrientationLetterboxAspectRatio -> dimen/config_fixedOrientationLetterboxAspectRatio)
+    0x01050123 -> 0x7f020001 (dimen/config_letterboxVerticalPositionMultiplier -> dimen/config_letterboxVerticalPositionMultiplier)
+    0x010e00c7 -> 0x7f030000 (integer/config_letterboxActivityCornersRadius -> integer/config_letterboxActivityCornersRadius)
+    0x010e00f9 -> 0x7f030001 (integer/config_multiuserMaximumUsers -> integer/config_multiuserMaximumUsers)
+    0x01110026 -> 0x7f010000 (bool/config_allowRotationResolver -> bool/config_allowRotationResolver)
+    0x01110037 -> 0x7f010001 (bool/config_appCompatUserAppAspectRatioFullscreenIsEnabled -> bool/config_appCompatUserAppAspectRatioFullscreenIsEnabled)
+    0x01110038 -> 0x7f010002 (bool/config_appCompatUserAppAspectRatioSettingsIsEnabled -> bool/config_appCompatUserAppAspectRatioSettingsIsEnabled)
+    0x0111019a -> 0x7f010003 (bool/config_enableMultiUserUI -> bool/config_enableMultiUserUI)
+    0x011101f1 -> 0x7f010004 (bool/config_isCompatFakeFocusEnabled -> bool/config_isCompatFakeFocusEnabled)
+    0x011101f9 -> 0x7f010005 (bool/config_isWindowManagerCameraCompatTreatmentEnabled -> bool/config_isWindowManagerCameraCompatTreatmentEnabled)
+    0x01110206 -> 0x7f010006 (bool/config_letterboxIsDisplayRotationImmersiveAppCompatPolicyEnabled -> bool/config_letterboxIsDisplayRotationImmersiveAppCompatPolicyEnabled)
+    0x01110207 -> 0x7f010007 (bool/config_letterboxIsEducationEnabled -> bool/config_letterboxIsEducationEnabled)
+    0x01110208 -> 0x7f010008 (bool/config_letterboxIsEnabledForTranslucentActivities -> bool/config_letterboxIsEnabledForTranslucentActivities)
+    0x01110209 -> 0x7f010009 (bool/config_letterboxIsHorizontalReachabilityEnabled -> bool/config_letterboxIsHorizontalReachabilityEnabled)
+    0x0111020a -> 0x7f01000a (bool/config_letterboxIsPolicyForIgnoringRequestedOrientationEnabled -> bool/config_letterboxIsPolicyForIgnoringRequestedOrientationEnabled)
+    0x0111020b -> 0x7f01000b (bool/config_letterboxIsSplitScreenAspectRatioForUnresizableAppsEnabled -> bool/config_letterboxIsSplitScreenAspectRatioForUnresizableAppsEnabled)
+    0x0111020c -> 0x7f01000c (bool/config_letterboxIsVerticalReachabilityEnabled -> bool/config_letterboxIsVerticalReachabilityEnabled)
+    0x01110278 -> 0x7f01000d (bool/config_showUserSwitcherByDefault -> bool/config_showUserSwitcherByDefault)
+
+IDMAP OF com.android.internal.systemui.navbar.gestural
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/NavigationBarModeGestural/NavigationBarModeGesturalOverlay.apk
+Debug info:
+    W failed to find resource 'string/navigation_bar_mode_title'
+Constraints:
+    None
+Mapping:
+    0x01050106 -> 0x7f020000 (dimen/config_backGestureInset -> dimen/config_backGestureInset)
+    0x0105027b -> 0x7f020001 (dimen/navigation_bar_frame_height -> dimen/navigation_bar_frame_height)
+    0x0105027d -> 0x7f020002 (dimen/navigation_bar_gesture_height -> dimen/navigation_bar_gesture_height)
+    0x0105027f -> 0x7f020003 (dimen/navigation_bar_height -> dimen/navigation_bar_height)
+    0x01050281 -> 0x7f020004 (dimen/navigation_bar_height_landscape -> dimen/navigation_bar_height_landscape)
+    0x01050284 -> 0x7f020005 (dimen/navigation_bar_width -> dimen/navigation_bar_width)
+    0x010e00fa -> 0x7f030000 (integer/config_navBarInteractionMode -> integer/config_navBarInteractionMode)
+    0x010e00fb -> 0x7f030001 (integer/config_navBarOpacityMode -> integer/config_navBarOpacityMode)
+    0x01110027 -> 0x7f010000 (bool/config_allowSeamlessRotationDespiteNavBarMoving -> bool/config_allowSeamlessRotationDespiteNavBarMoving)
+    0x0111003c -> 0x7f010001 (bool/config_attachNavBarToAppDuringTransition -> bool/config_attachNavBarToAppDuringTransition)
+    0x011101ed -> 0x7f010002 (bool/config_imeDrawsImeNavBar -> bool/config_imeDrawsImeNavBar)
+    0x01110227 -> 0x7f010003 (bool/config_navBarAlwaysShowOnSideEdgeGesture -> bool/config_navBarAlwaysShowOnSideEdgeGesture)
+    0x01110228 -> 0x7f010004 (bool/config_navBarCanMove -> bool/config_navBarCanMove)
+    0x0111022a -> 0x7f010005 (bool/config_navBarNeedsScrim -> bool/config_navBarNeedsScrim)
+    0x0111022b -> 0x7f010006 (bool/config_navBarTapThrough -> bool/config_navBarTapThrough)
+
+IDMAP OF com.android.internal.emulation.pixel_3_xl
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel3XL/EmulationPixel3XLOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/quick_qs_total_height'
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x01050198 -> 0x7f020000 (dimen/display_cutout_touchable_region_size -> dimen/display_cutout_touchable_region_size)
+    0x01050327 -> 0x7f020001 (dimen/quick_qs_offset_height -> dimen/quick_qs_offset_height)
+    0x0105033d -> 0x7f020003 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.display.cutout.emulation.double
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/DisplayCutoutEmulationDouble/DisplayCutoutEmulationDoubleOverlay.apk
+Debug info:
+    W failed to find resource 'string/display_cutout_emulation_overlay'
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105036a -> 0x7f020000 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020001 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.companiondevicemanager.auto_generated_characteristics_rro
+<missing idmap>
+IDMAP OF com.android.systemui.emulation.pixel_9a
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel9a/SystemUIEmulationPixel9aOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07011a -> 0x7f020000 (dimen/bottom_sheet_corner_radius -> dimen/bottom_sheet_corner_radius)
+    0x7f07059a -> 0x7f020001 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070af7 -> 0x7f020002 (dimen/pixel_pitch -> dimen/pixel_pitch)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.systemui.emulation.pixel_8_pro
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel8Pro/SystemUIEmulationPixel8ProOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f07059a -> 0x7f020000 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070ace -> 0x7f020001 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c66 -> 0x7f020004 (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.google.android.networkstack.tethering.emulator
+Paths:
+    target path  : /apex/com.android.tethering/priv-app/TetheringGoogle@370546200/TetheringGoogle.apk
+    overlay path : /product/overlay/EmulatorTetheringGoogleConfigOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f010006 -> 0x7f010000 (array/config_tether_wifi_p2p_regexs -> array/config_tether_wifi_p2p_regexs)
+    0x7f010007 -> 0x7f010001 (array/config_tether_wifi_regexs -> array/config_tether_wifi_regexs)
+
+IDMAP OF com.android.systemui.emulation.pixel_8
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel8/SystemUIEmulationPixel8Overlay.apk
+Debug info:
+    W failed to find resource 'dimen/multi_user_switch_keyguard_margin'
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/system_icons_super_container_avatarless_margin_end'
+Constraints:
+    None
+Mapping:
+    0x7f050020 -> 0x7f010000 (bool/config_enableDisplayCutoutProtection -> bool/config_enableDisplayCutoutProtection)
+    0x7f070219 -> 0x7f020000 (dimen/config_rounded_mask_size -> dimen/config_rounded_mask_size)
+    0x7f07021a -> 0x7f020001 (dimen/config_rounded_mask_size_bottom -> dimen/config_rounded_mask_size_bottom)
+    0x7f07021b -> 0x7f020002 (dimen/config_rounded_mask_size_top -> dimen/config_rounded_mask_size_top)
+    0x7f070431 -> 0x7f020003 (dimen/keyguard_carrier_text_margin -> dimen/keyguard_carrier_text_margin)
+    0x7f07059a -> 0x7f020004 (dimen/lock_icon_padding -> dimen/lock_icon_padding)
+    0x7f070c46 -> 0x7f020008 (dimen/status_bar_header_height_keyguard -> dimen/status_bar_header_height_keyguard)
+    0x7f070c66 -> 0x7f020009 (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f070c67 -> 0x7f02000a (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f070e15 -> 0x7f02000c (dimen/udfps_burn_in_offset_x -> dimen/udfps_burn_in_offset_x)
+    0x7f070e16 -> 0x7f02000d (dimen/udfps_burn_in_offset_y -> dimen/udfps_burn_in_offset_y)
+    0x7f080aa2 -> 0x7f030000 (drawable/rounded_corner_bottom -> drawable/rounded_corner_bottom)
+    0x7f080aa4 -> 0x7f030001 (drawable/rounded_corner_top -> drawable/rounded_corner_top)
+    0x7f130397 -> 0x7f040000 (string/config_cameraProtectionExcludedPackages -> string/config_cameraProtectionExcludedPackages)
+    0x7f13039f -> 0x7f040001 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303b4 -> 0x7f040002 (string/config_protectedCameraId -> string/config_protectedCameraId)
+
+IDMAP OF com.android.storagemanager.auto_generated_rro_product__
+Paths:
+    target path  : /system_ext/priv-app/StorageManager/StorageManager.apk
+    overlay path : /product/overlay/StorageManager__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Constraints:
+    None
+Mapping:
+    0x7f050002 -> 0x7f010000 (bool/config_hspa_data_distinguishable -> bool/config_hspa_data_distinguishable)
+    0x7f0800c8 -> 0x7f020000 (drawable/ic_5g_plus_mobiledata -> drawable/ic_5g_plus_mobiledata)
+    0x7f0800cb -> 0x7f020001 (drawable/ic_5g_plus_mobiledata_updated -> drawable/ic_5g_plus_mobiledata_updated)
+    0x7f12013d -> 0x7f030000 (string/config_avatar_picker_package -> string/config_avatar_picker_package)
+    0x7f120156 -> 0x7f030001 (string/data_connection_5g_plus -> string/data_connection_5g_plus)
+
+IDMAP OF com.android.systemui.emulation.pixel_3a
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel3a/SystemUIEmulationPixel3aOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/status_bar_height_portrait'
+Constraints:
+    None
+Mapping:
+    0x7f070ace -> 0x7f010000 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+
+IDMAP OF com.android.internal.systemui.navbar.transparent
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/TransparentNavigationBar/TransparentNavigationBarOverlay.apk
+Debug info:
+    W failed to find resource 'string/transparent_navigation_bar_title'
+Constraints:
+    None
+Mapping:
+    0x01110229 -> 0x7f010000 (bool/config_navBarDefaultTransparent -> bool/config_navBarDefaultTransparent)
+
+IDMAP OF com.android.traceur.auto_generated_rro_product__
+Paths:
+    target path  : /system/app/Traceur/Traceur.apk
+    overlay path : /product/overlay/Traceur__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Debug info:
+    W failed to find resource 'bool/config_hspa_data_distinguishable'
+    W failed to find resource 'drawable/ic_5g_plus_mobiledata'
+    W failed to find resource 'drawable/ic_5g_plus_mobiledata_updated'
+    W failed to find resource 'string/data_connection_5g_plus'
+Constraints:
+    None
+Mapping:
+    0x7f120142 -> 0x7f030000 (string/config_avatar_picker_package -> string/config_avatar_picker_package)
+
+IDMAP OF com.android.systemui.emulation.pixel_4
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel4/SystemUIEmulationPixel4Overlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+Constraints:
+    None
+Mapping:
+    0x7f070ace -> 0x7f010000 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+    0x7f070c67 -> 0x7f010003 (dimen/status_bar_padding_top -> dimen/status_bar_padding_top)
+    0x7f1303bc -> 0x7f020000 (string/config_rounded_mask -> string/config_rounded_mask)
+
+IDMAP OF com.android.internal.emulation.pixel_3
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel3/EmulationPixel3Overlay.apk
+Constraints:
+    None
+Mapping:
+    0x0105033d -> 0x7f010000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+
+IDMAP OF com.android.providers.telephony.auto_generated_characteristics_rro
+<missing idmap>
+IDMAP OF com.android.internal.emulation.pixel_4
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel4/EmulationPixel4Overlay.apk
+Constraints:
+    None
+Mapping:
+    0x0105033d -> 0x7f010000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105036b -> 0x7f010001 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+
+IDMAP OF com.android.settings.auto_generated_rro_product__
+Paths:
+    target path  : /system_ext/priv-app/SettingsGoogle/SettingsGoogle.apk
+    overlay path : /product/overlay/SettingsGoogle__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Debug info:
+    W failed to find resource 'string/wifi_calling_not_supported'
+Constraints:
+    None
+Mapping:
+    0x7f030068 -> 0x7f010000 (array/config_carrier_for_mobile_network_toggle_disable -> array/config_carrier_for_mobile_network_toggle_disable)
+    0x7f030069 -> 0x7f010001 (array/config_carrier_for_wifi_scorer_toggle_off -> array/config_carrier_for_wifi_scorer_toggle_off)
+    0x7f030088 -> 0x7f010002 (array/config_settings_slices_accessibility_components -> array/config_settings_slices_accessibility_components)
+    0x7f030094 -> 0x7f010003 (array/datausage_hiding_carrier_service_carrier_id -> array/datausage_hiding_carrier_service_carrier_id)
+    0x7f030095 -> 0x7f010004 (array/datausage_hiding_carrier_service_package_names -> array/datausage_hiding_carrier_service_package_names)
+    0x7f0300a3 -> 0x7f010005 (array/enabled_networks_except_gsm_values -> array/enabled_networks_except_gsm_values)
+    0x7f0300a6 -> 0x7f010006 (array/enabled_networks_values -> array/enabled_networks_values)
+    0x7f0300f4 -> 0x7f010007 (array/slice_allowlist_package_names -> array/slice_allowlist_package_names)
+    0x7f0300f5 -> 0x7f010008 (array/slice_allowlist_package_names_for_dev -> array/slice_allowlist_package_names_for_dev)
+    0x7f050033 -> 0x7f020000 (bool/config_hspa_data_distinguishable -> bool/config_hspa_data_distinguishable)
+    0x7f060144 -> 0x7f030000 (color/icon_accent -> color/icon_accent)
+    0x7f080204 -> 0x7f040000 (drawable/ic_5g_plus_mobiledata -> drawable/ic_5g_plus_mobiledata)
+    0x7f080207 -> 0x7f040001 (drawable/ic_5g_plus_mobiledata_updated -> drawable/ic_5g_plus_mobiledata_updated)
+    0x7f08063d -> 0x7f040002 (drawable/shortcut_base -> drawable/shortcut_base)
+    0x7f130027 -> 0x7f050000 (raw/fingerprint_location_animation -> raw/fingerprint_location_animation)
+    0x7f140963 -> 0x7f060000 (string/config_avatar_picker_package -> string/config_avatar_picker_package)
+    0x7f140abc -> 0x7f060001 (string/data_connection_5g_plus -> string/data_connection_5g_plus)
+    0x7f140df8 -> 0x7f060002 (string/fingerprint_unlock_set_unlock_password -> string/fingerprint_unlock_set_unlock_password)
+    0x7f140df9 -> 0x7f060003 (string/fingerprint_unlock_set_unlock_pattern -> string/fingerprint_unlock_set_unlock_pattern)
+    0x7f140dfa -> 0x7f060004 (string/fingerprint_unlock_set_unlock_pin -> string/fingerprint_unlock_set_unlock_pin)
+    0x7f140dfb -> 0x7f060005 (string/fingerprint_unlock_skip_fingerprint -> string/fingerprint_unlock_skip_fingerprint)
+    0x7f140dfc -> 0x7f060006 (string/fingerprint_unlock_title -> string/fingerprint_unlock_title)
+    0x7f1410ec -> 0x7f060007 (string/keywords_wifi_calling -> string/keywords_wifi_calling)
+    0x7f141b05 -> 0x7f060008 (string/security_settings_fingerprint_enroll_consent_introduction_title -> string/security_settings_fingerprint_enroll_consent_introduction_title)
+    0x7f141b23 -> 0x7f060009 (string/security_settings_fingerprint_enroll_introduction_message_unlock_disabled -> string/security_settings_fingerprint_enroll_introduction_message_unlock_disabled)
+    0x7f141b25 -> 0x7f06000a (string/security_settings_fingerprint_enroll_introduction_title -> string/security_settings_fingerprint_enroll_introduction_title)
+    0x7f141b26 -> 0x7f06000b (string/security_settings_fingerprint_enroll_introduction_title_unlock_disabled -> string/security_settings_fingerprint_enroll_introduction_title_unlock_disabled)
+    0x7f141b38 -> 0x7f06000c (string/security_settings_fingerprint_preference_title -> string/security_settings_fingerprint_preference_title)
+    0x7f141e3f -> 0x7f06000d (string/suggested_fingerprint_lock_settings_summary -> string/suggested_fingerprint_lock_settings_summary)
+    0x7f14221e -> 0x7f06000e (string/wfc_disclaimer_emergency_limitation_desc_text -> string/wfc_disclaimer_emergency_limitation_desc_text)
+    0x7f142261 -> 0x7f060010 (string/wifi_calling_off_explanation -> string/wifi_calling_off_explanation)
+    0x7f142262 -> 0x7f060011 (string/wifi_calling_off_explanation_2 -> string/wifi_calling_off_explanation_2)
+    0x7f142267 -> 0x7f060012 (string/wifi_calling_settings_activation_instructions -> string/wifi_calling_settings_activation_instructions)
+    0x7f142268 -> 0x7f060013 (string/wifi_calling_settings_title -> string/wifi_calling_settings_title)
+    0x7f142269 -> 0x7f060014 (string/wifi_calling_suggestion_summary -> string/wifi_calling_suggestion_summary)
+    0x7f14226c -> 0x7f060015 (string/wifi_calling_turn_on -> string/wifi_calling_turn_on)
+
+IDMAP OF com.android.role.notes.enabled
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/NotesRoleEnabled/NotesRoleEnabledOverlay.apk
+Debug info:
+    W failed to find resource 'string/notes_role_enabled_overlay_title'
+Constraints:
+    None
+Mapping:
+    0x0111000a -> 0x7f010000 (bool/config_enableDefaultNotes -> bool/config_enableDefaultNotes)
+    0x0111000b -> 0x7f010001 (bool/config_enableDefaultNotesForWorkProfile -> bool/config_enableDefaultNotesForWorkProfile)
+
+IDMAP OF com.google.android.marvin.talkbackoverlay
+Paths:
+    target path  : /product/app/talkback/talkback.apk
+    overlay path : /vendor/overlay/EmulatorTalkBackOverlay/EmulatorTalkBackOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f0500dc -> boolean 0x00000000 (bool/show_play_store)
+    0x7f0500dd -> boolean 0xffffffff (bool/skip_tutorial_in_launching)
+
+IDMAP OF com.android.managedprovisioning.auto_generated_rro_product__
+<missing idmap>
+IDMAP OF com.android.internal.display.cutout.emulation.corner
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/DisplayCutoutEmulationCorner/DisplayCutoutEmulationCornerOverlay.apk
+Debug info:
+    W failed to find resource 'string/display_cutout_emulation_overlay'
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105036a -> 0x7f020000 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020001 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.internal.emulation.pixel_7_pro
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel7Pro/EmulationPixel7ProOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033d -> 0x7f020000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+    0x0105033e -> 0x7f020001 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x0105033f -> 0x7f020002 (dimen/rounded_corner_radius_adjustment -> dimen/rounded_corner_radius_adjustment)
+    0x01050340 -> 0x7f020003 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020004 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020005 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020006 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020007 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.providers.contacts.auto_generated_rro_product__
+Paths:
+    target path  : /system/priv-app/ContactsProvider/ContactsProvider.apk
+    overlay path : /product/overlay/ContactsProvider__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Constraints:
+    None
+Mapping:
+    0x7f03000a -> 0x7f010000 (string/metadata_sync_pacakge -> string/metadata_sync_pacakge)
+
+IDMAP OF com.android.internal.systemui.navbar.twobutton
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/NavigationBarMode2Button/NavigationBarMode2ButtonOverlay.apk
+Debug info:
+    W failed to find resource 'string/navigation_bar_mode_title'
+Constraints:
+    None
+Mapping:
+    0x0105027d -> 0x7f010000 (dimen/navigation_bar_gesture_height -> dimen/navigation_bar_gesture_height)
+    0x010e00fa -> 0x7f020000 (integer/config_navBarInteractionMode -> integer/config_navBarInteractionMode)
+
+IDMAP OF com.android.bips.auto_generated_rro_product__
+Paths:
+    target path  : /system/priv-app/BuiltInPrintService/BuiltInPrintService.apk
+    overlay path : /product/overlay/BuiltInPrintService__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Constraints:
+    None
+Mapping:
+    0x7f050035 -> 0x7f010000 (color/iconColor -> color/iconColor)
+
+IDMAP OF android.auto_generated_rro_vendor__
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /vendor/overlay/framework-res__sdk_gphone64_x86_64__auto_generated_rro_vendor.apk
+Debug info:
+    W failed to find resource 'bool/config_lidControlsDisplayFold'
+Constraints:
+    None
+Mapping:
+    0x0104029a -> 0x7f040000 (string/config_defaultWearableSensingService -> string/config_defaultWearableSensingService)
+    0x010402dd -> 0x7f040001 (string/config_mms_user_agent -> string/config_mms_user_agent)
+    0x010402de -> 0x7f040002 (string/config_mms_user_agent_profile_url -> string/config_mms_user_agent_profile_url)
+    0x01070029 -> 0x7f010000 (array/config_autoTimeSourcesPriority -> array/config_autoTimeSourcesPriority)
+    0x0107005d -> 0x7f010001 (array/config_device_state_postures -> array/config_device_state_postures)
+    0x0107008b -> 0x7f010002 (array/config_foldedDeviceStates -> array/config_foldedDeviceStates)
+    0x01070093 -> 0x7f010003 (array/config_halfFoldedDeviceStates -> array/config_halfFoldedDeviceStates)
+    0x010700be -> 0x7f010004 (array/config_openDeviceStates -> array/config_openDeviceStates)
+    0x010700c0 -> 0x7f010005 (array/config_perDeviceStateRotationLockDefaults -> array/config_perDeviceStateRotationLockDefaults)
+    0x010700c9 -> 0x7f010006 (array/config_rearDisplayDeviceStates -> array/config_rearDisplayDeviceStates)
+    0x010700f4 -> 0x7f010007 (array/config_tether_wifi_regexs -> array/config_tether_wifi_regexs)
+    0x010e00f9 -> 0x7f030000 (integer/config_multiuserMaximumUsers -> integer/config_multiuserMaximumUsers)
+    0x0111006e -> 0x7f020000 (bool/config_canInternalDisplayHostDesktops -> bool/config_canInternalDisplayHostDesktops)
+    0x0111012b -> 0x7f020001 (bool/config_cellBroadcastAppLinks -> bool/config_cellBroadcastAppLinks)
+    0x0111019a -> 0x7f020002 (bool/config_enableMultiUserUI -> bool/config_enableMultiUserUI)
+    0x011101f3 -> 0x7f020003 (bool/config_isDesktopModeSupported -> bool/config_isDesktopModeSupported)
+    0x0111029e -> 0x7f020005 (bool/config_supportMicNearUltrasound -> bool/config_supportMicNearUltrasound)
+    0x011102a2 -> 0x7f020006 (bool/config_supportSpeakerNearUltrasound -> bool/config_supportSpeakerNearUltrasound)
+    0x011102a7 -> 0x7f020007 (bool/config_supportsCamToggle -> bool/config_supportsCamToggle)
+    0x011102ac -> 0x7f020008 (bool/config_supportsMicToggle -> bool/config_supportsMicToggle)
+    0x011102ce -> 0x7f020009 (bool/config_useDevInputEventForAudioJack -> bool/config_useDevInputEventForAudioJack)
+
+IDMAP OF com.android.systemui.emulation.pixel_3a_xl
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel3aXL/SystemUIEmulationPixel3aXLOverlay.apk
+Debug info:
+    W failed to find resource 'dimen/physical_volume_down_button_center_screen_location_y'
+    W failed to find resource 'dimen/physical_volume_up_button_center_screen_location_y'
+    W failed to find resource 'dimen/status_bar_height_portrait'
+Constraints:
+    None
+Mapping:
+    0x7f070ace -> 0x7f010000 (dimen/physical_power_button_center_screen_location_y -> dimen/physical_power_button_center_screen_location_y)
+
+IDMAP OF com.android.internal.emulation.pixel_9_pro_xl
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel9ProXL/EmulationPixel9ProXLOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f040000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f040001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105033e -> 0x7f020000 (dimen/rounded_corner_radius -> dimen/rounded_corner_radius)
+    0x01050340 -> 0x7f020001 (dimen/rounded_corner_radius_bottom -> dimen/rounded_corner_radius_bottom)
+    0x01050342 -> 0x7f020002 (dimen/rounded_corner_radius_top -> dimen/rounded_corner_radius_top)
+    0x01050369 -> 0x7f020003 (dimen/status_bar_height_default -> dimen/status_bar_height_default)
+    0x0105036a -> 0x7f020004 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020005 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x010e0163 -> 0x7f030000 (integer/config_stableDeviceDisplayHeight -> integer/config_stableDeviceDisplayHeight)
+    0x010e0164 -> 0x7f030001 (integer/config_stableDeviceDisplayWidth -> integer/config_stableDeviceDisplayWidth)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.phone.auto_generated_rro_vendor__
+Paths:
+    target path  : /system/priv-app/TeleService/TeleService.apk
+    overlay path : /vendor/overlay/TeleService__sdk_gphone64_x86_64__auto_generated_rro_vendor.apk
+Debug info:
+    W failed to find resource 'string/config_satellite_service_package'
+Constraints:
+    None
+Mapping:
+    0x7f0e010e -> 0x7f010000 (string/config_ims_mmtel_package -> string/config_ims_mmtel_package)
+    0x7f0e010f -> 0x7f010001 (string/config_ims_rcs_package -> string/config_ims_rcs_package)
+
+IDMAP OF com.android.internal.emulation.pixel_3a_xl
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/EmulationPixel3aXL/EmulationPixel3aXLOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x0105033d -> 0x7f010000 (dimen/rounded_corner_content_padding -> dimen/rounded_corner_content_padding)
+
+IDMAP OF com.android.internal.display.cutout.emulation.hole
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/DisplayCutoutEmulationHole/DisplayCutoutEmulationHoleOverlay.apk
+Debug info:
+    W failed to find resource 'string/display_cutout_emulation_overlay'
+Constraints:
+    None
+Mapping:
+    0x010402d6 -> 0x7f030000 (string/config_mainBuiltInDisplayCutout -> string/config_mainBuiltInDisplayCutout)
+    0x010402d7 -> 0x7f030001 (string/config_mainBuiltInDisplayCutoutRectApproximation -> string/config_mainBuiltInDisplayCutoutRectApproximation)
+    0x0105036a -> 0x7f020000 (dimen/status_bar_height_landscape -> dimen/status_bar_height_landscape)
+    0x0105036b -> 0x7f020001 (dimen/status_bar_height_portrait -> dimen/status_bar_height_portrait)
+    0x011101cb -> 0x7f010000 (bool/config_fillMainBuiltInDisplayCutout -> bool/config_fillMainBuiltInDisplayCutout)
+
+IDMAP OF com.android.systemui.auto_generated_rro_product__
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIGoogle__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Debug info:
+    W failed to find resource 'color/assistant_color'
+    W failed to find resource 'drawable/$a11ymenu_intro__0'
+    W failed to find resource 'drawable/$ic_logo_a11y_assistant__0'
+    W failed to find resource 'drawable/a11ymenu_intro'
+    W failed to find resource 'drawable/ic_5g_plus_mobiledata'
+    W failed to find resource 'drawable/ic_logo_a11y_assistant'
+    W failed to find resource 'drawable/ic_qs_branded_vpn'
+    W failed to find resource 'string/assistant_utterance'
+    W failed to find resource 'string/branded_monitoring_description_app_personal'
+    W failed to find resource 'string/branded_vpn_footer'
+Constraints:
+    None
+Mapping:
+    0x7f030036 -> 0x7f010000 (array/config_controlsPreferredPackages -> array/config_controlsPreferredPackages)
+    0x7f03004d -> 0x7f010001 (array/config_pluginAllowlist -> array/config_pluginAllowlist)
+    0x7f050037 -> 0x7f020000 (bool/config_hspa_data_distinguishable -> bool/config_hspa_data_distinguishable)
+    0x7f080529 -> 0x7f040004 (drawable/ic_5g_plus_mobiledata_updated -> drawable/ic_5g_plus_mobiledata_updated)
+    0x7f080b2f -> 0x7f040007 (drawable/stat_sys_branded_vpn -> drawable/stat_sys_branded_vpn)
+    0x7f0b0049 -> 0x7f050000 (integer/config_showUsbPortAlarm -> integer/config_showUsbPortAlarm)
+    0x7f1301c5 -> 0x7f060000 (string/ambientcue_first_time_edu_text -> string/ambientcue_first_time_edu_text)
+    0x7f130393 -> 0x7f060004 (string/config_avatar_picker_package -> string/config_avatar_picker_package)
+    0x7f1303b3 -> 0x7f060005 (string/config_preferredScreenshotEditor -> string/config_preferredScreenshotEditor)
+    0x7f1303bb -> 0x7f060006 (string/config_remoteCopyPackage -> string/config_remoteCopyPackage)
+    0x7f1303be -> 0x7f060007 (string/config_screenshotEditor -> string/config_screenshotEditor)
+    0x7f1303bf -> 0x7f060008 (string/config_screenshotFilesApp -> string/config_screenshotFilesApp)
+    0x7f130432 -> 0x7f060009 (string/data_connection_5g_plus -> string/data_connection_5g_plus)
+
+IDMAP OF android.auto_generated_rro_product__
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /product/overlay/framework-res__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Debug info:
+    W failed to find resource 'bool/config_dynamic_bind_ims'
+    W failed to find resource 'bool/config_timeZoneRulesUpdateTrackingEnabled'
+    W failed to find resource 'dimen/status_bar_clock_starting_padding'
+    W failed to find resource 'string/config_ims_package'
+Constraints:
+    None
+Mapping:
+    0x01040269 -> 0x7f040000 (string/config_defaultAutofillService -> string/config_defaultAutofillService)
+    0x01040276 -> 0x7f040001 (string/config_defaultContextualSearchPackageName -> string/config_defaultContextualSearchPackageName)
+    0x0104027f -> 0x7f040002 (string/config_defaultListenerAccessPackages -> string/config_defaultListenerAccessPackages)
+    0x01040294 -> 0x7f040003 (string/config_defaultTextClassifierPackage -> string/config_defaultTextClassifierPackage)
+    0x010402cd -> 0x7f040004 (string/config_icon_mask -> string/config_icon_mask)
+    0x0104039c -> 0x7f040006 (string/default_browser -> string/default_browser)
+    0x0107001a -> 0x7f010000 (array/config_angleAllowList -> array/config_angleAllowList)
+    0x010700a1 -> 0x7f010001 (array/config_locationExtraPackageNames -> array/config_locationExtraPackageNames)
+    0x010700a2 -> 0x7f010002 (array/config_locationProviderPackageNames -> array/config_locationProviderPackageNames)
+    0x0111018b -> 0x7f020001 (bool/config_enableFusedLocationOverlay -> bool/config_enableFusedLocationOverlay)
+    0x0111018d -> 0x7f020002 (bool/config_enableGeocoderOverlay -> bool/config_enableGeocoderOverlay)
+    0x0111018e -> 0x7f020003 (bool/config_enableGeofenceOverlay -> bool/config_enableGeofenceOverlay)
+    0x0111019d -> 0x7f020004 (bool/config_enableNetworkLocationOverlay -> bool/config_enableNetworkLocationOverlay)
+    0x01170016 -> 0x7f050000 (xml/power_profile -> xml/power_profile)
+
+IDMAP OF com.android.systemui:dynamic
+Paths:
+    target path  : /system/framework/framework-res.apk
+    overlay path : /data/resource-cache/com.android.systemui-dynamic-0Auj.frro
+Overlay name: dynamic
+Constraints:
+    None
+Mapping:
+    0x0106005e -> color 0xffafc0f4 (color/system_primary_container_light)
+    0x0106005f -> color 0xff2a3b66 (color/system_on_primary_container_light)
+    0x01060060 -> color 0xff4e5e8b (color/system_primary_light)
+    0x01060061 -> color 0xfff9f8ff (color/system_on_primary_light)
+    0x01060062 -> color 0xffdde2f9 (color/system_secondary_container_light)
+    0x01060063 -> color 0xff4b5164 (color/system_on_secondary_container_light)
+    0x01060064 -> color 0xff595e72 (color/system_secondary_light)
+    0x01060065 -> color 0xfff9f8ff (color/system_on_secondary_light)
+    0x01060066 -> color 0xffe8cdfd (color/system_tertiary_container_light)
+    0x01060067 -> color 0xff57426a (color/system_on_tertiary_container_light)
+    0x01060068 -> color 0xff6c567f (color/system_tertiary_light)
+    0x01060069 -> color 0xfffff6ff (color/system_on_tertiary_light)
+    0x0106006a -> color 0xfffaf8fe (color/system_background_light)
+    0x0106006b -> color 0xff30323b (color/system_on_background_light)
+    0x0106006c -> color 0xfffaf8fe (color/system_surface_light)
+    0x0106006d -> color 0xff30323b (color/system_on_surface_light)
+    0x0106006e -> color 0xfff4f3fa (color/system_surface_container_low_light)
+    0x0106006f -> color 0xffffffff (color/system_surface_container_lowest_light)
+    0x01060070 -> color 0xffeeedf6 (color/system_surface_container_light)
+    0x01060071 -> color 0xffe7e7f1 (color/system_surface_container_high_light)
+    0x01060072 -> color 0xffe1e2ed (color/system_surface_container_highest_light)
+    0x01060073 -> color 0xfffaf8fe (color/system_surface_bright_light)
+    0x01060074 -> color 0xffd9d9e4 (color/system_surface_dim_light)
+    0x01060075 -> color 0xffe1e2ed (color/system_surface_variant_light)
+    0x01060076 -> color 0xff5d5f68 (color/system_on_surface_variant_light)
+    0x01060077 -> color 0xff797a84 (color/system_outline_light)
+    0x01060078 -> color 0xffa83836 (color/system_error_light)
+    0x01060079 -> color 0xfffff7f6 (color/system_on_error_light)
+    0x0106007a -> color 0xfffa746f (color/system_error_container_light)
+    0x0106007b -> color 0xff6e0a12 (color/system_on_error_container_light)
+    0x0106007c -> color 0xffafc0f4 (color/system_control_activated_light)
+    0x0106007d -> color 0xff5d5f68 (color/system_control_normal_light)
+    0x0106007e -> color 0x1f000000 (color/system_control_highlight_light)
+    0x0106007f -> color 0xff9d9ca2 (color/system_text_primary_inverse_light)
+    0x01060080 -> color 0xffc5c6d1 (color/system_text_secondary_and_tertiary_inverse_light)
+    0x01060081 -> color 0xffe3e2e7 (color/system_text_primary_inverse_disable_only_light)
+    0x01060082 -> color 0xffe3e2e7 (color/system_text_secondary_and_tertiary_inverse_disabled_light)
+    0x01060083 -> color 0xffe3e2e7 (color/system_text_hint_inverse_light)
+    0x01060084 -> color 0xff6676a5 (color/system_palette_key_color_primary_light)
+    0x01060085 -> color 0xff71768b (color/system_palette_key_color_secondary_light)
+    0x01060086 -> color 0xff856e98 (color/system_palette_key_color_tertiary_light)
+    0x01060087 -> color 0xff77777c (color/system_palette_key_color_neutral_light)
+    0x01060088 -> color 0xff757680 (color/system_palette_key_color_neutral_variant_light)
+    0x01060089 -> color 0xff465174 (color/system_primary_container_dark)
+    0x0106008a -> color 0xffdbe2ff (color/system_on_primary_container_dark)
+    0x0106008b -> color 0xffbac5ee (color/system_primary_dark)
+    0x0106008c -> color 0xff333f61 (color/system_on_primary_dark)
+    0x0106008d -> color 0xff353b4d (color/system_secondary_container_dark)
+    0x0106008e -> color 0xffb9bed5 (color/system_on_secondary_container_dark)
+    0x0106008f -> color 0xffc0c6dd (color/system_secondary_dark)
+    0x01060090 -> color 0xff3a4052 (color/system_on_secondary_dark)
+    0x01060091 -> color 0xffe8cdfd (color/system_tertiary_container_dark)
+    0x01060092 -> color 0xff57426a (color/system_on_tertiary_container_dark)
+    0x01060093 -> color 0xfff2deff (color/system_tertiary_dark)
+    0x01060094 -> color 0xff604b73 (color/system_on_tertiary_dark)
+    0x01060095 -> color 0xff0d0e12 (color/system_background_dark)
+    0x01060096 -> color 0xffe4e5f0 (color/system_on_background_dark)
+    0x01060097 -> color 0xff0d0e12 (color/system_surface_dark)
+    0x01060098 -> color 0xffe4e5f0 (color/system_on_surface_dark)
+    0x01060099 -> color 0xff121318 (color/system_surface_container_low_dark)
+    0x0106009a -> color 0xff000000 (color/system_surface_container_lowest_dark)
+    0x0106009b -> color 0xff181920 (color/system_surface_container_dark)
+    0x0106009c -> color 0xff1e1f26 (color/system_surface_container_high_dark)
+    0x0106009d -> color 0xff23252e (color/system_surface_container_highest_dark)
+    0x0106009e -> color 0xff2a2c34 (color/system_surface_bright_dark)
+    0x0106009f -> color 0xff0d0e12 (color/system_surface_dim_dark)
+    0x010600a0 -> color 0xff23252e (color/system_surface_variant_dark)
+    0x010600a1 -> color 0xffa9aab5 (color/system_on_surface_variant_dark)
+    0x010600a2 -> color 0xff73757f (color/system_outline_dark)
+    0x010600a3 -> color 0xfffa746f (color/system_error_dark)
+    0x010600a4 -> color 0xff490006 (color/system_on_error_dark)
+    0x010600a5 -> color 0xff871f21 (color/system_error_container_dark)
+    0x010600a6 -> color 0xffff9993 (color/system_on_error_container_dark)
+    0x010600a7 -> color 0xff465174 (color/system_control_activated_dark)
+    0x010600a8 -> color 0xffa9aab5 (color/system_control_normal_dark)
+    0x010600a9 -> color 0x33ffffff (color/system_control_highlight_dark)
+    0x010600aa -> color 0xff545559 (color/system_text_primary_inverse_dark)
+    0x010600ab -> color 0xff44464f (color/system_text_secondary_and_tertiary_inverse_dark)
+    0x010600ac -> color 0xff1a1b20 (color/system_text_primary_inverse_disable_only_dark)
+    0x010600ad -> color 0xff1a1b20 (color/system_text_secondary_and_tertiary_inverse_disabled_dark)
+    0x010600ae -> color 0xff1a1b20 (color/system_text_hint_inverse_dark)
+    0x010600af -> color 0xff6a769b (color/system_palette_key_color_primary_dark)
+    0x010600b0 -> color 0xff71768b (color/system_palette_key_color_secondary_dark)
+    0x010600b1 -> color 0xff856e98 (color/system_palette_key_color_tertiary_dark)
+    0x010600b2 -> color 0xff77777c (color/system_palette_key_color_neutral_dark)
+    0x010600b3 -> color 0xff757680 (color/system_palette_key_color_neutral_variant_dark)
+    0x010600c0 -> color 0xffb0b1bc (color/system_outline_variant_light)
+    0x010600c1 -> color 0xff464850 (color/system_outline_variant_dark)
+    0x010600d2 -> color 0xff9d9ca2 (color/system_inverse_on_surface_light)
+    0x010600d3 -> color 0xffafc0f4 (color/system_inverse_primary_light)
+    0x010600d4 -> color 0xff0d0e12 (color/system_inverse_surface_light)
+    0x010600d5 -> color 0xff000000 (color/system_scrim_light)
+    0x010600d6 -> color 0xff000000 (color/system_shadow_light)
+    0x010600d7 -> color 0xff4e5e8b (color/system_surface_tint_light)
+    0x010600d8 -> color 0xff545559 (color/system_inverse_on_surface_dark)
+    0x010600d9 -> color 0xff525e81 (color/system_inverse_primary_dark)
+    0x010600da -> color 0xfffaf8fe (color/system_inverse_surface_dark)
+    0x010600db -> color 0xff000000 (color/system_scrim_dark)
+    0x010600dc -> color 0xff000000 (color/system_shadow_dark)
+    0x010600dd -> color 0xffbac5ee (color/system_surface_tint_dark)
+    0x01060415 -> color 0xffbac5ee (color/system_brand_a_dark)
+    0x01060416 -> color 0xff4a5a88 (color/system_brand_a_light)
+    0x01060417 -> color 0xfffaf8ff (color/system_brand_b_dark)
+    0x01060418 -> color 0xffa5aac1 (color/system_brand_b_light)
+    0x01060419 -> color 0xff8793b9 (color/system_brand_c_dark)
+    0x0106041a -> color 0xff6676a5 (color/system_brand_c_light)
+    0x0106041b -> color 0xfff0dbff (color/system_brand_d_dark)
+    0x0106041c -> color 0xff9b83af (color/system_brand_d_light)
+    0x0106041d -> color 0xffbac5ee (color/system_clock_hour_dark)
+    0x0106041e -> color 0xff383d50 (color/system_clock_hour_light)
+    0x0106041f -> color 0xffdae2ff (color/system_clock_minute_dark)
+    0x01060420 -> color 0xff435381 (color/system_clock_minute_light)
+    0x01060421 -> color 0xfff0dbff (color/system_clock_second_dark)
+    0x01060422 -> color 0xff6b567e (color/system_clock_second_light)
+    0x01060471 -> color 0xff0d1a3a (color/system_on_shade_active_dark)
+    0x01060472 -> color 0xff536391 (color/system_on_shade_active_light)
+    0x01060473 -> color 0xff3a4668 (color/system_on_shade_active_variant_dark)
+    0x01060474 -> color 0xff354571 (color/system_on_shade_active_variant_light)
+    0x01060475 -> color 0xffa9aab5 (color/system_on_shade_inactive_dark)
+    0x01060476 -> color 0xffe1e2ed (color/system_on_shade_inactive_light)
+    0x01060477 -> color 0xffc5c6d1 (color/system_on_shade_inactive_variant_dark)
+    0x01060478 -> color 0xffc5c6d1 (color/system_on_shade_inactive_variant_light)
+    0x01060479 -> color 0xffbac5ee (color/system_on_theme_app_dark)
+    0x0106047a -> color 0xff20305b (color/system_on_theme_app_light)
+    0x0106047b -> color 0xff50525b (color/system_overview_background_dark)
+    0x0106047c -> color 0xffc5c6d1 (color/system_overview_background_light)
+    0x0106047d -> color 0xffdae2ff (color/system_shade_active_dark)
+    0x0106047e -> color 0xffdae2ff (color/system_shade_active_light)
+    0x0106047f -> color 0xff0d0e12 (color/system_shade_disabled_dark)
+    0x01060480 -> color 0xff0d0e12 (color/system_shade_disabled_light)
+    0x01060481 -> color 0xff2f3035 (color/system_shade_inactive_dark)
+    0x01060482 -> color 0xff2f3035 (color/system_shade_inactive_light)
+    0x01060483 -> color 0x80232f50 (color/system_surface_effect_0_dark)
+    0x01060484 -> color 0xff2a3042 (color/system_surface_effect_0_fallback_dark)
+    0x01060485 -> color 0xffc0c6dd (color/system_surface_effect_0_fallback_light)
+    0x01060486 -> color 0x80dae2ff (color/system_surface_effect_0_light)
+    0x01060487 -> color 0x8a121317 (color/system_surface_effect_1_dark)
+    0x01060488 -> color 0x8afaf8fe (color/system_surface_effect_1_light)
+    0x01060489 -> color 0x26dae2ff (color/system_surface_effect_2_dark)
+    0x0106048a -> color 0x52ffffff (color/system_surface_effect_2_light)
+    0x0106048b -> color 0x1adae2ff (color/system_surface_effect_3_dark)
+    0x0106048c -> color 0x264d5d8b (color/system_surface_effect_3_light)
+    0x0106048d -> color 0xff2a3042 (color/system_theme_app_dark)
+    0x0106048e -> color 0xffafc0f4 (color/system_theme_app_light)
+    0x0106048f -> color 0xff9eaad2 (color/system_theme_app_ring_dark)
+    0x01060490 -> color 0xff9aaadd (color/system_theme_app_ring_light)
+    0x01060491 -> color 0xffad94c1 (color/system_theme_notif_dark)
+    0x01060492 -> color 0xffd7bdec (color/system_theme_notif_light)
+    0x01060493 -> color 0xff000000 (color/system_under_surface_dark)
+    0x01060494 -> color 0xff000000 (color/system_under_surface_light)
+    0x01060495 -> color 0xffbac5ee (color/system_weather_temp_dark)
+    0x01060496 -> color 0xff4d5d8b (color/system_weather_temp_light)
+    0x01060497 -> color 0xff2a3042 (color/system_widget_background_dark)
+    0x01060498 -> color 0xffeef0ff (color/system_widget_background_light)
+    0x01960000 -> color 0xff67040d (color/system_error_dim_light)
+    0x01960001 -> color 0xffc84f4c (color/system_palette_key_color_error_light)
+    0x01960002 -> color 0xff41527f (color/system_primary_dim_light)
+    0x01960003 -> color 0xff4d5366 (color/system_secondary_dim_light)
+    0x01960004 -> color 0xff5f4a72 (color/system_tertiary_dim_light)
+    0x01960005 -> color 0xffc54d4a (color/system_error_dim_dark)
+    0x01960006 -> color 0xffc84f4c (color/system_palette_key_color_error_dark)
+    0x01960007 -> color 0xffacb8e0 (color/system_primary_dim_dark)
+    0x01960008 -> color 0xffb3b8ce (color/system_secondary_dim_dark)
+    0x01960009 -> color 0xffe8cdfd (color/system_tertiary_dim_dark)
+    0x0196000a -> color 0xff142650 (color/system_on_primary_fixed_light)
+    0x0196000b -> color 0xff334470 (color/system_on_primary_fixed_variant_light)
+    0x0196000c -> color 0xff393f51 (color/system_on_secondary_fixed_light)
+    0x0196000d -> color 0xff555b6e (color/system_on_secondary_fixed_variant_light)
+    0x0196000e -> color 0xff433056 (color/system_on_tertiary_fixed_light)
+    0x0196000f -> color 0xff614c74 (color/system_on_tertiary_fixed_variant_light)
+    0x01960010 -> color 0xffafc0f4 (color/system_primary_fixed_light)
+    0x01960011 -> color 0xffa2b2e5 (color/system_primary_fixed_dim_light)
+    0x01960012 -> color 0xffdde2f9 (color/system_secondary_fixed_light)
+    0x01960013 -> color 0xffced4eb (color/system_secondary_fixed_dim_light)
+    0x01960014 -> color 0xffe8cdfd (color/system_tertiary_fixed_light)
+    0x01960015 -> color 0xffdabfee (color/system_tertiary_fixed_dim_light)
+    0x01960016 -> color 0xff293556 (color/system_on_primary_fixed_dark)
+    0x01960017 -> color 0xff465174 (color/system_on_primary_fixed_variant_dark)
+    0x01960018 -> color 0xff393f51 (color/system_on_secondary_fixed_dark)
+    0x01960019 -> color 0xff555b6e (color/system_on_secondary_fixed_variant_dark)
+    0x0196001a -> color 0xff433056 (color/system_on_tertiary_fixed_dark)
+    0x0196001b -> color 0xff614c74 (color/system_on_tertiary_fixed_variant_dark)
+    0x0196001c -> color 0xffc7d3fd (color/system_primary_fixed_dark)
+    0x0196001d -> color 0xffbac5ee (color/system_primary_fixed_dim_dark)
+    0x0196001e -> color 0xffdde2f9 (color/system_secondary_fixed_dark)
+    0x0196001f -> color 0xffced4eb (color/system_secondary_fixed_dim_dark)
+    0x01960020 -> color 0xffe8cdfd (color/system_tertiary_fixed_dark)
+    0x01960021 -> color 0xffdabfee (color/system_tertiary_fixed_dim_dark)
+
+IDMAP OF com.android.systemui.emulation.pixel_9_pro_fold
+Paths:
+    target path  : /system_ext/priv-app/SystemUIGoogle/SystemUIGoogle.apk
+    overlay path : /product/overlay/SystemUIEmulationPixel9ProFold/SystemUIEmulationPixel9ProFoldOverlay.apk
+Constraints:
+    None
+Mapping:
+    0x7f050040 -> 0x7f010000 (bool/config_letterboxIsReachabilityEducationEnabled -> bool/config_letterboxIsReachabilityEducationEnabled)
+    0x7f050041 -> 0x7f010001 (bool/config_letterboxIsRestartDialogEnabled -> bool/config_letterboxIsRestartDialogEnabled)
+    0x7f070c66 -> 0x7f020000 (dimen/status_bar_padding_start -> dimen/status_bar_padding_start)
+    0x7f13039f -> 0x7f030000 (string/config_frontBuiltInDisplayCutoutProtection -> string/config_frontBuiltInDisplayCutoutProtection)
+    0x7f1303a7 -> 0x7f030001 (string/config_innerBuiltInDisplayCutoutProtection -> string/config_innerBuiltInDisplayCutoutProtection)
+
+IDMAP OF com.android.systemui.accessibility.accessibilitymenu.auto_generated_rro_product__
+Paths:
+    target path  : /system_ext/app/AccessibilityMenu/AccessibilityMenu.apk
+    overlay path : /product/overlay/AccessibilityMenu__sdk_gphone64_x86_64__auto_generated_rro_product.apk
+Debug info:
+    W failed to find resource 'drawable/$a11ymenu_intro__0'
+    W failed to find resource 'drawable/$ic_logo_a11y_assistant__0'
+Constraints:
+    None
+Mapping:
+    0x7f05001e -> 0x7f010000 (color/assistant_color -> color/assistant_color)
+    0x7f070028 -> 0x7f020002 (drawable/a11ymenu_intro -> drawable/a11ymenu_intro)
+    0x7f07009a -> 0x7f020003 (drawable/ic_logo_a11y_assistant -> drawable/ic_logo_a11y_assistant)
+    0x7f0e002b -> 0x7f030000 (string/assistant_utterance -> string/assistant_utterance)
+
+Default overlays: com.android.internal.systemui.navbar.gestural

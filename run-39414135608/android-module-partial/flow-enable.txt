@@ -1,0 +1,7 @@
+nexus-quickstep: Nexus aún no ha comprobado la compatibilidad: ábrelo una vez (o usa --force).
+exit: 1
+Overlay pedido. REINICIA para que el sistema lo aplique en el arranque.
+Tras reiniciar: nexus-quickstep status  y  nexus-quickstep bound
+Si SystemUI no llega a enlazarse con Nexus, el vigilante lo desactiva y reinicia solo.
+Para deshacerlo: nexus-quickstep disable --reboot
+exit (--force): 0

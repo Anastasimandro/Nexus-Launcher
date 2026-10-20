@@ -70,3 +70,26 @@ app: 3 DEX, 11592 clases | sistema: 56 DEX, 63054 clases (con extra: 181010)
   todas existen
 
 ## Fase 2: instalar el módulo como lo hace Magisk (remount)
+- install-module: exit 0
+
+## Fase 3: el módulo en Android real (app privilegiada y overlay)
+- module-evidence: exit 0
+overlay (nuestro):
+lookup antes:
+com.google.android.apps.nexuslauncher/com.android.quickstep.RecentsActivity
+probe:
+cat: /data/user/0/app.nexus.launcher/files/quickstep-probe.txt: No such file or directory
+permisos permitidos y NO concedidos:
+android.permission.ACCESS_SHORTCUTS
+android.permission.INTERNAL_SYSTEM_WINDOW
+android.permission.MANAGE_ACCESSIBILITY
+android.permission.MANAGE_ACTIVITY_TASKS
+android.permission.MANAGE_KEY_GESTURES
+android.permission.MONITOR_INPUT
+android.permission.READ_FRAME_BUFFER
+android.permission.REMOVE_TASKS
+android.permission.SET_ORIENTATION
+android.permission.STATUS_BAR_SERVICE
+android.permission.SYSTEM_APPLICATION_OVERLAY
+
+## Fase 4: activar con 'nexus-quickstep enable', aplicar en el arranque y verificar el enlace
