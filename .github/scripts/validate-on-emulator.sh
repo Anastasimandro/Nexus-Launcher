@@ -73,6 +73,7 @@ wait_stable() {
     if overlay_up \
        && adb shell service check package 2>/dev/null | grep -q found \
        && [[ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == 1 ]]; then ok=1; fi
+    echo "$(date +%T) estable? ok=$ok pid=${pid:-none} anterior=${last:-none}" >> "$out/progress.log"
     if [[ $ok == 1 && -n $pid && $pid == "$last" ]]; then
       (( SECONDS - since >= 40 )) && return 0
     else

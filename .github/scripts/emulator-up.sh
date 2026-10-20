@@ -57,7 +57,7 @@ df -h / | tail -1
 
 # Los procesos en segundo plano de un paso pueden morir con él: se ejecuta todo en el mismo paso.
 nohup "$sdk/emulator/emulator" -avd qs -no-window -no-audio -no-boot-anim -no-snapshot \
-  -gpu swiftshader_indirect -memory 4096 -cores 3 -writable-system \
+  -gpu "${EMU_GPU:-swiftshader_indirect}" -memory 4096 -cores 3 -writable-system \
   > "$out/emulator.log" 2>&1 &
 emu_pid=$!
 echo "emulador lanzado (pid $emu_pid)"
