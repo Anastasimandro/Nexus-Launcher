@@ -103,8 +103,6 @@ jobs:
         if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          # surfaceflinger del emulador aborta (RegionSampling/readColorBufferDma) con la GPU del anfitrión.
-          EMU_GPU: guest
         run: .github/scripts/push-results.sh results build
 
   android:
@@ -145,6 +143,8 @@ jobs:
         timeout-minutes: 50
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          # surfaceflinger del emulador aborta (RegionSampling/readColorBufferDma) con la GPU del anfitrión.
+          EMU_GPU: guest
         run: |
           mkdir -p results
           .github/scripts/emulator-up.sh "${{ inputs.api_level || '37' }}" results
