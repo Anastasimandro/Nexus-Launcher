@@ -401,6 +401,9 @@ say "## Fase 4: activar con 'nexus-quickstep enable', aplicar en el arranque y v
 phase_enable_flow() {
   tool status > "$out/flow-status-0.txt"
   tool enable > "$out/flow-enable.txt"; echo "exit: $?" >> "$out/flow-enable.txt"
+  if ! has "exit: 0" "$out/flow-enable.txt"; then   # la prueba de Nexus puede negarse: se anota y se fuerza para seguir midiendo
+    tool enable --force >> "$out/flow-enable.txt"; echo "exit (--force): $?" >> "$out/flow-enable.txt"
+  fi
   dsh "ls -A $STATE_DIR" > "$out/flow-state-after-enable.txt"
   lookup > "$out/flow-lookup-before-reboot.txt"          # estático: antes de reiniciar no cambia nada
   emulate_magisk enable

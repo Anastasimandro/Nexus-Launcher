@@ -12,8 +12,10 @@ customize.sh                                             comprueba Android 14+, 
 META-INF/com/google/android/{update-binary,updater-script}
 system/product/priv-app/Nexus/Nexus.apk                  el APK de esa release
 system/product/etc/permissions/privapp-permissions-nexus.xml   lista blanca de permisos (generada)
-system/product/overlay/NexusRecentsOverlay.apk           overlay que hace de Nexus el proveedor de Quickstep (DESACTIVADO de serie)
-system/bin/nexus-quickstep                               activa, desactiva y comprueba ese overlay
+overlay-static/NexusRecentsOverlay.apk                   overlay ESTÁTICO que hace de Nexus el proveedor de Quickstep (fuera de system/: no se monta de serie)
+post-fs-data.sh                                          copia ese overlay a /product/overlay solo si se pidió con `enable`
+service.sh                                               vigilante: si SystemUI no se enlaza a Nexus, lo desactiva y reinicia
+system/bin/nexus-quickstep                               pide, quita y comprueba el overlay
 ```
 
 En este directorio están `module.prop` (con `@VERSION@` y `@VERSION_CODE@`), `customize.sh`, `META-INF/`, las listas de `permissions/`, el código del overlay en `overlay/` y la herramienta en `tools/`. El APK y el XML los pone el script, que también compila y firma el overlay (`.github/scripts/build-recents-overlay.sh`).
@@ -48,31 +50,42 @@ Que un permiso esté en la lista **no implica que tu ROM lo conceda**: Android s
 
 ## Gestos del sistema en Nexus (proveedor de Quickstep)
 
-Que Nexus pueda pedir transiciones propias (lo de arriba) **no** hace que reciba el gesto de Inicio: eso lo decide SystemUI, que enlaza con el servicio `QUICKSTEP_SERVICE` del paquete que dice el recurso `config_recentsComponentName` del framework. Mientras ese recurso apunte al launcher del sistema, el gesto es suyo y Nexus solo anima después.
+Que Nexus pueda pedir transiciones propias (lo de arriba) **no** hace que reciba el gesto de Inicio: eso lo decide SystemUI, que enlaza con el servicio `QUICKSTEP_SERVICE` del paquete que dice el recurso `config_recentsComponentName` del framework. Mientras apunte al launcher del sistema, el gesto es suyo y Nexus solo anima después.
 
-El módulo trae un overlay de recursos que cambia **solo esa cadena** a `app.nexus.launcher/com.android.quickstep.RecentsActivity`. No toca SystemUI ni ninguna comprobación de seguridad, y es el mismo mecanismo que usa QuickSwitch, sin depender de él. Viene **desactivado**: flashear el módulo no cambia tus gestos.
+El módulo trae un overlay de recursos que cambia **solo esa cadena** a `app.nexus.launcher/com.android.quickstep.RecentsActivity`. No toca SystemUI ni ninguna comprobación de seguridad y es el mismo mecanismo que usa QuickSwitch, sin depender de él. Con él, SystemUI enlaza con `TouchInteractionService` de Nexus y le entrega los eventos del gesto.
 
-Con él activo, SystemUI enlaza con `TouchInteractionService` de Nexus y le entrega los eventos del gesto; el código de Quickstep que ya lleva Nexus hace que la ventana de la app siga el dedo y termine en su icono.
+**Por qué es estático.** `PackageManagerService` calcula el paquete de recientes una sola vez al arrancar, y solo a ese paquete le concede los permisos `recents`. Un overlay normal (`cmd overlay enable`) entra después y llega tarde: SystemUI se enlaza a Nexus pero Nexus no tiene permisos y el servicio falla (se comprobó en un emulador). Por eso el overlay es `isStatic` con prioridad máxima y tiene que estar en `/product/overlay` antes de ese arranque. Para que flashear el módulo no cambie nada, el APK va **fuera** de `system/` y `post-fs-data.sh` lo copia al montaje solo si existe `/data/adb/nexus_quickstep/enabled`.
 
-Nexus tiene que ser app de **sistema** para esto (según lo observado por otros proyectos en Android 17, SystemUI solo da por válido un proveedor de recientes que esté en la partición del sistema): por eso hace falta el módulo y no basta con un APK normal.
+Viene **desactivado**. Comandos (como root):
 
 ```
-su -c nexus-quickstep status     # estado del overlay y resultado de la comprobación de Nexus
-su -c nexus-quickstep enable     # activa el overlay (reinicia después)
-su -c nexus-quickstep disable    # lo desactiva (reinicia después)
+su -c nexus-quickstep status            # overlay efectivo, comprobación de Nexus, estado del vigilante
+su -c nexus-quickstep enable            # lo pide; REINICIA para aplicarlo
+su -c nexus-quickstep bound             # ¿SystemUI está enlazado al servicio de Nexus? (exit 0 = sí)
+su -c nexus-quickstep disable --reboot  # lo quita y reinicia: el gesto vuelve al launcher del sistema
 ```
 
-Abre Nexus al menos una vez antes de `enable`: al arrancar comprueba si este Android tiene lo que usa Quickstep y lo deja en `files/quickstep-probe.txt`. **`enable` se niega si falta algo** (por ejemplo, en Android 17 cambiaron `IWindowManager.createInputConsumer` y varias constantes de `DesktopModeFlags`). `enable --force` se lo salta; si lo usas y el servicio se cae, te quedas sin gesto de Inicio hasta desactivarlo.
+Abre Nexus al menos una vez antes de `enable`: al arrancar comprueba si este Android tiene lo que usa Quickstep y lo deja en `files/quickstep-probe.txt`. **`enable` se niega si falta algo** o si el vigilante ya desactivó el overlay con esta misma versión de Nexus; `enable --force` se salta ambas cosas.
 
-**Si te quedas sin gestos:** `adb shell su -c "cmd overlay disable --user 0 app.nexus.launcher.overlay.recents"` y reinicia. Si no hay forma de usar el móvil, desactiva el módulo desde Magisk/KernelSU (modo seguro o recovery) y reinicia.
+Comprobación a mano de que SystemUI está enlazado: `dumpsys activity services app.nexus.launcher/com.android.quickstep.TouchInteractionService` debe mostrar `received=true` con SystemUI como cliente (un fallo muestra `binder=null received=false`), y `cmd overlay lookup --user 0 android android:string/config_recentsComponentName` debe devolver el componente de Nexus.
 
-El resultado de la comprobación aparece también en el informe de errores (`quickstepProbe:`).
+### Recuperación
+
+- **El vigilante** (`service.sh` → `nexus-quickstep guard`): con el overlay aplicado espera a que SystemUI se enlace a Nexus; si no pasa en 120 s, o el enlace se pierde 60 s seguidos durante los 300 s siguientes, borra `enabled`, deja constancia (`tripped`) y **reinicia una vez**. El arranque siguiente va sin overlay. No depende de que Nexus arranque. Después, `enable` exige `--force` para esa misma versión de Nexus.
+- **Bucle de arranque:** `post-fs-data.sh` deja un marcador `booting` y el vigilante lo borra al verificar el arranque. Si encuentra el marcador al arrancar, es que el arranque anterior con el overlay no terminó: quita `enabled` y arranca sin overlay.
+- **A mano:** `su -c nexus-quickstep disable --reboot`. Sin root: desactiva el módulo desde Magisk/KernelSU/APatch (modo seguro o recovery) o borra `/data/adb/nexus_quickstep/enabled` desde recovery, y reinicia.
+- No hace falta reinstalar la ROM en ningún caso: el overlay vive en el montaje systemless del módulo, no en la imagen.
+
+### Cosas que conviene saber
+
+- No añadas un `overlay/config/config.xml` al módulo: si existe en una partición, el sistema ignora los overlays estáticos de esa partición que no figuren en él y `PackageManager` puede fallar al arrancar («Missing required system package»). Se comprobó en un emulador.
+- OMS guarda el estado por overlay en `/data/system/overlays.xml`. Si alguna vez se registró `app.nexus.launcher.overlay.recents` como mutable (builds de prueba antiguas), ese estado puede seguir tratándolo como mutable aunque el APK ahora sea estático.
 
 ## Límites
 
-- **No está probado en un dispositivo.** El script, el instalador y la lógica de diagnóstico se han probado con simulaciones; falta un flasheo real en tu ROM.
+- **No está probado en un dispositivo.** Lo comprobado: compilación en CI, análisis estático y un emulador Android 17 (el overlay estático hace a Nexus proveedor de recientes y SystemUI se enlaza); el flujo del módulo se ejecutó en el emulador **simulando** a Magisk (`post-fs-data.sh` a mano). Falta un flasheo real: que Magisk/KernelSU/APatch monten el módulo antes de `PackageManagerService`, y los gestos en tu ROM.
 - Solo vale para el paquete oficial `app.nexus.launcher` (sabor `github`), no para `.nightly` ni `.play`.
-- Los gestos del sistema en Nexus (overlay de recientes) **no están probados en un dispositivo**: ni el overlay, ni que en Android 17 el resto de Quickstep funcione más allá de lo que comprueba `QuickstepProbe`. Tampoco existe un permiso `BIND_QUICKSTEP_SERVICE`: el servicio de Quickstep exige `STATUS_BAR_SERVICE` a quien se enlaza (SystemUI).
+- Los gestos del sistema en Nexus (overlay de recientes) **no están probados en un dispositivo real**, ni que en Android 17 el resto de Quickstep funcione más allá de lo comprobado. Tampoco existe un permiso `BIND_QUICKSTEP_SERVICE`: el servicio de Quickstep exige `STATUS_BAR_SERVICE` a quien se enlaza (SystemUI).
 - Requiere Android 14 (API 34) o superior y una partición `/product`.
 
 ## Si algo no va

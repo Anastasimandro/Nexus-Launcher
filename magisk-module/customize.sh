@@ -10,14 +10,15 @@
 # Estructura del zip (la genera .github/scripts/build-magisk-module.sh):
 #   system/product/priv-app/Nexus/Nexus.apk
 #   system/product/etc/permissions/privapp-permissions-nexus.xml
-#   system/product/overlay/NexusRecentsOverlay.apk   (desactivado hasta `nexus-quickstep enable`)
+#   overlay-static/NexusRecentsOverlay.apk           (FUERA de system/: no se monta de serie)
 #   system/bin/nexus-quickstep
+#   post-fs-data.sh                                  (monta el overlay solo si se pidió con `enable`)
 #   service.sh                                       (vigilante de Quickstep)
 
 MIN_API=34
 APK="$MODPATH/system/product/priv-app/Nexus/Nexus.apk"
 ALLOWLIST="$MODPATH/system/product/etc/permissions/privapp-permissions-nexus.xml"
-OVERLAY="$MODPATH/system/product/overlay/NexusRecentsOverlay.apk"
+OVERLAY="$MODPATH/overlay-static/NexusRecentsOverlay.apk"
 TOOL="$MODPATH/system/bin/nexus-quickstep"
 
 ui_print "- Nexus Launcher Systemless Overlay"
@@ -33,9 +34,14 @@ fi
 [ -f "$OVERLAY" ] || abort "! El zip no lleva el overlay de recientes: está incompleto"
 [ -f "$TOOL" ] || abort "! El zip no lleva nexus-quickstep: está incompleto"
 [ -f "$MODPATH/service.sh" ] || abort "! El zip no lleva service.sh: está incompleto"
+[ -f "$MODPATH/post-fs-data.sh" ] || abort "! El zip no lleva post-fs-data.sh: está incompleto"
+# El overlay no debe estar en system/: si lo estuviera se aplicaría en todos los arranques.
+[ ! -e "$MODPATH/system/product/overlay" ] || abort "! El zip lleva un overlay montable de serie: está mal construido"
 
 set_perm_recursive "$MODPATH/system/product" 0 0 0755 0644
 set_perm "$TOOL" 0 2000 0755
+set_perm "$MODPATH/post-fs-data.sh" 0 0 0755
+set_perm "$MODPATH/service.sh" 0 0 0755
 
 ui_print "- Nexus pasará a ser app privilegiada de /product"
 ui_print "- Reinicia una vez para que Android lo registre"
@@ -44,7 +50,7 @@ ui_print "  conserva los permisos sin volver a flashear el módulo"
 ui_print "- Gestos del sistema en Nexus (opcional, desactivado):"
 ui_print "  tras reiniciar, abre Nexus una vez y, con root, ejecuta"
 ui_print "  nexus-quickstep status   (para ver si este Android lo admite)"
-ui_print "  nexus-quickstep enable   (y reinicia)"
+ui_print "  nexus-quickstep enable   (y reinicia: el overlay es estático)"
 ui_print "  nexus-quickstep bound    (comprueba que SystemUI se enlazó a Nexus)"
-ui_print "  Si en el arranque SystemUI no se enlaza a Nexus, el módulo"
-ui_print "  desactiva el overlay solo. A mano: nexus-quickstep disable"
+ui_print "  Si tras reiniciar SystemUI no se enlaza a Nexus, el módulo"
+ui_print "  lo desactiva y reinicia solo. A mano: nexus-quickstep disable --reboot"
