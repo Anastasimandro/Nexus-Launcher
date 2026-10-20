@@ -1,0 +1,1 @@
+[static-overlay] permisos permitidos y no concedidos: 0 ()
