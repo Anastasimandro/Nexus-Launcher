@@ -1,0 +1,2 @@
+uses-permission: name='android.permission.CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS'
+uses-permission: name='android.permission.START_TASKS_FROM_RECENTS'
