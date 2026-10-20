@@ -1,0 +1,18 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): false
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+V3.0 Signer: certificate DN: CN=Nexus overlay temporal
+V3.0 Signer: certificate SHA-256 digest: 0a335da214cee514fa940fae8b157fc56379c5b2fe0cc26eff7eaa691d4ee346
+V3.0 Signer: certificate SHA-1 digest: 2206fe0fc0b88a108591e61ba7809fc151e0b973
+V3.0 Signer: certificate MD5 digest: 5dcdefdf7dd06224f6e20522dcda7601
+V3.0 Signer: key algorithm: RSA
+V3.0 Signer: key size (bits): 2048
+V3.0 Signer: public key SHA-256 digest: 4b93ad3a773dec20d22a92e1376236c5880bd644994bf02313e7c49a76923276
+V3.0 Signer: public key SHA-1 digest: 84c7b754a19c67bd63b8b19f6e42ee3a088b4511
+V3.0 Signer: public key MD5 digest: 9e3c90c9e1d9b77a83e6931984d45e7d

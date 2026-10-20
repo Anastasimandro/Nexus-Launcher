@@ -1,0 +1,3 @@
+build-tools: /usr/local/lib/android/sdk/build-tools/37.0.0
+Android Asset Packaging Tool (aapt) 2.20-15087165
+0.9
