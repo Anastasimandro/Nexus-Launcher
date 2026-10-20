@@ -1,0 +1,8 @@
+Pedido (enabled): no. El módulo no aplica el overlay (estado de serie).
+Overlay app.nexus.launcher.overlay.recents en este arranque: no aplicado
+  APK en /product/overlay: no
+config_recentsComponentName ahora: com.google.android.apps.nexuslauncher/com.android.quickstep.RecentsActivity
+Overlay efectivo: no
+Comprobación de Nexus: sin datos (abre Nexus una vez).
+Vigilante: sin verificar todavía.
+Los cambios solo se aplican al reiniciar.
