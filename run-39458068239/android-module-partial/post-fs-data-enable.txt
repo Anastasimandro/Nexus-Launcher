@@ -1,0 +1,10 @@
+rc=0
+total 16
+-rw-r--r-- 1 root root 8538 2026-10-20 16:45 NexusRecentsOverlay.apk
+booting
+enabled
+watchdog.log
+2026-10-20 16:45:35 cmd overlay list no devolvió el overlay: android [x] android.auto_generated_rro_vendor__ [x] com.google.android.overlay.googleconfig 
+2026-10-20 16:45:47 cmd overlay list no devolvió el overlay: android [x] android.auto_generated_rro_vendor__ [x] com.google.android.overlay.googleconfig 
+2026-10-20 16:45:50 post-fs-data: overlay copiado a /data/local/tmp/nexusmod/system/product/overlay/NexusRecentsOverlay.apk
+montado: sí
