@@ -81,6 +81,8 @@ Comprobación a mano de que SystemUI está enlazado: `dumpsys activity services 
 - No añadas un `overlay/config/config.xml` al módulo: si existe en una partición, el sistema ignora los overlays estáticos de esa partición que no figuren en él y `PackageManager` puede fallar al arrancar («Missing required system package»). Se comprobó en un emulador.
 - OMS guarda el estado por overlay en `/data/system/overlays.xml`. Si alguna vez se registró `app.nexus.launcher.overlay.recents` como mutable (builds de prueba antiguas), ese estado puede seguir tratándolo como mutable aunque el APK ahora sea estático.
 
+Protocolo de prueba en el dispositivo (gestos, cancelaciones, Atrás, Recientes, rotación, bloqueo, recuperación): [`PRUEBAS-EN-DISPOSITIVO.md`](PRUEBAS-EN-DISPOSITIVO.md).
+
 ## Límites
 
 - **No está probado en un dispositivo.** Lo comprobado: compilación en CI, análisis estático y un emulador Android 17 (el overlay estático hace a Nexus proveedor de recientes y SystemUI se enlaza); el flujo del módulo se ejecutó en el emulador **simulando** a Magisk (`post-fs-data.sh` a mano). Falta un flasheo real: que Magisk/KernelSU/APatch monten el módulo antes de `PackageManagerService`, y los gestos en tu ROM.
