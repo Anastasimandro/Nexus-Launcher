@@ -186,8 +186,14 @@ jobs:
             || fail "El APK dentro del módulo no es el que se publica."
           unzip -p "$zip" system/product/etc/permissions/privapp-permissions-nexus.xml | grep -qF 'name="android.permission.START_TASKS_FROM_RECENTS"' \
             || fail "La lista de permisos no concede START_TASKS_FROM_RECENTS."
-          unzip -l "$zip" system/product/overlay/NexusRecentsOverlay.apk >/dev/null 2>&1 \
+          unzip -l "$zip" overlay-static/NexusRecentsOverlay.apk >/dev/null 2>&1 \
             || fail "El módulo no lleva el overlay de recientes."
+          # Si el overlay estuviera en system/ se aplicaría en todos los arranques, sin que el usuario lo pida.
+          if unzip -l "$zip" 'system/product/overlay/*' 2>/dev/null | grep -q NexusRecentsOverlay; then
+            fail "El overlay está en system/: se aplicaría de serie."
+          fi
+          unzip -l "$zip" post-fs-data.sh >/dev/null 2>&1 \
+            || fail "El módulo no lleva post-fs-data.sh."
           unzip -l "$zip" system/bin/nexus-quickstep >/dev/null 2>&1 \
             || fail "El módulo no lleva nexus-quickstep."
           unzip -l "$zip" service.sh >/dev/null 2>&1 \
