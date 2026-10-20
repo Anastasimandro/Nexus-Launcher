@@ -177,12 +177,19 @@ check_framework_resources() {
   bt="$(ls "$sdk/build-tools" | sort -V | tail -n 1)"; aapt2="$sdk/build-tools/$bt/aapt2"
   adb pull /system/framework/framework-res.apk "$work/framework-res.apk" > /dev/null 2>&1 || return 1
   "$aapt2" dump resources "$work/framework-res.apk" > "$out/framework-res-dump.txt" 2>&1
-  python3 -I "$here/check-framework-resources.py" "$out/framework-res-dump.txt" \
+  # El android.jar con el que Gradle compila (compileSdk 37, extensión 2): de él salen los IDs que
+  # aapt2 graba en el APK para cada @*android:...
+  local jar; jar="$(ls -d "$sdk"/platforms/android-37*/android.jar 2>/dev/null | sort -V | tail -n 1)"
+  echo "android.jar de compilación: ${jar:-ninguno}"
+  if [[ -n $jar ]]; then "$aapt2" dump resources "$jar" > "$out/build-jar-dump.txt" 2>&1; else : > "$out/build-jar-dump.txt"; fi
+  [[ -s "$out/build-jar-dump.txt" ]] || echo "-" > "$out/build-jar-dump.txt"
+  local bj="$out/build-jar-dump.txt"; [[ "$(head -c 1 "$bj")" == "-" && "$(wc -c < "$bj")" -le 2 ]] && bj="-"
+  python3 -I "$here/check-framework-resources.py" "$out/framework-res-dump.txt" "$bj" \
     "$here/../../res" "$here/../../quickstep/res" "$here/../../lawnchair/res" "$here/../../systemUI" "$here/../../compatLib" 2>&1
 }
 cap framework-resources check_framework_resources > /dev/null 2>&1
 cat "$out/framework-resources.txt" | tee -a "$out/summary.md"
-rm -f "$out/framework-res-dump.txt"
+rm -f "$out/framework-res-dump.txt" "$out/build-jar-dump.txt"
 say ""
 
 # ---------------------------------------------------------------------------------------------
