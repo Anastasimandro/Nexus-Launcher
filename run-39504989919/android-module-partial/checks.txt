@@ -5,3 +5,6 @@ OK    tras reiniciar Nexus tiene los permisos de allow.txt (0 sin conceder)
 OK    SystemUI enlazado al servicio de Nexus
 OK    el vigilante dejó el arranque verificado (healthy)
 OK    el marcador booting se borró
+OK    disable --reboot: post-fs-data.sh no monta el APK
+OK    tras disable el sistema vuelve a los recientes de serie
+OK    tras disable SystemUI ya no se enlaza a Nexus
