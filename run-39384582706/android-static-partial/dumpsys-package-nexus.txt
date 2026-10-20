@@ -1,0 +1,296 @@
+Activity Resolver Table:
+  Schemes:
+      lawnchair:
+        9930428 app.nexus.launcher/app.lawnchair.ui.preferences.PreferenceActivity filter 2f8dae6
+          Action: "android.intent.action.VIEW"
+          Category: "android.intent.category.DEFAULT"
+          Category: "android.intent.category.BROWSABLE"
+          Scheme: "lawnchair"
+          Authority: "settings": -1
+          Path: "PatternMatcher{PREFIX: /}"
+
+  Non-Data Actions:
+      app.lawnchair.APPLY_ICONS:
+        d2d6fc3 app.nexus.launcher/app.lawnchair.ui.ApplyIconPackActivity filter 8383040
+          Action: "app.lawnchair.APPLY_ICONS"
+          Category: "android.intent.category.DEFAULT"
+      android.intent.action.MAIN:
+        c1b671a app.nexus.launcher/app.lawnchair.LawnchairLauncher filter 931024b
+          Action: "android.intent.action.MAIN"
+          Action: "android.intent.action.SHOW_WORK_APPS"
+          Action: "android.intent.action.ALL_APPS"
+          Category: "android.intent.category.HOME"
+          Category: "android.intent.category.DEFAULT"
+          Category: "android.intent.category.MONKEY"
+          Category: "android.intent.category.LAUNCHER_APP"
+          Category: "android.intent.category.LAUNCHER"
+      android.intent.action.PICK:
+        8e01635 app.nexus.launcher/com.android.launcher3.QuickstepWidgetPickerActivity filter 2bcaca
+          Action: "android.intent.action.PICK"
+          Category: "android.intent.category.DEFAULT"
+      android.content.pm.action.CONFIRM_PIN_APPWIDGET:
+        cab143b app.nexus.launcher/com.android.launcher3.dragndrop.AddItemActivity filter 5a3c758
+          Action: "android.content.pm.action.CONFIRM_PIN_APPWIDGET"
+          Action: "android.content.pm.action.CONFIRM_PIN_SHORTCUT"
+      android.intent.action.APPLICATION_PREFERENCES:
+        9930428 app.nexus.launcher/app.lawnchair.ui.preferences.PreferenceActivity filter dcd2541
+          Action: "android.intent.action.APPLICATION_PREFERENCES"
+          Category: "android.intent.category.DEFAULT"
+          mPriority=1, mOrder=0, mHasStaticPartialTypes=false, mHasDynamicPartialTypes=false
+        388e0b1 app.nexus.launcher/com.android.launcher3.settings.SettingsActivity filter fa3c996
+          Action: "android.intent.action.APPLICATION_PREFERENCES"
+          Category: "android.intent.category.DEFAULT"
+          mPriority=-1, mOrder=0, mHasStaticPartialTypes=false, mHasDynamicPartialTypes=false
+      android.intent.action.SHOW_WORK_APPS:
+        c1b671a app.nexus.launcher/app.lawnchair.LawnchairLauncher filter 931024b
+          Action: "android.intent.action.MAIN"
+          Action: "android.intent.action.SHOW_WORK_APPS"
+          Action: "android.intent.action.ALL_APPS"
+          Category: "android.intent.category.HOME"
+          Category: "android.intent.category.DEFAULT"
+          Category: "android.intent.category.MONKEY"
+          Category: "android.intent.category.LAUNCHER_APP"
+          Category: "android.intent.category.LAUNCHER"
+      android.intent.action.ALL_APPS:
+        c1b671a app.nexus.launcher/app.lawnchair.LawnchairLauncher filter 931024b
+          Action: "android.intent.action.MAIN"
+          Action: "android.intent.action.SHOW_WORK_APPS"
+          Action: "android.intent.action.ALL_APPS"
+          Category: "android.intent.category.HOME"
+          Category: "android.intent.category.DEFAULT"
+          Category: "android.intent.category.MONKEY"
+          Category: "android.intent.category.LAUNCHER_APP"
+          Category: "android.intent.category.LAUNCHER"
+      app.lawnchair.START_ACTION:
+        405d47d app.nexus.launcher/app.lawnchair.gestures.ui.RunHandlerActivity filter 2e7bf72
+          Action: "app.lawnchair.START_ACTION"
+          Category: "android.intent.category.DEFAULT"
+      com.android.quickstep.action.GESTURE_SANDBOX:
+        203b79 app.nexus.launcher/com.android.quickstep.interaction.GestureSandboxActivity filter 86e60be
+          Action: "com.android.quickstep.action.GESTURE_SANDBOX"
+          Category: "android.intent.category.DEFAULT"
+      com.android.quickstep.action.GESTURE_ONBOARDING_ALL_SET:
+        96d451f app.nexus.launcher/com.android.quickstep.interaction.AllSetActivity filter 390106c
+          Action: "com.android.quickstep.action.GESTURE_ONBOARDING_ALL_SET"
+          Category: "android.intent.category.DEFAULT"
+      android.content.pm.action.CONFIRM_PIN_SHORTCUT:
+        cab143b app.nexus.launcher/com.android.launcher3.dragndrop.AddItemActivity filter 5a3c758
+          Action: "android.content.pm.action.CONFIRM_PIN_APPWIDGET"
+          Action: "android.content.pm.action.CONFIRM_PIN_SHORTCUT"
+      android.intent.action.CREATE_SHORTCUT:
+        a8b7827 app.nexus.launcher/app.lawnchair.gestures.ui.LawnchairShortcutActivity filter 1283ad4
+          Action: "android.intent.action.CREATE_SHORTCUT"
+          Category: "android.intent.category.DEFAULT"
+
+Receiver Resolver Table:
+  Non-Data Actions:
+      app.nexus.launcher.bugreport.COPY:
+        c19d6ed app.nexus.launcher/app.lawnchair.bugreport.BugReportReceiver filter ecae922
+          Action: "app.nexus.launcher.bugreport.COPY"
+          Action: "app.nexus.launcher.bugreport.UPLOAD"
+          Action: "app.nexus.launcher.bugreport.UPLOAD_COMPLETE"
+      androidx.profileinstaller.action.SAVE_PROFILE:
+        c43f6a5 app.nexus.launcher/androidx.profileinstaller.ProfileInstallReceiver filter ac3b688
+          Action: "androidx.profileinstaller.action.SAVE_PROFILE"
+      android.app.action.DEVICE_ADMIN_ENABLED:
+        2cb917 app.nexus.launcher/app.lawnchair.gestures.handlers.SleepMethodDeviceAdmin$SleepDeviceAdmin filter 23a0104
+          Action: "android.app.action.DEVICE_ADMIN_ENABLED"
+      app.nexus.launcher.bugreport.UPLOAD:
+        c19d6ed app.nexus.launcher/app.lawnchair.bugreport.BugReportReceiver filter ecae922
+          Action: "app.nexus.launcher.bugreport.COPY"
+          Action: "app.nexus.launcher.bugreport.UPLOAD"
+          Action: "app.nexus.launcher.bugreport.UPLOAD_COMPLETE"
+      android.content.pm.action.SESSION_COMMITTED:
+        549f4e9 app.nexus.launcher/com.android.launcher3.SessionCommitReceiver filter e52756e
+          Action: "android.content.pm.action.SESSION_COMMITTED"
+      androidx.profileinstaller.action.INSTALL_PROFILE:
+        c43f6a5 app.nexus.launcher/androidx.profileinstaller.ProfileInstallReceiver filter 6b47a7a
+          Action: "androidx.profileinstaller.action.INSTALL_PROFILE"
+      androidx.profileinstaller.action.SKIP_FILE:
+        c43f6a5 app.nexus.launcher/androidx.profileinstaller.ProfileInstallReceiver filter c85822b
+          Action: "androidx.profileinstaller.action.SKIP_FILE"
+      androidx.profileinstaller.action.BENCHMARK_OPERATION:
+        c43f6a5 app.nexus.launcher/androidx.profileinstaller.ProfileInstallReceiver filter c225821
+          Action: "androidx.profileinstaller.action.BENCHMARK_OPERATION"
+      android.appwidget.action.APPWIDGET_HOST_RESTORED:
+        9f7b40f app.nexus.launcher/com.android.launcher3.AppWidgetsRestoredReceiver filter 9ee6c9c
+          Action: "android.appwidget.action.APPWIDGET_HOST_RESTORED"
+      app.nexus.launcher.bugreport.UPLOAD_COMPLETE:
+        c19d6ed app.nexus.launcher/app.lawnchair.bugreport.BugReportReceiver filter ecae922
+          Action: "app.nexus.launcher.bugreport.COPY"
+          Action: "app.nexus.launcher.bugreport.UPLOAD"
+          Action: "app.nexus.launcher.bugreport.UPLOAD_COMPLETE"
+      android.appwidget.action.APPWIDGET_UPDATE:
+        1b9cfb3 app.nexus.launcher/app.lawnchair.smartspace.SmartspaceAppWidgetProvider filter d82970
+          Action: "android.appwidget.action.APPWIDGET_UPDATE"
+
+Service Resolver Table:
+  Non-Data Actions:
+      android.intent.action.QUICKSTEP_SERVICE:
+        263ded2 app.nexus.launcher/com.android.quickstep.TouchInteractionService filter ad60ba3 permission android.permission.STATUS_BAR_SERVICE
+          Action: "android.intent.action.QUICKSTEP_SERVICE"
+      android.service.notification.NotificationListenerService:
+        7c0cea0 app.nexus.launcher/com.android.launcher3.notification.NotificationListener filter bccea59 permission android.permission.BIND_NOTIFICATION_LISTENER_SERVICE
+          Action: "android.service.notification.NotificationListenerService"
+      android.accessibilityservice.AccessibilityService:
+        c21b334 app.nexus.launcher/app.lawnchair.LawnchairAccessibilityService filter d2b555d permission android.permission.BIND_ACCESSIBILITY_SERVICE
+          Action: "android.accessibilityservice.AccessibilityService"
+
+Provider Resolver Table:
+  Non-Data Actions:
+      android.content.action.SEARCH_INDEXABLES_PROVIDER:
+        bffc446 app.nexus.launcher/com.android.quickstep.LauncherSearchIndexablesProvider filter dd81607
+          Action: "android.content.action.SEARCH_INDEXABLES_PROVIDER"
+
+Domain verification status:
+
+Permissions:
+  Permission [app.nexus.launcher.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (b1cc427):
+    sourcePackage=app.nexus.launcher
+    uid=10235 gids=[] type=0 prot=signature
+    perm=PermissionInfo{c2d96d4 app.nexus.launcher.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
+    flags=0x0
+
+Permissions:
+  Permission [app.nexus.launcher.permission.START_WIDGET_PICKER_ACTIVITY] (f56007d):
+    sourcePackage=app.nexus.launcher
+    uid=10235 gids=[] type=0 prot=signature|privileged
+    perm=PermissionInfo{9727b72 app.nexus.launcher.permission.START_WIDGET_PICKER_ACTIVITY}
+    flags=0x0
+
+Permissions:
+  Permission [app.nexus.launcher.permission.GRID_CONTROL] (3877bc3):
+    sourcePackage=app.nexus.launcher
+    uid=10235 gids=[] type=0 prot=signature|knownSigner
+    perm=PermissionInfo{4374c40 app.nexus.launcher.permission.GRID_CONTROL}
+    flags=0x0
+
+Registered ContentProviders:
+  app.nexus.launcher/androidx.core.content.FileProvider:
+    Provider{e472779 app.nexus.launcher/androidx.core.content.FileProvider}
+  app.nexus.launcher/app.lawnchair.bugreport.FileProvider:
+    Provider{2e8dcbe app.nexus.launcher/app.lawnchair.bugreport.FileProvider}
+  app.nexus.launcher/app.lawnchair.search.LawnchairRecentSuggestionProvider:
+    Provider{95c111f app.nexus.launcher/app.lawnchair.search.LawnchairRecentSuggestionProvider}
+  app.nexus.launcher/com.android.launcher3.graphics.LauncherCustomizationProvider:
+    Provider{664ec6c app.nexus.launcher/com.android.launcher3.graphics.LauncherCustomizationProvider}
+  app.nexus.launcher/rikka.shizuku.ShizukuProvider:
+    Provider{89c235 app.nexus.launcher/rikka.shizuku.ShizukuProvider}
+  app.nexus.launcher/com.android.launcher3.LauncherProvider:
+    Provider{dd206ca app.nexus.launcher/com.android.launcher3.LauncherProvider}
+  app.nexus.launcher/com.android.launcher3.testing.TestInformationProvider:
+    Provider{abaa03b app.nexus.launcher/com.android.launcher3.testing.TestInformationProvider}
+  app.nexus.launcher/com.android.quickstep.LauncherSearchIndexablesProvider:
+    Provider{bffc446 app.nexus.launcher/com.android.quickstep.LauncherSearchIndexablesProvider}
+
+ContentProvider Authorities:
+  [app.nexus.launcher.settings]:
+    Provider{dd206ca app.nexus.launcher/com.android.launcher3.LauncherProvider}
+      applicationInfo=ApplicationInfo{6ea6358 app.nexus.launcher}
+  [app.nexus.launcher.overview.fileprovider]:
+    Provider{e472779 app.nexus.launcher/androidx.core.content.FileProvider}
+      applicationInfo=ApplicationInfo{a214cb1 app.nexus.launcher}
+  [app.nexus.launcher.TestInfo]:
+    Provider{abaa03b app.nexus.launcher/com.android.launcher3.testing.TestInformationProvider}
+      applicationInfo=ApplicationInfo{771c596 app.nexus.launcher}
+  [app.nexus.launcher.search.LawnchairRecentSuggestionProvider]:
+    Provider{95c111f app.nexus.launcher/app.lawnchair.search.LawnchairRecentSuggestionProvider}
+      applicationInfo=ApplicationInfo{da90517 app.nexus.launcher}
+  [app.nexus.launcher.grid_control]:
+    Provider{664ec6c app.nexus.launcher/com.android.launcher3.graphics.LauncherCustomizationProvider}
+      applicationInfo=ApplicationInfo{74e5d04 app.nexus.launcher}
+  [app.nexus.launcher.shizuku]:
+    Provider{89c235 app.nexus.launcher/rikka.shizuku.ShizukuProvider}
+      applicationInfo=ApplicationInfo{1cd02ed app.nexus.launcher}
+  [app.nexus.launcher.fileprovider]:
+    Provider{2e8dcbe app.nexus.launcher/app.lawnchair.bugreport.FileProvider}
+      applicationInfo=ApplicationInfo{b7ca522 app.nexus.launcher}
+  [app.nexus.launcher]:
+    Provider{bffc446 app.nexus.launcher/com.android.quickstep.LauncherSearchIndexablesProvider}
+      applicationInfo=ApplicationInfo{8aedbb3 app.nexus.launcher}
+
+Key Set Manager:
+  [app.nexus.launcher]
+      Signing KeySets: 68
+
+Packages:
+  Package [app.nexus.launcher] (8d64570):
+    appId=10235
+    pccId=-1
+    pkg=Package{103e0e9 app.nexus.launcher}
+    codePath=/product/priv-app/Nexus
+    resourcePath=/product/priv-app/Nexus
+    legacyNativeLibraryDir=/product/priv-app/Nexus/lib
+    extractNativeLibs=false
+    primaryCpuAbi=x86_64
+    secondaryCpuAbi=null
+    cpuAbiOverride=null
+    versionCode=1601009900 minSdk=26 targetSdk=37
+    minExtensionVersions=[]
+    versionName=0.99
+    hiddenApiEnforcementPolicy=2
+    usesNonSdkApi=false
+    splits=[base]
+    apkSigningVersion=2
+    flags=[ SYSTEM HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP KILL_AFTER_RESTORE RESTORE_ANY_VERSION ]
+    privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE BACKUP_IN_FOREGROUND PARTIALLY_DIRECT_BOOT_AWARE PRIVILEGED PRODUCT PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    forceQueryable=false
+    pageSizeCompat=0
+    scannedAsStoppedSystemApp=true
+    supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
+    usesOptionalLibraries:
+      androidx.window.extensions
+      androidx.window.sidecar
+    usesLibraryFiles:
+      /system_ext/framework/androidx.window.extensions.jar
+      /system_ext/framework/androidx.window.sidecar.jar
+    timeStamp=2026-10-20 07:17:04
+    lastUpdateTime=2026-10-20 07:21:29
+    installerPackageName=null
+    installerPackageUid=-1
+    initiatingPackageName=null
+    originatingPackageName=null
+    packageSource=0
+    appMetadataFilePath=null
+    appMetadataSource=0
+    signatures=PackageSignatures{a63f16e version:2, signatures:[c821d99e], past signatures:[]}
+    installPermissionsFixed=false
+    pkgFlags=[ SYSTEM HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP KILL_AFTER_RESTORE RESTORE_ANY_VERSION ]
+    privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE BACKUP_IN_FOREGROUND PARTIALLY_DIRECT_BOOT_AWARE PRIVILEGED PRODUCT PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    apexModuleName=null
+    declared permissions:
+      app.nexus.launcher.permission.START_WIDGET_PICKER_ACTIVITY: prot=signature|privileged
+      app.nexus.launcher.permission.GRID_CONTROL: prot=signature|knownSigner
+      app.nexus.launcher.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION: prot=signature
+    requested permissions:
+      android.permission.POST_NOTIFICATIONS
+      android.permission.ACCESS_HIDDEN_PROFILES_FULL
+      android.permission.MANAGE_EXTERNAL_STORAGE
+      android.permission.ACCESS_HIDDEN_PROFILES
+      android.permission.READ_HISTORY_BOOKMARKS
+      android.permission.START_TASKS_FROM_RECENTS
+      android.permission.MONITOR_INPUT
+      android.permission.INTERNAL_SYSTEM_WINDOW
+      app.nexus.launcher.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+      android.permission.FOREGROUND_SERVICE
+      android.permission.READ_MEDIA_VISUAL_USER_SELECTED
+      android.permission.ACCESS_RESTRICTED_SETTINGS
+      app.nexus.launcher.permission.WRITE_SETTINGS
+      android.permission.MANAGE_ACTIVITY_TASKS
+      android.permission.RECEIVE_BOOT_COMPLETED
+      android.permission.REMOVE_TASKS
+      android.permission.EXPAND_STATUS_BAR
+      android.permission.INTERNET
+      com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER
+      android.permission.MANAGE_KEY_GESTURES
+      android.permission.ROTATE_SURFACE_FLINGER
+      android.permission.READ_EXTERNAL_STORAGE
+      android.permission.MANAGE_ACCESSIBILITY
+      android.permission.CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS
+      android.permission.INTERACT_ACROSS_USERS_FULL
+      android.permission.BIND_APPWIDGET
+      android.permission.STOP_APP_SWITCHES
+      android.permission.PACKAGE_USAGE_STATS
+      android.permission.WRITE_SECURE_SETTINGS
+      android.permission.STATUS_BAR_SERVICE
+  Error with service 'package' while dumping: DEAD_OBJECT
