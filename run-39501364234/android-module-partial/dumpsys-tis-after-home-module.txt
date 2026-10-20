@@ -1,0 +1,2 @@
+SERVICE app.nexus.launcher/com.android.quickstep.TouchInteractionService 4b8cc4 pid=8148 user=0
+  Client:

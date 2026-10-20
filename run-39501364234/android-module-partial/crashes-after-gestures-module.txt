@@ -1,0 +1,30 @@
+10-20 21:49:23.072  1039  1039 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 21:49:23.072  1039  1039 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1039
+10-20 21:49:27.392  1661  1661 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 21:49:27.392  1661  1661 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1661
+10-20 21:49:55.314  3200  3200 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 21:49:55.314  3200  3200 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 3200
+10-20 21:49:59.542  4033  4033 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 21:49:59.542  4033  4033 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 4033
+10-20 21:50:25.863  5499  5499 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 21:50:25.863  5499  5499 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 5499
+10-20 21:50:30.405  6306  6306 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 21:50:30.405  6306  6306 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 6306
+10-20 21:50:56.773  7728  7728 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 21:50:56.773  7728  7728 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 7728
+10-20 21:51:36.400 10534 10534 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 21:51:36.400 10534 10534 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 10534
+10-20 21:52:04.985 12980 12980 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 21:52:04.985 12980 12980 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 12980
+10-20 21:52:11.860 13410 13583 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-20 21:52:11.860 13410 13583 E AndroidRuntime: Process: com.google.android.inputmethod.latin, PID: 13410
+10-20 21:52:11.875 13924 14049 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-20 21:52:11.875 13924 14049 E AndroidRuntime: Process: com.google.android.googlequicksearchbox:googleapp, PID: 13924
+10-20 21:52:11.878 14280 14326 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-20 21:52:11.878 14280 14326 E AndroidRuntime: Process: com.google.android.gms.unstable, PID: 14280
+10-20 21:52:11.885 14280 14391 E AndroidRuntime: FATAL EXCEPTION: FlagRegistrar
+10-20 21:52:11.885 14280 14391 E AndroidRuntime: Process: com.google.android.gms.unstable, PID: 14280
+10-20 21:52:11.900 13754 13880 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-20 21:52:11.900 13754 13880 E AndroidRuntime: Process: com.google.android.gms, PID: 13754
+10-20 21:52:11.909 13066 14322 E AndroidRuntime: FATAL EXCEPTION: pool-157-thread-1
+10-20 21:52:11.909 13066 14322 E AndroidRuntime: Process: com.google.android.gms.persistent, PID: 13066

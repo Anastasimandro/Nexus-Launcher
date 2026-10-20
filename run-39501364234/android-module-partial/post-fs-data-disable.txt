@@ -1,0 +1,8 @@
+rc=0
+total 0
+watchdog.log
+2026-10-20 21:48:44 post-fs-data: overlay copiado a /data/local/tmp/nexusmod/system/product/overlay/NexusRecentsOverlay.apk
+2026-10-20 21:49:32 arranque con el overlay pedido: vigilando (espera 240s, vigilancia 60s)
+2026-10-20 21:49:59 SystemUI enlazado al servicio de Nexus tras 25s
+2026-10-20 21:51:00 vigilancia terminada: enlace estable
+montado: no

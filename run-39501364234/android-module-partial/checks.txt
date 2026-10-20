@@ -1,0 +1,7 @@
+OK    enable pide el overlay (archivo enabled)
+OK    antes de reiniciar el overlay aún no es efectivo
+OK    tras reiniciar config_recentsComponentName apunta a Nexus
+OK    tras reiniciar Nexus tiene los permisos de allow.txt (0 sin conceder)
+OK    SystemUI enlazado al servicio de Nexus
+OK    el vigilante dejó el arranque verificado (healthy)
+OK    el marcador booting se borró
