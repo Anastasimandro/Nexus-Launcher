@@ -130,7 +130,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           # surfaceflinger del emulador aborta (RegionSampling/readColorBufferDma) con la GPU del anfitrión.
-          EMU_GPU: swiftshader_indirect
+          EMU_GPU: swangle_indirect
         run: |
           mkdir -p results
           .github/scripts/emulator-up.sh "${{ inputs.api_level || '37' }}" results

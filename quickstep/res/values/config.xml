@@ -52,9 +52,8 @@
     <item type="id" name="action_create_application_bubble" />
 
     <!-- The max scale for the wallpaper when it's zoomed in -->
-    <item name="config_wallpaperMaxScale" format="float" type="dimen">
-        @*android:dimen/config_wallpaperMaxScale
-    </item>
+    <!-- Literal (el valor de AOSP): el ID privado del framework grabado al compilar no coincide con el del sistema. -->
+    <item name="config_wallpaperMaxScale" format="float" type="dimen">1.1</item>
 
     <string name="setup_wizard_pkg" translatable="false" />
 

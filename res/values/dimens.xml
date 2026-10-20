@@ -440,9 +440,8 @@
     <dimen name="taskbar_phone_size">48dp</dimen>
     <dimen name="taskbar_phone_home_button_size">80dp</dimen>
     <dimen name="taskbar_phone_content_padding">8dp</dimen>
-    <dimen name="taskbar_phone_rounded_corner_content_margin">
-        @*android:dimen/rounded_corner_content_padding
-    </dimen>
+    <!-- Literal (rounded_corner_content_padding de AOSP): ver taskbar_phone_size. -->
+    <dimen name="taskbar_phone_rounded_corner_content_margin">0dp</dimen>
     <dimen name="taskbar_stashed_size">0dp</dimen>
     <dimen name="qsb_widget_height">0dp</dimen>
     <dimen name="qsb_shadow_height">0dp</dimen>
