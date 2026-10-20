@@ -1,0 +1,2 @@
+nexus-quickstep: el overlay se desactivó solo (2026-10-20 21:57:05 SystemUI no se enlazó al servicio de Nexus en 60 s). Tras un fallo de arranque o con esta versión de Nexus (1601009900) hace falta --force; si es solo la versión, actualizar Nexus también vale.
+exit: 1
