@@ -91,3 +91,6 @@ WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last
 WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last-check.ini for reading.
 INFO         | Boot completed in 48638 ms
 INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+INFO         | Boot completed in 19614 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell am broadcast -a com.android.emulator.multidisplay.START -n com.android.emulator.multidisplay/.MultiDisplayServiceReceiver --user 0 ' failed: 'adb: device 'emulator-5554' not found'
