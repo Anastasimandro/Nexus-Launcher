@@ -6,15 +6,25 @@
   qué paquete enlazar con su servicio QUICKSTEP_SERVICE (y el sistema, para saber qué app es la de
   recientes). No se toca SystemUI ni ninguna comprobación de seguridad.
 
-  No es estático: se instala desactivado y se activa a propósito con `nexus-quickstep enable`
-  (ver magisk-module/README.md). Así, flashear el módulo no cambia los gestos del sistema.
+  Es ESTÁTICO (inmutable y activo desde el arranque) a propósito: el sistema decide qué paquete es
+  el de recientes UNA vez, cuando arranca PackageManagerService, y solo entonces concede a ese
+  paquete los permisos `signature|recents` que Quickstep necesita. Un overlay mutable activado
+  con `cmd overlay enable` llega tarde (OverlayManagerService arranca después): se probó en
+  Android 17 y Nexus no recibió ninguno de esos permisos.
+
+  Por eso el módulo NO lo instala en system/: lo guarda en overlay-static/ y post-fs-data.sh lo
+  copia a system/product/overlay/ solo cuando existe /data/adb/nexus_quickstep/enabled
+  (`nexus-quickstep enable`). Sin ese archivo el módulo no cambia los gestos del sistema.
+
+  priority al máximo: otros overlays estáticos de la imagen (p. ej. los de Pixel) también fijan
+  config_recentsComponentName y el de mayor prioridad gana.
 
   El APK lo genera .github/scripts/build-recents-overlay.sh.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="app.nexus.launcher.overlay.recents">
 
-    <overlay android:targetPackage="android" />
+    <overlay android:targetPackage="android" android:isStatic="true" android:priority="2147483647" />
 
     <application android:hasCode="false" />
 </manifest>

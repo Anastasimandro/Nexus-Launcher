@@ -3,29 +3,39 @@
 #
 # Uso (como root):
 #   nexus-quickstep status            estado del overlay, de la comprobación de Nexus y del vigilante
-#   nexus-quickstep enable [--force]  activa el overlay (hay que reiniciar después)
-#   nexus-quickstep disable [--no-restart]
-#                                     lo desactiva y reinicia SystemUI para volver al gesto del sistema
+#   nexus-quickstep enable [--force]  pide aplicar el overlay en el próximo arranque (hay que reiniciar)
+#   nexus-quickstep disable [--reboot]
+#                                     deja de aplicarlo (efectivo al reiniciar; --reboot reinicia ya)
 #   nexus-quickstep bound             ¿está SystemUI enlazado al servicio de Quickstep de Nexus?
 #   nexus-quickstep guard             lo ejecuta el módulo en cada arranque (ver service.sh)
 #
 # El overlay (app.nexus.launcher.overlay.recents) cambia config_recentsComponentName para que
 # SystemUI enlace con el TouchInteractionService de Nexus y los gestos del sistema (Inicio,
-# recientes) los lleve Nexus. Viene desactivado de serie.
+# recientes) los lleve Nexus.
+#
+# Es un overlay ESTÁTICO: el sistema solo lo tiene en cuenta si está en /product/overlay cuando
+# arranca PackageManagerService, y no se puede activar ni desactivar en caliente. Por eso `enable` y
+# `disable` solo crean o borran /data/adb/nexus_quickstep/enabled; post-fs-data.sh del módulo copia
+# el APK a system/product/overlay/ en el arranque si ese archivo existe. Sin él, los gestos del
+# sistema no cambian (estado de serie).
 #
 # `enable` se niega si Nexus no ha comprobado que Quickstep es compatible con este Android (archivo
 # quickstep-probe.txt que escribe la app al arrancar) o si el vigilante ya tuvo que desactivar el
 # overlay con esta misma versión de Nexus. --force se salta las dos cosas.
 #
-# El vigilante (`guard`): en cada arranque con el overlay activo espera a que SystemUI se enlace al
-# servicio de Nexus. Si no ocurre, o el enlace se pierde y no vuelve, desactiva el overlay y reinicia
-# SystemUI: el gesto vuelve al launcher del sistema sin tocar nada. No depende de que Nexus arranque.
+# El vigilante (`guard`): en cada arranque con el overlay aplicado espera a que SystemUI se enlace al
+# servicio de Nexus. Si no ocurre, o el enlace se pierde y no vuelve, borra `enabled` y reinicia: el
+# siguiente arranque va sin overlay y los gestos vuelven al launcher del sistema. No depende de que
+# Nexus arranque. Si el sistema ni siquiera termina de arrancar, post-fs-data.sh lo detecta (marcador
+# `booting`) y arranca sin overlay.
 
 OVERLAY="app.nexus.launcher.overlay.recents"
 PKG="app.nexus.launcher"
 SERVICE="$PKG/com.android.quickstep.TouchInteractionService"
 USER_ID=0
 STATE_DIR="${NEXUS_STATE_DIR:-/data/adb/nexus_quickstep}"
+MODDIR="${NEXUS_MODDIR:-/data/adb/modules/nexus_launcher_systemless}"
+COMPONENT_KEY="android:string/config_recentsComponentName"
 PROBE_FILE="${NEXUS_PROBE_FILE:-/data/user/$USER_ID/$PKG/files/quickstep-probe.txt}"
 # Segundos que se espera el primer enlace, cuánto se vigila después y cada cuánto se mira.
 GUARD_WAIT="${NEXUS_GUARD_WAIT:-120}"
@@ -43,7 +53,7 @@ log() {
 }
 
 usage() {
-  say "Uso: nexus-quickstep status | enable [--force] | disable [--no-restart] | bound"
+  say "Uso: nexus-quickstep status | enable [--force] | disable [--reboot] | bound"
   exit "${1:-2}"
 }
 
@@ -107,25 +117,47 @@ is_bound() {
   [ -n "$(bound_lines)" ]
 }
 
-restart_systemui() {
-  killall com.android.systemui 2>/dev/null || pkill -f com.android.systemui 2>/dev/null
-}
-
 boot_completed() {
   [ "$(getprop sys.boot_completed)" = "1" ]
 }
 
+# Componente de recientes que el sistema usa ahora.
+current_recents() {
+  cmd overlay lookup --user "$USER_ID" android "$COMPONENT_KEY" 2>/dev/null | head -n 1
+}
+
+# ¿Ha entrado el overlay en este arranque? (config_recentsComponentName apunta a Nexus)
+overlay_effective() {
+  case "$(current_recents)" in "$PKG"/*) return 0 ;; *) return 1 ;; esac
+}
+
+# Línea de `ls` del APK que el módulo ha puesto en /product/overlay (vacío si no está).
+applied_apk() {
+  ls -l /product/overlay/NexusRecentsOverlay.apk 2>/dev/null
+}
+
 show_status() {
+  if [ -f "$STATE_DIR/enabled" ]; then
+    say "Pedido (enabled): sí. El módulo aplica el overlay en cada arranque."
+  else
+    say "Pedido (enabled): no. El módulo no aplica el overlay (estado de serie)."
+  fi
+  [ -f "$MODDIR/overlay-static/NexusRecentsOverlay.apk" ] || say "  AVISO: el módulo no lleva overlay-static/NexusRecentsOverlay.apk."
   state=$(overlay_state)
-  say "Overlay $OVERLAY: $state"
-  case "$state" in
-    missing) say "  No está instalado: flashea el módulo de Nexus y reinicia." ;;
-    unavailable) say "  Instalado pero no aprobado por el sistema (revisa 'cmd overlay list')." ;;
-  esac
-  value=$(cmd overlay lookup --user "$USER_ID" android android:string/config_recentsComponentName 2>/dev/null | head -n 1)
+  say "Overlay $OVERLAY en este arranque: $state"
+  [ -n "$(applied_apk)" ] && say "  APK en /product/overlay: sí" || say "  APK en /product/overlay: no"
+  value=$(current_recents)
   say "config_recentsComponentName ahora: ${value:-desconocido}"
-  if [ "$state" = "enabled" ]; then
+  if overlay_effective; then
+    say "Overlay efectivo: sí (Nexus es el proveedor de recientes)"
     if is_bound; then say "SystemUI enlazado al servicio de Nexus: sí"; else say "SystemUI enlazado al servicio de Nexus: NO"; fi
+  else
+    say "Overlay efectivo: no"
+    if [ -f "$STATE_DIR/enabled" ] && [ -n "$(applied_apk)" ]; then
+      say "  Está aplicado pero otro overlay de la imagen gana sobre él, o hay un overlay/config/config.xml."
+    elif [ -f "$STATE_DIR/enabled" ]; then
+      say "  Falta reiniciar (o el arranque anterior no llegó a aplicarlo)."
+    fi
   fi
   if [ -r "$PROBE_FILE" ]; then
     say "Comprobación de Nexus: sdk=$(probe_value sdk) compatible=$(probe_value passed)"
@@ -141,20 +173,25 @@ show_status() {
   if [ -r "$STATE_DIR/tripped" ]; then
     say "Vigilante: desactivó el overlay -> $(cat "$STATE_DIR/tripped")"
   elif [ -e "$STATE_DIR/healthy" ]; then
-    say "Vigilante: el último arranque con el overlay activo quedó verificado."
+    say "Vigilante: el último arranque con el overlay aplicado quedó verificado."
   else
     say "Vigilante: sin verificar todavía."
   fi
-  say "Los cambios del overlay solo se aplican al reiniciar."
+  [ -f "$STATE_DIR/booting" ] && say "Marcador de arranque (booting): presente (el vigilante lo borra al verificar el arranque)."
+  say "Los cambios solo se aplican al reiniciar."
 }
 
 do_enable() {
   force=0
   [ "$1" = "--force" ] && force=1
   need_root
-  state=$(overlay_state)
-  [ "$state" = "missing" ] && die "el overlay no está instalado: flashea el módulo y reinicia."
-  [ "$state" = "unavailable" ] && die "el sistema no ha aprobado el overlay."
+  [ -f "$MODDIR/overlay-static/NexusRecentsOverlay.apk" ] || die "el módulo no lleva el overlay: reflashea el módulo y reinicia."
+  [ -f "$MODDIR/disable" ] && die "el módulo está desactivado en el gestor (archivo disable)."
+  # Con un overlay/config/config.xml en /product los overlays estáticos de esa partición que no
+  # aparezcan en él se ignoran, y los que sí se ignoran dejan de aplicarse: no se toca.
+  if [ -e /product/overlay/config/config.xml ] && [ "$force" != "1" ]; then
+    die "/product/overlay/config/config.xml existe: el sistema ignoraría un overlay estático que no esté en él. Con --force se prueba igualmente."
+  fi
   version=$(nexus_version_code)
   if [ "$force" != "1" ]; then
     [ -r "$PROBE_FILE" ] || die "Nexus aún no ha comprobado la compatibilidad: ábrelo una vez (o usa --force)."
@@ -163,36 +200,31 @@ do_enable() {
       missing=$(probe_value missing)
       die "Quickstep no es compatible con este Android (sdk=$(probe_value sdk); falta: ${missing:-?}). Con --force se activa igualmente, pero los gestos pueden dejar de funcionar."
     fi
-    if [ -r "$STATE_DIR/tripped" ] && [ "$(sed -n 's/^version=//p' "$STATE_DIR/tripped.meta" 2>/dev/null)" = "$version" ]; then
-      die "el vigilante ya desactivó el overlay con esta versión de Nexus ($version): $(cat "$STATE_DIR/tripped"). Actualiza Nexus o usa --force."
+    tripped_version=$(sed -n 's/^version=//p' "$STATE_DIR/tripped.meta" 2>/dev/null)
+    if [ -r "$STATE_DIR/tripped" ] && { [ "$tripped_version" = "$version" ] || [ "$tripped_version" = "bootloop" ]; }; then
+      die "el overlay se desactivó solo ($(cat "$STATE_DIR/tripped")). Tras un fallo de arranque o con esta versión de Nexus ($version) hace falta --force; si es solo la versión, actualizar Nexus también vale."
     fi
   fi
-  cmd overlay enable --user "$USER_ID" "$OVERLAY" >/dev/null 2>&1 || die "'cmd overlay enable' falló."
-  [ "$(overlay_state)" = "enabled" ] || die "el overlay no quedó activado."
   mkdir -p "$STATE_DIR"
-  rm -f "$STATE_DIR/tripped" "$STATE_DIR/tripped.meta" "$STATE_DIR/healthy"
-  echo "$(date '+%Y-%m-%d %H:%M:%S') version=$version" > "$STATE_DIR/armed"
-  say "Overlay activado. Reinicia para que los gestos pasen a Nexus."
-  say "Tras reiniciar, el vigilante lo desactiva solo si SystemUI no llega a enlazarse con Nexus."
-  say "Para deshacerlo a mano: nexus-quickstep disable"
+  rm -f "$STATE_DIR/tripped" "$STATE_DIR/tripped.meta" "$STATE_DIR/healthy" "$STATE_DIR/booting"
+  echo "$(date '+%Y-%m-%d %H:%M:%S') version=$version" > "$STATE_DIR/enabled"
+  say "Overlay pedido. REINICIA para que el sistema lo aplique en el arranque."
+  say "Tras reiniciar: nexus-quickstep status  y  nexus-quickstep bound"
+  say "Si SystemUI no llega a enlazarse con Nexus, el vigilante lo desactiva y reinicia solo."
+  say "Para deshacerlo: nexus-quickstep disable --reboot"
 }
 
 do_disable() {
   need_root
-  # Se intenta desactivar aunque el estado no se lea: es la vía de recuperación y no debe
-  # rendirse porque `cmd overlay list` no respondiera a la primera.
-  if ! cmd overlay disable --user "$USER_ID" "$OVERLAY" >/dev/null 2>&1; then
-    pm path "$OVERLAY" >/dev/null 2>&1 || die "el overlay no está instalado."
-    die "'cmd overlay disable' falló."
-  fi
-  [ "$(overlay_state)" = "disabled" ] || die "el overlay no quedó desactivado."
-  rm -f "$STATE_DIR/armed" "$STATE_DIR/healthy"
-  if [ "$1" = "--no-restart" ]; then
-    say "Overlay desactivado. Reinicia para que los gestos vuelvan al launcher del sistema."
+  rm -f "$STATE_DIR/enabled" "$STATE_DIR/booting" "$STATE_DIR/healthy"
+  # Se borra también la copia ya montada (por si el módulo no se reinicia limpio).
+  rm -f "$MODDIR/system/product/overlay/NexusRecentsOverlay.apk" 2>/dev/null
+  if [ "$1" = "--reboot" ]; then
+    say "Overlay desactivado. Reiniciando: el gesto vuelve al launcher del sistema."
+    reboot
   else
-    restart_systemui
-    say "Overlay desactivado y SystemUI reiniciado: el gesto vuelve al launcher del sistema."
-    say "Reinicia cuando puedas para que todo el sistema lo asuma."
+    say "Overlay desactivado para el próximo arranque. Reinicia para que los gestos vuelvan al launcher del sistema."
+    say "(El overlay es estático: mientras no reinicies, Nexus sigue siendo el proveedor de recientes.)"
   fi
 }
 
@@ -204,26 +236,36 @@ do_bound() {
     exit 0
   fi
   say "SystemUI enlazado al servicio de Quickstep de Nexus: NO"
-  say "(overlay: $(overlay_state))"
+  say "(overlay efectivo: $(overlay_effective && echo sí || echo no); estado: $(overlay_state))"
   exit 1
 }
 
-# Desactiva el overlay porque Quickstep de Nexus no funciona, y deja constancia.
+# Quickstep de Nexus no funciona: se quita el archivo `enabled`, se deja constancia y se reinicia
+# para que el siguiente arranque vaya sin overlay. No hay más reinicios: sin `enabled` el módulo
+# no vuelve a aplicarlo, así que no puede haber un bucle.
 trip() {
   reason="$1"
   log "DESACTIVO el overlay: $reason"
-  cmd overlay disable --user "$USER_ID" "$OVERLAY" >/dev/null 2>&1
   mkdir -p "$STATE_DIR"
   echo "$(date '+%Y-%m-%d %H:%M:%S') $reason" > "$STATE_DIR/tripped"
   echo "version=$(nexus_version_code)" > "$STATE_DIR/tripped.meta"
-  rm -f "$STATE_DIR/armed" "$STATE_DIR/healthy"
-  restart_systemui
-  log "overlay desactivado y SystemUI reiniciado"
+  rm -f "$STATE_DIR/enabled" "$STATE_DIR/booting" "$STATE_DIR/healthy"
+  if [ "${NEXUS_GUARD_NO_REBOOT:-0}" = "1" ]; then
+    log "reinicio omitido (NEXUS_GUARD_NO_REBOOT=1)"
+  else
+    log "reiniciando para arrancar sin overlay"
+    sleep 2
+    reboot
+  fi
 }
 
 do_guard() {
-  [ "$(overlay_state)" = "enabled" ] || { log "arranque: overlay no activo, nada que vigilar"; exit 0; }
-  log "arranque con el overlay activo: vigilando (espera ${GUARD_WAIT}s, vigilancia ${GUARD_WATCH}s)"
+  if [ ! -f "$STATE_DIR/enabled" ]; then
+    rm -f "$STATE_DIR/booting"
+    log "arranque: overlay no pedido, nada que vigilar"
+    exit 0
+  fi
+  log "arranque con el overlay pedido: vigilando (espera ${GUARD_WAIT}s, vigilancia ${GUARD_WATCH}s)"
 
   waited=0
   while ! boot_completed; do
@@ -232,10 +274,17 @@ do_guard() {
     [ "$waited" -ge 600 ] && { trip "el arranque no terminó en 600 s"; exit 0; }
   done
 
+  # ¿Entró el overlay? Si otro overlay de la imagen gana, o no se aplicó, no hay nada que verificar:
+  # no es un fallo de Quickstep y no se reinicia.
+  if ! overlay_effective; then
+    log "overlay pedido pero no efectivo ($(current_recents)): no se vigila"
+    rm -f "$STATE_DIR/booting"
+    exit 0
+  fi
+
   # Primer enlace: SystemUI tarda en arrancar y en enlazar; se da un margen.
   waited=0
   while ! is_bound; do
-    [ "$(overlay_state)" = "enabled" ] || { log "el overlay se desactivó mientras se esperaba"; exit 0; }
     [ "$waited" -ge "$GUARD_WAIT" ] && { trip "SystemUI no se enlazó al servicio de Nexus en ${GUARD_WAIT} s"; exit 0; }
     sleep "$GUARD_STEP"
     waited=$((waited + GUARD_STEP))
@@ -243,6 +292,7 @@ do_guard() {
   log "SystemUI enlazado al servicio de Nexus tras ${waited}s"
   mkdir -p "$STATE_DIR"
   date '+%Y-%m-%d %H:%M:%S' > "$STATE_DIR/healthy"
+  rm -f "$STATE_DIR/booting"
 
   # Vigilancia: si el servicio se cae justo después de arrancar y no vuelve, se desactiva.
   watched=0
@@ -250,7 +300,6 @@ do_guard() {
   while [ "$watched" -lt "$GUARD_WATCH" ]; do
     sleep "$GUARD_STEP"
     watched=$((watched + GUARD_STEP))
-    [ "$(overlay_state)" = "enabled" ] || { log "el overlay se desactivó durante la vigilancia"; exit 0; }
     if is_bound; then
       lost=0
     else

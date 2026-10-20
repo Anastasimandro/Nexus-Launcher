@@ -22,12 +22,12 @@ work="$(mktemp -d)"
 apk="$(ls "$dist"/Nexus-v*.apk | head -n 1)"
 zip="$(ls "$dist"/Nexus-MagiskModule-v*.zip | head -n 1)"
 PKG=app.nexus.launcher
-# mutable: fases 1 y 4-7 (overlay mutable). static / config: solo la fase 8 correspondiente, cada una
-# en su propio emulador para que un remount anterior no contamine el resultado.
-VARIANT="${VARIANT:-mutable}"
+VARIANT="${VARIANT:-module}"
 OVERLAY=app.nexus.launcher.overlay.recents
 SERVICE=$PKG/com.android.quickstep.TouchInteractionService
 TOOL=/data/local/tmp/nexus-quickstep
+MOD=/data/local/tmp/nexusmod
+STATE_DIR=/data/adb/nexus_quickstep
 
 : > "$out/summary.md"
 say() { echo "$*" | tee -a "$out/summary.md"; }
@@ -62,28 +62,6 @@ wait_boot() {
     sleep 4
   done
   sleep 3
-}
-# El emulador a veces aborta surfaceflinger (RegionSampling) ~25 s después del arranque y el framework
-# se reinicia: se espera a que system_server conserve el mismo pid 40 s con los servicios respondiendo.
-wait_stable() {
-  local deadline=$((SECONDS + 300)) last="" since=$SECONDS pid ok
-  while (( SECONDS < deadline )); do
-    pid="$(adb shell pidof system_server 2>/dev/null | tr -d '\r')"
-    ok=0
-    if overlay_up \
-       && adb shell service check package 2>/dev/null | grep -q found \
-       && [[ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == 1 ]]; then ok=1; fi
-    echo "$(date +%T) estable? ok=$ok pid=${pid:-none} anterior=${last:-none}" >> "$out/progress.log"
-    if [[ $ok == 1 && -n $pid && $pid == "$last" ]]; then
-      (( SECONDS - since >= 40 )) && return 0
-    else
-      since=$SECONDS; last="$pid"
-    fi
-    sleep 4
-  done
-  echo "$(date +%T) wait_stable agotado" >> "$out/progress.log"
-  say "!! el sistema no se estabilizó en 5 min (pid system_server: ${last:-ninguno})"
-  return 1
 }
 # Si el ejecutor muere (ha pasado dos veces sin dejar rastro), lo ya medido queda en la rama de resultados.
 checkpoint() {
@@ -145,7 +123,6 @@ say ""
 adb push "$here/../../magisk-module/tools/nexus-quickstep" "$TOOL" > /dev/null 2>&1
 adb shell chmod 755 "$TOOL"
 
-if [[ $VARIANT == mutable ]]; then
 # ---------------------------------------------------------------------------------------------
 say "## Fase 1: auditoría estática contra los binarios del sistema (sin módulo)"
 phase_static() {
@@ -191,7 +168,6 @@ phase_static() {
 cap static-audit-run phase_static
 grep -E "^== (ENLACE|AIDL|ESCANEO|BUSCAR)|^app:|^  (DIFERENCIA|AUSENTE)" "$out/static-audit.txt" | tee -a "$out/summary.md"
 say ""
-fi
 
 # ---------------------------------------------------------------------------------------------
 # Los recursos privados del framework (@*android:...) se compilan contra el SDK y fallan en ejecución
@@ -226,12 +202,15 @@ phase_install() {
   dsh 'mount | grep -E " /product | /system "' >> "$out/product-writable.txt"
   grep -q PRODUCT_WRITABLE "$out/product-writable.txt" || return 1
 
-  adb shell mkdir -p /product/priv-app/Nexus /product/overlay /product/etc/permissions
+  adb shell mkdir -p /product/priv-app/Nexus /product/etc/permissions
   adb push "$work/module/system/product/priv-app/Nexus/Nexus.apk" /product/priv-app/Nexus/ > /dev/null
   adb push "$work/module/system/product/etc/permissions/privapp-permissions-nexus.xml" /product/etc/permissions/ > /dev/null
-  adb push "$work/module/system/product/overlay/NexusRecentsOverlay.apk" /product/overlay/ > /dev/null
-  adb shell 'restorecon -RF /product/priv-app/Nexus /product/overlay /product/etc/permissions' > /dev/null 2>&1
-  dsh 'ls -lZ /product/priv-app/Nexus /product/overlay /product/etc/permissions/privapp-permissions-nexus.xml' > "$out/installed-files.txt"
+  adb shell 'restorecon -RF /product/priv-app/Nexus /product/etc/permissions' > /dev/null 2>&1
+  # El módulo entero (con overlay-static/, post-fs-data.sh y la herramienta) como lo dejaría Magisk en
+  # /data/adb/modules/<id>: aquí en /data/local/tmp, porque no hay Magisk en el emulador.
+  adb shell rm -rf "$MOD"; adb push "$work/module" "$MOD" > /dev/null 2>&1
+  adb shell "mkdir -p $MOD/system/product/overlay"
+  dsh "ls -lR $MOD | head -40; ls -lZ /product/priv-app/Nexus /product/etc/permissions/privapp-permissions-nexus.xml; ls /product/overlay | grep -i nexus" > "$out/installed-files.txt"
   reboot_device
 }
 cap install-module phase_install
@@ -348,223 +327,177 @@ phase_gestures() {
   dsh logcat -d | grep -E "AbsSwipeUpHandler|RecentsAnimation|TaskAnimationManager|TouchInteraction|AndroidRuntime|FATAL" | tail -n 250 > "$out/logcat-gestures$S.txt"
 }
 
-if [[ $VARIANT == mutable ]]; then
-# ---------------------------------------------------------------------------------------------
-say "## Fase 4: activar el overlay y comprobar que SystemUI se enlaza a Nexus"
-phase_enable() {
-  dsh "$TOOL enable" > "$out/enable-1.txt"; local rc=$?
-  echo "exit del primer enable (sin --force): $(adb shell "$TOOL enable >/dev/null 2>&1; echo \$?" | tr -d '\r')" >> "$out/enable-1.txt"
-  if ! grep -q "Overlay activado" "$out/enable-1.txt"; then
-    dsh "$TOOL enable --force" > "$out/enable-2-force.txt"
-  fi
-  dsh cmd overlay list --user 0 "$OVERLAY" > "$out/overlay-list-after-enable.txt"
-  dsh dumpsys overlay "$OVERLAY" > "$out/dumpsys-overlay-after-enable.txt"
-  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/lookup-after-enable.txt"
-  reboot_device
-  # Lo que hace service.sh en un dispositivo con Magisk, lanzado a mano.
-  adb shell "NEXUS_GUARD_WAIT=150 nohup $TOOL guard > /data/local/tmp/guard.out 2>&1 &"
-  sleep 90
-  dsh "$TOOL bound" > "$out/tool-bound.txt"
-  dsh "$TOOL status" > "$out/tool-status-after-reboot.txt"
-  dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-service.txt"
-  dsh dumpsys activity service SystemUIService > "$out/dumpsys-systemui-full.txt"
-  grep -n -i -B2 -A25 -E "OverviewProxyService|LauncherProxyService" "$out/dumpsys-systemui-full.txt" | head -n 120 > "$out/dumpsys-systemui-proxy.txt"
-  rm -f "$out/dumpsys-systemui-full.txt"
-  crashes > "$out/crashes-after-enable.txt"
-  perm_state after-enable > "$out/perm-state-after-enable.txt"
-  dsh logcat -d | grep -E "TouchInteraction|OverviewProxy|LauncherProxy|NexusQuickstep|InputConsumerCompat|QuickStep|AndroidRuntime" | tail -n 250 > "$out/logcat-quickstep.txt"
-  dsh "cat /data/adb/nexus_quickstep/watchdog.log" > "$out/watchdog-log-1.txt"
-  dsh "ls -la /data/adb/nexus_quickstep" > "$out/state-dir-1.txt"
-}
-cap enable-overlay phase_enable
-{ cat "$out/enable-1.txt"; echo "---"; cat "$out/lookup-after-enable.txt"; echo "---"; cat "$out/tool-bound.txt"; echo "--- caídas:"; cat "$out/crashes-after-enable.txt"; } | tee -a "$out/summary.md"
-say ""
+# =============================================================================================
+# Flujo del módulo tal y como lo hará el usuario. En el emulador no hay Magisk, así que se
+# reproduce lo que haría: post-fs-data.sh (el de verdad, en el shell de Android) corre con el
+# dispositivo ya encendido y su resultado se "monta" copiándolo a /product/overlay antes de
+# reiniciar; service.sh equivale a lanzar `nexus-quickstep guard` en segundo plano.
+# Lo que NO se prueba aquí: el montaje de Magisk/KernelSU/APatch ni que ejecuten post-fs-data.sh antes
+# de PackageManagerService (eso solo se puede comprobar en el dispositivo).
+# =============================================================================================
+tool() { dsh "NEXUS_MODDIR=$MOD $TOOL $*"; }
+lookup() { dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName | head -n 1; }
+boot_id() { adb shell cat /proc/sys/kernel/random/boot_id 2>/dev/null | tr -d '\r'; }
+settle() { local until_=$((SECONDS + 240)); until overlay_up; do (( SECONDS > until_ )) && break; sleep 5; done; sleep 60; }
 
-# ---------------------------------------------------------------------------------------------
-say "## Fase 4b: ¿concede el sistema a Nexus los permisos 'signature' al ser el proveedor de recientes?"
-{ echo "protección de los permisos que pide Nexus:"; cat "$out/permission-protection.txt"; echo; cat "$out/perm-state-after-enable.txt"; } | tee -a "$out/summary.md"
-phase_perms_second_boot() {
-  reboot_device
-  perm_state second-boot > "$out/perm-state-second-boot.txt"
-  dsh "$TOOL bound" > "$out/tool-bound-second-boot.txt"
-}
-if grep -qx "android.permission.MANAGE_ACTIVITY_TASKS" "$out/granted-after-enable.txt"; then
-  say "H0: MANAGE_ACTIVITY_TASKS concedido tras activar el overlay mutable y reiniciar."
-else
-  say "H0: NO concedido tras activar el overlay mutable y reiniciar. H1: un segundo reinicio."
-  cap perms-second-boot phase_perms_second_boot
-  cat "$out/perm-state-second-boot.txt" "$out/tool-bound-second-boot.txt" | tee -a "$out/summary.md"
-fi
-say ""
-
-# ---------------------------------------------------------------------------------------------
-say "## Fase 5: gestos con el overlay activo (inyectados con 'input')"
-cap gestures phase_gestures
-cat "$out/gesture-notes$S.txt" | tee -a "$out/summary.md"
-say ""
-
-# ---------------------------------------------------------------------------------------------
-say "## Fase 6: recuperación manual (nexus-quickstep disable)"
-phase_disable() {
-  { echo "--- cmd overlay list:"; dsh cmd overlay list --user 0 "$OVERLAY"
-    echo "--- pm path:"; dsh pm path "$OVERLAY"
-    echo "--- service check overlay:"; dsh service check overlay
-    echo "--- lookup:"; dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName; } > "$out/disable-pre.txt" 2>&1
-  dsh "sh -x $TOOL disable" > "$out/disable-trace.txt" 2>&1
-  dsh "$TOOL disable" > "$out/disable-1.txt"
-  sleep 15
-  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/lookup-after-disable.txt"
-  dsh "$TOOL status" > "$out/tool-status-after-disable.txt"
-  dsh "$TOOL bound" > "$out/tool-bound-after-disable.txt"
-  dsh input keyevent KEYCODE_HOME; sleep 2
-  dsh am start -a android.settings.SETTINGS > /dev/null; sleep 3
-  local size w h x; size="$(dsh wm size | grep -oE '[0-9]+x[0-9]+' | tail -n 1)"; w="${size%x*}"; h="${size#*x}"; x=$((w / 2))
-  dsh input swipe $x $((h - 8)) $x $((h / 3)) 180; sleep 3
-  echo "tras el gesto, con el overlay desactivado: $(fg)" > "$out/gesture-after-disable.txt"
-  crashes > "$out/crashes-after-disable.txt"
-}
-cap disable-overlay phase_disable
-cat "$out/disable-1.txt" "$out/lookup-after-disable.txt" "$out/tool-bound-after-disable.txt" "$out/gesture-after-disable.txt" | tee -a "$out/summary.md"
-say ""
-
-# ---------------------------------------------------------------------------------------------
-say "## Fase 7: recuperación automática (Nexus no consigue iniciar Quickstep)"
-phase_failure() {
-  dsh "$TOOL enable --force" > "$out/failure-enable.txt"
-  # Nexus no puede ofrecer el servicio: SystemUI no tendrá a qué enlazarse.
-  dsh pm disable "$PKG/com.android.quickstep.TouchInteractionService" > "$out/failure-disable-service.txt"
-  reboot_device
-  adb shell "NEXUS_GUARD_WAIT=60 NEXUS_GUARD_WATCH=30 nohup $TOOL guard > /data/local/tmp/guard2.out 2>&1 &"
-  sleep 110
-  dsh "$TOOL status" > "$out/failure-status.txt"
-  dsh "$TOOL bound" > "$out/failure-bound.txt"
-  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/failure-lookup.txt"
-  dsh "cat /data/adb/nexus_quickstep/watchdog.log" > "$out/failure-watchdog-log.txt"
-  dsh "ls -la /data/adb/nexus_quickstep; cat /data/adb/nexus_quickstep/tripped" > "$out/failure-state-dir.txt"
-  dsh input keyevent KEYCODE_HOME; sleep 2
-  dsh am start -a android.settings.SETTINGS > /dev/null; sleep 3
-  local size w h x; size="$(dsh wm size | grep -oE '[0-9]+x[0-9]+' | tail -n 1)"; w="${size%x*}"; h="${size#*x}"; x=$((w / 2))
-  dsh input swipe $x $((h - 8)) $x $((h / 3)) 180; sleep 3
-  echo "tras el gesto, con el vigilante ya disparado: $(fg)" > "$out/failure-gesture.txt"
-  # Con la misma versión de Nexus el vigilante ya falló: enable debe negarse.
-  dsh pm enable "$PKG/com.android.quickstep.TouchInteractionService" > /dev/null
-  dsh "$TOOL enable" > "$out/failure-enable-again.txt"
-}
-cap failure-recovery phase_failure
-cat "$out/failure-status.txt" "$out/failure-lookup.txt" "$out/failure-watchdog-log.txt" "$out/failure-gesture.txt" "$out/failure-enable-again.txt" | tee -a "$out/summary.md"
-say ""
-fi
-
-# ---------------------------------------------------------------------------------------------
-say "## Fase 8 ($VARIANT): overlay inmutable aplicado desde el arranque (Nexus recibe los permisos 'recents' en el arranque de PMS)"
-static_apk="$dist/NexusRecentsOverlayStatic.apk"
-# Las consultas a overlay/permisos se hacen con el sistema ya asentado: en la prueba anterior se lanzaron
-# antes de que `overlay` estuviera registrado y no valían como evidencia.
-settle_overlay() {
-  local until_=$((SECONDS + 240))
-  until overlay_up; do
-    (( SECONDS > until_ )) && { echo "!! cmd overlay no respondió en 4 min" >> "$out/summary.md"; break; }
-    sleep 5
-  done
-}
-collect_overlay() {
-  # El framework del emulador a veces se reinicia (surfaceflinger aborta): se repite la medición si
-  # el sistema no respondía o system_server cambió de pid durante ella.
-  local try pid0 pid1
-  for try in 1 2 3 4 5 6; do
-    settle_overlay; pid0="$(adb shell pidof system_server | tr -d '\r')"
-    collect_overlay_once "$1"
-    pid1="$(adb shell pidof system_server | tr -d '\r')"
-    if [[ -n $pid0 && $pid0 == "$pid1" ]] && ! grep -q "Can't find service" "$out/$1-overlay-list-all.txt" "$out/dumpsys-package-nexus-$1-overlay.txt"; then return 0; fi
-    echo "$(date +%T) medición $1 inválida (intento $try, pid $pid0 -> $pid1)" >> "$out/progress.log"; sleep 20
-  done
-}
-collect_overlay_once() {
-  local tag="$1"
-  dsh df -h /data /product /system_ext > "$out/df-$tag.txt"
-  dsh cmd overlay list --user 0 > "$out/$tag-overlay-list-all.txt"
-  dsh cmd overlay list --user 0 "$OVERLAY" > "$out/$tag-overlay-list.txt"
-  dsh dumpsys overlay "$OVERLAY" > "$out/$tag-overlay-dumpsys.txt"
-  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/$tag-overlay-lookup.txt"
-  perm_state "$tag-overlay" > "$out/perm-state-$tag-overlay.txt"
-  dsh "$TOOL bound" > "$out/tool-bound-$tag-overlay.txt"
-  dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-$tag-overlay.txt"
-  crashes > "$out/crashes-$tag-overlay.txt"
-  # Cómo ve el sistema un overlay estático real de la imagen frente al nuestro.
-  { for p in com.google.android.overlay.googleconfig com.google.android.overlay.pixelconfigcommon com.android.internal.ranchu.commonoverlay; do
-      dsh dumpsys overlay "$p" | grep -E "^[a-z].*:0 \{|mBaseCodePath|mState|mIsMutable|mPriority"; done
-    echo "--- dumpsys package (nuestro overlay):"; dsh dumpsys package "$OVERLAY" | grep -iE "overlay|static|codePath|flags=|pkgFlags|privateFlags"
-  } > "$out/real-static-overlays-$tag.txt"
-  dsh logcat -d -b crash > "$out/crash-buffer-$tag.txt"
-  dsh logcat -d | grep -E "SystemUiProxy|TouchInteraction|OverviewProxy|LauncherProxy|NoSuchMethod|NoSuchField|NoClassDef|RemoteException|SecurityException|AbsSwipeUpHandler" | tail -n 300 > "$out/logcat-$tag-overlay.txt"
-}
 remount_rw() {
   adb root > /dev/null 2>&1; adb wait-for-device
   adb remount > "$out/remount-$1.txt" 2>&1
-  # `adb remount` tras desactivar verity pide reiniciar: se repite hasta que quede en rw.
   if grep -qi "reboot" "$out/remount-$1.txt"; then
     reboot_device; adb root > /dev/null 2>&1; adb wait-for-device
     adb remount >> "$out/remount-$1.txt" 2>&1
   fi
 }
-phase_static_overlay() {
-  dsh cmd overlay disable --user 0 "$OVERLAY" > /dev/null
-  remount_rw static
-  # Mismo paquete: el APK mutable se quita antes de poner el estático.
-  adb shell rm -f /product/overlay/NexusRecentsOverlay.apk
-  adb push "$static_apk" /product/overlay/NexusRecentsOverlay.apk > "$out/static-push.txt" 2>&1
-  adb shell 'restorecon -RF /product/overlay' > /dev/null 2>&1
-  { echo "host:   $(sha256sum "$static_apk" | cut -d' ' -f1)"
-    echo "device: $(dsh sha256sum /product/overlay/NexusRecentsOverlay.apk)"
-    dsh ls -lZ /product/overlay/ | grep -i nexus; } > "$out/static-push-check.txt"
-  # OMS guarda el estado de cada overlay (incluido si era mutable) en overlays.xml; el mismo paquete
-  # registrado antes como mutable conservaría ese estado aunque el APK nuevo sea estático.
-  dsh "grep -A3 'app.nexus.launcher.overlay.recents' /data/system/overlays.xml" > "$out/overlays-xml-before-wipe.txt"
-  if [[ ${WIPE_OVERLAY_STATE:-1} == 1 ]]; then
-    dsh "rm -f /data/system/overlays.xml; rm -rf /data/system/package_cache" > "$out/wipe-overlay-state.txt"
-  fi
-  reboot_device
-  collect_overlay static
-}
-# 8b: el APK mutable de siempre, pero declarado inmutable y activo por defecto en overlay/config/config.xml.
-phase_config_overlay() {
-  dsh cmd overlay disable --user 0 "$OVERLAY" > /dev/null
-  remount_rw config
-  adb shell mkdir -p /product/overlay/config
-  case "$VARIANT" in
-    configdir) : ;;   # solo el directorio, sin config.xml
-    configempty) adb shell 'printf "%s\n" "<config>" "</config>" > /product/overlay/config/config.xml' ;;
-    *) adb shell 'printf "%s\n" "<config>" "    <overlay package=\"app.nexus.launcher.overlay.recents\" enabled=\"true\" mutable=\"false\" />" "</config>" > /product/overlay/config/config.xml' ;;
-  esac
-  adb shell 'restorecon -RF /product/overlay' > /dev/null 2>&1
-  dsh "cat /product/overlay/config/config.xml; ls -lZ /product/overlay /product/overlay/config | grep -iE 'nexus|config'" > "$out/config-overlay-files.txt"
-  dsh df -h /data /product /system_ext > "$out/df-config-before-reboot.txt"
-  BOOT_DEADLINE=150 EARLY_LOG="$out/early-boot-config.txt" reboot_device
-  collect_overlay config
-}
-effective() { grep -q "app.nexus.launcher/" "$1" 2>/dev/null; }
 
-case "$VARIANT" in
-  static|config|configempty|configdir)
-    if [[ ! -f $static_apk ]]; then
-      say "No hay APK de overlay estático en dist: no se prueba."
-    else
-      if [[ $VARIANT == static ]]; then cap static-overlay phase_static_overlay; else cap config-overlay phase_config_overlay; fi
-      t=$VARIANT; [[ $t == config* ]] && t=config
-      { cat "$out/$t-overlay-list-all.txt" 2>/dev/null | grep -iE "^android|nexus" ; cat "$out/$t-overlay-list.txt" "$out/$t-overlay-lookup.txt" "$out/perm-state-$t-overlay.txt" "$out/tool-bound-$t-overlay.txt" 2>/dev/null
-        echo "--- caídas:"; cat "$out/crashes-$t-overlay.txt" 2>/dev/null; } | tee -a "$out/summary.md"
-      if effective "$out/$t-overlay-lookup.txt"; then
-        say "El overlay inmutable ($t) se aplicó: config_recentsComponentName apunta a Nexus."
-        S="-$t"
-        cap gestures-final phase_gestures
-        cat "$out/gesture-notes$S.txt" | tee -a "$out/summary.md"
-        S=""
-      else
-        say "El overlay inmutable ($t) NO se aplicó a config_recentsComponentName."
-      fi
-    fi ;;
-  *) say "(variante mutable: la fase 8 se prueba en los trabajos static y config)" ;;
-esac
+# Lo que hace Magisk en el arranque: post-fs-data.sh y el montaje de system/ del módulo.
+emulate_magisk() {
+  remount_rw "$1"
+  adb shell rm -f /product/overlay/NexusRecentsOverlay.apk "$MOD/system/product/overlay/NexusRecentsOverlay.apk"
+  dsh "sh $MOD/post-fs-data.sh; echo rc=\$?; ls -l $MOD/system/product/overlay; ls -A $STATE_DIR; tail -n 4 $STATE_DIR/watchdog.log" > "$out/post-fs-data-$1.txt"
+  if dsh "test -f $MOD/system/product/overlay/NexusRecentsOverlay.apk && echo si" | grep -q si; then
+    adb shell "cp $MOD/system/product/overlay/NexusRecentsOverlay.apk /product/overlay/ && chmod 644 /product/overlay/NexusRecentsOverlay.apk && restorecon /product/overlay/NexusRecentsOverlay.apk"
+    echo "montado: sí" >> "$out/post-fs-data-$1.txt"
+  else
+    echo "montado: no" >> "$out/post-fs-data-$1.txt"
+  fi
+}
+
+# Tras un reinicio que ha pedido el propio dispositivo (el vigilante o `disable --reboot`).
+after_device_reboot() {
+  local old_boot="$1" down=$((SECONDS + 300))
+  until [[ "$(adb get-state 2>/dev/null)" != device ]]; do
+    (( SECONDS > down )) && { echo "el dispositivo no se reinició" >> "$out/summary.md"; return 1; }
+    sleep 3
+  done
+  sleep 3
+  wait_boot; adb root > /dev/null 2>&1; adb wait-for-device; sleep 4
+}
+
+start_guard() { adb shell "NEXUS_MODDIR=$MOD $1 nohup $TOOL guard > /data/local/tmp/guard-$2.out 2>&1 &"; }
+
+# Estado del sistema en un momento dado: qué recientes usa, permisos, enlace y archivos de estado.
+snapshot() {
+  local tag="$1"
+  { echo "## $tag"
+    echo "config_recentsComponentName: $(lookup)"
+    perm_state "$tag"
+    echo "--- nexus-quickstep bound:"; tool bound
+    echo "--- nexus-quickstep status:"; tool status
+    echo "--- /data/adb/nexus_quickstep:"; dsh "ls -A $STATE_DIR; for f in tripped enabled healthy booting; do [ -f $STATE_DIR/\$f ] && echo \"\$f: \$(cat $STATE_DIR/\$f)\"; done"
+    echo "--- watchdog.log:"; dsh "tail -n 12 $STATE_DIR/watchdog.log"
+    echo "--- caídas:"; crashes
+  } > "$out/snapshot-$tag.txt" 2>&1
+  dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-$tag.txt"
+}
+check() {  # check "descripción" comando...
+  local d="$1"; shift
+  if "$@" > /dev/null 2>&1; then echo "OK    $d" >> "$out/checks.txt"; else echo "FALLA $d" >> "$out/checks.txt"; fi
+}
+has() { grep -q -- "$1" "$2" 2>/dev/null; }
+: > "$out/checks.txt"
+
+# ---------------------------------------------------------------------------------------------
+say "## Fase 4: activar con 'nexus-quickstep enable', aplicar en el arranque y verificar el enlace"
+phase_enable_flow() {
+  tool status > "$out/flow-status-0.txt"
+  tool enable > "$out/flow-enable.txt"; echo "exit: $?" >> "$out/flow-enable.txt"
+  dsh "ls -A $STATE_DIR" > "$out/flow-state-after-enable.txt"
+  lookup > "$out/flow-lookup-before-reboot.txt"          # estático: antes de reiniciar no cambia nada
+  emulate_magisk enable
+  reboot_device
+  start_guard "NEXUS_GUARD_WAIT=150 NEXUS_GUARD_WATCH=60" 1
+  settle
+  snapshot enabled
+}
+cap enable-flow phase_enable_flow
+{ echo "enable:"; cat "$out/flow-enable.txt"; echo "estado tras enable: $(paste -sd' ' "$out/flow-state-after-enable.txt")"
+  echo "lookup antes de reiniciar: $(cat "$out/flow-lookup-before-reboot.txt")"; echo; cat "$out/snapshot-enabled.txt"; } | tee -a "$out/summary.md"
+check "enable pide el overlay (archivo enabled)" has enabled "$out/flow-state-after-enable.txt"
+check "antes de reiniciar el overlay aún no es efectivo" bash -c "! grep -q app.nexus.launcher/ '$out/flow-lookup-before-reboot.txt'"
+check "tras reiniciar config_recentsComponentName apunta a Nexus" has "config_recentsComponentName: app.nexus.launcher/" "$out/snapshot-enabled.txt"
+check "tras reiniciar Nexus tiene los permisos de allow.txt (0 sin conceder)" has "permisos permitidos y no concedidos: 0 " "$out/snapshot-enabled.txt"
+check "SystemUI enlazado al servicio de Nexus" has "Quickstep de Nexus: sí" "$out/snapshot-enabled.txt"
+check "el vigilante dejó el arranque verificado (healthy)" has "^healthy:" "$out/snapshot-enabled.txt"
+check "el marcador booting se borró" bash -c "! grep -q '^booting:' '$out/snapshot-enabled.txt'"
+say ""
+
+# ---------------------------------------------------------------------------------------------
+say "## Fase 5: gestos con Nexus como proveedor de Quickstep"
+S="-module"
+cap gestures phase_gestures
+cat "$out/gesture-notes$S.txt" | tee -a "$out/summary.md"
+S=""
+say ""
+
+# ---------------------------------------------------------------------------------------------
+say "## Fase 6: deshacer a mano ('nexus-quickstep disable --reboot')"
+phase_manual_disable() {
+  local ob; ob="$(boot_id)"
+  tool disable --reboot > "$out/manual-disable.txt" 2>&1
+  after_device_reboot "$ob"
+  emulate_magisk disable     # sin 'enabled', post-fs-data.sh no vuelve a montar el APK
+  reboot_device
+  settle
+  snapshot disabled
+}
+cap manual-disable phase_manual_disable
+{ cat "$out/manual-disable.txt"; cat "$out/post-fs-data-disable.txt"; cat "$out/snapshot-disabled.txt"; } | tee -a "$out/summary.md"
+check "disable --reboot: post-fs-data.sh no monta el APK" has "montado: no" "$out/post-fs-data-disable.txt"
+check "tras disable el sistema vuelve a los recientes de serie" bash -c "grep -q 'config_recentsComponentName: ' '$out/snapshot-disabled.txt' && ! grep -q 'config_recentsComponentName: app.nexus.launcher/' '$out/snapshot-disabled.txt'"
+check "tras disable SystemUI ya no se enlaza a Nexus" has "Quickstep de Nexus: NO" "$out/snapshot-disabled.txt"
+say ""
+
+# ---------------------------------------------------------------------------------------------
+say "## Fase 7: recuperación automática (Nexus no consigue ofrecer el servicio de Quickstep)"
+phase_auto_recovery() {
+  tool enable > "$out/auto-enable.txt"
+  # Nexus no puede ofrecer el servicio: SystemUI no tendrá a qué enlazarse.
+  dsh pm disable "$PKG/com.android.quickstep.TouchInteractionService" > "$out/auto-disable-service.txt"
+  emulate_magisk auto
+  reboot_device
+  local ob; ob="$(boot_id)"
+  start_guard "NEXUS_GUARD_WAIT=60 NEXUS_GUARD_WATCH=30" 2
+  # El vigilante tiene que reiniciar él solo (~60-90 s).
+  BOOT_DEADLINE=300 after_device_reboot "$ob"; echo "reinicio por el vigilante: exit $?" > "$out/auto-reboot.txt"
+  snapshot after-guard-reboot       # arranque que sigue al reinicio del vigilante
+  # El APK sigue en /product porque aquí no hay montaje dinámico: se reproduce el siguiente arranque.
+  emulate_magisk after-trip
+  reboot_device
+  settle
+  snapshot after-trip
+  tool enable > "$out/auto-enable-again.txt"; echo "exit: $?" >> "$out/auto-enable-again.txt"
+  tool enable --force > "$out/auto-enable-force.txt"; echo "exit: $?" >> "$out/auto-enable-force.txt"
+  tool disable > /dev/null 2>&1
+  dsh pm enable "$PKG/com.android.quickstep.TouchInteractionService" > /dev/null
+}
+cap auto-recovery phase_auto_recovery
+{ cat "$out/auto-reboot.txt"; cat "$out/snapshot-after-guard-reboot.txt"; cat "$out/post-fs-data-after-trip.txt"; cat "$out/snapshot-after-trip.txt"
+  echo "--- enable tras el fallo:"; cat "$out/auto-enable-again.txt"; echo "--- enable --force:"; cat "$out/auto-enable-force.txt"; } | tee -a "$out/summary.md"
+check "el vigilante reinició el dispositivo" has "exit 0" "$out/auto-reboot.txt"
+check "tras el fallo no queda archivo enabled" bash -c "! grep -q '^enabled:' '$out/snapshot-after-guard-reboot.txt'"
+check "el vigilante dejó constancia (tripped)" has "^tripped:" "$out/snapshot-after-guard-reboot.txt"
+check "tras el fallo los recientes vuelven a los de serie" bash -c "! grep -q 'config_recentsComponentName: app.nexus.launcher/' '$out/snapshot-after-trip.txt'"
+check "enable se niega tras el fallo con la misma versión" has "exit: 1" "$out/auto-enable-again.txt"
+check "enable --force lo permite" has "exit: 0" "$out/auto-enable-force.txt"
+say ""
+
+# ---------------------------------------------------------------------------------------------
+say "## Fase 8: protección contra bucle de arranque (marcador booting)"
+phase_bootloop() {
+  dsh "rm -f $STATE_DIR/tripped $STATE_DIR/tripped.meta; touch $STATE_DIR/enabled $STATE_DIR/booting"
+  adb shell rm -f "$MOD/system/product/overlay/NexusRecentsOverlay.apk"
+  dsh "sh $MOD/post-fs-data.sh; echo rc=\$?; ls -A $STATE_DIR; cat $STATE_DIR/tripped; ls $MOD/system/product/overlay" > "$out/bootloop-post-fs-data.txt"
+  tool enable > "$out/bootloop-enable.txt"; echo "exit: $?" >> "$out/bootloop-enable.txt"
+}
+cap bootloop phase_bootloop
+cat "$out/bootloop-post-fs-data.txt" "$out/bootloop-enable.txt" | tee -a "$out/summary.md"
+check "bucle de arranque: post-fs-data.sh quita enabled" bash -c "! grep -qx enabled '$out/bootloop-post-fs-data.txt'"
+check "bucle de arranque: no copia el APK" bash -c "! grep -q NexusRecentsOverlay '$out/bootloop-post-fs-data.txt'"
+check "bucle de arranque: enable exige --force" has "exit: 1" "$out/bootloop-enable.txt"
+say ""
+
+say "## Resumen de comprobaciones (emulador Android $(grep -o 'ro.build.version.release=.*' "$out/device-info.txt"))"
+cat "$out/checks.txt" | tee -a "$out/summary.md"
 say ""
 
 adb logcat -d -b main,system,crash 2>/dev/null | gzip -9 > "$out/logcat-full.txt.gz"

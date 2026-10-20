@@ -10,10 +10,13 @@
 #   customize.sh, META-INF/        instalador
 #   system/product/priv-app/Nexus/Nexus.apk
 #   system/product/etc/permissions/privapp-permissions-nexus.xml
-#   system/product/overlay/NexusRecentsOverlay.apk   RRO que hace de Nexus el proveedor de Quickstep
-#                                                    (desactivado hasta `nexus-quickstep enable`)
-#   system/bin/nexus-quickstep                       activa, desactiva y comprueba ese overlay
-#   service.sh                                       vigilante: si SystemUI no se enlaza a Nexus, lo desactiva
+#   overlay-static/NexusRecentsOverlay.apk   RRO estático que hace de Nexus el proveedor de Quickstep.
+#                                            NO va en system/: post-fs-data.sh lo copia a
+#                                            system/product/overlay/ solo si existe el archivo
+#                                            /data/adb/nexus_quickstep/enabled (`nexus-quickstep enable`)
+#   system/bin/nexus-quickstep               activa, desactiva y comprueba ese overlay
+#   post-fs-data.sh                          aplica el overlay en el arranque (antes de PackageManagerService)
+#   service.sh                               vigilante: si SystemUI no se enlaza a Nexus, lo desactiva
 set -euo pipefail
 # sort y comm tienen que ordenar igual.
 export LC_ALL=C
@@ -45,6 +48,7 @@ fail() {
 [[ -f $module_dir/module.prop && -f $module_dir/customize.sh ]] || fail "Faltan archivos en $module_dir."
 [[ -f $module_dir/tools/nexus-quickstep ]] || fail "Falta $module_dir/tools/nexus-quickstep."
 [[ -f $module_dir/service.sh ]] || fail "Falta $module_dir/service.sh."
+[[ -f $module_dir/post-fs-data.sh ]] || fail "Falta $module_dir/post-fs-data.sh."
 [[ -f $module_dir/overlay/AndroidManifest.xml ]] || fail "Falta $module_dir/overlay/AndroidManifest.xml."
 [[ $version =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] || fail "Versión no válida: '$version'."
 [[ $version_code =~ ^[0-9]+$ ]] || fail "versionCode no válido: '$version_code'."
@@ -116,7 +120,7 @@ work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 root="$work/module"
 mkdir -p "$root/system/product/priv-app/Nexus" "$root/system/product/etc/permissions" \
-  "$root/system/product/overlay" "$root/system/bin"
+  "$root/overlay-static" "$root/system/bin"
 
 cp -R "$module_dir/META-INF" "$root/META-INF"
 cp "$module_dir/customize.sh" "$root/customize.sh"
@@ -124,11 +128,13 @@ sed -e "s/@VERSION@/$version/" -e "s/@VERSION_CODE@/$version_code/" \
   "$module_dir/module.prop" > "$root/module.prop"
 cp "$apk" "$root/system/product/priv-app/Nexus/Nexus.apk"
 
-# Overlay de recientes (RRO) y su herramienta de control. El overlay va desactivado de serie.
+# Overlay de recientes (RRO) y su herramienta de control. El overlay va fuera de system/: sin
+# `nexus-quickstep enable` el módulo no lo monta y los gestos del sistema no cambian.
 OVERLAY_DIR="$module_dir/overlay" bash "$script_dir/build-recents-overlay.sh" \
-  "$root/system/product/overlay/NexusRecentsOverlay.apk"
+  "$root/overlay-static/NexusRecentsOverlay.apk"
 cp "$module_dir/tools/nexus-quickstep" "$root/system/bin/nexus-quickstep"
 cp "$module_dir/service.sh" "$root/service.sh"
+cp "$module_dir/post-fs-data.sh" "$root/post-fs-data.sh"
 
 xml="$root/system/product/etc/permissions/privapp-permissions-nexus.xml"
 {
@@ -165,16 +171,16 @@ fi
 
 # --- Zip ---
 chmod 0755 "$root/customize.sh" "$root/META-INF/com/google/android/update-binary" \
-  "$root/system/bin/nexus-quickstep" "$root/service.sh"
+  "$root/system/bin/nexus-quickstep" "$root/service.sh" "$root/post-fs-data.sh"
 mkdir -p "$(dirname "$out_zip")"
 out_abs="$(cd "$(dirname "$out_zip")" && pwd)/$(basename "$out_zip")"
 rm -f "$out_abs"
-(cd "$root" && zip -q -r -X "$out_abs" module.prop customize.sh service.sh META-INF system)
+(cd "$root" && zip -q -r -X "$out_abs" module.prop customize.sh service.sh post-fs-data.sh META-INF system overlay-static)
 unzip -tq "$out_abs" >/dev/null || fail "El zip generado está corrupto."
 for entry in module.prop customize.sh META-INF/com/google/android/update-binary \
   META-INF/com/google/android/updater-script system/product/priv-app/Nexus/Nexus.apk \
   system/product/etc/permissions/privapp-permissions-nexus.xml \
-  system/product/overlay/NexusRecentsOverlay.apk system/bin/nexus-quickstep service.sh; do
+  overlay-static/NexusRecentsOverlay.apk system/bin/nexus-quickstep service.sh post-fs-data.sh; do
   unzip -l "$out_abs" "$entry" >/dev/null 2>&1 || fail "Falta $entry dentro del zip."
 done
 

@@ -101,12 +101,10 @@ got_pkg=$(sed -n "s/.*package: name='\([^']*\)'.*/\1/p" <<<"$badging")
 manifest=$("$AAPT2" dump xmltree --file AndroidManifest.xml "$work/signed.apk")
 grep -q 'E: overlay' <<<"$manifest" || fail "El manifiesto no tiene el elemento <overlay>."
 grep -qE 'targetPackage.*"android"' <<<"$manifest" || fail "El overlay no apunta al paquete 'android'."
-# Un overlay estático no se puede desactivar: este tiene que ser mutable. (ALLOW_STATIC_OVERLAY=1
-# solo lo usa la validación en emulador para probar el efecto de un overlay aplicado desde el
-# arranque; esa variante nunca va en el módulo.)
-if grep -q 'isStatic' <<<"$manifest" && [[ ${ALLOW_STATIC_OVERLAY:-} != 1 ]]; then
-  fail "El overlay declara isStatic: tiene que ser mutable para poder desactivarlo."
-fi
+# Tiene que ser estático (inmutable, activo desde el arranque) y con la prioridad máxima: ver el
+# comentario de magisk-module/overlay/AndroidManifest.xml.
+grep -q 'isStatic.*=true' <<<"$manifest" || fail "El overlay tiene que declarar android:isStatic=\"true\"."
+grep -qE 'priority.*=2147483647' <<<"$manifest" || fail "El overlay tiene que declarar android:priority=\"2147483647\"."
 
 resources=$("$AAPT2" dump resources "$work/signed.apk")
 grep -q "string/$resource" <<<"$resources" || fail "El overlay no define string/$resource."

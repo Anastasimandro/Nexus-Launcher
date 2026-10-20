@@ -55,9 +55,11 @@ cmp -s "$apk" "$work/module/system/product/priv-app/Nexus/Nexus.apk" \
   && ok "módulo: nexus-quickstep ejecutable" || bad "módulo: nexus-quickstep sin bit de ejecución"
 [[ -f $work/module/service.sh ]] \
   && ok "módulo: lleva service.sh" || echo "NOTA  módulo: sin service.sh" >> "$out/summary.txt"
+[[ -f $work/module/post-fs-data.sh ]] \
+  && ok "módulo: lleva post-fs-data.sh" || bad "módulo: sin post-fs-data.sh (no podría aplicar el overlay en el arranque)"
 
 # --- Overlay (el que va dentro del módulo) ---
-ov="$work/module/system/product/overlay/NexusRecentsOverlay.apk"
+ov="$work/module/overlay-static/NexusRecentsOverlay.apk"
 if [[ -f $ov ]]; then
   "$aapt2" dump badging "$ov" > "$out/overlay-badging.txt" 2>&1
   "$aapt2" dump xmltree --file AndroidManifest.xml "$ov" > "$out/overlay-manifest.txt" 2>&1
@@ -68,8 +70,13 @@ if [[ -f $ov ]]; then
   grep -q 'E: overlay' "$out/overlay-manifest.txt" && ok "overlay: tiene <overlay>" || bad "overlay: sin <overlay>"
   grep -qE 'targetPackage.*"android"' "$out/overlay-manifest.txt" \
     && ok "overlay: target = android" || bad "overlay: target"
-  grep -q 'isStatic' "$out/overlay-manifest.txt" \
-    && bad "overlay: es estático (no se podría desactivar)" || ok "overlay: mutable (sin isStatic)"
+  grep -q 'isStatic.*=true' "$out/overlay-manifest.txt" \
+    && ok "overlay: estático" || bad "overlay: no es estático (no se aplicaría en el arranque de PackageManagerService)"
+  grep -qE 'priority.*=2147483647' "$out/overlay-manifest.txt" \
+    && ok "overlay: prioridad máxima" || bad "overlay: prioridad distinta de la máxima"
+  [[ ! -e $work/module/system/product/overlay/NexusRecentsOverlay.apk ]] \
+    && ok "módulo: el overlay NO está en system/ (se copia solo si se activa)" \
+    || bad "módulo: el overlay está en system/ y se aplicaría siempre"
   grep -q 'string/config_recentsComponentName' "$out/overlay-resources.txt" \
     && ok "overlay: define config_recentsComponentName" || bad "overlay: no define config_recentsComponentName"
   grep -q 'app.nexus.launcher/com.android.quickstep.RecentsActivity' "$out/overlay-resources.txt" \
@@ -78,6 +85,11 @@ if [[ -f $ov ]]; then
 else
   bad "módulo: no lleva el overlay"
 fi
+
+# --- Recursos concretos que han fallado en el dispositivo (Resources$NotFoundException) ---
+"$aapt2" dump resources "$apk" > "$work/apk-resources-full.txt" 2>&1
+grep -E -A4 "0x7f0707ce|dimen/taskbar_phone_size|dimen/taskbar_stashed_size" "$work/apk-resources-full.txt" \
+  > "$out/apk-resources-taskbar.txt" 2>&1 || true
 
 # --- Clases de RecentsActivity y servicio en el APK (nombres que usa el overlay y SystemUI) ---
 "$aapt2" dump xmltree --file AndroidManifest.xml "$apk" > "$out/apk-manifest.txt" 2>&1

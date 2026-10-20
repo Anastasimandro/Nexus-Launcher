@@ -73,19 +73,6 @@ jobs:
           .github/scripts/build-magisk-module.sh "dist/Nexus-v${VALIDATION_VERSION}.apk" \
             "$VALIDATION_VERSION" "$VALIDATION_VERSION_CODE" "dist/Nexus-MagiskModule-v${VALIDATION_VERSION}.zip"
 
-      # Variante estática del overlay, solo para la prueba del emulador (nunca va en el módulo).
-      - name: Overlay estático de prueba
-        run: |
-          tmp="$(mktemp -d)"
-          cp -R magisk-module/overlay/. "$tmp"/
-          sed -i 's#<overlay android:targetPackage="android" />#<overlay android:targetPackage="android" android:isStatic="true" android:priority="2147483647" />#' "$tmp/AndroidManifest.xml"
-          grep -q 'isStatic' "$tmp/AndroidManifest.xml"
-          ALLOW_STATIC_OVERLAY=1 OVERLAY_DIR="$tmp" .github/scripts/build-recents-overlay.sh dist/NexusRecentsOverlayStatic.apk
-          mkdir -p results
-          bt="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -n 1)"
-          "$bt/aapt2" dump xmltree --file AndroidManifest.xml dist/NexusRecentsOverlayStatic.apk > results/static-overlay-manifest.txt 2>&1 || true
-          "$bt/aapt2" dump badging dist/NexusRecentsOverlayStatic.apk > results/static-overlay-badging.txt 2>&1 || true
-
       - name: Inspeccionar con aapt2 y apksigner reales
         run: .github/scripts/inspect-build.sh dist results "$VALIDATION_VERSION"
 
@@ -108,12 +95,11 @@ jobs:
   android:
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 75
-    # Un emulador por variante: así un remount de una prueba no contamina la siguiente.
+    timeout-minutes: 100
     strategy:
       fail-fast: false
       matrix:
-        variant: [static]
+        variant: [module]
     env:
       VARIANT: ${{ matrix.variant }}
     steps:
@@ -140,7 +126,7 @@ jobs:
       # El emulador y la validación van en el mismo paso: un proceso en segundo plano puede no
       # sobrevivir al paso que lo lanzó.
       - name: Emulador Android y validación
-        timeout-minutes: 50
+        timeout-minutes: 80
         env:
           GITHUB_TOKEN: ${{ github.token }}
           # surfaceflinger del emulador aborta (RegionSampling/readColorBufferDma) con la GPU del anfitrión.
