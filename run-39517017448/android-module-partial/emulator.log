@@ -94,3 +94,11 @@ INFO         | Boot completed in 47033 ms
 INFO         | Increasing screen off timeout, logcat buffer size to 2M.
 INFO         | Boot completed in 18122 ms
 INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+ERROR        | DisplaySurfaceGlContextHelper context was preempted by others, current=0x3, needed=0x3, thread=0x558d5a5e2d28
+ERROR        | Failed to restore previous context: 12297
+INFO         | Boot completed in 16698 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell am broadcast -a com.android.emulator.multidisplay.START -n com.android.emulator.multidisplay/.MultiDisplayServiceReceiver --user 0 ' failed: 'Broadcasting: Intent { act=com.android.emulator.multidisplay.START flg=0x400000 cmp=com.android.emulator.multidisplay/.MultiDisplayServiceReceiver }'
+WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell am broadcast -a com.android.emulator.multidisplay.START -n com.android.emulator.multidisplay/.MultiDisplayServiceReceiver --user 0 ' failed: 'adb: device 'emulator-5554' not found'
+ERROR        | Failed to find ColorBuffer: 678
+ERROR        | Failed to bind to texture: invalid color buffer.

@@ -1,0 +1,8 @@
+rc=0
+total 16
+-rw-r--r-- 1 root root 8538 2026-10-20 23:56 NexusRecentsOverlay.apk
+booting
+enabled
+watchdog.log
+2026-10-20 23:56:36 post-fs-data: overlay copiado a /data/local/tmp/nexusmod/system/product/overlay/NexusRecentsOverlay.apk
+montado: sí
