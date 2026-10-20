@@ -61,7 +61,7 @@ wait_boot() {
     (( SECONDS > sdeadline )) && { say "!! los servicios no respondieron en 5 min"; break; }
     sleep 4
   done
-  wait_stable
+  sleep 3
 }
 # El emulador a veces aborta surfaceflinger (RegionSampling) ~25 s después del arranque y el framework
 # se reinicia: se espera a que system_server conserve el mismo pid 40 s con los servicios respondiendo.
@@ -449,9 +449,20 @@ settle_overlay() {
     (( SECONDS > until_ )) && { echo "!! cmd overlay no respondió en 4 min" >> "$out/summary.md"; break; }
     sleep 5
   done
-  wait_stable
 }
 collect_overlay() {
+  # El framework del emulador a veces se reinicia (surfaceflinger aborta): se repite la medición si
+  # el sistema no respondía o system_server cambió de pid durante ella.
+  local try pid0 pid1
+  for try in 1 2 3 4 5 6; do
+    settle_overlay; pid0="$(adb shell pidof system_server | tr -d '\r')"
+    collect_overlay_once "$1"
+    pid1="$(adb shell pidof system_server | tr -d '\r')"
+    if [[ -n $pid0 && $pid0 == "$pid1" ]] && ! grep -q "Can't find service" "$out/$1-overlay-list-all.txt" "$out/dumpsys-package-nexus-$1-overlay.txt"; then return 0; fi
+    echo "$(date +%T) medición $1 inválida (intento $try, pid $pid0 -> $pid1)" >> "$out/progress.log"; sleep 20
+  done
+}
+collect_overlay_once() {
   local tag="$1"
   dsh df -h /data /product /system_ext > "$out/df-$tag.txt"
   dsh cmd overlay list --user 0 > "$out/$tag-overlay-list-all.txt"
@@ -496,7 +507,6 @@ phase_static_overlay() {
     dsh "rm -f /data/system/overlays.xml; rm -rf /data/system/package_cache" > "$out/wipe-overlay-state.txt"
   fi
   reboot_device
-  settle_overlay
   collect_overlay static
 }
 # 8b: el APK mutable de siempre, pero declarado inmutable y activo por defecto en overlay/config/config.xml.
@@ -513,7 +523,6 @@ phase_config_overlay() {
   dsh "cat /product/overlay/config/config.xml; ls -lZ /product/overlay /product/overlay/config | grep -iE 'nexus|config'" > "$out/config-overlay-files.txt"
   dsh df -h /data /product /system_ext > "$out/df-config-before-reboot.txt"
   BOOT_DEADLINE=150 EARLY_LOG="$out/early-boot-config.txt" reboot_device
-  settle_overlay
   collect_overlay config
 }
 effective() { grep -q "app.nexus.launcher/" "$1" 2>/dev/null; }
