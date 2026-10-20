@@ -90,3 +90,5 @@ WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last
 WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last-check.ini for reading.
 INFO         | Boot completed in 44007 ms
 INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+INFO         | Boot completed in 20786 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
