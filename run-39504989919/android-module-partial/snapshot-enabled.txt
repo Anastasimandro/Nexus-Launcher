@@ -1,0 +1,48 @@
+## enabled
+config_recentsComponentName: app.nexus.launcher/com.android.quickstep.RecentsActivity
+[enabled] permisos permitidos y no concedidos: 0 ()
+--- nexus-quickstep bound:
+SystemUI enlazado al servicio de Quickstep de Nexus: sí
+      * Client AppBindRecord{3c2dd40 ProcessRecord{60abfb9 9997:com.android.systemui/u0a201}}
+    binding=AppBindRecord{3c2dd40 app.nexus.launcher/com.android.quickstep.TouchInteractionService:com.android.systemui}
+--- nexus-quickstep status:
+Pedido (enabled): sí. El módulo aplica el overlay en cada arranque.
+Overlay app.nexus.launcher.overlay.recents en este arranque: aplicado (efectivo)
+  APK en /product/overlay: sí
+config_recentsComponentName ahora: app.nexus.launcher/com.android.quickstep.RecentsActivity
+Overlay efectivo: sí (Nexus es el proveedor de recientes)
+SystemUI enlazado al servicio de Nexus: sí
+Comprobación de Nexus: sdk=37 compatible=true
+  Ausente pero tolerado por Nexus: DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_ALTTAB_TRANSITIONS_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_TRANSITIONS_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_TRAMPOLINE_CLOSE_ANIMATION_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_EXIT_BY_MINIMIZE_TRANSITION_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_QUICK_SWITCH,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_TASKBAR_RUNNING_APPS,DesktopModeFlags.ENABLE_QUICKSWITCH_DESKTOP_SPLIT_BUGFIX,DesktopModeFlags.ENABLE_START_LAUNCH_TRANSITION_FROM_TASKBAR_BUGFIX,DesktopModeFlags.ENABLE_TASKBAR_RECENTS_LAYOUT_TRANSITION,DesktopExperienceFlags.ENABLE_DESKTOP_APP_LAUNCH_BUGFIX,DesktopExperienceFlags.ENABLE_DESKTOP_FIRST_FULLSCREEN_REFOCUS_BUGFIX,DesktopExperienceFlags.ENABLE_DESKTOP_WINDOWING_PIP,DesktopExperienceFlags.ENABLE_FREEFORM_DISPLAY_LAUNCH_PARAMS,DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND,DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_FRONTEND,DesktopExperienceFlags.ENABLE_PINNING_APP_WITH_CONTEXT_MENU,DesktopExperienceFlags.ENABLE_REJECT_HOME_TRANSITION,DesktopExperienceFlags.ENABLE_TASKBAR_RECENT_TASKS_THROTTLE_BUGFIX
+Vigilante: el último arranque con el overlay aplicado quedó verificado.
+Los cambios solo se aplican al reiniciar.
+--- /data/adb/nexus_quickstep:
+enabled
+healthy
+watchdog.log
+enabled: 2026-10-20 22:17:36 version=1601009900
+healthy: 2026-10-20 22:18:19
+--- watchdog.log:
+2026-10-20 22:17:36 post-fs-data: overlay copiado a /data/local/tmp/nexusmod/system/product/overlay/NexusRecentsOverlay.apk
+2026-10-20 22:18:19 arranque con el overlay pedido: vigilando (espera 240s, vigilancia 60s)
+2026-10-20 22:18:19 SystemUI enlazado al servicio de Nexus tras 0s
+2026-10-20 22:19:20 vigilancia terminada: enlace estable
+--- caídas:
+10-20 22:18:12.056  1039  1039 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:18:12.056  1039  1039 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1039
+10-20 22:18:16.933  1728  1728 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:18:16.933  1728  1728 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1728
+10-20 22:18:38.990  3223  3223 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:18:38.990  3223  3223 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 3223
+10-20 22:18:43.905  4129  4129 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:18:43.905  4129  4129 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 4129
+10-20 22:19:05.799  5566  5566 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:19:05.799  5566  5566 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 5566
+10-20 22:19:09.369  6266  6266 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:19:09.369  6266  6266 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 6266
+10-20 22:19:33.848  7883  7883 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:19:33.848  7883  7883 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 7883
+10-20 22:19:37.810  8683  8683 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:19:37.810  8683  8683 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 8683
+10-20 22:20:00.337 10143 10143 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:20:00.337 10143 10143 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 10143

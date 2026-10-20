@@ -121,3 +121,86 @@ android.permission.STOP_APP_SWITCHES
 android.permission.SYSTEM_APPLICATION_OVERLAY
 
 ## Fase 4: activar con 'nexus-quickstep enable', aplicar en el arranque y verificar el enlace
+- enable-flow: exit 0
+enable:
+nexus-quickstep: Nexus aún no ha comprobado la compatibilidad: ábrelo una vez (o usa --force).
+exit: 1
+Overlay pedido. REINICIA para que el sistema lo aplique en el arranque.
+Tras reiniciar: nexus-quickstep status  y  nexus-quickstep bound
+Si SystemUI no llega a enlazarse con Nexus, el vigilante lo desactiva y reinicia solo.
+Para deshacerlo: nexus-quickstep disable --reboot
+exit (--force): 0
+estado tras enable: enabled
+lookup antes de reiniciar: com.google.android.apps.nexuslauncher/com.android.quickstep.RecentsActivity
+
+## enabled
+config_recentsComponentName: app.nexus.launcher/com.android.quickstep.RecentsActivity
+[enabled] permisos permitidos y no concedidos: 0 ()
+--- nexus-quickstep bound:
+SystemUI enlazado al servicio de Quickstep de Nexus: sí
+      * Client AppBindRecord{3c2dd40 ProcessRecord{60abfb9 9997:com.android.systemui/u0a201}}
+    binding=AppBindRecord{3c2dd40 app.nexus.launcher/com.android.quickstep.TouchInteractionService:com.android.systemui}
+--- nexus-quickstep status:
+Pedido (enabled): sí. El módulo aplica el overlay en cada arranque.
+Overlay app.nexus.launcher.overlay.recents en este arranque: aplicado (efectivo)
+  APK en /product/overlay: sí
+config_recentsComponentName ahora: app.nexus.launcher/com.android.quickstep.RecentsActivity
+Overlay efectivo: sí (Nexus es el proveedor de recientes)
+SystemUI enlazado al servicio de Nexus: sí
+Comprobación de Nexus: sdk=37 compatible=true
+  Ausente pero tolerado por Nexus: DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_ALTTAB_TRANSITIONS_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_TRANSITIONS_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_TRAMPOLINE_CLOSE_ANIMATION_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_EXIT_BY_MINIMIZE_TRANSITION_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_QUICK_SWITCH,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_TASKBAR_RUNNING_APPS,DesktopModeFlags.ENABLE_QUICKSWITCH_DESKTOP_SPLIT_BUGFIX,DesktopModeFlags.ENABLE_START_LAUNCH_TRANSITION_FROM_TASKBAR_BUGFIX,DesktopModeFlags.ENABLE_TASKBAR_RECENTS_LAYOUT_TRANSITION,DesktopExperienceFlags.ENABLE_DESKTOP_APP_LAUNCH_BUGFIX,DesktopExperienceFlags.ENABLE_DESKTOP_FIRST_FULLSCREEN_REFOCUS_BUGFIX,DesktopExperienceFlags.ENABLE_DESKTOP_WINDOWING_PIP,DesktopExperienceFlags.ENABLE_FREEFORM_DISPLAY_LAUNCH_PARAMS,DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND,DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_FRONTEND,DesktopExperienceFlags.ENABLE_PINNING_APP_WITH_CONTEXT_MENU,DesktopExperienceFlags.ENABLE_REJECT_HOME_TRANSITION,DesktopExperienceFlags.ENABLE_TASKBAR_RECENT_TASKS_THROTTLE_BUGFIX
+Vigilante: el último arranque con el overlay aplicado quedó verificado.
+Los cambios solo se aplican al reiniciar.
+--- /data/adb/nexus_quickstep:
+enabled
+healthy
+watchdog.log
+enabled: 2026-10-20 22:17:36 version=1601009900
+healthy: 2026-10-20 22:18:19
+--- watchdog.log:
+2026-10-20 22:17:36 post-fs-data: overlay copiado a /data/local/tmp/nexusmod/system/product/overlay/NexusRecentsOverlay.apk
+2026-10-20 22:18:19 arranque con el overlay pedido: vigilando (espera 240s, vigilancia 60s)
+2026-10-20 22:18:19 SystemUI enlazado al servicio de Nexus tras 0s
+2026-10-20 22:19:20 vigilancia terminada: enlace estable
+--- caídas:
+10-20 22:18:12.056  1039  1039 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:18:12.056  1039  1039 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1039
+10-20 22:18:16.933  1728  1728 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:18:16.933  1728  1728 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1728
+10-20 22:18:38.990  3223  3223 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:18:38.990  3223  3223 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 3223
+10-20 22:18:43.905  4129  4129 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:18:43.905  4129  4129 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 4129
+10-20 22:19:05.799  5566  5566 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:19:05.799  5566  5566 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 5566
+10-20 22:19:09.369  6266  6266 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:19:09.369  6266  6266 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 6266
+10-20 22:19:33.848  7883  7883 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:19:33.848  7883  7883 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 7883
+10-20 22:19:37.810  8683  8683 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:19:37.810  8683  8683 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 8683
+10-20 22:20:00.337 10143 10143 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 22:20:00.337 10143 10143 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 10143
+
+## Fase 5: gestos con Nexus como proveedor de Quickstep
+- gestures: exit 0
+pantalla 1080x2400
+=== A. Inicio con gesto rápido   [system_server pid 12224]
+antes:     topResumedActivity=ActivityRecord{42533467 u0 com.android.settings/.homepage.SettingsHomepageActivity t7}
+después:     topResumedActivity=ActivityRecord{42533467 u0 com.android.settings/.homepage.SettingsHomepageActivity t7}
+=== B. Inicio con gesto lento: captura a mitad del gesto (la ventana debe seguir el dedo)   [system_server pid 12224]
+después:       topResumedActivity=ActivityRecord{48710297 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2}
+=== C. Cancelación: subir y volver al punto de partida (debe quedarse en la app)   [system_server pid 14400]
+después: 
+=== D. Cancelación con ACTION_CANCEL a mitad del gesto   [system_server pid 16622]
+después:       topResumedActivity=ActivityRecord{162692054 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2}
+=== E. Atrás   [system_server pid 16622]
+después:     topResumedActivity=ActivityRecord{126050350 u0 com.android.settings/.homepage.SettingsHomepageActivity t7}
+=== F. Recientes: subir y mantener   [system_server pid 16622]
+después:       topResumedActivity=ActivityRecord{149014816 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2}
+=== G. Rotación (horizontal) y gesto de Inicio   [system_server pid 18950]
+después (apaisado):       topResumedActivity=ActivityRecord{128884398 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2}
+=== H. Bloqueo y desbloqueo, y gesto de Inicio   [system_server pid 20298]
+después:       topResumedActivity=ActivityRecord{243076210 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2}
+
+## Fase 6: deshacer a mano ('nexus-quickstep disable --reboot')
