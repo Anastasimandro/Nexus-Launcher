@@ -1,0 +1,5 @@
+Binary APK
+Package name=app.nexus.launcher.overlay.recents id=7f
+  type string id=01 entryCount=1
+    resource 0x7f010000 string/config_recentsComponentName
+      () "app.nexus.launcher/com.android.quickstep.RecentsActivity"
