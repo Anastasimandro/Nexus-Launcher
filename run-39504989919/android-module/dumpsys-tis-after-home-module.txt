@@ -1,0 +1,130 @@
+SERVICE app.nexus.launcher/com.android.quickstep.TouchInteractionService 4346b1a pid=13101 user=0
+  Client:
+    GestureState:
+    	displayID=0
+    	gestureID=-1
+    	runningTask=null
+    	endTarget=null
+    	lastAppearedTaskTargetId=null
+    	lastStartedTaskId=[-1, -1]
+    	isRecentsAnimationRunning=false
+    Input state:
+    	mInputMonitorCompat=com.android.systemui.shared.system.InputMonitorCompat@dd00ac
+    	mInputEventReceiver=com.android.systemui.shared.system.InputChannelCompat$InputEventReceiver@555e175
+    	mInputMonitorDisplayModel=null
+    DisplayController.Info (displayId=0):
+      normalizedDisplayInfo=CachedDisplayInfo{size=Point(1080, 2400), cutout=DisplayCutout{insets=Rect(0, 0 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=0 displayHeight=0 physicalDisplayWidth=0 physicalDisplayHeight=0 density={0.0} cutoutSpec={} rotation={0} scale={0.0} physicalPixelDisplaySizeRatio={0.0}}} sideOverrides=null}, rotation=0}
+      rotation=0
+      fontScale=1.0
+      densityDpi=420
+      navigationMode=NO_BUTTON
+      isTaskbarPinned=false
+      isInDesktopMode=false
+      isInDesktopFirstMode=false
+      showLockedTaskbarOnHome=false
+      currentSize=Point(1080, 2400)
+      perDisplayBounds - CachedDisplayInfo{size=Point(1080, 2400), cutout=DisplayCutout{insets=Rect(0, 0 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=0 displayHeight=0 physicalDisplayWidth=0 physicalDisplayHeight=0 density={0.0} cutoutSpec={} rotation={0} scale={0.0} physicalPixelDisplaySizeRatio={0.0}}} sideOverrides=null}, rotation=0}: [WindowBounds{bounds=Rect(0, 0 - 1080, 2400), insets=Rect(0, 63 - 0, 63), availableSize=Point(1080, 2274), rotationHint=0}, WindowBounds{bounds=Rect(0, 0 - 2400, 1080), insets=Rect(0, 63 - 0, 63), availableSize=Point(2400, 954), rotationHint=1}, WindowBounds{bounds=Rect(0, 0 - 1080, 2400), insets=Rect(0, 63 - 0, 63), availableSize=Point(1080, 2274), rotationHint=2}, WindowBounds{bounds=Rect(0, 0 - 2400, 1080), insets=Rect(0, 63 - 0, 63), availableSize=Point(2400, 954), rotationHint=3}]
+      isTransientTaskbar=true
+    TouchState (displayId 0):
+    DeviceState:
+      canStartSystemGesture=true
+      systemUiFlagsForDefaultDisplay=268435456
+      systemUiFlagsDesc=awake
+      assistantAvailable=false
+      assistantDisabled=false
+      isOneHandedModeEnabled=false
+      isSwipeToNotificationEnabled=false
+      deferredGestureRegion=Rect(0, 0 - 0, 0)
+      exclusionRegion=Rect(0, 0 - 0, 0)
+      pipIsActive=false
+      predictiveBackToHomeInProgress=false
+      RotationTouchHelper:
+    RotationTouchHelper:
+      currentActiveRotation=0
+      displayRotation=0
+    OrientationTouchTransformerState: 
+      currentActiveRotation=0
+      lastTouchedRegion=null
+      multipleRegionsEnabled=false
+      currentTouchableRotations=RectF(0.0, 2316.0, 1080.0, 2400.0) rotation: 0 
+      mNavBarGesturalHeight=84
+      mNavBarLargerGesturalHeight=210
+      mAssistantLeftRegion=RectF(0.0, 2316.0, 126.0, 2400.0)
+      mAssistantRightRegion=RectF(954.0, 2316.0, 1080.0, 2400.0)
+      mOneHandedModeRegion=RectF(0.0, 2190.0, 1080.0, 2400.0)
+    	createdOverviewActivity=null
+    	resumed=false
+    	TaskAnimationManager:
+    		mDisplayId=0
+    		mRecentsAnimationStartPending=false
+    		mShouldIgnoreUpcomingGestures=false
+    	mConsumer=TYPE_NO_OP
+    ActiveGestureErrorDetector:
+    ActiveGestureLog history:
+    RecentsModel:
+      RecentTasksList:
+        mChangeId=1
+        mResultsUi=[id=-1, tasks=
+        ]
+        rawTasks=[
+        ]
+    TaskbarManager:
+    DesktopVisibilityController:
+    	desktopVisibilityListeners=[]
+    	visibleDesktopTasksCount=0
+    	inOverviewState=false
+    	backgroundStateEnabled=false
+    	gestureInProgress=false
+    	desktopTaskListener=com.android.launcher3.statehandlers.DesktopVisibilityController$DesktopTaskListenerImpl@5acb944
+    	context=app.lawnchair.LawnchairApp@5d2c41c
+    ContextualSearchStateManager:
+    	ContextualSearchStMgr event history:
+    SystemUiProxy:
+    	mSystemUiProxy=null
+    	mPip=null
+    	mPipAnimationListener=null
+    	mBubbles=null
+    	mBubblesListener=null
+    	mSplitScreen=null
+    	mSplitScreenListener=com.android.quickstep.TopTaskTracker@995ca2d
+    	mSplitSelectListener=null
+    	mOneHanded=null
+    	mShellTransitions=null
+    	mHomeVisibilityState={HomeVisibilityState isHomeVisible=true}
+    	mFocusState={FocusState focusedDisplayId=0}
+    	mStartingWindow=null
+    	mStartingWindowListener=null
+    	mSysuiUnlockAnimationController=null
+    	mLauncherActivityClass=null
+    	mLauncherUnlockAnimationController=null
+    	mRecentTasks=null
+    	mRecentTasksListener=com.android.quickstep.RecentTasksList$1@42efb62
+    	mBackAnimation=null
+    	mBackToLauncherCallback=null
+    	mBackToLauncherRunner=null
+    	mDesktopMode=null
+    	mDesktopTaskListener=com.android.launcher3.statehandlers.DesktopVisibilityController$DesktopTaskListenerImpl@5acb944
+    	mUnfoldAnimation=null
+    	mUnfoldAnimationListener=null
+    	mDragAndDrop=null
+        DeviceConfigWrapper:
+       	customLpnhThresholds=true
+       	customLphThresholds=true
+       	overrideLpnhLphThresholds=false
+       	lpnhSlopPercentage=100
+       	animateLpnh=false
+       	shrinkNavHandleOnPress=false
+       	lpnhTimeoutMs=450
+       	enableLpnhTwoStages=false
+       	twoStageDurationPercentage=200
+       	twoStageSlopPercentage=50
+       	enableLongPressNavHandle=true
+       	enableSearchHapticHint=true
+       	enableSearchHapticCommit=true
+       	lpnhHapticHintStartScalePercent=0
+       	lpnhHapticHintEndScalePercent=100
+       	lpnhHapticHintScaleExponent=1
+       	lpnhHapticHintIterations=50
+       	enableLpnhDeepPress=true
+       	lpnhHapticHintDelay=0
+       	lpnhExtraTouchWidthDp=0

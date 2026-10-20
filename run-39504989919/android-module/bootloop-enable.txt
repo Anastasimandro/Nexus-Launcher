@@ -1,0 +1,2 @@
+nexus-quickstep: el overlay se desactivó solo (2026-10-20 22:29:29 el arranque anterior con el overlay no terminó). Tras un fallo de arranque o con esta versión de Nexus (1601009900) hace falta --force; si es solo la versión, actualizar Nexus también vale.
+exit: 1

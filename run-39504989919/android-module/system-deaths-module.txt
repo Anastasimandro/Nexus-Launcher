@@ -1,0 +1,40 @@
+3030:10-20 22:18:20.407   489   542 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 542 (RegionSampling), pid 489 (surfaceflinger)
+3059:10-20 22:18:21.013  2626  2626 F DEBUG   : pid: 489, ppid: 1, tid: 542, name: RegionSampling  >>> /system/bin/surfaceflinger <<<
+3061:10-20 22:18:21.013  2626  2626 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+3062:10-20 22:18:21.013  2626  2626 F DEBUG   : Abort message: 'Assertion failed: !rcEnc->featureInfo()->hasReadColorBufferDma'
+3079:10-20 22:18:21.013  2626  2626 F DEBUG   :       #09 pc 000000000042059b  /system/bin/surfaceflinger (android::RegionSamplingThread::threadMain()+2571) (BuildId: 25d13f27c4a5b6e198dbf71cb2b70894)
+3080:10-20 22:18:21.013  2626  2626 F DEBUG   :       #10 pc 00000000004c9727  /system/bin/surfaceflinger (void* std::__1::__thread_proxy[abi:nn220000]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, android::RegionSamplingThread:
+3088:10-20 22:18:21.282     0     0 I init    : Untracked process (pid: 2629 name: (RegionSampling) ppid: 1 pgrp: 2629 state: Z) exited with status 0
+3089:10-20 22:18:21.283     0     0 I init    : Untracked process (pid: 2629 name: (RegionSampling) ppid: 1 pgrp: 2629 state: Z) did not have an associated service entry and will not be reaped
+4784:10-20 22:18:46.782  2715  2762 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 2762 (RegionSampling), pid 2715 (surfaceflinger)
+4807:10-20 22:18:47.170  4992  4992 F DEBUG   : pid: 2715, ppid: 1, tid: 2762, name: RegionSampling  >>> /system/bin/surfaceflinger <<<
+4809:10-20 22:18:47.170  4992  4992 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+4810:10-20 22:18:47.170  4992  4992 F DEBUG   : Abort message: 'Assertion failed: !rcEnc->featureInfo()->hasReadColorBufferDma'
+4827:10-20 22:18:47.170  4992  4992 F DEBUG   :       #09 pc 000000000042059b  /system/bin/surfaceflinger (android::RegionSamplingThread::threadMain()+2571) (BuildId: 25d13f27c4a5b6e198dbf71cb2b70894)
+4828:10-20 22:18:47.170  4992  4992 F DEBUG   :       #10 pc 00000000004c9727  /system/bin/surfaceflinger (void* std::__1::__thread_proxy[abi:nn220000]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, android::RegionSamplingThread:
+4836:10-20 22:18:47.381     0     0 I init    : Untracked process (pid: 4999 name: (RegionSampling) ppid: 1 pgrp: 4999 state: Z) exited with status 0
+4837:10-20 22:18:47.386     0     0 I init    : Untracked process (pid: 4999 name: (RegionSampling) ppid: 1 pgrp: 4999 state: Z) did not have an associated service entry and will not be reaped
+9258:10-20 22:19:14.477  5031  5084 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 5084 (RegionSampling), pid 5031 (surfaceflinger)
+9309:10-20 22:19:14.963  7229  7229 F DEBUG   : pid: 5031, ppid: 1, tid: 5084, name: RegionSampling  >>> /system/bin/surfaceflinger <<<
+9311:10-20 22:19:14.963  7229  7229 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+9312:10-20 22:19:14.963  7229  7229 F DEBUG   : Abort message: 'Assertion failed: !rcEnc->featureInfo()->hasReadColorBufferDma'
+9329:10-20 22:19:14.963  7229  7229 F DEBUG   :       #09 pc 000000000042059b  /system/bin/surfaceflinger (android::RegionSamplingThread::threadMain()+2571) (BuildId: 25d13f27c4a5b6e198dbf71cb2b70894)
+9330:10-20 22:19:14.963  7229  7229 F DEBUG   :       #10 pc 00000000004c9727  /system/bin/surfaceflinger (void* std::__1::__thread_proxy[abi:nn220000]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, android::RegionSamplingThread:
+9339:10-20 22:19:15.172     0     0 I init    : Untracked process (pid: 7232 name: (RegionSampling) ppid: 1 pgrp: 7232 state: Z) exited with status 0
+9340:10-20 22:19:15.190     0     0 I init    : Untracked process (pid: 7232 name: (RegionSampling) ppid: 1 pgrp: 7232 state: Z) did not have an associated service entry and will not be reaped
+19757:10-20 22:19:41.268  7324  7376 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 7376 (RegionSampling), pid 7324 (surfaceflinger)
+19789:10-20 22:19:41.764  9554  9554 F DEBUG   : pid: 7324, ppid: 1, tid: 7376, name: RegionSampling  >>> /system/bin/surfaceflinger <<<
+19791:10-20 22:19:41.764  9554  9554 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+19792:10-20 22:19:41.764  9554  9554 F DEBUG   : Abort message: 'Assertion failed: !rcEnc->featureInfo()->hasReadColorBufferDma'
+19809:10-20 22:19:41.764  9554  9554 F DEBUG   :       #09 pc 000000000042059b  /system/bin/surfaceflinger (android::RegionSamplingThread::threadMain()+2571) (BuildId: 25d13f27c4a5b6e198dbf71cb2b70894)
+19810:10-20 22:19:41.764  9554  9554 F DEBUG   :       #10 pc 00000000004c9727  /system/bin/surfaceflinger (void* std::__1::__thread_proxy[abi:nn220000]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, android::RegionSamplingThread
+20042:10-20 22:19:42.500     0     0 I init    : Untracked process (pid: 9562 name: (RegionSampling) ppid: 1 pgrp: 9562 state: Z) exited with status 0
+20043:10-20 22:19:42.502     0     0 I init    : Untracked process (pid: 9562 name: (RegionSampling) ppid: 1 pgrp: 9562 state: Z) did not have an associated service entry and will not be reaped
+30417:10-20 22:20:10.525  9596  9643 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 9643 (RegionSampling), pid 9596 (surfaceflinger)
+30451:10-20 22:20:10.911 12092 12092 F DEBUG   : pid: 9596, ppid: 1, tid: 9643, name: RegionSampling  >>> /system/bin/surfaceflinger <<<
+30453:10-20 22:20:10.911 12092 12092 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+30454:10-20 22:20:10.911 12092 12092 F DEBUG   : Abort message: 'Assertion failed: !rcEnc->featureInfo()->hasReadColorBufferDma'
+30471:10-20 22:20:10.912 12092 12092 F DEBUG   :       #09 pc 000000000042059b  /system/bin/surfaceflinger (android::RegionSamplingThread::threadMain()+2571) (BuildId: 25d13f27c4a5b6e198dbf71cb2b70894)
+30472:10-20 22:20:10.912 12092 12092 F DEBUG   :       #10 pc 00000000004c9727  /system/bin/surfaceflinger (void* std::__1::__thread_proxy[abi:nn220000]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, android::RegionSamplingThread
+30482:10-20 22:20:11.153     0     0 I init    : Untracked process (pid: 12097 name: (RegionSampling) ppid: 1 pgrp: 12097 state: Z) exited with status 0
+30483:10-20 22:20:11.162     0     0 I init    : Untracked process (pid: 12097 name: (RegionSampling) ppid: 1 pgrp: 12097 state: Z) did not have an associated service entry and will not be reaped
