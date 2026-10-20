@@ -1,0 +1,8 @@
+rc=0
+total 0
+watchdog.log
+2026-10-20 16:46:32 arranque con el overlay pedido: vigilando (espera 150s, vigilancia 60s)
+2026-10-20 16:47:35 cmd overlay list no devolvió el overlay: android [x] android.auto_generated_rro_vendor__ [x] com.google.android.overlay.googleconfig 
+2026-10-20 16:47:38 cmd overlay list no devolvió el overlay: android [x] android.auto_generated_rro_vendor__ [x] com.google.android.overlay.googleconfig 
+2026-10-20 16:48:58 SystemUI enlazado al servicio de Nexus tras 145s
+montado: no
