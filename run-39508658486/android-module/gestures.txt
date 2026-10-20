@@ -1,0 +1,6 @@
+cmd: Failure calling service input: Broken pipe (32)
+cmd: Can't find service: input
+cmd: Can't find service: input
+grep: write error: Broken pipe
+cut: write error: Broken pipe
+grep: write error: Broken pipe
