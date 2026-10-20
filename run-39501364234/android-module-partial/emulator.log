@@ -106,3 +106,5 @@ WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emu
 INFO         | Boot completed in 24429 ms
 INFO         | Increasing screen off timeout, logcat buffer size to 2M.
 WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put system accelerometer_rotation 1 ' failed: 'adb: device 'emulator-5554' not found'
+INFO         | Boot completed in 24687 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
