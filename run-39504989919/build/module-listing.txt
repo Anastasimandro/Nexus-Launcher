@@ -1,0 +1,27 @@
+Archive:  dist/Nexus-MagiskModule-v0.99.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+      312  2026-10-20 22:10   module.prop
+     3089  2026-10-20 22:10   customize.sh
+      547  2026-10-20 22:10   service.sh
+     2177  2026-10-20 22:10   post-fs-data.sh
+        0  2026-10-20 22:10   META-INF/
+        0  2026-10-20 22:10   META-INF/com/
+        0  2026-10-20 22:10   META-INF/com/google/
+        0  2026-10-20 22:10   META-INF/com/google/android/
+      621  2026-10-20 22:10   META-INF/com/google/android/update-binary
+        8  2026-10-20 22:10   META-INF/com/google/android/updater-script
+        0  2026-10-20 22:10   system/
+        0  2026-10-20 22:10   system/product/
+        0  2026-10-20 22:10   system/product/priv-app/
+        0  2026-10-20 22:10   system/product/priv-app/Nexus/
+ 17767144  2026-10-20 22:10   system/product/priv-app/Nexus/Nexus.apk
+        0  2026-10-20 22:10   system/product/etc/
+        0  2026-10-20 22:10   system/product/etc/permissions/
+     3259  2026-10-20 22:10   system/product/etc/permissions/privapp-permissions-nexus.xml
+        0  2026-10-20 22:10   system/bin/
+    13714  2026-10-20 22:10   system/bin/nexus-quickstep
+        0  2026-10-20 22:10   overlay-static/
+     8538  2026-10-20 22:10   overlay-static/NexusRecentsOverlay.apk
+---------                     -------
+ 17799409                     22 files
