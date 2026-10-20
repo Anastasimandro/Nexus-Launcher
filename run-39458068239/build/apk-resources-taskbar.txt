@@ -1,0 +1,11 @@
+    resource 0x7f0707ce dimen/taskbar_phone_size
+      () 48.000000dp
+    resource 0x7f0707cf dimen/taskbar_pinning_popup_menu_min_padding_from_screen_edge
+      () 16.000000dp
+    resource 0x7f0707d0 dimen/taskbar_pinning_popup_menu_vertical_margin
+--
+    resource 0x7f0707dc dimen/taskbar_stashed_size
+      () 24.000000dp
+    resource 0x7f0707dd dimen/taskbar_stashed_small_screen
+      () 108.000000dp
+    resource 0x7f0707de dimen/taskbar_suw_frame
