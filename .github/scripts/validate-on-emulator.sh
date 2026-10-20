@@ -194,6 +194,22 @@ say ""
 fi
 
 # ---------------------------------------------------------------------------------------------
+# Los recursos privados del framework (@*android:...) se compilan contra el SDK y fallan en ejecución
+# si el sistema ya no los tiene: se comparan con el framework-res.apk real del dispositivo.
+check_framework_resources() {
+  local bt aapt2
+  bt="$(ls "$sdk/build-tools" | sort -V | tail -n 1)"; aapt2="$sdk/build-tools/$bt/aapt2"
+  adb pull /system/framework/framework-res.apk "$work/framework-res.apk" > /dev/null 2>&1 || return 1
+  "$aapt2" dump resources "$work/framework-res.apk" > "$out/framework-res-dump.txt" 2>&1
+  python3 -I "$here/check-framework-resources.py" "$out/framework-res-dump.txt" \
+    "$here/../../res" "$here/../../quickstep/res" "$here/../../lawnchair/res" "$here/../../systemUI" "$here/../../compatLib" 2>&1
+}
+cap framework-resources check_framework_resources > /dev/null 2>&1
+cat "$out/framework-resources.txt" | tee -a "$out/summary.md"
+rm -f "$out/framework-res-dump.txt"
+say ""
+
+# ---------------------------------------------------------------------------------------------
 say "## Fase 2: instalar el módulo como lo hace Magisk (remount)"
 phase_install() {
   unzip -q "$zip" -d "$work/module"
@@ -254,55 +270,7 @@ cap module-evidence phase_module
   echo "probe:"; cat "$out/probe-file.txt"; echo "permisos permitidos y NO concedidos:"; cat "$out/allowed-but-NOT-granted.txt"; } | tee -a "$out/summary.md"
 say ""
 
-if [[ $VARIANT == mutable ]]; then
-# ---------------------------------------------------------------------------------------------
-say "## Fase 4: activar el overlay y comprobar que SystemUI se enlaza a Nexus"
-phase_enable() {
-  dsh "$TOOL enable" > "$out/enable-1.txt"; local rc=$?
-  echo "exit del primer enable (sin --force): $(adb shell "$TOOL enable >/dev/null 2>&1; echo \$?" | tr -d '\r')" >> "$out/enable-1.txt"
-  if ! grep -q "Overlay activado" "$out/enable-1.txt"; then
-    dsh "$TOOL enable --force" > "$out/enable-2-force.txt"
-  fi
-  dsh cmd overlay list --user 0 "$OVERLAY" > "$out/overlay-list-after-enable.txt"
-  dsh dumpsys overlay "$OVERLAY" > "$out/dumpsys-overlay-after-enable.txt"
-  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/lookup-after-enable.txt"
-  reboot_device
-  # Lo que hace service.sh en un dispositivo con Magisk, lanzado a mano.
-  adb shell "NEXUS_GUARD_WAIT=150 nohup $TOOL guard > /data/local/tmp/guard.out 2>&1 &"
-  sleep 90
-  dsh "$TOOL bound" > "$out/tool-bound.txt"
-  dsh "$TOOL status" > "$out/tool-status-after-reboot.txt"
-  dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-service.txt"
-  dsh dumpsys activity service SystemUIService > "$out/dumpsys-systemui-full.txt"
-  grep -n -i -B2 -A25 -E "OverviewProxyService|LauncherProxyService" "$out/dumpsys-systemui-full.txt" | head -n 120 > "$out/dumpsys-systemui-proxy.txt"
-  rm -f "$out/dumpsys-systemui-full.txt"
-  crashes > "$out/crashes-after-enable.txt"
-  perm_state after-enable > "$out/perm-state-after-enable.txt"
-  dsh logcat -d | grep -E "TouchInteraction|OverviewProxy|LauncherProxy|NexusQuickstep|InputConsumerCompat|QuickStep|AndroidRuntime" | tail -n 250 > "$out/logcat-quickstep.txt"
-  dsh "cat /data/adb/nexus_quickstep/watchdog.log" > "$out/watchdog-log-1.txt"
-  dsh "ls -la /data/adb/nexus_quickstep" > "$out/state-dir-1.txt"
-}
-cap enable-overlay phase_enable
-{ cat "$out/enable-1.txt"; echo "---"; cat "$out/lookup-after-enable.txt"; echo "---"; cat "$out/tool-bound.txt"; echo "--- caídas:"; cat "$out/crashes-after-enable.txt"; } | tee -a "$out/summary.md"
-say ""
-
-# ---------------------------------------------------------------------------------------------
-say "## Fase 4b: ¿concede el sistema a Nexus los permisos 'signature' al ser el proveedor de recientes?"
-{ echo "protección de los permisos que pide Nexus:"; cat "$out/permission-protection.txt"; echo; cat "$out/perm-state-after-enable.txt"; } | tee -a "$out/summary.md"
-phase_perms_second_boot() {
-  reboot_device
-  perm_state second-boot > "$out/perm-state-second-boot.txt"
-  dsh "$TOOL bound" > "$out/tool-bound-second-boot.txt"
-}
-if grep -qx "android.permission.MANAGE_ACTIVITY_TASKS" "$out/granted-after-enable.txt"; then
-  say "H0: MANAGE_ACTIVITY_TASKS concedido tras activar el overlay mutable y reiniciar."
-else
-  say "H0: NO concedido tras activar el overlay mutable y reiniciar. H1: un segundo reinicio."
-  cap perms-second-boot phase_perms_second_boot
-  cat "$out/perm-state-second-boot.txt" "$out/tool-bound-second-boot.txt" | tee -a "$out/summary.md"
-fi
-say ""
-
+S=""   # sufijo de los archivos de la fase de gestos (la repetición con el overlay estático usa "-static")
 # Nexus tiene que ser el launcher de inicio para que los gestos de Inicio lo lleven a él.
 ensure_home() {
   dsh "cmd role add-role-holder --user 0 android.app.role.HOME $PKG" > "$out/set-home$S.txt"
@@ -311,9 +279,6 @@ ensure_home() {
   { echo "inicio resuelto: $(dsh cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME | tail -n 1)"
     echo "actividad en primer plano: $(fg)"; } >> "$out/set-home$S.txt"
 }
-# ---------------------------------------------------------------------------------------------
-say "## Fase 5: gestos con el overlay activo (inyectados con 'input')"
-S=""   # sufijo de los archivos de la fase de gestos (la repetición con el overlay estático usa "-static")
 phase_gestures() {
   ensure_home
   dsh cmd overlay enable-exclusive --category com.android.internal.systemui.navbar.gestural > "$out/gestural-nav$S.txt"
@@ -382,6 +347,58 @@ phase_gestures() {
   crashes > "$out/crashes-after-gestures$S.txt"
   dsh logcat -d | grep -E "AbsSwipeUpHandler|RecentsAnimation|TaskAnimationManager|TouchInteraction|AndroidRuntime|FATAL" | tail -n 250 > "$out/logcat-gestures$S.txt"
 }
+
+if [[ $VARIANT == mutable ]]; then
+# ---------------------------------------------------------------------------------------------
+say "## Fase 4: activar el overlay y comprobar que SystemUI se enlaza a Nexus"
+phase_enable() {
+  dsh "$TOOL enable" > "$out/enable-1.txt"; local rc=$?
+  echo "exit del primer enable (sin --force): $(adb shell "$TOOL enable >/dev/null 2>&1; echo \$?" | tr -d '\r')" >> "$out/enable-1.txt"
+  if ! grep -q "Overlay activado" "$out/enable-1.txt"; then
+    dsh "$TOOL enable --force" > "$out/enable-2-force.txt"
+  fi
+  dsh cmd overlay list --user 0 "$OVERLAY" > "$out/overlay-list-after-enable.txt"
+  dsh dumpsys overlay "$OVERLAY" > "$out/dumpsys-overlay-after-enable.txt"
+  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName > "$out/lookup-after-enable.txt"
+  reboot_device
+  # Lo que hace service.sh en un dispositivo con Magisk, lanzado a mano.
+  adb shell "NEXUS_GUARD_WAIT=150 nohup $TOOL guard > /data/local/tmp/guard.out 2>&1 &"
+  sleep 90
+  dsh "$TOOL bound" > "$out/tool-bound.txt"
+  dsh "$TOOL status" > "$out/tool-status-after-reboot.txt"
+  dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-service.txt"
+  dsh dumpsys activity service SystemUIService > "$out/dumpsys-systemui-full.txt"
+  grep -n -i -B2 -A25 -E "OverviewProxyService|LauncherProxyService" "$out/dumpsys-systemui-full.txt" | head -n 120 > "$out/dumpsys-systemui-proxy.txt"
+  rm -f "$out/dumpsys-systemui-full.txt"
+  crashes > "$out/crashes-after-enable.txt"
+  perm_state after-enable > "$out/perm-state-after-enable.txt"
+  dsh logcat -d | grep -E "TouchInteraction|OverviewProxy|LauncherProxy|NexusQuickstep|InputConsumerCompat|QuickStep|AndroidRuntime" | tail -n 250 > "$out/logcat-quickstep.txt"
+  dsh "cat /data/adb/nexus_quickstep/watchdog.log" > "$out/watchdog-log-1.txt"
+  dsh "ls -la /data/adb/nexus_quickstep" > "$out/state-dir-1.txt"
+}
+cap enable-overlay phase_enable
+{ cat "$out/enable-1.txt"; echo "---"; cat "$out/lookup-after-enable.txt"; echo "---"; cat "$out/tool-bound.txt"; echo "--- caídas:"; cat "$out/crashes-after-enable.txt"; } | tee -a "$out/summary.md"
+say ""
+
+# ---------------------------------------------------------------------------------------------
+say "## Fase 4b: ¿concede el sistema a Nexus los permisos 'signature' al ser el proveedor de recientes?"
+{ echo "protección de los permisos que pide Nexus:"; cat "$out/permission-protection.txt"; echo; cat "$out/perm-state-after-enable.txt"; } | tee -a "$out/summary.md"
+phase_perms_second_boot() {
+  reboot_device
+  perm_state second-boot > "$out/perm-state-second-boot.txt"
+  dsh "$TOOL bound" > "$out/tool-bound-second-boot.txt"
+}
+if grep -qx "android.permission.MANAGE_ACTIVITY_TASKS" "$out/granted-after-enable.txt"; then
+  say "H0: MANAGE_ACTIVITY_TASKS concedido tras activar el overlay mutable y reiniciar."
+else
+  say "H0: NO concedido tras activar el overlay mutable y reiniciar. H1: un segundo reinicio."
+  cap perms-second-boot phase_perms_second_boot
+  cat "$out/perm-state-second-boot.txt" "$out/tool-bound-second-boot.txt" | tee -a "$out/summary.md"
+fi
+say ""
+
+# ---------------------------------------------------------------------------------------------
+say "## Fase 5: gestos con el overlay activo (inyectados con 'input')"
 cap gestures phase_gestures
 cat "$out/gesture-notes$S.txt" | tee -a "$out/summary.md"
 say ""
