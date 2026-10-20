@@ -406,6 +406,9 @@ has() { grep -q -- "$1" "$2" 2>/dev/null; }
 # ---------------------------------------------------------------------------------------------
 say "## Fase 4: activar con 'nexus-quickstep enable', aplicar en el arranque y verificar el enlace"
 phase_enable_flow() {
+  # Nexus escribe quickstep-probe.txt al arrancar y `enable` lo exige: se abre una vez, como haría el usuario.
+  dsh monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 > /dev/null 2>&1
+  sleep 8
   tool status > "$out/flow-status-0.txt"
   tool enable > "$out/flow-enable.txt"; echo "exit: $?" >> "$out/flow-enable.txt"
   if ! has "exit: 0" "$out/flow-enable.txt"; then   # la prueba de Nexus puede negarse: se anota y se fuerza para seguir midiendo

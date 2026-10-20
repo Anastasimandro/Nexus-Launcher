@@ -66,7 +66,8 @@ overlay_line() {
   n=0
   out=""
   while [ "$n" -lt 3 ]; do
-    out=$(cmd overlay list --user "$USER_ID" "$OVERLAY" 2>&1)
+    # El argumento de `cmd overlay list` es el paquete OBJETIVO (android), no el del overlay.
+    out=$(cmd overlay list --user "$USER_ID" android 2>&1)
     line=$(echo "$out" | grep -F "$OVERLAY" | head -n 1)
     if [ -n "$line" ]; then
       echo "$line"
