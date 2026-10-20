@@ -113,3 +113,9 @@ WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emu
 INFO         | Boot completed in 23646 ms
 INFO         | Increasing screen off timeout, logcat buffer size to 2M.
 WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell am broadcast -a com.android.emulator.multidisplay.START -n com.android.emulator.multidisplay/.MultiDisplayServiceReceiver --user 0 ' failed: 'adb: device 'emulator-5554' not found'
+INFO         | Boot completed in 23313 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell am broadcast -a com.android.emulator.multidisplay.START -n com.android.emulator.multidisplay/.MultiDisplayServiceReceiver --user 0 ' failed: 'adb: device 'emulator-5554' not found'
+INFO         | Boot completed in 23490 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell am broadcast -a com.android.emulator.multidisplay.START -n com.android.emulator.multidisplay/.MultiDisplayServiceReceiver --user 0 ' failed: 'adb: device offline'
