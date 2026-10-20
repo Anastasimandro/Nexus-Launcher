@@ -1,0 +1,10 @@
+rc=0
+total 0
+tripped
+tripped.meta
+watchdog.log
+2026-10-20 16:53:27 DESACTIVO el overlay: SystemUI no se enlazó al servicio de Nexus en 60 s
+2026-10-20 16:53:27 reiniciando para arrancar sin overlay
+2026-10-20 16:54:06 cmd overlay list no devolvió el overlay: android [x] android.auto_generated_rro_vendor__ [x] com.google.android.overlay.googleconfig 
+2026-10-20 16:54:09 cmd overlay list no devolvió el overlay: android [x] android.auto_generated_rro_vendor__ [x] com.google.android.overlay.googleconfig 
+montado: no
