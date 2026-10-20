@@ -71,7 +71,7 @@ Comprobación a mano de que SystemUI está enlazado: `dumpsys activity services 
 
 ### Recuperación
 
-- **El vigilante** (`service.sh` → `nexus-quickstep guard`): con el overlay aplicado espera a que SystemUI se enlace a Nexus; si no pasa en 120 s, o el enlace se pierde 60 s seguidos durante los 300 s siguientes, borra `enabled`, deja constancia (`tripped`) y **reinicia una vez**. El arranque siguiente va sin overlay. No depende de que Nexus arranque. Después, `enable` exige `--force` para esa misma versión de Nexus.
+- **El vigilante** (`service.sh` → `nexus-quickstep guard`): con el overlay aplicado espera a que SystemUI se enlace a Nexus; si no pasa en 180 s, o el enlace se pierde 60 s seguidos durante los 300 s siguientes, borra `enabled`, deja constancia (`tripped`) y **reinicia una vez**. El arranque siguiente va sin overlay. No depende de que Nexus arranque. Después, `enable` exige `--force` para esa misma versión de Nexus.
 - **Bucle de arranque:** `post-fs-data.sh` deja un marcador `booting` y el vigilante lo borra al verificar el arranque. Si encuentra el marcador al arrancar, es que el arranque anterior con el overlay no terminó: quita `enabled` y arranca sin overlay.
 - **A mano:** `su -c nexus-quickstep disable --reboot`. Sin root: desactiva el módulo desde Magisk/KernelSU/APatch (modo seguro o recovery) o borra `/data/adb/nexus_quickstep/enabled` desde recovery, y reinicia.
 - No hace falta reinstalar la ROM en ningún caso: el overlay vive en el montaje systemless del módulo, no en la imagen.

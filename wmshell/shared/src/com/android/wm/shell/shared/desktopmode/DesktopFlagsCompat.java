@@ -31,6 +31,10 @@ import java.util.function.BooleanSupplier;
  * tumbaba el servicio de Quickstep. Aquí una constante ausente cuenta como desactivada, igual que
  * el resto de indicadores de escritorio de este fork.
  *
+ * <p>También vale para las clases de indicadores generadas por aconfig que Android 17 no incluye
+ * (p. ej. {@code android.companion.virtualdevice.flags.Flags}, que tumbaba el servicio de Quickstep
+ * con NoClassDefFoundError en {@code KeyButtonRipple}): la clase ausente cuenta como indicador apagado.
+ *
  * <p>Uso: {@code DesktopFlagsCompat.isTrue(() -> DesktopModeFlags.X.isTrue())}. La lectura va
  * dentro de la lambda para que el error de enlace se produzca (y se recoja) aquí.
  */

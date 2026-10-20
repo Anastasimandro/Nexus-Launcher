@@ -120,6 +120,7 @@ import com.android.systemui.shared.system.QuickStepContract;
 import com.android.systemui.shared.system.QuickStepContract.SystemUiStateFlags;
 import com.android.wm.shell.shared.bubbles.BubbleBarLocation;
 
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.StringJoiner;
@@ -316,7 +317,7 @@ public class NavbarButtonsViewController implements TaskbarControllers.LoggableT
         mIsImeRenderingNavButtons = mContext.imeDrawsImeNavBar();
         if (!mIsImeRenderingNavButtons) {
             // IME switcher
-            final int switcherResId = Flags.imeSwitcherRevamp()
+            final int switcherResId = DesktopFlagsCompat.isTrue(Flags::imeSwitcherRevamp)
                     ? com.android.internal.R.drawable.ic_ime_switcher_new
                     : R.drawable.ic_ime_switcher;
             mImeSwitcherButton = addButton(switcherResId, BUTTON_IME_SWITCH,

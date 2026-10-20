@@ -418,8 +418,11 @@ phase_enable_flow() {
   lookup > "$out/flow-lookup-before-reboot.txt"          # estático: antes de reiniciar no cambia nada
   emulate_magisk enable
   reboot_device
-  start_guard "NEXUS_GUARD_WAIT=150 NEXUS_GUARD_WATCH=60" 1
+  start_guard "NEXUS_GUARD_WAIT=240 NEXUS_GUARD_WATCH=60" 1
   settle
+  # El enlace puede tardar más de un minuto tras el arranque (se vio 145 s): se espera hasta 4 min antes de medir.
+  local w=$((SECONDS + 240)); until tool bound > /dev/null 2>&1; do (( SECONDS > w )) && break; sleep 5; done
+  echo "enlace tras ~$((240 - (w - SECONDS))) s" > "$out/bind-wait.txt"
   snapshot enabled
 }
 cap enable-flow phase_enable_flow

@@ -61,6 +61,7 @@ import com.android.quickstep.util.ContextualSearchInvoker;
 import com.android.systemui.contextualeducation.GestureType;
 import com.android.systemui.shared.system.QuickStepContract.SystemUiStateFlags;
 
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat;
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -239,7 +240,7 @@ public class TaskbarNavButtonController implements TaskbarControllers.LoggableTa
                 }
                 return true;
             case BUTTON_IME_SWITCH:
-                if (Flags.imeSwitcherRevamp()) {
+                if (DesktopFlagsCompat.isTrue(Flags::imeSwitcherRevamp)) {
                     logEvent(LAUNCHER_TASKBAR_IME_SWITCHER_BUTTON_LONGPRESS);
                     onImeSwitcherLongPress();
                     view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,

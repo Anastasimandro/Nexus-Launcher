@@ -42,6 +42,7 @@ import android.view.animation.PathInterpolator;
 import androidx.annotation.DimenRes;
 import androidx.annotation.Keep;
 
+import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -105,7 +106,8 @@ public class KeyButtonRipple extends Drawable {
         mMaxWidthResource = maxWidthResource;
         mMaxWidth = ctx.getResources().getDimensionPixelSize(maxWidthResource);
         mTargetView = targetView;
-        if ((VERSION.SDK_INT_FULL >= 3600001) && Flags.viewconfigurationApis()) {
+        if ((VERSION.SDK_INT_FULL >= 3600001)
+                && DesktopFlagsCompat.isTrue(Flags::viewconfigurationApis)) {
             mTapTimeoutMillis = ViewConfiguration.get(mTargetView.getContext()).getTapTimeoutMillis();
         } else {
             mTapTimeoutMillis = ViewConfiguration.getTapTimeout();

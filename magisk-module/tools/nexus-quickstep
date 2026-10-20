@@ -38,7 +38,7 @@ MODDIR="${NEXUS_MODDIR:-/data/adb/modules/nexus_launcher_systemless}"
 COMPONENT_KEY="android:string/config_recentsComponentName"
 PROBE_FILE="${NEXUS_PROBE_FILE:-/data/user/$USER_ID/$PKG/files/quickstep-probe.txt}"
 # Segundos que se espera el primer enlace, cuánto se vigila después y cada cuánto se mira.
-GUARD_WAIT="${NEXUS_GUARD_WAIT:-120}"
+GUARD_WAIT="${NEXUS_GUARD_WAIT:-180}"
 GUARD_WATCH="${NEXUS_GUARD_WATCH:-300}"
 GUARD_STEP="${NEXUS_GUARD_STEP:-5}"
 # Segundos seguidos sin enlace durante la vigilancia a partir de los cuales se desactiva.
@@ -61,35 +61,16 @@ need_root() {
   [ "$(id -u)" = "0" ] || die "hace falta root (su -c nexus-quickstep ...)."
 }
 
-# Línea de `cmd overlay list` de nuestro overlay ("[x] paquete", "[ ] paquete" o "--- paquete").
-overlay_line() {
-  n=0
-  out=""
-  while [ "$n" -lt 3 ]; do
-    # El argumento de `cmd overlay list` es el paquete OBJETIVO (android), no el del overlay.
-    out=$(cmd overlay list --user "$USER_ID" android 2>&1)
-    line=$(echo "$out" | grep -F "$OVERLAY" | head -n 1)
-    if [ -n "$line" ]; then
-      echo "$line"
-      return 0
-    fi
-    n=$((n + 1))
-    sleep 1
-  done
-  # Sin línea: o no está instalado o el servicio de overlays no respondió. Se deja constancia.
-  log "cmd overlay list no devolvió el overlay: $(echo "$out" | head -n 3 | tr '\n' ' ')"
-  return 0
-}
-
-# Estado del overlay: enabled, disabled, unavailable (instalado pero sin aprobar) o missing.
+# Estado del overlay en este arranque. Un overlay estático no sale en `cmd overlay list` (comprobado en
+# Android 17), así que se mira el resultado: si config_recentsComponentName apunta a Nexus, está aplicado.
 overlay_state() {
-  line=$(overlay_line)
-  case "$line" in
-    "[x]"*) echo enabled ;;
-    "[ ]"*) echo disabled ;;
-    "---"*) echo unavailable ;;
-    *) echo missing ;;
-  esac
+  if overlay_effective; then
+    echo "aplicado (efectivo)"
+  elif [ -n "$(applied_apk)" ]; then
+    echo "APK puesto pero no efectivo"
+  else
+    echo "no aplicado"
+  fi
 }
 
 # Valor de una clave del archivo de comprobación (vacío si no existe).
@@ -100,7 +81,15 @@ probe_value() {
 
 # versionCode instalado de Nexus (vacío si no se puede leer).
 nexus_version_code() {
-  dumpsys package "$PKG" 2>/dev/null | sed -n 's/.*versionCode=\([0-9][0-9]*\).*/\1/p' | head -n 1
+  # Justo después de arrancar `dumpsys package` puede no responder: se reintenta y se prueba otra vía.
+  n=0
+  while [ "$n" -lt 5 ]; do
+    v=$(dumpsys package "$PKG" 2>/dev/null | sed -n 's/.*versionCode=\([0-9][0-9]*\).*/\1/p' | head -n 1)
+    [ -n "$v" ] && { echo "$v"; return 0; }
+    v=$(cmd package list packages --show-versioncode "$PKG" 2>/dev/null | sed -n 's/.*versionCode:\([0-9][0-9]*\).*/\1/p' | head -n 1)
+    [ -n "$v" ] && { echo "$v"; return 0; }
+    n=$((n + 1)); sleep 1
+  done
 }
 
 # Líneas del volcado del servicio que muestran a SystemUI enlazado (vacío si no lo está).
@@ -202,7 +191,7 @@ do_enable() {
       die "Quickstep no es compatible con este Android (sdk=$(probe_value sdk); falta: ${missing:-?}). Con --force se activa igualmente, pero los gestos pueden dejar de funcionar."
     fi
     tripped_version=$(sed -n 's/^version=//p' "$STATE_DIR/tripped.meta" 2>/dev/null)
-    if [ -r "$STATE_DIR/tripped" ] && { [ "$tripped_version" = "$version" ] || [ "$tripped_version" = "bootloop" ]; }; then
+    if [ -r "$STATE_DIR/tripped" ] && { [ -z "$tripped_version" ] || [ -z "$version" ] || [ "$tripped_version" = "$version" ] || [ "$tripped_version" = "bootloop" ]; }; then
       die "el overlay se desactivó solo ($(cat "$STATE_DIR/tripped")). Tras un fallo de arranque o con esta versión de Nexus ($version) hace falta --force; si es solo la versión, actualizar Nexus también vale."
     fi
   fi
