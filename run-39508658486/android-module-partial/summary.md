@@ -84,3 +84,27 @@ android.jar de compilación: /usr/local/lib/android/sdk/platforms/android-37.2/a
   ID DISTINTO android:dimen/navigation_bar_frame_height compilado=0x01050283 sistema=0x0105027b  <- /home/runner/work/Nexus-Launcher/Nexus-Launcher/.github/scripts/../../res/values/dimens.xml:437
 
 ## Fase 2: instalar el módulo como lo hace Magisk (remount)
+- install-module: exit 0
+
+## Fase 3: el módulo en Android real (app privilegiada y overlay)
+- module-evidence: exit 0
+overlay (nuestro):
+cmd: Failure calling service overlay: Broken pipe (32)
+lookup antes:
+cmd: Failure calling service overlay: Broken pipe (32)
+probe:
+cat: /data/user/0/app.nexus.launcher/files/quickstep-probe.txt: No such file or directory
+permisos permitidos y NO concedidos:
+android.permission.ACCESS_SHORTCUTS
+android.permission.INTERNAL_SYSTEM_WINDOW
+android.permission.MANAGE_ACCESSIBILITY
+android.permission.MANAGE_ACTIVITY_TASKS
+android.permission.MANAGE_KEY_GESTURES
+android.permission.MONITOR_INPUT
+android.permission.READ_FRAME_BUFFER
+android.permission.REMOVE_TASKS
+android.permission.SET_ORIENTATION
+android.permission.STATUS_BAR_SERVICE
+android.permission.SYSTEM_APPLICATION_OVERLAY
+
+## Fase 4: activar con 'nexus-quickstep enable', aplicar en el arranque y verificar el enlace

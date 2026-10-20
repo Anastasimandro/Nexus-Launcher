@@ -94,3 +94,7 @@ INFO         | Boot completed in 48238 ms
 INFO         | Increasing screen off timeout, logcat buffer size to 2M.
 INFO         | Boot completed in 18448 ms
 INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+INFO         | Boot completed in 22865 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put system screen_off_timeout 2147483647 ' failed: 'cmd: Can't find service: settings'
+WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put system screen_off_timeout 2147483647 ' failed: 'cmd: Can't find service: settings'
