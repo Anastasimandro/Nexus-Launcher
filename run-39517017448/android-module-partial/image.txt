@@ -1,0 +1,2 @@
+Imagen: system-images;android-37.0;google_apis;x86_64
+AVD creado en /home/runner/.android/avd

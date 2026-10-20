@@ -1,0 +1,2 @@
+Filesystem      Size Used Avail Use% Mounted on
+/dev/block/dm-6 7.7G 776M  6.9G  10% /data_mirror/data_ce/null/0
