@@ -1,0 +1,3 @@
+host:   8ec9bf13854624a7204ddb9ac1de35853147541a0faf98367524762de6cf7c85
+device: 8ec9bf13854624a7204ddb9ac1de35853147541a0faf98367524762de6cf7c85  /product/overlay/NexusRecentsOverlay.apk
+-rw-rw-rw- 1 root root u:object_r:system_file:s0    8538 2026-10-20 07:02 NexusRecentsOverlay.apk

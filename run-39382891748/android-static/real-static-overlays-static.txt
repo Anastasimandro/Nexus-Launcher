@@ -1,0 +1,31 @@
+com.google.android.overlay.googleconfig:0 {
+  mBaseCodePath..........: /product/overlay/GoogleConfigOverlay.apk
+  mState.................: STATE_ENABLED
+  mIsMutable.............: false
+  mPriority..............: 6
+com.google.android.overlay.pixelconfigcommon:0 {
+  mBaseCodePath..........: /product/overlay/PixelConfigOverlayCommon.apk
+  mState.................: STATE_ENABLED
+  mIsMutable.............: false
+  mPriority..............: 11
+com.android.internal.ranchu.commonoverlay:0 {
+  mBaseCodePath..........: /product/overlay/RanchuCommonOverlay.apk
+  mState.................: STATE_ENABLED
+  mIsMutable.............: false
+  mPriority..............: 13
+--- dumpsys package (nuestro overlay):
+  [app.nexus.launcher.overlay.recents]
+  Package [app.nexus.launcher.overlay.recents] (cfe4ba5):
+    pkg=Package{4458aa7 app.nexus.launcher.overlay.recents}
+    codePath=/product/overlay/NexusRecentsOverlay.apk
+    resourcePath=/product/overlay/NexusRecentsOverlay.apk
+    legacyNativeLibraryDir=/product/lib64/NexusRecentsOverlay
+    flags=[ SYSTEM ALLOW_CLEAR_USER_DATA ALLOW_BACKUP KILL_AFTER_RESTORE ]
+    privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRODUCT PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    pkgFlags=[ SYSTEM ALLOW_CLEAR_USER_DATA ALLOW_BACKUP KILL_AFTER_RESTORE ]
+    privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRODUCT PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    overlayTarget=android
+    overlayCategory=null
+    User 0: ceDataInode=483925 deDataInode=278882 pccCeDataInode=0 pccDeDataInode=0 installed=true hidden=false suspended=false appLockEnabled=false distractionFlags=0 stopped=false notLaunched=false enabled=0 instant=false virtual=false quarantined=false
+      dataDir=/data/user/0/app.nexus.launcher.overlay.recents
+  [app.nexus.launcher.overlay.recents]
