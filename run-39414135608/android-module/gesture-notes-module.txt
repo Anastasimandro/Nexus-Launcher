@@ -1,0 +1,18 @@
+pantalla 1080x2400
+=== A. Inicio con gesto rápido
+antes:     topResumedActivity=ActivityRecord{71681358 u0 com.android.settings/.homepage.SettingsHomepageActivity t8}
+después:     topResumedActivity=ActivityRecord{71681358 u0 com.android.settings/.homepage.SettingsHomepageActivity t8}
+=== B. Inicio con gesto lento: captura a mitad del gesto (la ventana debe seguir el dedo)
+después:     topResumedActivity=ActivityRecord{71681358 u0 com.android.settings/.homepage.SettingsHomepageActivity t8}
+=== C. Cancelación: subir y volver al punto de partida (debe quedarse en la app)
+después:     topResumedActivity=ActivityRecord{71681358 u0 com.android.settings/.homepage.SettingsHomepageActivity t8}
+=== D. Cancelación con ACTION_CANCEL a mitad del gesto
+después:     topResumedActivity=ActivityRecord{71681358 u0 com.android.settings/.homepage.SettingsHomepageActivity t8}
+=== E. Atrás
+después:       topResumedActivity=ActivityRecord{72682140 u0 app.nexus.launcher/app.lawnchair.LawnchairLauncher t10}
+=== F. Recientes: subir y mantener
+después:     topResumedActivity=ActivityRecord{142170245 u0 com.android.settings/.homepage.SettingsHomepageActivity t11}
+=== G. Rotación (horizontal) y gesto de Inicio
+después (apaisado):       topResumedActivity=ActivityRecord{62686616 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2}
+=== H. Bloqueo y desbloqueo, y gesto de Inicio
+después:     topResumedActivity=ActivityRecord{266194235 u0 com.android.settings/.homepage.SettingsHomepageActivity t14}

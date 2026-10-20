@@ -1,0 +1,10 @@
+rc=0
+total 16
+-rw-r--r-- 1 root root 8538 2026-10-20 11:34 NexusRecentsOverlay.apk
+booting
+enabled
+watchdog.log
+2026-10-20 11:34:52 cmd overlay list no devolvió el overlay: cmd: Can't find service: overlay 
+2026-10-20 11:34:55 cmd overlay list no devolvió el overlay:  
+2026-10-20 11:34:56 post-fs-data: overlay copiado a /data/local/tmp/nexusmod/system/product/overlay/NexusRecentsOverlay.apk
+montado: sí

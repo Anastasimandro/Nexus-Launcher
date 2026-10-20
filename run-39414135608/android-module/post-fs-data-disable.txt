@@ -1,0 +1,8 @@
+rc=0
+total 0
+watchdog.log
+2026-10-20 11:35:37 arranque con el overlay pedido: vigilando (espera 150s, vigilancia 60s)
+2026-10-20 11:36:40 cmd overlay list no devolvió el overlay:  
+2026-10-20 11:36:44 cmd overlay list no devolvió el overlay:  
+2026-10-20 11:38:04 SystemUI enlazado al servicio de Nexus tras 145s
+montado: no
