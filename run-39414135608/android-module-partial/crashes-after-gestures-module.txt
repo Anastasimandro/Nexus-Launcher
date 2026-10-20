@@ -1,0 +1,18 @@
+10-20 11:35:29.381  1037  1037 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 11:35:29.381  1037  1037 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1037
+10-20 11:35:33.201  1718  1718 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 11:35:33.201  1718  1718 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1718
+10-20 11:35:36.555  1432  1432 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 11:35:36.555  1432  1432 E AndroidRuntime: Process: app.nexus.launcher, PID: 1432
+10-20 11:35:44.149  2635  2635 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 11:35:44.149  2635  2635 E AndroidRuntime: Process: app.nexus.launcher, PID: 2635
+10-20 11:38:05.209  5207  5207 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 11:38:05.209  5207  5207 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 5207
+10-20 11:38:09.522  5966  5966 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 11:38:09.522  5966  5966 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 5966
+10-20 11:38:11.853  5372  5372 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 11:38:11.853  5372  5372 E AndroidRuntime: Process: app.nexus.launcher, PID: 5372
+10-20 11:38:17.420  6727  6727 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 11:38:17.420  6727  6727 E AndroidRuntime: Process: app.nexus.launcher, PID: 6727
+10-20 11:38:26.149  7457  7457 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 11:38:26.149  7457  7457 E AndroidRuntime: Process: app.nexus.launcher, PID: 7457
