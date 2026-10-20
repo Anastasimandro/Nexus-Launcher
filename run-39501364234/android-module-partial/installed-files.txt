@@ -1,0 +1,45 @@
+/data/local/tmp/nexusmod:
+total 56
+drwxrwx--x 3 shell shell 4096 2026-10-20 21:47 META-INF
+-rwxrwxrwx 1 root  root  3089 2026-10-20 21:41 customize.sh
+-rw-rw-rw- 1 root  root   312 2026-10-20 21:41 module.prop
+drwxrwx--x 2 shell shell 4096 2026-10-20 21:47 overlay-static
+-rwxrwxrwx 1 root  root  2177 2026-10-20 21:41 post-fs-data.sh
+-rwxrwxrwx 1 root  root   547 2026-10-20 21:41 service.sh
+drwxrwx--x 4 shell shell 4096 2026-10-20 21:47 system
+
+/data/local/tmp/nexusmod/META-INF:
+total 8
+drwxrwx--x 3 shell shell 4096 2026-10-20 21:47 com
+
+/data/local/tmp/nexusmod/META-INF/com:
+total 8
+drwxrwx--x 3 shell shell 4096 2026-10-20 21:47 google
+
+/data/local/tmp/nexusmod/META-INF/com/google:
+total 8
+drwxrwx--x 2 shell shell 4096 2026-10-20 21:47 android
+
+/data/local/tmp/nexusmod/META-INF/com/google/android:
+total 16
+-rwxrwxrwx 1 root root 621 2026-10-20 21:41 update-binary
+-rw-rw-rw- 1 root root   8 2026-10-20 21:41 updater-script
+
+/data/local/tmp/nexusmod/overlay-static:
+total 16
+-rw-rw-rw- 1 root root 8538 2026-10-20 21:41 NexusRecentsOverlay.apk
+
+/data/local/tmp/nexusmod/system:
+total 16
+drwxrwx--x 2 shell shell 4096 2026-10-20 21:47 bin
+drwxrwx--x 5 shell shell 4096 2026-10-20 21:47 product
+
+/data/local/tmp/nexusmod/system/bin:
+total 20
+-rwxrwxrwx 1 root root 13714 2026-10-20 21:41 nexus-quickstep
+
+-rw-rw-rw- 1 root root u:object_r:system_file:s0  3259 2026-10-20 21:41 /product/etc/permissions/privapp-permissions-nexus.xml
+
+/product/priv-app/Nexus:
+total 17372
+-rw-r--r-- 1 root root u:object_r:system_file:s0  17767144 2026-10-20 21:41 Nexus.apk
