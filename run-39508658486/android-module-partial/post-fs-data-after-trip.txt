@@ -1,0 +1,10 @@
+rc=0
+total 0
+tripped
+tripped.meta
+watchdog.log
+2026-10-20 22:52:04 post-fs-data: overlay copiado a /data/local/tmp/nexusmod/system/product/overlay/NexusRecentsOverlay.apk
+2026-10-20 22:52:51 arranque con el overlay pedido: vigilando (espera 60s, vigilancia 30s)
+2026-10-20 22:53:52 DESACTIVO el overlay: SystemUI no se enlazó al servicio de Nexus en 60 s
+2026-10-20 22:53:52 reiniciando para arrancar sin overlay
+montado: no

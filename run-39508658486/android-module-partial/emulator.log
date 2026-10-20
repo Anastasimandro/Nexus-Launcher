@@ -152,3 +152,9 @@ java.lang.IllegalStateException: Cannot broadcast before boot completed
 	at com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:3288)
 	at android.os.Binder.execTransactInternal(Binder.java:1369)
 	at android.os.Binder.execTransact(Binder.java:1323)'
+INFO         | Boot completed in 19245 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put system accelerometer_rotation 1 ' failed: 'adb: device offline'
+INFO         | Boot completed in 20945 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell logcat -G 2M ' failed: 'adb: device offline'
