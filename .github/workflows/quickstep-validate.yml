@@ -78,7 +78,7 @@ jobs:
         run: |
           tmp="$(mktemp -d)"
           cp -R magisk-module/overlay/. "$tmp"/
-          sed -i 's#<overlay android:targetPackage="android" />#<overlay android:targetPackage="android" android:isStatic="true" android:priority="1" />#' "$tmp/AndroidManifest.xml"
+          sed -i 's#<overlay android:targetPackage="android" />#<overlay android:targetPackage="android" android:isStatic="true" android:priority="2147483647" />#' "$tmp/AndroidManifest.xml"
           grep -q 'isStatic' "$tmp/AndroidManifest.xml"
           ALLOW_STATIC_OVERLAY=1 OVERLAY_DIR="$tmp" .github/scripts/build-recents-overlay.sh dist/NexusRecentsOverlayStatic.apk
           mkdir -p results
