@@ -1,0 +1,19 @@
+OK    APK de Nexus: firma válida
+OK    APK: paquete app.nexus.launcher
+OK    APK: versionName 0.99
+OK    APK pide los dos permisos de transición
+OK    módulo: lleva el mismo APK
+OK    módulo: nexus-quickstep ejecutable
+OK    módulo: lleva service.sh
+OK    módulo: lleva post-fs-data.sh
+OK    overlay: firma válida
+OK    overlay: tiene <overlay>
+OK    overlay: target = android
+OK    overlay: estático
+OK    overlay: prioridad máxima
+OK    módulo: el overlay NO está en system/ (se copia solo si se activa)
+OK    overlay: define config_recentsComponentName
+OK    overlay: valor = RecentsActivity de Nexus
+OK    APK: declara RecentsActivity
+OK    APK: declara TouchInteractionService
+OK    APK: TouchInteractionService responde a QUICKSTEP_SERVICE
