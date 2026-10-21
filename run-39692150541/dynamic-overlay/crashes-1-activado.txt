@@ -1,0 +1,5 @@
+10-21 23:19:29.821  2596  2596 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 23:19:29.821  2596  2596 E AndroidRuntime: Process: com.google.android.googlequicksearchbox:googleapp, PID: 2596
+10-21 23:19:38.707  3187  3242 E AndroidRuntime: FATAL EXCEPTION: BackgroundExecutor
+10-21 23:19:38.707  3187  3242 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 3187
+10-21 23:19:44.062  4462  4462 E AndroidRuntime: FATAL EXCEPTION: main

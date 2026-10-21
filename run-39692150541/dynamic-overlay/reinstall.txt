@@ -1,0 +1,20 @@
+Error: Unable to open file: dist/Nexus-v0.2.4.apk
+Consider using a file under /data/local/tmp/
+Error: Can't open file: dist/Nexus-v0.2.4.apk
+
+Exception occurred while executing 'install':
+java.lang.IllegalArgumentException: Error: Can't open file: dist/Nexus-v0.2.4.apk
+	at com.android.server.wm.Task$$ExternalSyntheticBUOutline2.m(R8$$SyntheticClass:0)
+	at com.android.server.pm.PackageManagerShellCommand.setParamsSize(PackageManagerShellCommand.java:701)
+	at com.android.server.pm.PackageManagerShellCommand.doRunInstall(PackageManagerShellCommand.java:1637)
+	at com.android.server.pm.PackageManagerShellCommand.runInstall(PackageManagerShellCommand.java:1577)
+	at com.android.server.pm.PackageManagerShellCommand.onCommand(PackageManagerShellCommand.java:249)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:39)
+	at com.android.server.pm.PackageManagerService$IPackageManagerImpl.onShellCommand(PackageManagerService.java:7069)
+	at android.os.Binder.shellCommand(Binder.java:1088)
+	at android.os.Binder.onTransact(Binder.java:946)
+	at android.content.pm.IPackageManager$Stub.onTransact(IPackageManager.java:4786)
+	at com.android.server.pm.PackageManagerService$IPackageManagerImpl.onTransact(PackageManagerService.java:7053)
+	at android.os.Binder.execTransactInternal(Binder.java:1369)
+	at android.os.Binder.execTransact(Binder.java:1323)

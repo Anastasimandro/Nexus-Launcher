@@ -1,0 +1,5 @@
+-rw-r--r-- 1 root root u:object_r:system_file:s0  8538 2026-10-21 23:17 /product/overlay/NexusRecentsOverlay.apk
+
+/product/priv-app/Nexus:
+total 17372
+-rw-r--r-- 1 root root u:object_r:system_file:s0  17767160 2026-10-21 19:11 Nexus.apk

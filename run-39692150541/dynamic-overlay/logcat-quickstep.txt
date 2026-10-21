@@ -1,0 +1,26 @@
+10-21 23:23:02.526  1013  1013 W ContextImpl: 	at com.android.quickstep.QuickstepProcessInitializer.init(go/retraceme dc5b05c43537c6aa1d671c685c710819682fcc95b6af33c0ce7f88e1808452b7:39)
+10-21 23:23:02.527  1013  1013 I QuickstepProtoLogGroup: Initializing ProtoLog.
+10-21 23:23:02.643   894   894 W BatteryControllerGoogle: java.lang.SecurityException: Failed to find provider com.google.android.flipendo.api for user 0; expected to find a valid ContentProvider for this authority
+10-21 23:23:06.946   894   894 E BatteryInfoBroadcast: java.lang.SecurityException: Failed to find provider com.google.android.apps.turbo.estimated_time_remaining for user 0; expected to find a valid ContentProvider for this authority
+10-21 23:23:09.709  1513  1680 E PackagePolicyHandler: java.lang.SecurityException: Caller does not have the required permissions for this user. Permission required: android.permission.MANAGE_DEVICE_POLICY_APPS_CONTROL.
+10-21 23:23:09.942  1013  1013 D TouchInteractionService: onCreate: user=0 instance=71739498
+10-21 23:23:09.942  1013  1013 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=71739498
+10-21 23:23:18.728  2365  2365 W BatteryControllerGoogle: java.lang.SecurityException: Failed to find provider com.google.android.flipendo.api for user 0; expected to find a valid ContentProvider for this authority
+10-21 23:23:18.758  2484  2484 I QuickstepProtoLogGroup: Initializing ProtoLog.
+10-21 23:23:21.299  2365  2365 E BatteryInfoBroadcast: java.lang.SecurityException: Failed to find provider com.google.android.apps.turbo.estimated_time_remaining for user 0; expected to find a valid ContentProvider for this authority
+10-21 23:23:23.226  2860  3103 E PackagePolicyHandler: java.lang.SecurityException: Caller does not have the required permissions for this user. Permission required: android.permission.MANAGE_DEVICE_POLICY_APPS_CONTROL.
+10-21 23:23:24.075  2484  2484 D TouchInteractionService: onCreate: user=0 instance=175597410
+10-21 23:23:24.076  2484  2484 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=175597410
+10-21 23:23:27.949  2484  2484 D TouchInteractionService: onUserUnlocked: userId=0 instance=175597410
+10-21 23:23:33.671  4096  4096 W BatteryControllerGoogle: java.lang.SecurityException: Failed to find provider com.google.android.flipendo.api for user 0; expected to find a valid ContentProvider for this authority
+10-21 23:23:33.906  4220  4220 I QuickstepProtoLogGroup: Initializing ProtoLog.
+10-21 23:23:35.969  4096  4096 E BatteryInfoBroadcast: java.lang.SecurityException: Failed to find provider com.google.android.apps.turbo.estimated_time_remaining for user 0; expected to find a valid ContentProvider for this authority
+10-21 23:23:39.371  4220  4220 D TouchInteractionService: onCreate: user=0 instance=247668591
+10-21 23:23:39.371  4220  4220 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=247668591
+10-21 23:23:44.384  5055  5055 W BatteryControllerGoogle: java.lang.SecurityException: Failed to find provider com.google.android.flipendo.api for user 0; expected to find a valid ContentProvider for this authority
+10-21 23:23:44.461  5180  5180 I QuickstepProtoLogGroup: Initializing ProtoLog.
+10-21 23:23:46.510  5055  5055 E BatteryInfoBroadcast: java.lang.SecurityException: Failed to find provider com.google.android.apps.turbo.estimated_time_remaining for user 0; expected to find a valid ContentProvider for this authority
+10-21 23:23:48.424  5532  5761 E PackagePolicyHandler: java.lang.SecurityException: Caller does not have the required permissions for this user. Permission required: android.permission.MANAGE_DEVICE_POLICY_APPS_CONTROL.
+10-21 23:23:52.094  5180  5180 D TouchInteractionService: onCreate: user=0 instance=24085061
+10-21 23:23:52.095  5180  5180 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onTrackpadConnected() instance=24085061
+10-21 23:23:53.843  3600  3600 I adbd    : adbd service requested 'shell,v2,raw:dumpsys activity services app.nexus.launcher/com.android.quickstep.TouchInteractionService'
