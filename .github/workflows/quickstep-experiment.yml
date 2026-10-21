@@ -38,11 +38,14 @@ jobs:
         run: |
           mkdir -p dist results
           gh api "repos/${GITHUB_REPOSITORY}/releases/latest" -q '.tag_name' | tee results/release-tag.txt
-          for pat in '^Nexus-v[0-9.]+\.apk$' '^Nexus-MagiskModule-v[0-9.]+\.zip$'; do
-            row=$(gh api "repos/${GITHUB_REPOSITORY}/releases/latest" -q ".assets[] | select(.name|test(\"$pat\")) | \"\(.url) \(.name)\"")
+          fetch() {
+            row=$(gh api "repos/${GITHUB_REPOSITORY}/releases/latest" -q ".assets[] | select($1) | \"\(.url) \(.name)\"" | head -n 1)
+            [ -n "$row" ] || { echo "::error::No encuentro el archivo ($1) en la release"; exit 1; }
             url=${row%% *}; name=${row#* }
             gh api -H "Accept: application/octet-stream" "$url" > "dist/$name"
-          done
+          }
+          fetch '(.name|startswith("Nexus-v")) and (.name|endswith(".apk"))'
+          fetch '(.name|startswith("Nexus-MagiskModule-v")) and (.name|endswith(".zip"))'
           ls -l dist
 
       - name: Liberar disco y activar KVM
