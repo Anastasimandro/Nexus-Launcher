@@ -101,11 +101,16 @@ got_pkg=$(sed -n "s/.*package: name='\([^']*\)'.*/\1/p" <<<"$badging")
 manifest=$("$AAPT2" dump xmltree --file AndroidManifest.xml "$work/signed.apk")
 grep -q 'E: overlay' <<<"$manifest" || fail "El manifiesto no tiene el elemento <overlay>."
 grep -qE 'targetPackage.*"android"' <<<"$manifest" || fail "El overlay no apunta al paquete 'android'."
-# Tiene que ser estático (inmutable, activo desde el arranque) y con la prioridad máxima: ver el
-# comentario de magisk-module/overlay/AndroidManifest.xml.
-grep -q 'isStatic.*=true' <<<"$manifest" || fail "El overlay tiene que declarar android:isStatic=\"true\"."
-# 9999 es el máximo que admite PackageManager: con más rechaza el overlay («priority must be between 0 and 9999»).
-grep -qE 'priority.*=9999' <<<"$manifest" || fail "El overlay tiene que declarar android:priority=\"9999\" (el máximo admitido)."
+if [[ ${OVERLAY_MUTABLE:-0} == 1 ]]; then
+  # Solo para el experimento del overlay normal (no estático): ver .github/scripts/experiment-dynamic-overlay.sh.
+  grep -q 'isStatic.*=true' <<<"$manifest" && fail "OVERLAY_MUTABLE=1 pide un overlay no estático."
+else
+  # Tiene que ser estático (inmutable, activo desde el arranque) y con la prioridad máxima: ver el
+  # comentario de magisk-module/overlay/AndroidManifest.xml.
+  grep -q 'isStatic.*=true' <<<"$manifest" || fail "El overlay tiene que declarar android:isStatic=\"true\"."
+  # 9999 es el máximo que admite PackageManager: con más rechaza el overlay («priority must be between 0 and 9999»).
+  grep -qE 'priority.*=9999' <<<"$manifest" || fail "El overlay tiene que declarar android:priority=\"9999\" (el máximo admitido)."
+fi
 
 resources=$("$AAPT2" dump resources "$work/signed.apk")
 grep -q "string/$resource" <<<"$resources" || fail "El overlay no define string/$resource."
