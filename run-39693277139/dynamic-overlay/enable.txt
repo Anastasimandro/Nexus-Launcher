@@ -1,0 +1,2 @@
+[x] app.nexus.launcher.overlay.recents
+app.nexus.launcher/com.android.quickstep.RecentsActivity

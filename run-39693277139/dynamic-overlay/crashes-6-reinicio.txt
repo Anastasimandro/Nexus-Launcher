@@ -1,0 +1,2 @@
+10-21 23:35:29.820  1131  1131 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 23:35:29.820  1131  1131 E AndroidRuntime: Process: app.nexus.launcher, PID: 1131

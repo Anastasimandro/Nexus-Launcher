@@ -1,0 +1,1 @@
+[x] app.nexus.launcher.overlay.recents

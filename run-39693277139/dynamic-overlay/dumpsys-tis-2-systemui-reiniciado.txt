@@ -1,0 +1,87 @@
+ACTIVITY MANAGER SERVICES (dumpsys activity services)
+  User 0 active services:
+  * ServiceRecord{e5075e u0 app.nexus.launcher/com.android.quickstep.TouchInteractionService c:com.android.systemui}
+    intent={act=android.intent.action.QUICKSTEP_SERVICE pkg=app.nexus.launcher}
+    packageName=app.nexus.launcher
+    processName=app.nexus.launcher
+    targetSdkVersion=37
+    permission=android.permission.STATUS_BAR_SERVICE
+    baseDir=/product/priv-app/Nexus/Nexus.apk
+    dataDir=/data/user/0/app.nexus.launcher
+    app=ProcessRecord{3bd2fdc 8271:app.nexus.launcher/u0a235}
+    useNewWiuLogic_forCapabilities()=true
+    useNewWiuLogic_forStart()=true
+    useNewBfslLogic()=true
+    mAllowWiu_noBinding=DENIED
+    mAllowWiu_inBindService=PROC_STATE_PERSISTENT
+    mAllowWiu_byBindings=DENIED
+    getFgsAllowWiu_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowWiu_new=DENIED
+    getFgsAllowWiu_forStart=DENIED
+    getFgsAllowWiu_forCapabilities=DENIED
+    allowUiJobScheduling=false
+    recentCallingPackage=com.android.systemui
+    recentCallingUid=10201
+    mAllowStart_noBinding=DENIED
+    mAllowStart_inBindService=PROC_STATE_PERSISTENT
+    mAllowStart_byBindings=DENIED
+    getFgsAllowStart_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowStart_new=DENIED
+    getFgsAllowStart=DENIED
+    startForegroundCount=0
+    infoAllowStartForeground=[callingPackage: com.android.systemui; callingUid: 10201; uidState: PER ; uidBFSL: [BFSL]; BFGS denied: false; intent: Intent { act=android.intent.action.QUICKSTEP_SERVICE xflg=0x4 pkg=app.nexus.launcher }; code:PROC_STATE_PERSISTENT; tempAllowListReason:<e5150b6 android.intent.action.BOOT_COMPLETED/u0/0x20c1,reasonCode:BOOT_COMPLETED,duration:20000,callingUid:1000>; allowWiu:10; targetSdkVersion:37; callerTargetSdkVersion:37; startForegroundCount:0; bindFromPackage:null; isBindService:true]
+    createTime=-6s244ms startingBgTimeout=--
+    lastActivity=-6s244ms restartTime=-6s244ms createdFromFg=true
+    executeNesting=2 executeFg=true executingStart=-6s236ms
+    Bindings:
+    * IntentBindRecord{88a994a CREATE}:
+      intent={act=android.intent.action.QUICKSTEP_SERVICE xflg=0x4 pkg=app.nexus.launcher}
+      binder=null
+      requested=true received=false hasBound=true doRebind=false
+      * Client AppBindRecord{6f400bb ProcessRecord{23596fb 7983:com.android.systemui/u0a201}}
+        Per-process Connections:
+          ConnectionRecord{b84d899 u0 CR FGSA app.nexus.launcher/com.android.quickstep.TouchInteractionService:@f468de0 flags=0x2000001}
+    All Connections:
+      ConnectionRecord{b84d899 u0 CR FGSA app.nexus.launcher/com.android.quickstep.TouchInteractionService:@f468de0 flags=0x2000001}
+
+  Destroying services:
+  * Destroy ServiceRecord{1cd56f1 u0 app.nexus.launcher/com.android.quickstep.TouchInteractionService c:com.android.systemui}
+    intent={act=android.intent.action.QUICKSTEP_SERVICE pkg=app.nexus.launcher}
+    packageName=app.nexus.launcher
+    processName=app.nexus.launcher
+    targetSdkVersion=37
+    permission=android.permission.STATUS_BAR_SERVICE
+    baseDir=/product/priv-app/Nexus/Nexus.apk
+    dataDir=/data/user/0/app.nexus.launcher
+    app=ProcessRecord{3bd2fdc 8271:app.nexus.launcher/u0a235}
+    useNewWiuLogic_forCapabilities()=true
+    useNewWiuLogic_forStart()=true
+    useNewBfslLogic()=true
+    mAllowWiu_noBinding=DENIED
+    mAllowWiu_inBindService=DENIED
+    mAllowWiu_byBindings=DENIED
+    getFgsAllowWiu_legacy=DENIED
+    getFgsAllowWiu_new=DENIED
+    getFgsAllowWiu_forStart=DENIED
+    getFgsAllowWiu_forCapabilities=DENIED
+    allowUiJobScheduling=false
+    recentCallingPackage=com.android.systemui
+    recentCallingUid=10201
+    mAllowStart_noBinding=DENIED
+    mAllowStart_inBindService=DENIED
+    mAllowStart_byBindings=DENIED
+    getFgsAllowStart_legacy=DENIED
+    getFgsAllowStart_new=DENIED
+    getFgsAllowStart=DENIED
+    startForegroundCount=0
+    infoAllowStartForeground=null
+    createTime=-14s59ms startingBgTimeout=--
+    lastActivity=-12s922ms restartTime=-- createdFromFg=true
+    executeNesting=4 executeFg=true executingStart=-6s288ms
+    destroying=true destroyTime=-6s289ms
+
+  Connection bindings to services:
+  * ConnectionRecord{b84d899 u0 CR FGSA app.nexus.launcher/com.android.quickstep.TouchInteractionService:@f468de0 flags=0x2000001}
+    binding=AppBindRecord{6f400bb app.nexus.launcher/com.android.quickstep.TouchInteractionService:com.android.systemui}
+    conn=android.os.BinderProxy@f468de0 flags=0x2000001
+    ongoingCalls=false

@@ -1,0 +1,2 @@
+::notice title=Overlay de recientes::Firmado con una clave temporal (no hay keystore.properties).
+Overlay de recientes (clave temporal) → /tmp/tmp.ovE29Pcj0T/NexusRecentsOverlay.apk
