@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Nexus Quickstep</title>
+<style>
+  :root {
+    --bg: #f4f2f8; --card: #ffffff; --text: #1c1b22; --muted: #6b6877; --line: #e3e0ea;
+    --accent: #6b4ce6; --accent-text: #ffffff;
+    --ok: #1f8a4c; --ok-bg: #e3f4ea; --warn: #a15c00; --warn-bg: #fdf0d9; --bad: #b3261e; --bad-bg: #fbe4e2;
+    --idle: #4b4958; --idle-bg: #ebe9f1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121117; --card: #1c1b24; --text: #ecebf2; --muted: #9c99a8; --line: #2d2b38;
+      --accent: #a58bff; --accent-text: #15112b;
+      --ok: #62d18c; --ok-bg: #16301f; --warn: #f0b95a; --warn-bg: #36280f; --bad: #ff8a80; --bad-bg: #3a1916;
+      --idle: #c8c5d4; --idle-bg: #272532;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+  }
+  main { max-width: 640px; margin: 0 auto; display: grid; gap: 14px; }
+  header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 4px 2px; }
+  h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+  h2 { font-size: 13px; margin: 0 0 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+  .ver { color: var(--muted); font-size: 13px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+  .verdict { border-radius: 12px; padding: 12px 14px; font-weight: 600; }
+  .verdict small { display: block; font-weight: 400; margin-top: 2px; opacity: 0.9; }
+  .v-ok { background: var(--ok-bg); color: var(--ok); }
+  .v-warn { background: var(--warn-bg); color: var(--warn); }
+  .v-bad { background: var(--bad-bg); color: var(--bad); }
+  .v-idle { background: var(--idle-bg); color: var(--idle); }
+  dl { margin: 14px 0 0; display: grid; gap: 0; }
+  .row { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); }
+  .row:first-child { border-top: 0; }
+  dt { color: var(--muted); }
+  dd { margin: 0; text-align: right; font-weight: 500; overflow-wrap: anywhere; }
+  .y { color: var(--ok); } .n { color: var(--bad); } .q { color: var(--muted); }
+  .actions { display: grid; gap: 10px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  button {
+    font: inherit; font-weight: 600; border: 0; border-radius: 12px; padding: 13px 14px; min-height: 48px;
+    background: var(--idle-bg); color: var(--text); cursor: pointer;
+  }
+  button.primary { background: var(--accent); color: var(--accent-text); }
+  button.danger { background: var(--bad-bg); color: var(--bad); }
+  button:disabled { opacity: 0.5; cursor: default; }
+  button:active:not(:disabled) { filter: brightness(0.92); }
+  .hint { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+  pre {
+    margin: 12px 0 0; padding: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px;
+    font: 12px/1.45 ui-monospace, "SF Mono", Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere;
+    max-height: 340px; overflow: auto;
+  }
+  pre:empty { display: none; }
+  dialog { border: 1px solid var(--line); border-radius: 18px; background: var(--card); color: var(--text); padding: 20px; width: min(92vw, 420px); }
+  dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
+  dialog h3 { margin: 0 0 8px; font-size: 18px; }
+  dialog p { margin: 0 0 12px; color: var(--muted); }
+  label.check { display: flex; gap: 10px; align-items: flex-start; margin: 4px 0 16px; }
+  label.check input { margin-top: 3px; width: 18px; height: 18px; flex: none; }
+  .notice { background: var(--warn-bg); color: var(--warn); border-radius: 12px; padding: 12px 14px; }
+  .busy { opacity: 0.6; pointer-events: none; }
+</style>
+</head>
+<body>
+<main id="app">
+  <header>
+    <h1>Nexus Quickstep</h1>
+    <span class="ver" id="ver"></span>
+  </header>
+
+  <div class="notice" id="noksu" hidden>
+    Esta página solo funciona dentro del gestor de root: en KernelSU abre Módulos y pulsa el módulo (WebUI).
+  </div>
+
+  <section class="card">
+    <h2>Estado</h2>
+    <div class="verdict v-idle" id="verdict">Leyendo estado…</div>
+    <dl id="rows"></dl>
+  </section>
+
+  <section class="card">
+    <h2>Acciones</h2>
+    <div class="actions">
+      <button class="primary" id="btn-enable">Activar gestos de Nexus (Quickstep)</button>
+      <div class="pair">
+        <button id="btn-disable">Desactivar</button>
+        <button class="danger" id="btn-reboot">Reiniciar</button>
+      </div>
+      <button id="btn-refresh">Actualizar estado</button>
+    </div>
+    <p class="hint">
+      El cambio se aplica al reiniciar. Si el arranque falla, el módulo lo detecta: si el móvil se cuelga lo reinicia
+      solo pasados unos minutos, y el arranque siguiente va sin Quickstep y guarda un registro para diagnosticar.
+    </p>
+    <pre id="action-out"></pre>
+  </section>
+
+  <section class="card">
+    <h2>Diagnóstico</h2>
+    <div class="pair">
+      <button id="btn-diag">Generar informe</button>
+      <button id="btn-export">Guardar en Descargas</button>
+    </div>
+    <p class="hint">Guarda un .tar.gz en Descargas con el informe y los registros del último arranque fallido.</p>
+    <pre id="diag-out"></pre>
+    <button id="btn-log" style="margin-top:10px;width:100%">Ver registro del vigilante</button>
+    <pre id="log-out"></pre>
+  </section>
+</main>
+
+<dialog id="dlg-enable">
+  <h3>Activar gestos de Nexus</h3>
+  <p>
+    Nexus pasará a ser el proveedor de recientes del sistema en el próximo arranque. Si algo falla, el módulo vuelve
+    solo al launcher de serie, pero ese arranque puede tardar unos minutos.
+  </p>
+  <label class="check">
+    <input type="checkbox" id="chk-force">
+    <span>Forzar: necesario tras un arranque fallido, o si Nexus aún no ha comprobado la compatibilidad.</span>
+  </label>
+  <div class="pair">
+    <button id="dlg-cancel">Cancelar</button>
+    <button class="primary" id="dlg-ok">Activar</button>
+  </div>
+</dialog>
+
+<dialog id="dlg-reboot">
+  <h3>Reiniciar ahora</h3>
+  <p id="dlg-reboot-text">El móvil se reiniciará.</p>
+  <div class="pair">
+    <button id="dlg-reboot-cancel">Ahora no</button>
+    <button class="danger" id="dlg-reboot-ok">Reiniciar</button>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  'use strict';
+
+  var TOOL = 'sh /data/adb/modules/nexus_launcher_systemless/system/bin/nexus-quickstep';
+  var STATE_DIR = '/data/adb/nexus_quickstep';
+  var hasKsu = typeof window.ksu !== 'undefined' && typeof window.ksu.exec === 'function';
+  var counter = 0;
+
+  function $(id) { return document.getElementById(id); }
+
+  // API de KernelSU (también la ofrecen APatch y MMRL): ksu.exec(comando, opciones, nombreDeCallback);
+  // el callback recibe (código, stdout, stderr).
+  function run(cmd) {
+    return new Promise(function (resolve, reject) {
+      if (!hasKsu) { reject(new Error('Sin acceso al gestor de root')); return; }
+      var name = 'nexusExec' + Date.now() + '_' + (counter++);
+      window[name] = function (errno, stdout, stderr) {
+        delete window[name];
+        resolve({ code: errno, out: String(stdout || ''), err: String(stderr || '') });
+      };
+      try {
+        window.ksu.exec(cmd, '{}', name);
+      } catch (e) {
+        delete window[name];
+        reject(e);
+      }
+    });
+  }
+
+  function toast(msg) {
+    try { if (hasKsu && window.ksu.toast) { window.ksu.toast(msg); } } catch (e) { /* sin aviso */ }
+  }
+
+  function parseState(text) {
+    var s = {};
+    text.split('\n').forEach(function (line) {
+      var i = line.indexOf('=');
+      if (i > 0) { s[line.slice(0, i)] = line.slice(i + 1).trim(); }
+    });
+    return s;
+  }
+
+  function yn(v, yesText, noText) {
+    if (v === '1') { return ['y', yesText || 'Sí']; }
+    if (v === '0') { return ['n', noText || 'No']; }
+    return ['q', 'Sin datos'];
+  }
+
+  function row(label, cls, text) {
+    var wrap = document.createElement('div');
+    wrap.className = 'row';
+    var dt = document.createElement('dt');
+    dt.textContent = label;
+    var dd = document.createElement('dd');
+    dd.className = cls;
+    dd.textContent = text;
+    wrap.appendChild(dt);
+    wrap.appendChild(dd);
+    return wrap;
+  }
+
+  function setVerdict(cls, title, detail) {
+    var el = $('verdict');
+    el.className = 'verdict ' + cls;
+    el.textContent = title;
+    if (detail) {
+      var small = document.createElement('small');
+      small.textContent = detail;
+      el.appendChild(small);
+    }
+  }
+
+  function render(s) {
+    $('ver').textContent = s.module_version ? 'v' + s.module_version : '';
+    var enabled = s.enabled === '1';
+    var effective = s.effective === '1';
+    var bound = s.bound === '1';
+    var tripped = s.tripped && s.tripped.length > 0;
+
+    if (tripped) {
+      setVerdict('v-bad', 'Desactivado por seguridad', s.tripped);
+    } else if (effective && bound) {
+      setVerdict('v-ok', 'Gestos de Nexus activos', 'SystemUI está enlazado al servicio de Nexus.');
+    } else if (effective) {
+      setVerdict('v-warn', 'Overlay activo, SystemUI sin enlazar', 'Si no se enlaza, el vigilante lo desactivará.');
+    } else if (enabled) {
+      setVerdict('v-warn', 'Pedido: falta reiniciar', 'Se aplicará en el próximo arranque.');
+    } else {
+      setVerdict('v-idle', 'Desactivado (estado de serie)', 'El sistema usa su launcher para los gestos.');
+    }
+
+    var rows = $('rows');
+    rows.textContent = '';
+    var a = yn(s.enabled, 'Sí', 'No');
+    rows.appendChild(row('Pedido para el arranque', a[0] === 'n' ? 'q' : a[0], a[1]));
+    a = yn(s.effective, 'Sí', 'No');
+    rows.appendChild(row('Overlay efectivo ahora', a[0] === 'n' ? 'q' : a[0], a[1]));
+    a = s.effective === '1' ? yn(s.bound) : ['q', '—'];
+    rows.appendChild(row('SystemUI enlazado a Nexus', a[0], a[1]));
+    rows.appendChild(row('Recientes del sistema', 'q', (s.current_recents || '?').replace('/com.android.quickstep.RecentsActivity', '')));
+    a = yn(s.nexus_in_product, 'Sí', 'No');
+    rows.appendChild(row('Nexus instalado por el módulo', a[0], a[1]));
+    a = s.nexus_privileged === '?' ? ['q', 'No se pudo leer'] : yn(s.nexus_privileged);
+    rows.appendChild(row('Nexus es app privilegiada', a[0], a[1]));
+    a = s.probe_passed ? yn(s.probe_passed === 'true' ? '1' : '0', 'Compatible', 'No compatible') : ['q', 'Abre Nexus una vez'];
+    rows.appendChild(row('Comprobación de Nexus', a[0], a[1]));
+    if (s.probe_denied) { rows.appendChild(row('Permisos sin conceder', 'n', s.probe_denied)); }
+    var failed = s.failed_boot && s.failed_boot !== '0';
+    rows.appendChild(row('Registro de un arranque fallido', failed ? 'n' : 'q', failed ? s.failed_boot : 'No hay'));
+  }
+
+  function busy(on) { $('app').classList.toggle('busy', on); }
+
+  function refresh() {
+    busy(true);
+    return run(TOOL + ' state')
+      .then(function (r) {
+        if (r.code !== 0 && !r.out) { throw new Error(r.err || 'El comando falló'); }
+        render(parseState(r.out));
+      })
+      .catch(function (e) {
+        setVerdict('v-bad', 'No se pudo leer el estado', e.message);
+      })
+      .then(function () { busy(false); });
+  }
+
+  function show(id, text) { $(id).textContent = text; }
+
+  function cmdOutput(r) { return (r.out + (r.err ? '\n' + r.err : '')).trim() || '(sin salida)'; }
+
+  function askReboot(text) {
+    $('dlg-reboot-text').textContent = text;
+    $('dlg-reboot').showModal();
+  }
+
+  $('btn-refresh').addEventListener('click', refresh);
+
+  $('btn-enable').addEventListener('click', function () {
+    $('chk-force').checked = false;
+    $('dlg-enable').showModal();
+  });
+  $('dlg-cancel').addEventListener('click', function () { $('dlg-enable').close(); });
+  $('dlg-ok').addEventListener('click', function () {
+    var force = $('chk-force').checked;
+    $('dlg-enable').close();
+    busy(true);
+    run(TOOL + ' enable' + (force ? ' --force' : ''))
+      .then(function (r) {
+        show('action-out', cmdOutput(r));
+        if (r.code === 0) {
+          toast('Pedido: reinicia para aplicarlo');
+          askReboot('Los gestos de Nexus se aplican en el arranque. ¿Reiniciar ahora?');
+        }
+      })
+      .catch(function (e) { show('action-out', e.message); })
+      .then(function () { busy(false); return refresh(); });
+  });
+
+  $('btn-disable').addEventListener('click', function () {
+    busy(true);
+    run(TOOL + ' disable')
+      .then(function (r) {
+        show('action-out', cmdOutput(r));
+        if (r.code === 0) { askReboot('Se desactiva en el próximo arranque. ¿Reiniciar ahora para volver al launcher de serie?'); }
+      })
+      .catch(function (e) { show('action-out', e.message); })
+      .then(function () { busy(false); return refresh(); });
+  });
+
+  $('btn-reboot').addEventListener('click', function () { askReboot('El móvil se reiniciará.'); });
+  $('dlg-reboot-cancel').addEventListener('click', function () { $('dlg-reboot').close(); });
+  $('dlg-reboot-ok').addEventListener('click', function () {
+    $('dlg-reboot').close();
+    run('reboot').catch(function (e) { show('action-out', e.message); });
+  });
+
+  $('btn-diag').addEventListener('click', function () {
+    busy(true);
+    show('diag-out', 'Generando…');
+    run(TOOL + ' diag')
+      .then(function (r) { show('diag-out', cmdOutput(r)); })
+      .catch(function (e) { show('diag-out', e.message); })
+      .then(function () { busy(false); });
+  });
+
+  $('btn-export').addEventListener('click', function () {
+    busy(true);
+    run(TOOL + ' diag --export')
+      .then(function (r) {
+        show('diag-out', cmdOutput(r));
+        if (r.code === 0) { toast('Guardado en Descargas'); }
+      })
+      .catch(function (e) { show('diag-out', e.message); })
+      .then(function () { busy(false); });
+  });
+
+  $('btn-log').addEventListener('click', function () {
+    run('tail -n 80 ' + STATE_DIR + '/watchdog.log 2>&1')
+      .then(function (r) { show('log-out', cmdOutput(r)); })
+      .catch(function (e) { show('log-out', e.message); });
+  });
+
+  if (!hasKsu) {
+    $('noksu').hidden = false;
+    setVerdict('v-idle', 'Sin conexión con el gestor de root');
+    document.querySelectorAll('button').forEach(function (b) { b.disabled = true; });
+  } else {
+    refresh();
+  }
+})();
+</script>
+</body>
+</html>

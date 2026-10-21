@@ -14,11 +14,18 @@
 # vigilante (service.sh) lo borra cuando el sistema ha arrancado y SystemUI se ha enlazado a Nexus.
 # Si en el siguiente arranque el marcador sigue ahí, el anterior no terminó: se quita el archivo
 # `enabled`, se anota y ese arranque va sin overlay.
+#
+# Registro y reinicio automático: al aplicar el overlay se arranca (en segundo plano) un registro
+# del arranque (logcat y dmesg) y un temporizador que reinicia el móvil si el sistema no termina de
+# arrancar en unos minutos. En el arranque siguiente, que ya va sin overlay, ese registro se guarda
+# en /data/adb/nexus_quickstep/failed-boot/ (con pstore si el kernel lo conserva) para exportarlo
+# desde el WebUI del módulo. Todo esto vive en `nexus-quickstep capture`.
 MODDIR=${0%/*}
 STATE="${NEXUS_STATE_DIR:-/data/adb/nexus_quickstep}"
 SRC="$MODDIR/overlay-static/NexusRecentsOverlay.apk"
 DST_DIR="$MODDIR/system/product/overlay"
 DST="$DST_DIR/NexusRecentsOverlay.apk"
+TOOL="$MODDIR/system/bin/nexus-quickstep"
 
 mkdir -p "$STATE"
 log() { echo "$(date '+%Y-%m-%d %H:%M:%S') post-fs-data: $*" >> "$STATE/watchdog.log"; }
@@ -27,6 +34,8 @@ log() { echo "$(date '+%Y-%m-%d %H:%M:%S') post-fs-data: $*" >> "$STATE/watchdog
 rm -f "$DST"
 
 if [ -f "$STATE/booting" ]; then
+  # Se conserva el registro del arranque que no terminó antes de que nada lo borre.
+  [ -f "$TOOL" ] && sh "$TOOL" capture keep >/dev/null 2>&1
   rm -f "$STATE/enabled" "$STATE/booting"
   echo "$(date '+%Y-%m-%d %H:%M:%S') el arranque anterior con el overlay no terminó" > "$STATE/tripped"
   echo "version=bootloop" > "$STATE/tripped.meta"
@@ -46,6 +55,8 @@ if cp "$SRC" "$DST" && chmod 0644 "$DST"; then
   chcon u:object_r:system_file:s0 "$DST" 2>/dev/null
   touch "$STATE/booting"
   log "overlay copiado a $DST"
+  # En segundo plano y sin enganchar la salida: este script no debe esperar al registro.
+  [ -f "$TOOL" ] && sh "$TOOL" capture start >/dev/null 2>&1
 else
   rm -f "$DST"
   log "no se pudo copiar el overlay: arranque sin overlay"

@@ -49,6 +49,7 @@ fail() {
 [[ -f $module_dir/tools/nexus-quickstep ]] || fail "Falta $module_dir/tools/nexus-quickstep."
 [[ -f $module_dir/service.sh ]] || fail "Falta $module_dir/service.sh."
 [[ -f $module_dir/post-fs-data.sh ]] || fail "Falta $module_dir/post-fs-data.sh."
+[[ -f $module_dir/webroot/index.html ]] || fail "Falta $module_dir/webroot/index.html (WebUI del módulo)."
 [[ -f $module_dir/overlay/AndroidManifest.xml ]] || fail "Falta $module_dir/overlay/AndroidManifest.xml."
 [[ $version =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] || fail "Versión no válida: '$version'."
 [[ $version_code =~ ^[0-9]+$ ]] || fail "versionCode no válido: '$version_code'."
@@ -135,6 +136,8 @@ OVERLAY_DIR="$module_dir/overlay" bash "$script_dir/build-recents-overlay.sh" \
 cp "$module_dir/tools/nexus-quickstep" "$root/system/bin/nexus-quickstep"
 cp "$module_dir/service.sh" "$root/service.sh"
 cp "$module_dir/post-fs-data.sh" "$root/post-fs-data.sh"
+# WebUI del gestor de root (KernelSU, APatch; en Magisk con MMRL o KsuWebUI): estado y control sin comandos.
+cp -R "$module_dir/webroot" "$root/webroot"
 
 xml="$root/system/product/etc/permissions/privapp-permissions-nexus.xml"
 {
@@ -175,12 +178,12 @@ chmod 0755 "$root/customize.sh" "$root/META-INF/com/google/android/update-binary
 mkdir -p "$(dirname "$out_zip")"
 out_abs="$(cd "$(dirname "$out_zip")" && pwd)/$(basename "$out_zip")"
 rm -f "$out_abs"
-(cd "$root" && zip -q -r -X "$out_abs" module.prop customize.sh service.sh post-fs-data.sh META-INF system overlay-static)
+(cd "$root" && zip -q -r -X "$out_abs" module.prop customize.sh service.sh post-fs-data.sh META-INF system overlay-static webroot)
 unzip -tq "$out_abs" >/dev/null || fail "El zip generado está corrupto."
 for entry in module.prop customize.sh META-INF/com/google/android/update-binary \
   META-INF/com/google/android/updater-script system/product/priv-app/Nexus/Nexus.apk \
   system/product/etc/permissions/privapp-permissions-nexus.xml \
-  overlay-static/NexusRecentsOverlay.apk system/bin/nexus-quickstep service.sh post-fs-data.sh; do
+  overlay-static/NexusRecentsOverlay.apk system/bin/nexus-quickstep service.sh post-fs-data.sh webroot/index.html; do
   unzip -l "$out_abs" "$entry" >/dev/null 2>&1 || fail "Falta $entry dentro del zip."
 done
 

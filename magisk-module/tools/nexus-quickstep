@@ -8,6 +8,11 @@
 #                                     deja de aplicarlo (efectivo al reiniciar; --reboot reinicia ya)
 #   nexus-quickstep bound             ¿está SystemUI enlazado al servicio de Quickstep de Nexus?
 #   nexus-quickstep guard             lo ejecuta el módulo en cada arranque (ver service.sh)
+#   nexus-quickstep state             estado en líneas clave=valor (lo lee el WebUI del módulo)
+#   nexus-quickstep diag [--export]   informe de diagnóstico; --export lo deja en Descargas con los
+#                                     registros del último arranque fallido
+#   nexus-quickstep capture start|stop|keep
+#                                     registro del arranque (lo usa post-fs-data.sh, ver abajo)
 #
 # El overlay (app.nexus.launcher.overlay.recents) cambia config_recentsComponentName para que
 # SystemUI enlace con el TouchInteractionService de Nexus y los gestos del sistema (Inicio,
@@ -43,6 +48,13 @@ GUARD_WATCH="${NEXUS_GUARD_WATCH:-300}"
 GUARD_STEP="${NEXUS_GUARD_STEP:-5}"
 # Segundos seguidos sin enlace durante la vigilancia a partir de los cuales se desactiva.
 GUARD_LOST="${NEXUS_GUARD_LOST:-60}"
+# Registro del arranque con el overlay aplicado y reinicio automático si el arranque se cuelga.
+# El registro vive en capture/; si el arranque no termina, post-fs-data.sh lo copia a failed-boot/
+# en el arranque siguiente (el que ya va sin overlay) para que se pueda exportar.
+CAPTURE_DIR="$STATE_DIR/capture"
+FAILED_DIR="$STATE_DIR/failed-boot"
+BOOT_TIMEOUT="${NEXUS_BOOT_TIMEOUT:-360}"
+EXPORT_DIR="${NEXUS_EXPORT_DIR:-/storage/emulated/0/Download}"
 
 say() { echo "$*"; }
 die() { echo "nexus-quickstep: $*" >&2; exit 1; }
@@ -53,7 +65,7 @@ log() {
 }
 
 usage() {
-  say "Uso: nexus-quickstep status | enable [--force] | disable [--reboot] | bound"
+  say "Uso: nexus-quickstep status | enable [--force] | disable [--reboot] | bound | state | diag [--export]"
   exit "${1:-2}"
 }
 
@@ -240,6 +252,7 @@ trip() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') $reason" > "$STATE_DIR/tripped"
   echo "version=$(nexus_version_code)" > "$STATE_DIR/tripped.meta"
   rm -f "$STATE_DIR/enabled" "$STATE_DIR/booting" "$STATE_DIR/healthy"
+  capture_stop
   if [ "${NEXUS_GUARD_NO_REBOOT:-0}" = "1" ]; then
     log "reinicio omitido (NEXUS_GUARD_NO_REBOOT=1)"
   else
@@ -252,6 +265,7 @@ trip() {
 do_guard() {
   if [ ! -f "$STATE_DIR/enabled" ]; then
     rm -f "$STATE_DIR/booting"
+    capture_stop
     log "arranque: overlay no pedido, nada que vigilar"
     exit 0
   fi
@@ -269,6 +283,7 @@ do_guard() {
   if ! overlay_effective; then
     log "overlay pedido pero no efectivo ($(current_recents)): no se vigila"
     rm -f "$STATE_DIR/booting"
+    capture_stop
     exit 0
   fi
 
@@ -283,6 +298,7 @@ do_guard() {
   mkdir -p "$STATE_DIR"
   date '+%Y-%m-%d %H:%M:%S' > "$STATE_DIR/healthy"
   rm -f "$STATE_DIR/booting"
+  capture_stop
 
   # Vigilancia: si el servicio se cae justo después de arrancar y no vuelve, se desactiva.
   watched=0
@@ -300,11 +316,196 @@ do_guard() {
   log "vigilancia terminada: enlace estable"
 }
 
+boot_id() {
+  cat /proc/sys/kernel/random/boot_id 2>/dev/null
+}
+
+# Arranca, en segundo plano y sin bloquear a quien lo llama (post-fs-data.sh), el registro del
+# arranque y un temporizador: si sys.boot_completed no llega en BOOT_TIMEOUT s el sistema se
+# reinicia solo. El marcador `booting` sigue puesto, así que el arranque siguiente va sin overlay
+# (post-fs-data.sh) y conserva este registro en failed-boot/.
+capture_start() {
+  mkdir -p "$CAPTURE_DIR" 2>/dev/null || return 0
+  rm -f "$CAPTURE_DIR"/* 2>/dev/null
+  boot_id > "$CAPTURE_DIR/boot_id"
+  date '+%Y-%m-%d %H:%M:%S' > "$CAPTURE_DIR/started"
+  logcat -b all -v threadtime -f "$CAPTURE_DIR/logcat.log" -r 4096 -n 4 </dev/null >/dev/null 2>&1 &
+  echo $! > "$CAPTURE_DIR/logcat.pid"
+  dmesg -w </dev/null > "$CAPTURE_DIR/dmesg.log" 2>/dev/null &
+  echo $! > "$CAPTURE_DIR/dmesg.pid"
+  (
+    waited=0
+    while [ "$waited" -lt "$BOOT_TIMEOUT" ]; do
+      [ "$(getprop sys.boot_completed)" = "1" ] && exit 0
+      sleep 5
+      waited=$((waited + 5))
+    done
+    log "el arranque no terminó en ${BOOT_TIMEOUT} s: reinicio automático"
+    sync
+    setprop sys.powerctl reboot,nexus_boot_timeout 2>/dev/null || reboot
+  ) </dev/null >/dev/null 2>&1 &
+  echo $! > "$CAPTURE_DIR/timer.pid"
+}
+
+# Para el registro y el temporizador. Solo toca los procesos de ESTE arranque (los pid de un
+# arranque anterior podrían ser de otro proceso).
+capture_stop() {
+  [ -r "$CAPTURE_DIR/boot_id" ] && [ "$(cat "$CAPTURE_DIR/boot_id")" = "$(boot_id)" ] || return 0
+  for name in logcat dmesg timer; do
+    pid=$(cat "$CAPTURE_DIR/$name.pid" 2>/dev/null)
+    [ -n "$pid" ] && kill "$pid" 2>/dev/null
+    rm -f "$CAPTURE_DIR/$name.pid"
+  done
+  return 0
+}
+
+# Guarda el registro del arranque que no terminó (más el de pstore, si el kernel lo conserva).
+capture_keep() {
+  rm -rf "$FAILED_DIR"
+  mkdir -p "$FAILED_DIR" 2>/dev/null || return 0
+  cp "$CAPTURE_DIR"/logcat.log* "$CAPTURE_DIR/dmesg.log" "$CAPTURE_DIR/started" "$FAILED_DIR"/ 2>/dev/null
+  if ls /sys/fs/pstore/* >/dev/null 2>&1; then
+    mkdir -p "$FAILED_DIR/pstore"
+    cp /sys/fs/pstore/* "$FAILED_DIR/pstore"/ 2>/dev/null
+  fi
+  date '+%Y-%m-%d %H:%M:%S' > "$FAILED_DIR/saved-at"
+  return 0
+}
+
+kv() { echo "$1=$2"; }
+
+# Estado en líneas clave=valor: lo lee el WebUI del módulo (webroot/index.html).
+show_state() {
+  kv module_version "$(sed -n 's/^version=//p' "$MODDIR/module.prop" 2>/dev/null | head -n 1)"
+  kv boot_completed "$(boot_completed && echo 1 || echo 0)"
+  kv enabled "$([ -f "$STATE_DIR/enabled" ] && echo 1 || echo 0)"
+  kv overlay_apk_in_module "$([ -f "$MODDIR/overlay-static/NexusRecentsOverlay.apk" ] && echo 1 || echo 0)"
+  kv overlay_apk_applied "$([ -f /product/overlay/NexusRecentsOverlay.apk ] && echo 1 || echo 0)"
+  kv current_recents "$(current_recents)"
+  if overlay_effective; then
+    kv effective 1
+    kv bound "$(is_bound && echo 1 || echo 0)"
+  else
+    kv effective 0
+    kv bound -
+  fi
+  kv healthy "$([ -e "$STATE_DIR/healthy" ] && echo 1 || echo 0)"
+  kv booting "$([ -f "$STATE_DIR/booting" ] && echo 1 || echo 0)"
+  kv tripped "$(cat "$STATE_DIR/tripped" 2>/dev/null | tr '\n' ' ')"
+  kv failed_boot "$([ -f "$FAILED_DIR/saved-at" ] && cat "$FAILED_DIR/saved-at" || echo 0)"
+  # Nexus como app de sistema privilegiada: se lee de `dumpsys package` (formato sin verificar en
+  # todas las ROM: si no aparece la línea, queda "?").
+  pk=$(dumpsys package "$PKG" 2>/dev/null)
+  priv="?"
+  system="?"
+  if echo "$pk" | grep -q 'privateFlags='; then
+    if echo "$pk" | grep 'privateFlags=' | head -n 1 | grep -q 'PRIVILEGED'; then priv=1; else priv=0; fi
+  fi
+  if echo "$pk" | grep -q 'pkgFlags='; then
+    if echo "$pk" | grep 'pkgFlags=' | head -n 1 | grep -q ' SYSTEM'; then system=1; else system=0; fi
+  fi
+  kv nexus_system "$system"
+  kv nexus_privileged "$priv"
+  kv nexus_in_product "$([ -f /product/priv-app/Nexus/Nexus.apk ] && echo 1 || echo 0)"
+  kv probe_passed "$(probe_value passed)"
+  kv probe_denied "$(probe_value denied)"
+}
+
+section() { echo; echo "=== $1 ==="; }
+
+build_diag() {
+  echo "Nexus Launcher: diagnóstico del módulo"
+  echo "fecha: $(date '+%Y-%m-%d %H:%M:%S')"
+  section "Sistema"
+  for p in ro.product.brand ro.product.device ro.build.fingerprint ro.build.version.sdk \
+    ro.build.version.release ro.build.type ro.control_privapp_permissions ro.boot.vendor.overlay.static; do
+    echo "$p=$(getprop "$p")"
+  done
+  section "Gestor de root"
+  (ksud --version || magisk -v || apd --version) 2>&1 | head -n 3
+  section "Módulo"
+  cat "$MODDIR/module.prop" 2>/dev/null
+  ls -laZ "$MODDIR" 2>&1 | head -n 30
+  ls -laRZ "$MODDIR/system/product" 2>&1 | head -n 40
+  section "Montajes de las particiones"
+  grep -E ' /product | /system_ext | /vendor ' /proc/mounts 2>&1 | head -n 12
+  section "Nexus (paquete)"
+  pm path "$PKG" 2>&1
+  dumpsys package "$PKG" 2>&1 | grep -E 'codePath|versionCode|versionName|pkgFlags|privateFlags|lastUpdateTime|installerPackageName' | head -n 24
+  ls -laZ /product/priv-app/Nexus 2>&1
+  section "Lista de permisos privilegiados"
+  ls -laZ /product/etc/permissions 2>&1 | grep -i nexus
+  head -n 12 /product/etc/permissions/privapp-permissions-nexus.xml 2>&1
+  section "Overlays"
+  ls -laZ /product/overlay 2>&1 | head -n 40
+  echo "config_recentsComponentName ahora: $(current_recents)"
+  ls -la /product/overlay/config 2>&1 | head -n 5
+  cmd overlay list 2>&1 | head -n 60
+  section "Estado del módulo"
+  show_state
+  ls -laZ "$STATE_DIR" 2>&1
+  tail -n 60 "$STATE_DIR/watchdog.log" 2>&1
+  section "Último arranque fallido"
+  if [ -f "$FAILED_DIR/saved-at" ]; then
+    ls -la "$FAILED_DIR"
+    [ -d "$FAILED_DIR/pstore" ] && ls -la "$FAILED_DIR/pstore"
+    echo "--- líneas relevantes del registro ---"
+    grep -h -i -E 'FATAL EXCEPTION|Missing required system package|privapp|allowlist|whitelist|Violation|SecurityException|nexus|recents|overlay' \
+      "$FAILED_DIR"/logcat.log* 2>/dev/null | head -n 120
+    echo "--- líneas relevantes de pstore ---"
+    grep -a -h -i -E 'panic|Missing required|privapp|allowlist|nexus|overlay|Watchdog' \
+      "$FAILED_DIR"/pstore/* 2>/dev/null | head -n 60
+  else
+    echo "No hay registro de un arranque fallido."
+  fi
+}
+
+do_diag() {
+  need_root
+  mkdir -p "$STATE_DIR" 2>/dev/null
+  build_diag > "$STATE_DIR/diag.txt" 2>&1
+  if [ "$1" = "--export" ]; then
+    mkdir -p "$EXPORT_DIR" 2>/dev/null
+    out="$EXPORT_DIR/Nexus-diagnostico.tar.gz"
+    rm -f "$out"
+    files="diag.txt"
+    for f in watchdog.log tripped failed-boot capture; do
+      [ -e "$STATE_DIR/$f" ] && files="$files $f"
+    done
+    # shellcheck disable=SC2086
+    if (cd "$STATE_DIR" && tar -czf "$out" $files 2>/dev/null) && [ -s "$out" ]; then
+      chmod 0666 "$out" 2>/dev/null
+      say "Exportado: $out"
+    else
+      rm -f "$out"
+      if cp "$STATE_DIR/diag.txt" "$EXPORT_DIR/Nexus-diagnostico.txt" 2>/dev/null; then
+        chmod 0666 "$EXPORT_DIR/Nexus-diagnostico.txt" 2>/dev/null
+        say "Exportado: $EXPORT_DIR/Nexus-diagnostico.txt (sin los registros del arranque: no se pudo crear el .tar.gz)"
+      else
+        die "no se pudo escribir en $EXPORT_DIR"
+      fi
+    fi
+    return 0
+  fi
+  cat "$STATE_DIR/diag.txt"
+}
+
 case "$1" in
   status) show_status ;;
   enable) do_enable "$2" ;;
   disable) do_disable "$2" ;;
   bound) do_bound ;;
+  state) need_root; show_state ;;
+  diag) do_diag "$2" ;;
+  capture)
+    need_root
+    case "$2" in
+      start) capture_start ;;
+      stop) capture_stop ;;
+      keep) capture_keep ;;
+      *) usage 2 ;;
+    esac
+    ;;
   guard) need_root; do_guard ;;
   -h | --help | help) usage 0 ;;
   *) usage 2 ;;
