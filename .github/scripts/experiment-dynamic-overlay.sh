@@ -64,9 +64,22 @@ reboot_device() {
   adb root > /dev/null 2>&1; adb wait-for-device; sleep 4
 }
 
+# `cmd overlay` puede no estar listo justo tras arrancar (en la primera prueba falló "Can't find service:
+# overlay" y el overlay no llegó a activarse): se espera a que responda de verdad.
+wait_overlay() {
+  local i
+  for i in $(seq 1 90); do
+    adb shell cmd overlay list --user 0 "$OVERLAY" 2>&1 | grep -q "$OVERLAY" && return 0
+    sleep 4
+  done
+  say "!! cmd overlay no responde tras 6 min"
+  return 1
+}
+
 # Permisos de Nexus ahora: cuántos de los clave están concedidos, y estado de recientes y enlace.
 snapshot() {
   local tag="$1"
+  wait_overlay
   dsh dumpsys package "$PKG" > "$out/dumpsys-package-$tag.txt"
   sed -n '/install permissions:/,/User 0:/p' "$out/dumpsys-package-$tag.txt" | grep -E "granted=true" \
     | sed -E 's/^[[:space:]]*([A-Za-z0-9_.]+): granted=true.*/\1/' | sort -u > "$out/granted-$tag.txt"
@@ -136,8 +149,11 @@ snapshot "0-base"
 dsh cmd overlay dump --user 0 "$OVERLAY" > "$out/overlay-dump-base.txt" 2>&1
 
 # --- 1. Activar el overlay ---
+wait_overlay
 dsh cmd overlay enable --user 0 "$OVERLAY" > "$out/enable.txt"
 sleep 10
+dsh cmd overlay list --user 0 "$OVERLAY" >> "$out/enable.txt"
+dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName >> "$out/enable.txt"
 snapshot "1-activado"
 
 # --- 2. Reiniciar SystemUI (que vuelva a leer el recurso y enlazar) ---
@@ -146,7 +162,8 @@ sleep 25
 snapshot "2-systemui-reiniciado"
 
 # --- 3. Reinstalar Nexus como actualización de la app de sistema (dispara el recálculo de permisos del paquete) ---
-dsh pm install -r -d "$apk" > "$out/reinstall.txt"
+adb push "$apk" /data/local/tmp/nexus-reinstall.apk > /dev/null
+dsh pm install -r -d /data/local/tmp/nexus-reinstall.apk > "$out/reinstall.txt"
 sleep 15
 dsh am crash com.android.systemui > /dev/null 2>&1
 sleep 25
