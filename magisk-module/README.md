@@ -64,6 +64,7 @@ su -c nexus-quickstep enable            # lo pide; REINICIA para aplicarlo
 su -c nexus-quickstep bound             # ¿SystemUI está enlazado al servicio de Nexus? (exit 0 = sí)
 su -c nexus-quickstep disable --reboot  # lo quita y reinicia: el gesto vuelve al launcher del sistema
 su -c nexus-quickstep diag --export     # informe + registros del último arranque fallido, en Descargas
+su -c nexus-quickstep logs              # copia todos los registros a /sdcard/Nexus-Logs
 ```
 
 Abre Nexus al menos una vez antes de `enable`: al arrancar comprueba si este Android tiene lo que usa Quickstep y lo deja en `files/quickstep-probe.txt`. **`enable` se niega si falta algo** o si el vigilante ya desactivó el overlay con esta misma versión de Nexus; `enable --force` se salta ambas cosas.
@@ -74,6 +75,7 @@ Comprobación a mano de que SystemUI está enlazado: `dumpsys activity services 
 
 - **El vigilante** (`service.sh` → `nexus-quickstep guard`): con el overlay aplicado espera a que SystemUI se enlace a Nexus; si no pasa en 180 s, o el enlace se pierde 60 s seguidos durante los 300 s siguientes, borra `enabled`, deja constancia (`tripped`) y **reinicia una vez**. El arranque siguiente va sin overlay. No depende de que Nexus arranque. Después, `enable` exige `--force` para esa misma versión de Nexus.
 - **Bucle de arranque:** `post-fs-data.sh` deja un marcador `booting` y el vigilante lo borra al verificar el arranque. Si encuentra el marcador al arrancar, es que el arranque anterior con el overlay no terminó: quita `enabled` y arranca sin overlay.
+- **Carpeta `Nexus-Logs`:** con el overlay aplicado, el módulo copia los registros del arranque cada 10 s a `/sdcard/Nexus-Logs/` en cuanto el almacenamiento está disponible (no lo está hasta que desbloqueas el móvil tras arrancar; antes se guardan en `/data/adb/nexus_quickstep/`). `RESUMEN.txt` dice en claro si el arranque fue bien o falló; `arranque-actual/` es este arranque y `arranque-fallido/` el último que no terminó (se copia al desbloquear tras el reinicio que arranca sin overlay).
 - **Arranque colgado:** al aplicar el overlay, `post-fs-data.sh` arranca un registro (logcat y dmesg) y un temporizador: si `sys.boot_completed` no llega en 6 minutos, el móvil se reinicia solo. Ese reinicio arranca sin overlay y guarda el registro en `/data/adb/nexus_quickstep/failed-boot/` (con pstore si el kernel lo conserva); el WebUI lo avisa y lo exporta. Un cuelgue del sistema antes de que corra el temporizador no se puede reiniciar desde aquí: en ese caso, reinicio manual (mantener el botón de encendido) y el siguiente arranque ya va sin overlay.
 - **A mano:** `su -c nexus-quickstep disable --reboot`. Sin root: desactiva el módulo desde Magisk/KernelSU/APatch (modo seguro o recovery) o borra `/data/adb/nexus_quickstep/enabled` desde recovery, y reinicia.
 - No hace falta reinstalar la ROM en ningún caso: el overlay vive en el montaje systemless del módulo, no en la imagen.

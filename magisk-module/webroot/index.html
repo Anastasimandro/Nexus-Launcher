@@ -112,7 +112,12 @@
       <button id="btn-diag">Generar informe</button>
       <button id="btn-export">Guardar en Descargas</button>
     </div>
-    <p class="hint">Guarda un .tar.gz en Descargas con el informe y los registros del último arranque fallido.</p>
+    <button id="btn-logs" style="margin-top:10px;width:100%">Copiar registros a Nexus-Logs</button>
+    <p class="hint">
+      Los registros también se copian solos a la carpeta <b>Nexus-Logs</b> del almacenamiento interno en cuanto el móvil
+      se desbloquea. Abre <b>RESUMEN.txt</b>: dice en claro si el arranque fue bien o falló.
+      El .tar.gz de Descargas lleva además el informe del sistema.
+    </p>
     <pre id="diag-out"></pre>
     <button id="btn-log" style="margin-top:10px;width:100%">Ver registro del vigilante</button>
     <pre id="log-out"></pre>
@@ -339,6 +344,17 @@
       .then(function (r) {
         show('diag-out', cmdOutput(r));
         if (r.code === 0) { toast('Guardado en Descargas'); }
+      })
+      .catch(function (e) { show('diag-out', e.message); })
+      .then(function () { busy(false); });
+  });
+
+  $('btn-logs').addEventListener('click', function () {
+    busy(true);
+    run(TOOL + ' logs')
+      .then(function (r) {
+        show('diag-out', cmdOutput(r));
+        if (r.code === 0) { toast('Copiado a Nexus-Logs'); }
       })
       .catch(function (e) { show('diag-out', e.message); })
       .then(function () { busy(false); });

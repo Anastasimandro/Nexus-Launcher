@@ -11,6 +11,8 @@
 #   nexus-quickstep state             estado en líneas clave=valor (lo lee el WebUI del módulo)
 #   nexus-quickstep diag [--export]   informe de diagnóstico; --export lo deja en Descargas con los
 #                                     registros del último arranque fallido
+#   nexus-quickstep logs [segundos]  copia todos los registros a /sdcard/Nexus-Logs (RESUMEN.txt dice
+#                                     en claro si el arranque fue bien o falló)
 #   nexus-quickstep capture start|stop|keep
 #                                     registro del arranque (lo usa post-fs-data.sh, ver abajo)
 #
@@ -55,6 +57,11 @@ CAPTURE_DIR="$STATE_DIR/capture"
 FAILED_DIR="$STATE_DIR/failed-boot"
 BOOT_TIMEOUT="${NEXUS_BOOT_TIMEOUT:-360}"
 EXPORT_DIR="${NEXUS_EXPORT_DIR:-/storage/emulated/0/Download}"
+# Carpeta en el almacenamiento interno con todos los registros, para verlos sin comandos.
+# El almacenamiento no está disponible hasta que se desbloquea el móvil tras arrancar: hasta entonces
+# los registros se guardan en STATE_DIR y se copian aquí en cuanto se pueda.
+LOGS_DIR="${NEXUS_LOGS_DIR:-/storage/emulated/0/Nexus-Logs}"
+SDCARD_READY="${NEXUS_SDCARD_READY:-/storage/emulated/0/Android}"
 
 say() { echo "$*"; }
 die() { echo "nexus-quickstep: $*" >&2; exit 1; }
@@ -65,7 +72,7 @@ log() {
 }
 
 usage() {
-  say "Uso: nexus-quickstep status | enable [--force] | disable [--reboot] | bound | state | diag [--export]"
+  say "Uso: nexus-quickstep status | enable [--force] | disable [--reboot] | bound | state | diag [--export] | logs"
   exit "${1:-2}"
 }
 
@@ -253,6 +260,7 @@ trip() {
   echo "version=$(nexus_version_code)" > "$STATE_DIR/tripped.meta"
   rm -f "$STATE_DIR/enabled" "$STATE_DIR/booting" "$STATE_DIR/healthy"
   capture_stop
+  logs_sync
   if [ "${NEXUS_GUARD_NO_REBOOT:-0}" = "1" ]; then
     log "reinicio omitido (NEXUS_GUARD_NO_REBOOT=1)"
   else
@@ -267,6 +275,8 @@ do_guard() {
     rm -f "$STATE_DIR/booting"
     capture_stop
     log "arranque: overlay no pedido, nada que vigilar"
+    # Aunque no haya overlay, se deja en Nexus-Logs el registro de un arranque fallido anterior.
+    logs_sync_later
     exit 0
   fi
   log "arranque con el overlay pedido: vigilando (espera ${GUARD_WAIT}s, vigilancia ${GUARD_WATCH}s)"
@@ -284,6 +294,7 @@ do_guard() {
     log "overlay pedido pero no efectivo ($(current_recents)): no se vigila"
     rm -f "$STATE_DIR/booting"
     capture_stop
+    logs_sync_later
     exit 0
   fi
 
@@ -299,6 +310,7 @@ do_guard() {
   date '+%Y-%m-%d %H:%M:%S' > "$STATE_DIR/healthy"
   rm -f "$STATE_DIR/booting"
   capture_stop
+  logs_sync_later
 
   # Vigilancia: si el servicio se cae justo después de arrancar y no vuelve, se desactiva.
   watched=0
@@ -318,6 +330,91 @@ do_guard() {
 
 boot_id() {
   cat /proc/sys/kernel/random/boot_id 2>/dev/null
+}
+
+sdcard_ready() {
+  [ -d "$SDCARD_READY" ]
+}
+
+# Resumen en lenguaje llano de cómo va (o cómo fue) el arranque con el overlay.
+write_resumen() {
+  {
+    echo "NEXUS QUICKSTEP: RESUMEN DEL ARRANQUE"
+    echo "Actualizado: $(date '+%Y-%m-%d %H:%M:%S')"
+    echo
+    if [ -f "$FAILED_DIR/saved-at" ]; then
+      echo "ARRANQUE ANTERIOR: FALLÓ (el sistema no terminó de arrancar con el overlay)."
+      echo "  Registro guardado: $(cat "$FAILED_DIR/saved-at"). Está en la carpeta arranque-fallido/."
+    else
+      echo "ARRANQUE ANTERIOR: sin fallos registrados."
+    fi
+    echo
+    if [ -f "$STATE_DIR/enabled" ]; then
+      echo "Overlay pedido: sí"
+    else
+      echo "Overlay pedido: no (arranque normal, sin overlay)"
+    fi
+    if boot_completed; then
+      echo "Este arranque: el sistema TERMINÓ de arrancar."
+    else
+      echo "Este arranque: el sistema todavía NO ha terminado de arrancar."
+    fi
+    if overlay_effective; then
+      echo "Overlay efectivo: sí"
+      if is_bound; then echo "SystemUI enlazado a Nexus: sí"; else echo "SystemUI enlazado a Nexus: no (todavía)"; fi
+    else
+      echo "Overlay efectivo: no"
+    fi
+    if [ -e "$STATE_DIR/healthy" ]; then
+      echo
+      echo "RESULTADO: OK. Arrancó con el overlay y SystemUI se enlazó a Nexus."
+    elif [ -r "$STATE_DIR/tripped" ]; then
+      echo
+      echo "RESULTADO: DESACTIVADO por seguridad: $(cat "$STATE_DIR/tripped")"
+    fi
+    echo
+    echo "Archivos de esta carpeta:"
+    echo "  arranque-actual/    logcat y dmesg de este arranque"
+    echo "  arranque-fallido/   logcat, dmesg y pstore del último arranque que no terminó"
+    echo "  watchdog.log        decisiones del módulo"
+  } > "$LOGS_DIR/RESUMEN.txt" 2>/dev/null
+}
+
+# Copia todos los registros a LOGS_DIR. No falla si el almacenamiento no está disponible.
+logs_sync() {
+  sdcard_ready || return 1
+  mkdir -p "$LOGS_DIR/arranque-actual" 2>/dev/null || return 1
+  write_resumen
+  cp "$CAPTURE_DIR"/logcat.log* "$CAPTURE_DIR/dmesg.log" "$CAPTURE_DIR/started" "$LOGS_DIR/arranque-actual"/ 2>/dev/null
+  cp "$STATE_DIR/watchdog.log" "$LOGS_DIR/" 2>/dev/null
+  if [ -d "$FAILED_DIR" ]; then
+    mkdir -p "$LOGS_DIR/arranque-fallido" 2>/dev/null
+    cp -r "$FAILED_DIR"/. "$LOGS_DIR/arranque-fallido"/ 2>/dev/null
+  fi
+  chmod -R a+rwX "$LOGS_DIR" 2>/dev/null
+  return 0
+}
+
+# Espera hasta $1 segundos a que el almacenamiento esté disponible (0 = no espera).
+logs_wait() {
+  waited=0
+  while ! sdcard_ready; do
+    [ "$waited" -ge "${1:-0}" ] && return 1
+    sleep 5; waited=$((waited + 5))
+  done
+  return 0
+}
+
+# Lo usa el vigilante: en segundo plano, para no retrasar la vigilancia ni morir si no hay almacenamiento.
+logs_sync_later() {
+  ( logs_wait 900 && logs_sync ) </dev/null >/dev/null 2>&1 &
+}
+
+do_logs() {
+  need_root
+  logs_wait "${1:-0}" || die "el almacenamiento interno no está disponible (¿móvil sin desbloquear?)."
+  logs_sync
+  say "Registros copiados a $LOGS_DIR"
 }
 
 # Arranca, en segundo plano y sin bloquear a quien lo llama (post-fs-data.sh), el registro del
@@ -345,13 +442,22 @@ capture_start() {
     setprop sys.powerctl reboot,nexus_boot_timeout 2>/dev/null || reboot
   ) </dev/null >/dev/null 2>&1 &
   echo $! > "$CAPTURE_DIR/timer.pid"
+  # Copia periódica a la carpeta Nexus-Logs en cuanto el almacenamiento esté disponible.
+  (
+    while ! sdcard_ready; do sleep 5; done
+    while :; do
+      logs_sync
+      sleep 10
+    done
+  ) </dev/null >/dev/null 2>&1 &
+  echo $! > "$CAPTURE_DIR/sync.pid"
 }
 
 # Para el registro y el temporizador. Solo toca los procesos de ESTE arranque (los pid de un
 # arranque anterior podrían ser de otro proceso).
 capture_stop() {
   [ -r "$CAPTURE_DIR/boot_id" ] && [ "$(cat "$CAPTURE_DIR/boot_id")" = "$(boot_id)" ] || return 0
-  for name in logcat dmesg timer; do
+  for name in logcat dmesg timer sync; do
     pid=$(cat "$CAPTURE_DIR/$name.pid" 2>/dev/null)
     [ -n "$pid" ] && kill "$pid" 2>/dev/null
     rm -f "$CAPTURE_DIR/$name.pid"
@@ -497,6 +603,7 @@ case "$1" in
   bound) do_bound ;;
   state) need_root; show_state ;;
   diag) do_diag "$2" ;;
+  logs) do_logs "${2:-0}" ;;
   capture)
     need_root
     case "$2" in
