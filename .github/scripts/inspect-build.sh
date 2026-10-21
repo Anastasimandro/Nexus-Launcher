@@ -72,8 +72,8 @@ if [[ -f $ov ]]; then
     && ok "overlay: target = android" || bad "overlay: target"
   grep -q 'isStatic.*=true' "$out/overlay-manifest.txt" \
     && ok "overlay: estático" || bad "overlay: no es estático (no se aplicaría en el arranque de PackageManagerService)"
-  grep -qE 'priority.*=2147483647' "$out/overlay-manifest.txt" \
-    && ok "overlay: prioridad máxima" || bad "overlay: prioridad distinta de la máxima"
+  grep -qE 'priority.*=9999' "$out/overlay-manifest.txt" \
+    && ok "overlay: prioridad máxima admitida (9999)" || bad "overlay: prioridad distinta de 9999 (PackageManager rechaza más de 9999)"
   [[ ! -e $work/module/system/product/overlay/NexusRecentsOverlay.apk ]] \
     && ok "módulo: el overlay NO está en system/ (se copia solo si se activa)" \
     || bad "módulo: el overlay está en system/ y se aplicaría siempre"

@@ -104,7 +104,8 @@ grep -qE 'targetPackage.*"android"' <<<"$manifest" || fail "El overlay no apunta
 # Tiene que ser estático (inmutable, activo desde el arranque) y con la prioridad máxima: ver el
 # comentario de magisk-module/overlay/AndroidManifest.xml.
 grep -q 'isStatic.*=true' <<<"$manifest" || fail "El overlay tiene que declarar android:isStatic=\"true\"."
-grep -qE 'priority.*=2147483647' <<<"$manifest" || fail "El overlay tiene que declarar android:priority=\"2147483647\"."
+# 9999 es el máximo que admite PackageManager: con más rechaza el overlay («priority must be between 0 and 9999»).
+grep -qE 'priority.*=9999' <<<"$manifest" || fail "El overlay tiene que declarar android:priority=\"9999\" (el máximo admitido)."
 
 resources=$("$AAPT2" dump resources "$work/signed.apk")
 grep -q "string/$resource" <<<"$resources" || fail "El overlay no define string/$resource."

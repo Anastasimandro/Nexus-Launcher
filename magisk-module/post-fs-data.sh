@@ -37,7 +37,10 @@ if [ -f "$STATE/booting" ]; then
   # Se conserva el registro del arranque que no terminó antes de que nada lo borre.
   [ -f "$TOOL" ] && sh "$TOOL" capture keep >/dev/null 2>&1
   rm -f "$STATE/enabled" "$STATE/booting"
-  echo "$(date '+%Y-%m-%d %H:%M:%S') el arranque anterior con el overlay no terminó" > "$STATE/tripped"
+  # Sin fecha: en este punto del arranque el reloj aún no está ajustado (sale 1970).
+  reason=$(cat "$STATE/abort-reason" 2>/dev/null)
+  echo "el arranque anterior con el overlay no terminó${reason:+ ($reason)}" > "$STATE/tripped"
+  rm -f "$STATE/abort-reason"
   echo "version=bootloop" > "$STATE/tripped.meta"
   log "el arranque anterior no terminó: overlay desactivado"
   exit 0

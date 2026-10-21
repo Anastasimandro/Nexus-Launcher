@@ -54,6 +54,7 @@ GUARD_LOST="${NEXUS_GUARD_LOST:-60}"
 # El registro vive en capture/; si el arranque no termina, post-fs-data.sh lo copia a failed-boot/
 # en el arranque siguiente (el que ya va sin overlay) para que se pueda exportar.
 CAPTURE_DIR="$STATE_DIR/capture"
+OVERLAY_PATH="/product/overlay/NexusRecentsOverlay.apk"
 FAILED_DIR="$STATE_DIR/failed-boot"
 BOOT_TIMEOUT="${NEXUS_BOOT_TIMEOUT:-360}"
 EXPORT_DIR="${NEXUS_EXPORT_DIR:-/storage/emulated/0/Download}"
@@ -345,6 +346,7 @@ write_resumen() {
     if [ -f "$FAILED_DIR/saved-at" ]; then
       echo "ARRANQUE ANTERIOR: FALLÓ (el sistema no terminó de arrancar con el overlay)."
       echo "  Registro guardado: $(cat "$FAILED_DIR/saved-at"). Está en la carpeta arranque-fallido/."
+      [ -r "$FAILED_DIR/abort-reason" ] && echo "  Causa detectada: $(cat "$FAILED_DIR/abort-reason")"
     else
       echo "ARRANQUE ANTERIOR: sin fallos registrados."
     fi
@@ -383,9 +385,16 @@ write_resumen() {
 # Copia todos los registros a LOGS_DIR. No falla si el almacenamiento no está disponible.
 logs_sync() {
   sdcard_ready || return 1
-  mkdir -p "$LOGS_DIR/arranque-actual" 2>/dev/null || return 1
+  mkdir -p "$LOGS_DIR" 2>/dev/null || return 1
+  mkdir -p "$LOGS_DIR/arranque-actual" 2>/dev/null
   write_resumen
-  cp "$CAPTURE_DIR"/logcat.log* "$CAPTURE_DIR/dmesg.log" "$CAPTURE_DIR/started" "$LOGS_DIR/arranque-actual"/ 2>/dev/null
+  # Solo el registro de ESTE arranque; si no lo hay (arranque sin overlay) no se deja uno viejo aquí.
+  if [ -r "$CAPTURE_DIR/boot_id" ] && [ "$(cat "$CAPTURE_DIR/boot_id")" = "$(boot_id)" ]; then
+    cp "$CAPTURE_DIR"/logcat.log* "$CAPTURE_DIR/dmesg.log" "$CAPTURE_DIR/started" "$LOGS_DIR/arranque-actual"/ 2>/dev/null
+  else
+    rm -rf "$LOGS_DIR/arranque-actual"
+    echo "Este arranque no registró logcat (se registra solo cuando el overlay está pedido)." > "$LOGS_DIR/arranque-actual.txt"
+  fi
   cp "$STATE_DIR/watchdog.log" "$LOGS_DIR/" 2>/dev/null
   if [ -d "$FAILED_DIR" ]; then
     mkdir -p "$LOGS_DIR/arranque-fallido" 2>/dev/null
@@ -434,6 +443,18 @@ capture_start() {
     waited=0
     while [ "$waited" -lt "$BOOT_TIMEOUT" ]; do
       [ "$(getprop sys.boot_completed)" = "1" ] && exit 0
+      # Firma del fallo visto en un móvil real: zygote no puede reabrir el APK del overlay en cada
+      # proceso nuevo (el archivo del módulo no se ve desde ahí) y TODAS las apps abortan, SystemUI
+      # incluida: el arranque nunca termina. No hace falta esperar a BOOT_TIMEOUT.
+      if grep -q -a "Failed open($OVERLAY_PATH" "$CAPTURE_DIR/logcat.log" 2>/dev/null; then
+        echo "zygote no puede abrir $OVERLAY_PATH: todas las apps abortan" > "$STATE_DIR/abort-reason"
+        log "DETECTADO: zygote no puede abrir $OVERLAY_PATH; reinicio sin overlay"
+        sleep 3
+        capture_stop_logcat
+        sync
+        setprop sys.powerctl reboot,nexus_overlay_unreadable 2>/dev/null || reboot
+        exit 0
+      fi
       sleep 5
       waited=$((waited + 5))
     done
@@ -451,6 +472,15 @@ capture_start() {
     done
   ) </dev/null >/dev/null 2>&1 &
   echo $! > "$CAPTURE_DIR/sync.pid"
+}
+
+# Para solo los procesos de registro (lo usa el temporizador, que no debe matarse a sí mismo).
+capture_stop_logcat() {
+  for name in logcat dmesg; do
+    pid=$(cat "$CAPTURE_DIR/$name.pid" 2>/dev/null)
+    [ -n "$pid" ] && kill "$pid" 2>/dev/null
+  done
+  return 0
 }
 
 # Para el registro y el temporizador. Solo toca los procesos de ESTE arranque (los pid de un
@@ -474,6 +504,7 @@ capture_keep() {
     mkdir -p "$FAILED_DIR/pstore"
     cp /sys/fs/pstore/* "$FAILED_DIR/pstore"/ 2>/dev/null
   fi
+  [ -f "$STATE_DIR/abort-reason" ] && cp "$STATE_DIR/abort-reason" "$FAILED_DIR/" 2>/dev/null
   date '+%Y-%m-%d %H:%M:%S' > "$FAILED_DIR/saved-at"
   return 0
 }
