@@ -224,7 +224,10 @@
     var bound = s.bound === '1';
     var tripped = s.tripped && s.tripped.length > 0;
 
-    if (tripped) {
+    if (s.nexus_in_product === '0') {
+      setVerdict('v-warn', 'El módulo no está montado',
+        'Nexus no aparece en /product. Reinicia tras flashear; en KernelSU hace falta un metamódulo de montaje (p. ej. meta-overlayfs), sin él no se monta nada.');
+    } else if (tripped) {
       setVerdict('v-bad', 'Desactivado por seguridad', s.tripped);
     } else if (effective && bound) {
       setVerdict('v-ok', 'Gestos de Nexus activos', 'SystemUI está enlazado al servicio de Nexus.');
