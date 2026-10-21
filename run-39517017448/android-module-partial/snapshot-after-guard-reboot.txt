@@ -1,0 +1,63 @@
+## after-guard-reboot
+config_recentsComponentName: cmd: Can't find service: overlay
+[after-guard-reboot] permisos permitidos y no concedidos: 19 (ACCESS_HIDDEN_PROFILES ACCESS_HIDDEN_PROFILES_FULL ACCESS_SHORTCUTS ALLOW_SLIPPERY_TOUCHES BROADCAST_CLOSE_SYSTEM_DIALOGS CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS INTERNAL_SYSTEM_WINDOW MANAGE_ACCESSIBILITY MANAGE_ACTIVITY_TASKS MANAGE_KEY_GESTURES MONITOR_INPUT READ_FRAME_BUFFER REMOVE_TASKS SET_ORIENTATION START_TASKS_FROM_RECENTS STATUS_BAR STATUS_BAR_SERVICE STOP_APP_SWITCHES SYSTEM_APPLICATION_OVERLAY)
+--- nexus-quickstep bound:
+SystemUI enlazado al servicio de Quickstep de Nexus: NO
+(overlay efectivo: no; estado: APK puesto pero no efectivo)
+--- nexus-quickstep status:
+Pedido (enabled): sí. El módulo aplica el overlay en cada arranque.
+Overlay app.nexus.launcher.overlay.recents en este arranque: APK puesto pero no efectivo
+  APK en /product/overlay: sí
+config_recentsComponentName ahora: desconocido
+Overlay efectivo: no
+  Está aplicado pero otro overlay de la imagen gana sobre él, o hay un overlay/config/config.xml.
+Comprobación de Nexus: sdk=37 compatible=true
+  Ausente pero tolerado por Nexus: DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_ALTTAB_TRANSITIONS_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_TRANSITIONS_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_TRAMPOLINE_CLOSE_ANIMATION_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_EXIT_BY_MINIMIZE_TRANSITION_BUGFIX,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_QUICK_SWITCH,DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_TASKBAR_RUNNING_APPS,DesktopModeFlags.ENABLE_QUICKSWITCH_DESKTOP_SPLIT_BUGFIX,DesktopModeFlags.ENABLE_START_LAUNCH_TRANSITION_FROM_TASKBAR_BUGFIX,DesktopModeFlags.ENABLE_TASKBAR_RECENTS_LAYOUT_TRANSITION,DesktopExperienceFlags.ENABLE_DESKTOP_APP_LAUNCH_BUGFIX,DesktopExperienceFlags.ENABLE_DESKTOP_FIRST_FULLSCREEN_REFOCUS_BUGFIX,DesktopExperienceFlags.ENABLE_DESKTOP_WINDOWING_PIP,DesktopExperienceFlags.ENABLE_FREEFORM_DISPLAY_LAUNCH_PARAMS,DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND,DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_FRONTEND,DesktopExperienceFlags.ENABLE_PINNING_APP_WITH_CONTEXT_MENU,DesktopExperienceFlags.ENABLE_REJECT_HOME_TRANSITION,DesktopExperienceFlags.ENABLE_TASKBAR_RECENT_TASKS_THROTTLE_BUGFIX
+Vigilante: el último arranque con el overlay aplicado quedó verificado.
+Los cambios solo se aplican al reiniciar.
+--- /data/adb/nexus_quickstep:
+enabled
+healthy
+watchdog.log
+enabled: 2026-10-21 00:02:58 version=1601009900
+healthy: 2026-10-21 00:03:48
+--- watchdog.log:
+2026-10-20 23:56:36 post-fs-data: overlay copiado a /data/local/tmp/nexusmod/system/product/overlay/NexusRecentsOverlay.apk
+2026-10-20 23:57:20 arranque con el overlay pedido: vigilando (espera 240s, vigilancia 60s)
+2026-10-20 23:57:20 overlay pedido pero no efectivo (): no se vigila
+2026-10-21 00:03:00 post-fs-data: overlay copiado a /data/local/tmp/nexusmod/system/product/overlay/NexusRecentsOverlay.apk
+2026-10-21 00:03:48 arranque con el overlay pedido: vigilando (espera 60s, vigilancia 30s)
+2026-10-21 00:03:48 SystemUI enlazado al servicio de Nexus tras 0s
+2026-10-21 00:04:19 vigilancia terminada: enlace estable
+--- caídas:
+10-21 00:03:44.278  1014  1014 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:03:44.278  1014  1014 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1014
+10-21 00:03:46.589  1836  1836 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:03:46.589  1836  1836 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1836
+10-21 00:04:05.484  3307  3307 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:04:05.484  3307  3307 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 3307
+10-21 00:04:07.311  4140  4140 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:04:07.311  4140  4140 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 4140
+10-21 00:04:28.523  5539  5539 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:04:28.523  5539  5539 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 5539
+10-21 00:04:30.923  6498  6498 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:04:30.923  6498  6498 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 6498
+10-21 00:04:51.470  7693  7693 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:04:51.470  7693  7693 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 7693
+10-21 00:04:53.456  8622  8622 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:04:53.456  8622  8622 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 8622
+10-21 00:05:08.953  9776  9776 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:05:08.953  9776  9776 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 9776
+10-21 00:05:11.307 10441 10441 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:05:11.307 10441 10441 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 10441
+10-21 00:05:28.500 11806 11806 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:05:28.500 11806 11806 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 11806
+10-21 00:05:30.808 12502 12502 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:05:30.808 12502 12502 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 12502
+10-21 00:05:46.693 13843 13843 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:05:46.693 13843 13843 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 13843
+10-21 00:05:49.430 14501 14501 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:05:49.430 14501 14501 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 14501
+10-21 00:06:07.973 15823 15823 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 00:06:07.973 15823 15823 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 15823
+grep: write error: Broken pipe

@@ -227,3 +227,4 @@ watchdog.log
 10-21 00:02:17.892  2914  2986 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 2914
 
 ## Fase 7: recuperación automática (Nexus no consigue ofrecer el servicio de Quickstep)
+el dispositivo no se reinició

@@ -1,0 +1,1 @@
+reinicio por el vigilante: exit 1
