@@ -449,6 +449,7 @@ capture_start() {
       if grep -q -a "Failed open($OVERLAY_PATH" "$CAPTURE_DIR/logcat.log" 2>/dev/null; then
         echo "zygote no puede abrir $OVERLAY_PATH: todas las apps abortan" > "$STATE_DIR/abort-reason"
         log "DETECTADO: zygote no puede abrir $OVERLAY_PATH; reinicio sin overlay"
+        capture_probe
         sleep 3
         capture_stop_logcat
         sync
@@ -472,6 +473,45 @@ capture_start() {
     done
   ) </dev/null >/dev/null 2>&1 &
   echo $! > "$CAPTURE_DIR/sync.pid"
+}
+
+# Qué ve cada proceso importante del overlay y de /product. Se ejecuta justo al detectar el fallo de
+# zygote (antes de reiniciar), que es el único momento en que esa información existe: el arranque
+# siguiente va sin overlay. /proc/<pid>/root resuelve rutas en el espacio de montajes de ese proceso.
+capture_probe() {
+  out="$CAPTURE_DIR/probe.txt"
+  {
+    echo "Sonda de visibilidad del overlay: $(date '+%Y-%m-%d %H:%M:%S')"
+    echo "archivo esperado: $OVERLAY_PATH"
+    echo
+    echo "--- init (1)"
+    ls -l "/proc/1/root$OVERLAY_PATH" 2>&1
+    echo "--- montajes de /product en init"
+    grep -E ' /product( |/)' /proc/1/mountinfo 2>&1 | head -n 10
+    for name in zygote64 zygote system_server; do
+      for pid in $(pidof "$name" 2>/dev/null); do
+        echo
+        echo "--- $name ($pid)  ns: $(readlink /proc/$pid/ns/mnt 2>&1)  uid: $(awk '/^Uid:/{print $2}' /proc/$pid/status 2>/dev/null)"
+        echo "archivo visible: $(ls -l /proc/$pid/root$OVERLAY_PATH 2>&1)"
+        echo "directorio /product/overlay: $(ls /proc/$pid/root/product/overlay 2>&1 | tr '\n' ' ' | cut -c1-300)"
+        echo "montajes de /product:"
+        grep -E ' /product( |/)' /proc/$pid/mountinfo 2>&1 | head -n 10
+        echo "fds abiertos que mencionan el overlay:"
+        ls -l /proc/$pid/fd 2>/dev/null | grep -i -E 'NexusRecents|product/overlay' | head -n 10
+      done
+    done
+    echo
+    echo "--- ns de montajes distintos entre init y zygote64:"
+    zp=$(pidof zygote64 2>/dev/null | awk '{print $1}')
+    echo "init=$(readlink /proc/1/ns/mnt) zygote64=$(readlink /proc/$zp/ns/mnt 2>/dev/null)"
+    echo
+    echo "--- configuración de hybrid_mount"
+    cat /data/adb/hybrid-mount/config.toml 2>&1 | head -n 40
+    echo
+    echo "--- zygisk (módulos en /data/adb)"
+    ls /data/adb/neozygisk /data/adb/modules 2>&1 | head -n 40
+  } > "$out" 2>&1
+  return 0
 }
 
 # Para solo los procesos de registro (lo usa el temporizador, que no debe matarse a sí mismo).
@@ -499,7 +539,7 @@ capture_stop() {
 capture_keep() {
   rm -rf "$FAILED_DIR"
   mkdir -p "$FAILED_DIR" 2>/dev/null || return 0
-  cp "$CAPTURE_DIR"/logcat.log* "$CAPTURE_DIR/dmesg.log" "$CAPTURE_DIR/started" "$FAILED_DIR"/ 2>/dev/null
+  cp "$CAPTURE_DIR"/logcat.log* "$CAPTURE_DIR/dmesg.log" "$CAPTURE_DIR/started" "$CAPTURE_DIR/probe.txt" "$FAILED_DIR"/ 2>/dev/null
   if ls /sys/fs/pstore/* >/dev/null 2>&1; then
     mkdir -p "$FAILED_DIR/pstore"
     cp /sys/fs/pstore/* "$FAILED_DIR/pstore"/ 2>/dev/null
