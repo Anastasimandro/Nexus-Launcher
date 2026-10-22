@@ -285,7 +285,9 @@ android {
         }
 
         github {
-            applicationId 'app.nexus.launcher'
+            // NEXUS_APPLICATION_ID solo se usa en el experimento de sustituir el launcher de la ROM
+            // (.github/scripts/experiment-replace-rom.sh); las releases usan siempre app.nexus.launcher.
+            applicationId((System.getenv("NEXUS_APPLICATION_ID") ?: "").trim() ?: 'app.nexus.launcher')
             dimension "channel"
         }
 
