@@ -114,6 +114,11 @@ dsh pm uninstall-system-updates "$PKG" > "$out/uninstall-updates.txt"
   echo '<permissions>'
   echo "    <privapp-permissions package=\"$PKG\">"
   grep -vE '^\s*(#|$)' "$here/../../magisk-module/permissions/allow.txt" | sed -E 's/^\s*(\S+).*/        <permission name="\1"\/>/'
+  # Igual que el módulo real: lo que el APK pide, es privilegiado y no se concede se deniega explícitamente
+  # (si no, la ROM aborta el arranque: «Signature|privileged permissions not in privileged permission allowlist»).
+  for perm in android.permission.FORCE_STOP_PACKAGES android.permission.INTERACT_ACROSS_USERS android.permission.MANAGE_USERS; do
+    echo "        <deny-permission name=\"$perm\"/>"
+  done
   echo '    </privapp-permissions>'
   echo '</permissions>'
 } > "$out/privapp-permissions-experiment.xml"
