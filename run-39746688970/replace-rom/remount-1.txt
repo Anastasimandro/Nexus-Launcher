@@ -1,0 +1,11 @@
+Successfully disabled verity
+virtual bool android::fiemap::ImageManagerBinder::MapImageDevice(const std::string &, const std::chrono::milliseconds &, std::string *) binder returned: Failed to map
+[libfs_mgr] could not map scratch image
+Failed to allocate scratch on /data, fallback to use free space on super
+Using overlayfs for /system
+Using overlayfs for /vendor
+Using overlayfs for /product
+Using overlayfs for /system_dlkm
+Using overlayfs for /system_ext
+Verity disabled; overlayfs enabled.
+Now reboot your device for settings to take effect

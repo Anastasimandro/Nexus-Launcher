@@ -1,0 +1,150 @@
+10-22 08:31:38.109  3874  3874 D SystemServerTiming: OnBootPhase_520_com.android.server.pm.LauncherAppsService
+10-22 08:31:38.109  3874  3874 V SystemServerTiming: OnBootPhase_520_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 08:31:38.280  3874  3874 D SystemServerTiming: OnBootPhase_550_com.android.server.GestureLauncherService
+10-22 08:31:38.280  3874  3874 V SystemServerTiming: OnBootPhase_550_com.android.server.GestureLauncherService took to complete: 0ms
+10-22 08:31:38.283  3874  3874 D SystemServerTiming: OnBootPhase_550_com.android.server.pm.LauncherAppsService
+10-22 08:31:38.283  3874  3874 V SystemServerTiming: OnBootPhase_550_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 08:31:38.523  3874  3874 D SystemServerTiming: OnBootPhase_600_com.android.server.GestureLauncherService
+10-22 08:31:38.523  3874  3874 V SystemServerTiming: OnBootPhase_600_com.android.server.GestureLauncherService took to complete: 0ms
+10-22 08:31:38.531  3874  3874 D SystemServerTiming: OnBootPhase_600_com.android.server.pm.LauncherAppsService
+10-22 08:31:38.531  3874  3874 V SystemServerTiming: OnBootPhase_600_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 08:31:38.535  4184  4184 W BatteryControllerGoogle: java.lang.SecurityException: Failed to find provider com.google.android.flipendo.api for user 0; expected to find a valid ContentProvider for this authority
+10-22 08:31:38.601  3874  3874 D SystemServerTimingAsync: ssm.onStartUser-0_com.android.server.GestureLauncherService
+10-22 08:31:38.601  3874  3874 V SystemServerTimingAsync: ssm.onStartUser-0_com.android.server.GestureLauncherService took to complete: 0ms
+10-22 08:31:38.601  3874  3874 D SystemServerTimingAsync: ssm.onStartUser-0_com.android.server.pm.LauncherAppsService
+10-22 08:31:38.601  3874  3874 V SystemServerTimingAsync: ssm.onStartUser-0_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 08:31:39.148  3874  4379 D LauncherAppsService: Started watching for package broadcasts
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: disconnectFromLauncherService bound?: false currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: java.lang.Throwable
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.updateEnabledAndBinding(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:29)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.<init>(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:462)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get3(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:1309)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4566)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at dagger.internal.DelegateFactory.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get14(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:2584)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4511)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl$$ExternalSyntheticLambda1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:46)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.timeInitialization(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:27)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:232)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startSystemUserServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:69)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.systemui.SystemUIService.onCreate(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:9)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5644)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(ActivityThread.java:0)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2804)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-22 08:31:39.502  4184  4184 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-22 08:31:39.575  3874  3963 I ActivityManager: Start proc 4471:com.google.android.apps.nexuslauncher/u0a198 for bound-service {com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService}
+10-22 08:31:39.857  4471  4514 I NexusQuickstepProbe: sdk=37 passed=true missing=[] tolerated=[DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_ALTTAB_TRANSITIONS_BUGFIX, DesktopModeFlags.ENABLE_DESKTOP_APP_LAUNCH_TRANSITIONS_BUGFIX, DesktopModeFlags.ENABLE_DESKTOP_TRAMPOLINE_CLOSE_ANIMATION_BUGFIX, DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_EXIT_BY_MINIMIZE_TRANSITION_BUGFIX, DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_QUICK_SWITCH, DesktopModeFlags.ENABLE_DESKTOP_WINDOWING_TASKBAR_RUNNING_APPS, DesktopModeFlags.ENABLE_QUICKSWITCH_DESKTOP_SPLIT_BUGFIX, DesktopModeFlags.ENABLE_START_LAUNCH_TRANSITION_FROM_TASKBAR_BUGFIX, DesktopModeFlags.ENABLE_TASKBAR_RECENTS_LAYOUT_TRANSITION, DesktopExperienceFlags.ENABLE_DESKTOP_APP_LAUNCH_BUGFIX, DesktopExperienceFlags.ENABLE_DESKTOP_FIRST_FULLSCREEN_REFOCUS_BUGFIX, DesktopExperienceFlags.ENABLE_DESKTOP_WINDOWING_PIP, DesktopExperienceFlags.ENABLE_FREEFORM_DISPLAY_LAUNCH_PARAMS, DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_BACKEND, DesktopExperienceFlags.ENABLE_MULTIPLE_DESKTOPS_FRONTEND, DesktopExperienceFlags.ENABLE_PINNING_APP_WITH_CONTEXT_MENU, DesktopExperienceFlags.ENABLE_REJECT_HOME_TRANSITION, DesktopExperienceFlags.ENABLE_TASKBAR_RECENT_TASKS_THROTTLE_BUGFIX] denied=[]
+10-22 08:31:39.865  4471  4471 D TouchInteractionService: onCreate: user=0 instance=210572990
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: Attempting to log to ProtoLog before initializing it.
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: java.lang.IllegalStateException
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.util.QuickstepProtoLogGroup.isProtoLogInitialized(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:9)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.util.ActiveGestureProtoLogProxy.logCreateTouchRegionForDisplay(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:1)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.OrientationTouchTransformer.createRegionForDisplay(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:181)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.OrientationTouchTransformer.resetSwipeRegions(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:59)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.OrientationTouchTransformer.refreshTouchRegion(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:8)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.OrientationTouchTransformer.setNavigationMode(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:53)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.RotationTouchHelper.onDisplayInfoChanged(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:74)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.RotationTouchHelper.<init>(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:70)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.RotationTouchHelper_Factory.newInstance(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:3)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.RotationTouchHelper_Factory.get(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:25)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.RotationTouchHelper_Factory_Impl.create(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:3)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule.provideRotationTouchHandlerRepo(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:29)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRotationTouchHandlerRepoFactory.provideRotationTouchHandlerRepo(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:3)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRotationTouchHandlerRepoFactory.get(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:25)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRotationTouchHandlerRepoFactory.get(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:30)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at d81.get(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:14)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:19)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.PerDisplayRepositoriesModule_ProvideRecentsAnimationDeviceStateRepoFactory.get(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:30)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at d81.get(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:14)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.launcher3.dagger.DaggerLauncherAppComponent$LauncherAppComponentImpl.getRecentsAnimationDeviceStateRepository(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:3)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at o03.apply(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:36)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.launcher3.util.DaggerSingletonObject.get(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:7)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.quickstep.TouchInteractionService.onCreate(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:53)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5644)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(ActivityThread.java:0)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2804)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at android.os.Looper.loop(Looper.java:397)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at java.lang.reflect.Method.invoke(Native Method)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-22 08:31:39.918  4471  4471 W QuickstepProtoLogGroup: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-22 08:31:39.991  4471  4471 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: onNavigationModeChanged() instance=210572990
+10-22 08:31:39.999  4471  4471 D TouchInteractionService: onBind: user=0 instance=210572990
+10-22 08:31:40.259  4184  4184 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-22 08:31:40.310  4184  4184 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-22 08:31:40.725  4184  4184 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-22 08:31:41.423  3874  3897 D ActivityManagerTiming: OnBootPhase_1000_com.android.server.GestureLauncherService
+10-22 08:31:41.423  3874  3897 V ActivityManagerTiming: OnBootPhase_1000_com.android.server.GestureLauncherService took to complete: 0ms
+10-22 08:31:41.524  3874  3897 D ActivityManagerTiming: OnBootPhase_1000_com.android.server.pm.LauncherAppsService
+10-22 08:31:41.524  3874  3897 V ActivityManagerTiming: OnBootPhase_1000_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 08:31:42.611  4184  4184 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-22 08:31:42.959  3874  3962 D SystemServerTimingAsync: ssm.onUnlockingUser-0_com.android.server.GestureLauncherService
+10-22 08:31:42.959  3874  3962 V SystemServerTimingAsync: ssm.onUnlockingUser-0_com.android.server.GestureLauncherService took to complete: 0ms
+10-22 08:31:42.959  3874  3962 D SystemServerTimingAsync: ssm.onUnlockingUser-0_com.android.server.pm.LauncherAppsService
+10-22 08:31:42.959  3874  3962 V SystemServerTimingAsync: ssm.onUnlockingUser-0_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 08:31:43.801  3874  3962 D SystemServerTimingAsync: ssm.onUnlockedUser-0_com.android.server.GestureLauncherService
+10-22 08:31:43.801  3874  3962 V SystemServerTimingAsync: ssm.onUnlockedUser-0_com.android.server.GestureLauncherService took to complete: 0ms
+10-22 08:31:43.813  3874  3962 D SystemServerTimingAsync: ssm.onUnlockedUser-0_com.android.server.pm.LauncherAppsService
+10-22 08:31:43.813  3874  3962 V SystemServerTimingAsync: ssm.onUnlockedUser-0_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 08:31:45.185  4184  4184 D LauncherProxyService: Launcher proxy service connected
+10-22 08:31:45.189  4184  4184 D LauncherProxyService: LauncherProxyService connected, initializing launcher proxy
+10-22 08:31:45.238  4471  4471 D TouchInteractionService: disposeEventHandlers: Reason: Initializing input monitor due to: TISBinder#onInitialize() instance=210572990
+10-22 08:31:45.686  4184  4184 E BatteryInfoBroadcast: java.lang.SecurityException: Failed to find provider com.google.android.apps.turbo.estimated_time_remaining for user 0; expected to find a valid ContentProvider for this authority
+10-22 08:31:47.224  4184  4201 W Looper  : Slow delivery took 600ms wmshell.main app=com.android.systemui main=false group=FOREGROUND h=android.content.pm.LauncherApps$CallbackMessageHandler c=null m=8
+10-22 08:31:47.791  3874  4260 V ActivityTaskManager: TaskLaunchParamsModifier: phase=3 task=Task{70afa0d #7 type=home I=com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher} activity=ActivityRecord{25501495 u0 com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher t-1} display-area-token-from-option=DefaultTaskDisplayArea@184262952 display-id=0 task-display-area-windowing-mode=1 suggested-display-area=DefaultTaskDisplayArea@184262952 non-freeform-task-display-area display-area=DefaultTaskDisplayArea@184262952 skip-bounds-fullscreen
+10-22 08:31:47.792  3874  4260 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10000100 cmp=com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher (has extras)} with LAUNCH_SINGLE_TASK from uid 0 (BAL_ALLOW_ALLOWLISTED_UID) result code=0
+10-22 08:31:48.825  3874  5132 D SystemServerTimingAsync: ssm.onCompletedEventUser-0_{|Unlocked|}_com.android.server.GestureLauncherService
+10-22 08:31:48.825  3874  5132 V SystemServerTimingAsync: ssm.onCompletedEventUser-0_{|Unlocked|}_com.android.server.GestureLauncherService took to complete: 0ms
+10-22 08:31:48.825  3874  5132 D SystemServerTimingAsync: ssm.onCompletedEventUser-0_{|Unlocked|}_com.android.server.pm.LauncherAppsService
+10-22 08:31:48.825  3874  5132 V SystemServerTimingAsync: ssm.onCompletedEventUser-0_{|Unlocked|}_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 08:31:49.765  4650  4737 I LauncherIconVisibilityModule: LauncherIconVisibilityModule.updateLauncherIconVisibility():76 updateLauncherIconVisibility() : Visible = false
+10-22 08:31:51.531  4184  4258 W Looper  : Slow delivery took 1098ms SysUiBg app=com.android.systemui main=false group=FOREGROUND h=android.content.pm.LauncherApps$CallbackMessageHandler c=null m=8
+10-22 08:31:52.573  3874  3897 I BLASTSyncEngine: Unfinished container: Task{70afa0d #7 type=home I=com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher}
+10-22 08:31:52.573  3874  3897 I BLASTSyncEngine: Unfinished container: ActivityRecord{25501495 u0 com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher t7}
+10-22 08:31:52.637  3874  3894 V WindowManager:         {WCT{RemoteToken{20e5cd7 Task{70afa0d #7 type=home I=com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher}}} m=OPEN f=MOVE_TO_TOP|FLAG_CHANGED_INTERACTIVE leash=Surface(name=Task=7#81)/@0x203f12c sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1 winMode=1 userId=0},
+10-22 08:31:53.321  4471  4471 D IDP     : After initGrid:gridName:4_by_6, dbFile:launcher_6_4_4.db, LauncherPrefs GRID_NAME:4_by_6, LauncherPrefs DB_FILE:launcher_6_4_4.db
+10-22 08:31:53.909  3492  3492 I adbd    : adbd service requested 'shell,v2,raw:dumpsys activity services com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService'
+10-22 08:31:53.986  4471  4471 D BaseActivity: Launcher flags updated: [state_started] +[state_started]
+10-22 08:31:53.988  4471  4471 D BaseActivity: Launcher flags updated: [state_started|state_resumed|state_user_active] +[state_resumed|state_user_active]
+10-22 08:31:53.994  4471  4471 I NexusLaunchAnimator: Launcher reanudado (venía de una apertura de Nexus=false)
+10-22 08:31:54.004  4184  4201 D WindowManagerShell: setLauncherKeepClearAreaHeight: visible=false, height=599
+10-22 08:31:54.004  4184  4201 D WindowManagerShell: setLauncherKeepClearAreaHeight: visible=true, height=599
+10-22 08:31:54.047  4471  4471 D TouchInteractionService: onBind: user=0 instance=210572990
+10-22 08:31:54.058  4471  4471 D TouchInteractionService: onUserUnlocked: userId=0 instance=210572990
+10-22 08:31:54.458  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity}
+10-22 08:31:54.488  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail}
+10-22 08:31:54.522  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity}
+10-22 08:31:54.574  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.apps.messaging/com.google.android.apps.messaging.ui.ConversationListActivity}
+10-22 08:31:54.587  4471  4471 W Resources: 	at com.android.quickstep.TouchInteractionService.onUserUnlocked(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:126)
+10-22 08:31:54.620  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.dialer/com.google.android.dialer.extensions.GoogleDialtactsActivity}
+10-22 08:31:54.694  4471  4471 D BaseActivity: Launcher flags updated: [state_started|state_resumed|state_deferred_resumed|state_user_active] +[state_deferred_resumed]
+10-22 08:31:54.700  4471  4471 D WindowOnBackDispatcher: setTopOnBackInvokedCallback (unwrapped): com.android.launcher3.uioverrides.QuickstepLauncher$3@369a8c2
+10-22 08:31:54.701  3874  4376 D CoreBackPreview: Window{d3309a2 u0 com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@26b521b, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+10-22 08:31:54.706  3874  4376 D CoreBackPreview: Window{d3309a2 u0 com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@3e2f4f7, mPriority=0, mIsAnimationCallback=true, mOverrideBehavior=0}
+10-22 08:31:54.719  4471  4471 D VRI[LawnchairLauncher]: WindowInsets changed: 1080x2400 statusBars:[0,63,0,0] mandatorySystemGestures:[0,63,0,0] 
+10-22 08:31:54.736  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.android.settings/com.android.settings.Settings}
+10-22 08:31:54.760  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.android.chrome/com.google.android.apps.chrome.Main}
+10-22 08:31:54.777  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.apps.youtube.music/com.google.android.apps.youtube.music.activities.MusicActivity}
+10-22 08:31:54.795  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity}
+10-22 08:31:54.834  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity}
+10-22 08:31:54.847  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail}
+10-22 08:31:54.855  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.apps.maps/com.google.android.maps.MapsActivity}
+10-22 08:31:54.856  3874  4379 D WindowManager: setClientSurface Surface(name=VRI-com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher#91)/@0x883f9fb for d3309a2 com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher
+10-22 08:31:54.863  4471  4471 I Surface : Creating surface for consumer VRI[LawnchairLauncher]#0(BLAST Consumer)0 with slotExpansion=1 for 64 slots
+10-22 08:31:54.994  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.googlequicksearchbox/com.google.android.googlequicksearchbox.SearchActivity}
+10-22 08:31:55.050  4471  4506 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{com.google.android.apps.docs/com.google.android.apps.docs.app.NewMainProxyActivity}
