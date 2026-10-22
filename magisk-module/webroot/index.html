@@ -326,6 +326,16 @@
       </div>
 
       <div class="card">
+        <h2>La app y el módulo</h2>
+        <p class="small muted" style="margin:0 0 10px">
+          El módulo lleva dentro el APK de su misma versión. Al flashearlo, y en cada arranque, instala ese APK encima si la
+          app instalada es más antigua (actualización normal: conserva tus datos y nunca baja de versión).
+        </p>
+        <p class="small" style="margin:0 0 10px" id="apk-text">—</p>
+        <button class="btn" id="btn-sync-apk">Instalar ahora el APK del módulo</button>
+      </div>
+
+      <div class="card">
         <h2>Acciones</h2>
         <div class="stack">
           <button class="btn" id="btn-disable">Desactivar gestos de Nexus</button>
@@ -514,7 +524,8 @@
     'desactivado-auto': ['Desactivado por seguridad', 'bad', 'x'],
     'arranque-fallido': ['Arranque fallido', 'bad', 'x'],
     'verificado': ['Verificado', 'ok', 'check'],
-    'hybrid': ['Ajuste de hybrid_mount', 'info', 'info']
+    'hybrid': ['Ajuste de hybrid_mount', 'info', 'info'],
+    'apk': ['App de Nexus', 'info', 'check']
   };
 
   /* ---------- Estado derivado ---------- */
@@ -717,6 +728,7 @@
       $('btn-plan-a-off').disabled = !f.changed;
     }
     $('ver').textContent = S.module_version ? 'módulo v' + S.module_version : '';
+    $('apk-text').textContent = S.apk_sync ? 'Última comprobación: ' + S.apk_sync : 'Todavía no se ha comprobado en este arranque.';
   }
 
   function renderAll() { renderHome(); renderChecks(); renderRows(); renderHistory(); renderSettings(); }
@@ -868,6 +880,16 @@
   $('dlg-reboot-ok').addEventListener('click', function () {
     $('dlg-reboot').close();
     run('reboot').catch(function (e) { toast(e.message); });
+  });
+  $('btn-sync-apk').addEventListener('click', function () {
+    busy(true);
+    run(TOOL + ' sync-apk', 120000)
+      .then(function (r) {
+        show('action-out', out(r));
+        toast(r.code === 0 ? 'Nexus está al día con el módulo' : 'No se pudo actualizar');
+      })
+      .catch(function (e) { toast(e.message); })
+      .then(function () { busy(false); return refresh(); });
   });
   $('btn-plan-a-on').addEventListener('click', function () { planA(true); });
   $('btn-plan-a-off').addEventListener('click', function () { planA(false); });

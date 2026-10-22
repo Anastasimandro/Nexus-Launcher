@@ -49,6 +49,16 @@ set_perm "$MODPATH/service.sh" 0 0 0755
 set_perm "$MODPATH/uninstall.sh" 0 0 0755
 set_perm_recursive "$MODPATH/webroot" 0 0 0755 0644
 
+# Con Android en marcha (gestor de root, no recovery) se instala el APK del módulo ahora mismo, sin esperar
+# al reinicio: si la app instalada es más antigua queda actualizada. Es opcional: si falla, el módulo
+# reintenta en cada arranque (service.sh) y el APK de /product entra tras reiniciar.
+if command -v pm >/dev/null 2>&1 && pm path android >/dev/null 2>&1; then
+  ui_print "- Actualizando la app Nexus con el APK del módulo…"
+  NEXUS_MODDIR="$MODPATH" sh "$TOOL" sync-apk 2>&1 | while IFS= read -r line; do ui_print "  $line"; done
+else
+  ui_print "- Sin Android en marcha: la app se actualizará sola en el próximo arranque"
+fi
+
 ui_print "- Nexus pasará a ser app privilegiada de /product"
 ui_print "- Reinicia una vez para que Android lo registre"
 ui_print "- Después actualiza Nexus como siempre (APK normal):"

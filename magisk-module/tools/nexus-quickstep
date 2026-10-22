@@ -85,7 +85,7 @@ log() {
 }
 
 usage() {
-  say "Uso: nexus-quickstep status | enable [--force] [--umount-fix] | disable [--reboot] | bound | state | diag [--export] | logs | umount-fix on|restore|status | preflight | history"
+  say "Uso: nexus-quickstep status | enable [--force] [--umount-fix] | disable [--reboot] | bound | state | diag [--export] | logs | umount-fix on|restore|status | preflight | history | sync-apk [--wait]"
   exit "${1:-2}"
 }
 
@@ -264,6 +264,69 @@ hybrid_restore() {
   fi
 }
 
+# --- Mantener la app al día con el módulo ---
+# El módulo lleva dentro el APK de su misma versión (version y versionCode sincronizados). Con el
+# módulo flasheado, la app instalada puede quedarse en una versión anterior (Android decide con qué
+# copia arranca y a veces conserva la vieja). `sync-apk` instala el APK del módulo encima si la versión
+# instalada es MENOR o Nexus no está instalado: es una actualización normal (conserva los datos), solo
+# si la firma coincide. Nunca desinstala ni baja de versión. Lo llaman customize.sh (al flashear, si
+# Android está en marcha) y service.sh (en cada arranque, con --wait).
+bundled_apk() { echo "$MODDIR/system/product/priv-app/Nexus/Nexus.apk"; }
+bundled_version_code() { sed -n 's/^versionCode=//p' "$MODDIR/module.prop" 2>/dev/null | head -n 1; }
+
+do_sync_apk() {
+  need_root
+  apk=$(bundled_apk)
+  want=$(bundled_version_code)
+  [ -f "$apk" ] || die "el módulo no lleva el APK ($apk)."
+  [ -n "$want" ] || die "no se pudo leer el versionCode del módulo."
+  if [ "$1" = "--wait" ]; then
+    # Tras el arranque, a la espera de que el sistema responda (hasta ~5 min) y un respiro para que se asiente.
+    n=0
+    while [ "$n" -lt 100 ]; do
+      boot_completed && pm path android >/dev/null 2>&1 && break
+      n=$((n + 1)); sleep 3
+    done
+    [ "$n" -ge 100 ] && { echo "el sistema no respondió a tiempo" > "$STATE_DIR/apk-sync" 2>/dev/null; return 0; }
+    sleep "${NEXUS_SYNC_SETTLE:-20}"
+  fi
+  have=$(nexus_version_code)
+  if [ -n "$have" ] && [ "$have" -ge "$want" ] 2>/dev/null; then
+    say "Nexus ya está al día (instalado $have, módulo $want)."
+    mkdir -p "$STATE_DIR"; echo "al día: instalado $have, módulo $want" > "$STATE_DIR/apk-sync"
+    return 0
+  fi
+  say "Instalando el APK del módulo (instalado: ${have:-ninguno}, módulo: $want)…"
+  tmp="${NEXUS_TMP_DIR:-/data/local/tmp}/nexus-module.apk"
+  if ! cp "$apk" "$tmp" 2>/dev/null; then
+    mkdir -p "$STATE_DIR"; echo "no se pudo copiar el APK a /data/local/tmp" > "$STATE_DIR/apk-sync"
+    log "sync-apk: no se pudo copiar el APK"
+    die "no se pudo copiar el APK a /data/local/tmp."
+  fi
+  chmod 0644 "$tmp" 2>/dev/null
+  res=$(pm install -r "$tmp" 2>&1)
+  rm -f "$tmp"
+  mkdir -p "$STATE_DIR"
+  case "$res" in
+    *Success*)
+      echo "actualizado de ${have:-nada} a $want" > "$STATE_DIR/apk-sync"
+      log "sync-apk: instalado el APK del módulo ($want) sobre ${have:-nada}"
+      hist apk "actualizado de ${have:-nada} a $want"
+      say "Nexus actualizado a la versión del módulo ($want)."
+      ;;
+    *)
+      echo "falló: $(echo "$res" | tr '\n' ' ' | cut -c1-200)" > "$STATE_DIR/apk-sync"
+      log "sync-apk: pm install falló: $res"
+      hist apk "no se pudo actualizar: $(echo "$res" | tr '\n' ' ' | cut -c1-120)"
+      say "No se pudo instalar el APK del módulo: $res"
+      case "$res" in
+        *INCOMPATIBLE* | *signature*) say "La app instalada está firmada con otra clave. Desinstálala a mano (perderías sus datos) o instala el APK de la release encima." ;;
+      esac
+      return 1
+      ;;
+  esac
+}
+
 # --- Historial de intentos ---
 # Una línea por suceso en history.log, que el WebUI muestra como cronología. Durante el arranque temprano
 # (post-fs-data) el reloj aún no está ajustado y la fecha sale 1970: el WebUI lo trata como "al arrancar".
@@ -360,6 +423,15 @@ do_preflight() {
     pf overlayapk ok "El módulo lleva el overlay" "overlay-static/NexusRecentsOverlay.apk"
   else
     pf overlayapk bad "Falta el overlay en el módulo" "Reflashea el módulo."
+  fi
+
+  want=$(bundled_version_code); have=$(nexus_version_code)
+  if [ -z "$have" ]; then
+    pf apk warn "Nexus no está instalado" "El módulo lleva la versión $want. Se instala solo en el próximo arranque, o desde Ajustes."
+  elif [ -n "$want" ] && [ "$have" -lt "$want" ] 2>/dev/null; then
+    pf apk warn "La app es más antigua que la del módulo" "Instalada $have, módulo $want. $(cat "$STATE_DIR/apk-sync" 2>/dev/null)"
+  else
+    pf apk ok "La app está al día con el módulo" "instalada $have, módulo ${want:-?}"
   fi
 
   if [ -r "$PROBE_FILE" ]; then
@@ -848,6 +920,8 @@ show_state() {
   kv nexus_in_product "$([ -f "$PRODUCT_DIR/priv-app/Nexus/Nexus.apk" ] && echo 1 || echo 0)"
   kv probe_passed "$(probe_value passed)"
   kv probe_denied "$(probe_value denied)"
+  kv apk_bundled "$(bundled_version_code)"
+  kv apk_sync "$(cat "$STATE_DIR/apk-sync" 2>/dev/null | tr '\n' ' ')"
   kv hybrid_umount "$(hybrid_value)"
   kv hybrid_changed "$([ -f "$HYBRID_MARK" ] && echo 1 || echo 0)"
   kv plan_a_failed "$([ -f "$STATE_DIR/plan-a-failed" ] && echo 1 || echo 0)"
@@ -967,6 +1041,7 @@ case "$1" in
   enable) shift; do_enable "$@" ;;
   umount-fix) do_umount_fix "$2" ;;
   preflight) do_preflight ;;
+  sync-apk) do_sync_apk "$2" ;;
   history) do_history ;;
   hist-add) need_root; hist "$2" "$3" ;;
   disable) do_disable "$2" ;;

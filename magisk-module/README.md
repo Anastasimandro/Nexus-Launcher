@@ -20,6 +20,10 @@ webroot/index.html                                       WebUI (KernelSU, APatch
 system/bin/nexus-quickstep                               pide, quita y comprueba el overlay
 ```
 
+## La app se actualiza con el módulo
+
+El módulo lleva dentro el APK de su misma versión. Al flashearlo (si Android está en marcha, desde el gestor de root) y en cada arranque, `nexus-quickstep sync-apk` compara el `versionCode` instalado con el del módulo y, si el instalado es **menor** o no hay app, instala el APK del módulo encima con `pm install -r`. Es una actualización normal: conserva los datos y los ajustes, nunca baja de versión ni desinstala. Si la firma no coincide (otra clave), no toca nada y lo dice en el informe y en el WebUI (Ajustes → «La app y el módulo»). Flashear desde recovery no puede instalar en ese momento: lo hace solo en el primer arranque.
+
 ## WebUI
 
 Cuatro pestañas: **Inicio** (qué pasa y un botón con lo que conviene hacer, los tres pasos pedir → reiniciar → verificar), **Comprobar** (comprobaciones previas con semáforo y una recomendación), **Registros** (historial de intentos, informe, copia a `Nexus-Logs`) y **Ajustes** (plan A, plan B, desactivar, reiniciar). Por debajo usa estos comandos, que también valen en terminal: `nexus-quickstep state | preflight | history | diag | logs`.
