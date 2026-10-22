@@ -1,0 +1,6 @@
+/system_ext/priv-app/NexusLauncherRelease:
+total 17390
+drwxr-xr-x 1 root root u:object_r:system_file:s0      3452 2026-10-22 06:43 .
+drwxr-xr-x 1 root root u:object_r:system_file:s0      3452 2026-10-22 06:43 ..
+-rw-r--r-- 1 root root u:object_r:system_file:s0  17767160 2026-10-22 06:40 NexusLauncherRelease.apk
+-rw-r--r-- 1 root root u:object_r:system_file:s0     10410 2026-10-12 05:23 NexusLauncherRelease.apk.prof

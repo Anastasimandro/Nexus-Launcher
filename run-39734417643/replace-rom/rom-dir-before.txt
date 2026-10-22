@@ -1,0 +1,21 @@
+/system_ext/priv-app/NexusLauncherRelease:
+total 16828
+drwxr-xr-x  3 root root u:object_r:system_file:s0      4096 2026-10-12 05:32 .
+drwxr-xr-x 18 root root u:object_r:system_file:s0      4096 2026-10-12 05:32 ..
+-rw-r--r--  1 root root u:object_r:system_file:s0  17212643 2026-10-12 05:23 NexusLauncherRelease.apk
+-rw-r--r--  1 root root u:object_r:system_file:s0     10410 2026-10-12 05:23 NexusLauncherRelease.apk.prof
+drwxr-xr-x  3 root root u:object_r:system_file:s0      4096 2026-10-12 05:32 oat
+
+/system_ext/priv-app/NexusLauncherRelease/oat:
+total 12
+drwxr-xr-x 3 root root u:object_r:system_file:s0  4096 2026-10-12 05:32 .
+drwxr-xr-x 3 root root u:object_r:system_file:s0  4096 2026-10-12 05:32 ..
+drwxr-xr-x 2 root root u:object_r:system_file:s0  4096 2026-10-12 05:32 x86_64
+
+/system_ext/priv-app/NexusLauncherRelease/oat/x86_64:
+total 5408
+drwxr-xr-x 2 root root u:object_r:system_file:s0     4096 2026-10-12 05:32 .
+drwxr-xr-x 3 root root u:object_r:system_file:s0     4096 2026-10-12 05:32 ..
+-rw-r--r-- 1 root root u:object_r:system_file:s0  1254464 2026-10-12 05:23 NexusLauncherRelease.art
+-rw-r--r-- 1 root root u:object_r:system_file:s0  3964744 2026-10-12 05:23 NexusLauncherRelease.odex
+-rw-r--r-- 1 root root u:object_r:system_file:s0   311644 2026-10-12 05:23 NexusLauncherRelease.vdex

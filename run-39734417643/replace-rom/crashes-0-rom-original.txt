@@ -1,0 +1,2 @@
+10-22 06:43:42.985  1014  1075 E AndroidRuntime: FATAL EXCEPTION: UiThreadHelper
+10-22 06:43:42.985  1014  1075 E AndroidRuntime: Process: com.google.android.apps.nexuslauncher, PID: 1014
