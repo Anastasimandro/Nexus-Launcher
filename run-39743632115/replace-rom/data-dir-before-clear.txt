@@ -1,0 +1,8 @@
+total 68
+drwx------   7 u0_a198 u0_a198       u:object_r:privapp_data_file:s0:c512,c768   4096 2026-10-22 08:01 .
+drwxrwx--x 265 system  system        u:object_r:system_data_file:s0:c512,c768   16384 2026-10-22 08:00 ..
+drwxrws--x   2 u0_a198 u0_a198_cache u:object_r:privapp_data_file:s0:c512,c768   4096 2026-10-22 08:00 cache
+drwxrws--x   2 u0_a198 u0_a198_cache u:object_r:privapp_data_file:s0:c512,c768   4096 2026-10-22 08:00 code_cache
+drwxrwx--x   2 u0_a198 u0_a198       u:object_r:privapp_data_file:s0:c512,c768   4096 2026-10-22 08:01 databases
+drwxrwx--x   2 u0_a198 u0_a198       u:object_r:privapp_data_file:s0:c512,c768   4096 2026-10-22 08:01 files
+drwxrwx--x   2 u0_a198 u0_a198       u:object_r:privapp_data_file:s0:c512,c768   4096 2026-10-22 08:01 shared_prefs

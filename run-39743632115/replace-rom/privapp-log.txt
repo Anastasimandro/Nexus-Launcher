@@ -1,0 +1,27 @@
+10-22 08:04:10.114   636   652 I SystemConfig: Reading permissions from /system/etc/permissions/privapp-permissions-platform.xml
+10-22 08:04:10.119   636   652 I SystemConfig: Reading permissions from /system/etc/permissions/privapp-permissions-google.xml
+10-22 08:04:10.231   636   652 I SystemConfig: Reading permissions from /product/etc/permissions/privapp-permissions-google-p.xml
+10-22 08:04:10.243   636   652 I SystemConfig: Reading permissions from /product/etc/permissions/privapp-permissions-goldfish.xml
+10-22 08:04:10.243   636   652 I SystemConfig: Reading permissions from /product/etc/permissions/privapp-permissions-google-spoon.xml
+10-22 08:04:10.244   636   652 I SystemConfig: Reading permissions from /product/etc/permissions/velvet_app-privapp-permissions.xml
+10-22 08:04:10.244   636   652 I SystemConfig: Reading permissions from /product/etc/permissions/privapp-permissions-sdk-google.xml
+10-22 08:04:10.259   636   652 I SystemConfig: Reading permissions from /product/etc/permissions/privapp-permissions-google-pearl.xml
+10-22 08:04:10.269   636   652 I SystemConfig: Reading permissions from /system_ext/etc/permissions/privapp-permissions-google-se.xml
+10-22 08:04:10.274   636   652 I SystemConfig: Reading permissions from /system_ext/etc/permissions/privapp-permissions-nexus-experiment.xml
+10-22 08:04:10.279   636   652 I SystemConfig: Reading permissions from /apex/com.android.telephonycore/etc/permissions/privapp_allowlist_com.google.android.telecomui.xml
+10-22 08:04:10.281   636   652 I SystemConfig: Reading permissions from /apex/com.android.permission/etc/permissions/privapp_allowlist_com.google.android.permissioncontroller.xml
+10-22 08:04:10.285   636   652 I SystemConfig: Reading permissions from /apex/com.android.extservices/etc/permissions/privapp_allowlist_com.google.android.ext.services.xml
+10-22 08:04:10.287   636   652 I SystemConfig: Reading permissions from /apex/com.android.mediaprovider/etc/permissions/privapp_allowlist_com.google.android.providers.media.module.xml
+10-22 08:04:10.288   636   652 I SystemConfig: Reading permissions from /apex/com.android.mediaprovider/etc/permissions/privapp_allowlist_com.google.android.photopicker.xml
+10-22 08:04:10.291   636   652 I SystemConfig: Reading permissions from /apex/com.android.adservices/etc/permissions/privapp_allowlist_com.google.android.adservices.api.xml
+10-22 08:04:10.294   636   652 I SystemConfig: Reading permissions from /apex/com.android.nfcservices/etc/permissions/privapp_allowlist_com.google.android.nfc.xml
+10-22 08:04:10.295   636   652 I SystemConfig: Reading permissions from /apex/com.android.nfcservices/etc/permissions/privapp_allowlist_com.android.nfc.xml
+10-22 08:04:10.296   636   652 I SystemConfig: Reading permissions from /apex/com.android.bt/etc/permissions/privapp_allowlist_com.google.android.bluetooth.xml
+10-22 08:04:10.299   636   652 I SystemConfig: Reading permissions from /apex/com.android.cellbroadcast/etc/permissions/privapp_allowlist_com.google.android.cellbroadcastreceiver.xml
+10-22 08:04:10.299   636   652 I SystemConfig: Reading permissions from /apex/com.android.cellbroadcast/etc/permissions/privapp_allowlist_com.google.android.cellbroadcastservice.xml
+10-22 08:04:10.301   636   652 I SystemConfig: Reading permissions from /apex/com.android.tethering/etc/permissions/privapp_allowlist_com.google.android.networkstack.tethering.xml
+10-22 08:04:10.303   636   652 I SystemConfig: Reading permissions from /apex/com.android.healthfitness/etc/permissions/privapp_allowlist_com.google.android.healthconnect.controller.xml
+10-22 08:04:10.309   636   652 I SystemConfig: Reading permissions from /apex/com.google.android.gmssystem/etc/permissions/privapp_allowlist_com.google.android.gmssystem.xml
+10-22 08:04:10.311   636   652 I SystemConfig: Reading permissions from /apex/com.android.webapp/etc/permissions/privapp_allowlist_com.google.android.webapp.service.xml
+10-22 08:05:07.310  3062  3062 I adbd    : adbd service requested 'shell,v2,raw:getprop | grep -E 'ro.build.version|control_privapp''
+10-22 08:05:07.337  3062  3062 I adbd    : adbd service requested 'shell,v2,raw:logcat -d | grep -iE 'privileged permission|not in the allowlist|privapp''
