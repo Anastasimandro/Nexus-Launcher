@@ -95,6 +95,16 @@ Protocolo de prueba en el dispositivo (gestos, cancelaciones, Atrás, Recientes,
 - Los gestos del sistema en Nexus (overlay de recientes) **no están probados en un dispositivo real**, ni que en Android 17 el resto de Quickstep funcione más allá de lo comprobado. Tampoco existe un permiso `BIND_QUICKSTEP_SERVICE`: el servicio de Quickstep exige `STATUS_BAR_SERVICE` a quien se enlaza (SystemUI).
 - Requiere Android 14 (API 34) o superior y una partición `/product`.
 
+## Plan A: ajuste de hybrid_mount (`--umount-fix`)
+
+Con KernelSU + hybrid_mount + NeoZygisk el overlay estático hacía abortar a zygote («Failed open(/product/overlay/NexusRecentsOverlay.apk)»): la ocultación de root le quita el montaje del módulo y no puede reabrir el APK. `nexus-quickstep enable --umount-fix` (en el WebUI, casilla «Plan A» del diálogo de activar) pone `disable_umount = true` en `/data/adb/hybrid-mount/config.toml`, que es la solución que se cita en Hybrid-Mount/meta-hybrid_mount#497 para este mismo fallo.
+
+- **No está demostrado que baste en este móvil.** Es una prueba; en el emulador no existe esa pila de root.
+- Guarda una copia exacta del archivo; solo añade o cambia esa línea (antes de la primera tabla `[...]`) y comprueba el resultado antes de escribirlo. hybrid_mount rechaza el archivo entero si hay claves duplicadas.
+- Si el overlay se desactiva por un fallo (vigilante, arranque que no termina), se restaura sola la configuración original. Manual: `nexus-quickstep umount-fix restore` o el botón del WebUI.
+- Coste: hybrid_mount deja de ocultar los montajes del módulo a las apps, lo que puede afectar a Play Integrity o a apps que detectan root.
+- Plan B (si esto no basta): Nexus con el nombre de paquete del launcher de la ROM, ver `NEXUS-RECIENTES-MISMO-PAQUETE.md` en el proyecto.
+
 ## Si algo no va
 
 - `systemPrivileges: alternativo, … motivo=…` en el informe de errores dice por qué Nexus usa el modo alternativo (app normal, permiso sin conceder, o rechazo del sistema).

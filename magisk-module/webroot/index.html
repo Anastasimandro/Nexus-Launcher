@@ -45,6 +45,7 @@
   dt { color: var(--muted); }
   dd { margin: 0; text-align: right; font-weight: 500; overflow-wrap: anywhere; }
   .y { color: var(--ok); } .n { color: var(--bad); } .q { color: var(--muted); }
+  [hidden] { display: none !important; }
   .actions { display: grid; gap: 10px; }
   .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   button {
@@ -98,6 +99,7 @@
         <button class="danger" id="btn-reboot">Reiniciar</button>
       </div>
       <button id="btn-refresh">Actualizar estado</button>
+      <button id="btn-restore-hybrid" hidden>Restaurar la configuración original de hybrid_mount</button>
     </div>
     <p class="hint">
       El cambio se aplica al reiniciar. Si el arranque falla, el módulo lo detecta: si el móvil se cuelga lo reinicia
@@ -133,6 +135,10 @@
   <label class="check">
     <input type="checkbox" id="chk-force">
     <span>Forzar: necesario tras un arranque fallido, o si Nexus aún no ha comprobado la compatibilidad.</span>
+  </label>
+  <label class="check" id="lbl-umount">
+    <input type="checkbox" id="chk-umount" checked>
+    <span>Plan A: ajustar hybrid_mount (<code>disable_umount = true</code>) para que zygote no pierda el montaje del overlay. Es la causa probable del arranque fallido con hybrid_mount + NeoZygisk. Se guarda una copia y se restaura sola si falla; debilita un poco la ocultación de root.</span>
   </label>
   <div class="pair">
     <button id="dlg-cancel">Cancelar</button>
@@ -224,6 +230,8 @@
 
   function render(s) {
     $('ver').textContent = s.module_version ? 'v' + s.module_version : '';
+    hasHybrid = !!s.hybrid_umount && s.hybrid_umount !== 'sin-config';
+    $('btn-restore-hybrid').hidden = s.hybrid_changed !== '1';
     var enabled = s.enabled === '1';
     var effective = s.effective === '1';
     var bound = s.bound === '1';
@@ -260,10 +268,16 @@
     a = s.probe_passed ? yn(s.probe_passed === 'true' ? '1' : '0', 'Compatible', 'No compatible') : ['q', 'Abre Nexus una vez'];
     rows.appendChild(row('Comprobación de Nexus', a[0], a[1]));
     if (s.probe_denied) { rows.appendChild(row('Permisos sin conceder', 'n', s.probe_denied)); }
+    if (s.hybrid_umount && s.hybrid_umount !== 'sin-config') {
+      var changed = s.hybrid_changed === '1';
+      rows.appendChild(row('hybrid_mount: disable_umount', s.hybrid_umount === 'true' ? 'y' : 'q',
+        s.hybrid_umount + (changed ? ' (cambiado por Nexus)' : '')));
+    }
     var failed = s.failed_boot && s.failed_boot !== '0';
     rows.appendChild(row('Registro de un arranque fallido', failed ? 'n' : 'q', failed ? s.failed_boot : 'No hay'));
   }
 
+  var hasHybrid = false;
   function busy(on) { $('app').classList.toggle('busy', on); }
 
   function refresh() {
@@ -292,14 +306,17 @@
 
   $('btn-enable').addEventListener('click', function () {
     $('chk-force').checked = false;
+    $('lbl-umount').hidden = !hasHybrid;
+    $('chk-umount').checked = hasHybrid;
     $('dlg-enable').showModal();
   });
   $('dlg-cancel').addEventListener('click', function () { $('dlg-enable').close(); });
   $('dlg-ok').addEventListener('click', function () {
     var force = $('chk-force').checked;
+    var fix = hasHybrid && $('chk-umount').checked;
     $('dlg-enable').close();
     busy(true);
-    run(TOOL + ' enable' + (force ? ' --force' : ''))
+    run(TOOL + ' enable' + (force ? ' --force' : '') + (fix ? ' --umount-fix' : ''))
       .then(function (r) {
         show('action-out', cmdOutput(r));
         if (r.code === 0) {
@@ -317,6 +334,17 @@
       .then(function (r) {
         show('action-out', cmdOutput(r));
         if (r.code === 0) { askReboot('Se desactiva en el próximo arranque. ¿Reiniciar ahora para volver al launcher de serie?'); }
+      })
+      .catch(function (e) { show('action-out', e.message); })
+      .then(function () { busy(false); return refresh(); });
+  });
+
+  $('btn-restore-hybrid').addEventListener('click', function () {
+    busy(true);
+    run(TOOL + ' umount-fix restore')
+      .then(function (r) {
+        show('action-out', cmdOutput(r));
+        if (r.code === 0) { askReboot('hybrid_mount vuelve a su configuración al reiniciar. ¿Reiniciar ahora?'); }
       })
       .catch(function (e) { show('action-out', e.message); })
       .then(function () { busy(false); return refresh(); });

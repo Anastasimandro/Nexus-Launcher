@@ -37,6 +37,8 @@ if [ -f "$STATE/booting" ]; then
   # Se conserva el registro del arranque que no terminó antes de que nada lo borre.
   [ -f "$TOOL" ] && sh "$TOOL" capture keep >/dev/null 2>&1
   rm -f "$STATE/enabled" "$STATE/booting"
+  # Si el overlay se probó con el ajuste de hybrid_mount (disable_umount) y no arrancó, se deja como estaba.
+  [ -f "$STATE/hybrid-changed" ] && [ -f "$TOOL" ] && sh "$TOOL" umount-fix restore >/dev/null 2>&1
   # Sin fecha: en este punto del arranque el reloj aún no está ajustado (sale 1970).
   reason=$(cat "$STATE/abort-reason" 2>/dev/null)
   echo "el arranque anterior con el overlay no terminó${reason:+ ($reason)}" > "$STATE/tripped"

@@ -6,6 +6,9 @@
 #   nexus-quickstep enable [--force]  pide aplicar el overlay en el próximo arranque (hay que reiniciar)
 #   nexus-quickstep disable [--reboot]
 #                                     deja de aplicarlo (efectivo al reiniciar; --reboot reinicia ya)
+#   nexus-quickstep enable --umount-fix  además pone disable_umount = true en hybrid_mount (con copia;
+#                                     se restaura si el overlay falla). Ver hybrid_apply
+#   nexus-quickstep umount-fix on|restore|status   solo ese ajuste de hybrid_mount
 #   nexus-quickstep bound             ¿está SystemUI enlazado al servicio de Quickstep de Nexus?
 #   nexus-quickstep guard             lo ejecuta el módulo en cada arranque (ver service.sh)
 #   nexus-quickstep state             estado en líneas clave=valor (lo lee el WebUI del módulo)
@@ -63,6 +66,10 @@ EXPORT_DIR="${NEXUS_EXPORT_DIR:-/storage/emulated/0/Download}"
 # los registros se guardan en STATE_DIR y se copian aquí en cuanto se pueda.
 LOGS_DIR="${NEXUS_LOGS_DIR:-/storage/emulated/0/Nexus-Logs}"
 SDCARD_READY="${NEXUS_SDCARD_READY:-/storage/emulated/0/Android}"
+# Ajuste opcional de hybrid_mount (metamódulo de KernelSU): ver hybrid_apply.
+HYBRID_CONFIG="${NEXUS_HYBRID_CONFIG:-/data/adb/hybrid-mount/config.toml}"
+HYBRID_BACKUP="$STATE_DIR/hybrid-config.orig"
+HYBRID_MARK="$STATE_DIR/hybrid-changed"
 
 say() { echo "$*"; }
 die() { echo "nexus-quickstep: $*" >&2; exit 1; }
@@ -73,7 +80,7 @@ log() {
 }
 
 usage() {
-  say "Uso: nexus-quickstep status | enable [--force] | disable [--reboot] | bound | state | diag [--export] | logs"
+  say "Uso: nexus-quickstep status | enable [--force] [--umount-fix] | disable [--reboot] | bound | state | diag [--export] | logs | umount-fix on|restore|status"
   exit "${1:-2}"
 }
 
@@ -191,10 +198,90 @@ show_status() {
   say "Los cambios solo se aplican al reiniciar."
 }
 
+# --- Ajuste de hybrid_mount: disable_umount = true ---
+# Con hybrid_mount (y NeoZygisk) el overlay estático de recientes hacía abortar a zygote: la
+# ocultación de root le quitaba el montaje del módulo y no podía reabrir el APK del overlay. En
+# hybrid_mount, `disable_umount = true` hace que no oculte los montajes del módulo a las apps (lo
+# citan como solución en Hybrid-Mount/meta-hybrid_mount#497). Es una PRUEBA: no está demostrado que
+# baste en este móvil, y debilita un poco la ocultación de root (Play Integrity).
+# Se guarda una copia exacta del archivo; si el overlay se desactiva por un fallo se restaura sola.
+hybrid_value() {
+  [ -f "$HYBRID_CONFIG" ] || { echo "sin-config"; return; }
+  v=$(sed -n 's/^[[:space:]]*disable_umount[[:space:]]*=[[:space:]]*\([a-z]*\).*/\1/p' "$HYBRID_CONFIG" | head -n 1)
+  echo "${v:-ausente}"
+}
+
+hybrid_apply() {
+  [ -f "$HYBRID_CONFIG" ] || die "no hay $HYBRID_CONFIG: este móvil no usa hybrid_mount, el ajuste no aplica."
+  if [ "$(hybrid_value)" = "true" ]; then
+    say "hybrid_mount: disable_umount ya estaba en true; no se toca."
+    return 0
+  fi
+  mkdir -p "$STATE_DIR"
+  [ -f "$HYBRID_BACKUP" ] || cp "$HYBRID_CONFIG" "$HYBRID_BACKUP" || die "no se pudo guardar la copia de $HYBRID_CONFIG."
+  tmp="$STATE_DIR/hybrid-config.new"
+  if grep -qE '^[[:space:]]*disable_umount[[:space:]]*=' "$HYBRID_CONFIG"; then
+    sed 's/^[[:space:]]*disable_umount[[:space:]]*=.*/disable_umount = true/' "$HYBRID_CONFIG" > "$tmp"
+  else
+    # Una clave suelta tiene que ir antes de la primera tabla ([...]); si no hay tablas, al final.
+    n=$(grep -n '^\[' "$HYBRID_CONFIG" | head -n 1 | cut -d: -f1)
+    if [ -n "$n" ]; then
+      { head -n "$((n - 1))" "$HYBRID_CONFIG"; echo "disable_umount = true"; tail -n "+$n" "$HYBRID_CONFIG"; } > "$tmp"
+    else
+      # (si el archivo no acaba en salto de línea, se añade antes de la clave nueva)
+      { cat "$HYBRID_CONFIG"; [ -n "$(tail -c 1 "$HYBRID_CONFIG")" ] && echo; echo "disable_umount = true"; } > "$tmp"
+    fi
+  fi
+  # hybrid_mount rechaza el archivo entero si hay claves duplicadas o mal formadas: se comprueba antes de escribir.
+  if [ "$(grep -cE '^[[:space:]]*disable_umount[[:space:]]*=' "$tmp")" != "1" ] || ! grep -qxE 'disable_umount = true' "$tmp"; then
+    rm -f "$tmp"
+    die "no se pudo preparar el cambio en $HYBRID_CONFIG (no se ha tocado nada)."
+  fi
+  # `cat >` conserva propietario, permisos y contexto SELinux del archivo.
+  cat "$tmp" > "$HYBRID_CONFIG" || { rm -f "$tmp"; hybrid_restore quiet; die "no se pudo escribir $HYBRID_CONFIG."; }
+  rm -f "$tmp"
+  date '+%Y-%m-%d %H:%M:%S' > "$HYBRID_MARK"
+  log "hybrid_mount: disable_umount = true (copia en $HYBRID_BACKUP)"
+  say "hybrid_mount: disable_umount = true. Copia del original guardada; se restaura sola si el overlay falla."
+}
+
+hybrid_restore() {
+  [ -f "$HYBRID_BACKUP" ] || { [ "$1" = "quiet" ] || say "hybrid_mount: no hay ajuste de Nexus que restaurar."; rm -f "$HYBRID_MARK"; return 0; }
+  if cat "$HYBRID_BACKUP" > "$HYBRID_CONFIG"; then
+    rm -f "$HYBRID_BACKUP" "$HYBRID_MARK"
+    log "hybrid_mount: configuración original restaurada"
+    [ "$1" = "quiet" ] || say "hybrid_mount: configuración original restaurada (surte efecto al reiniciar)."
+  else
+    log "hybrid_mount: NO se pudo restaurar $HYBRID_CONFIG (copia en $HYBRID_BACKUP)"
+    [ "$1" = "quiet" ] || say "No se pudo restaurar. La copia original está en $HYBRID_BACKUP."
+  fi
+}
+
+do_umount_fix() {
+  need_root
+  case "$1" in
+    on) hybrid_apply; say "Reinicia para que hybrid_mount lo lea." ;;
+    restore) hybrid_restore ;;
+    status | "")
+      say "hybrid_mount config: $([ -f "$HYBRID_CONFIG" ] && echo "$HYBRID_CONFIG" || echo "no encontrada")"
+      say "disable_umount: $(hybrid_value)"
+      [ -f "$HYBRID_MARK" ] && say "Cambiado por Nexus el $(cat "$HYBRID_MARK") (copia original en $HYBRID_BACKUP)"
+      ;;
+    *) usage 2 ;;
+  esac
+}
+
 do_enable() {
   force=0
-  [ "$1" = "--force" ] && force=1
+  umount_fix=0
+  for arg in "$@"; do
+    case "$arg" in
+      --force) force=1 ;;
+      --umount-fix) umount_fix=1 ;;
+    esac
+  done
   need_root
+  [ "$umount_fix" = "1" ] && [ ! -f "$HYBRID_CONFIG" ] && die "no hay $HYBRID_CONFIG: este móvil no usa hybrid_mount, --umount-fix no aplica."
   [ -f "$MODDIR/overlay-static/NexusRecentsOverlay.apk" ] || die "el módulo no lleva el overlay: reflashea el módulo y reinicia."
   [ -f "$MODDIR/disable" ] && die "el módulo está desactivado en el gestor (archivo disable)."
   # Con un overlay/config/config.xml en /product los overlays estáticos de esa partición que no
@@ -216,6 +303,7 @@ do_enable() {
     fi
   fi
   mkdir -p "$STATE_DIR"
+  [ "$umount_fix" = "1" ] && hybrid_apply
   rm -f "$STATE_DIR/tripped" "$STATE_DIR/tripped.meta" "$STATE_DIR/healthy" "$STATE_DIR/booting"
   echo "$(date '+%Y-%m-%d %H:%M:%S') version=$version" > "$STATE_DIR/enabled"
   say "Overlay pedido. REINICIA para que el sistema lo aplique en el arranque."
@@ -260,6 +348,7 @@ trip() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') $reason" > "$STATE_DIR/tripped"
   echo "version=$(nexus_version_code)" > "$STATE_DIR/tripped.meta"
   rm -f "$STATE_DIR/enabled" "$STATE_DIR/booting" "$STATE_DIR/healthy"
+  hybrid_restore quiet
   capture_stop
   logs_sync
   if [ "${NEXUS_GUARD_NO_REBOOT:-0}" = "1" ]; then
@@ -586,6 +675,8 @@ show_state() {
   kv nexus_in_product "$([ -f /product/priv-app/Nexus/Nexus.apk ] && echo 1 || echo 0)"
   kv probe_passed "$(probe_value passed)"
   kv probe_denied "$(probe_value denied)"
+  kv hybrid_umount "$(hybrid_value)"
+  kv hybrid_changed "$([ -f "$HYBRID_MARK" ] && echo 1 || echo 0)"
 }
 
 section() { echo; echo "=== $1 ==="; }
@@ -699,7 +790,8 @@ do_diag() {
 
 case "$1" in
   status) show_status ;;
-  enable) do_enable "$2" ;;
+  enable) shift; do_enable "$@" ;;
+  umount-fix) do_umount_fix "$2" ;;
   disable) do_disable "$2" ;;
   bound) do_bound ;;
   state) need_root; show_state ;;
