@@ -194,6 +194,8 @@ jobs:
           fi
           unzip -l "$zip" post-fs-data.sh >/dev/null 2>&1 \
             || fail "El módulo no lleva post-fs-data.sh."
+          unzip -l "$zip" uninstall.sh >/dev/null 2>&1 \
+            || fail "El módulo no lleva uninstall.sh."
           unzip -l "$zip" webroot/index.html >/dev/null 2>&1 \
             || fail "El módulo no lleva el WebUI (webroot/index.html)."
           unzip -l "$zip" system/bin/nexus-quickstep >/dev/null 2>&1 \

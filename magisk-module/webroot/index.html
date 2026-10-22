@@ -7,151 +7,377 @@
 <title>Nexus Quickstep</title>
 <style>
   :root {
-    --bg: #f4f2f8; --card: #ffffff; --text: #1c1b22; --muted: #6b6877; --line: #e3e0ea;
-    --accent: #6b4ce6; --accent-text: #ffffff;
-    --ok: #1f8a4c; --ok-bg: #e3f4ea; --warn: #a15c00; --warn-bg: #fdf0d9; --bad: #b3261e; --bad-bg: #fbe4e2;
-    --idle: #4b4958; --idle-bg: #ebe9f1;
+    --bg: #f5f3fa; --card: #ffffff; --card-2: #f0edf7; --text: #1b1a22; --muted: #66637a; --line: #e4e0ee;
+    --accent: #6240e0; --accent-2: #ebe5ff; --accent-text: #ffffff;
+    --ok: #17743f; --ok-bg: #e0f3e8; --warn: #8f5200; --warn-bg: #fdefd2; --bad: #b3261e; --bad-bg: #fbe3e0;
+    --info: #3b4a8a; --info-bg: #e6eafb; --idle: #46445a; --idle-bg: #ebe9f2;
+    --shadow: 0 1px 2px rgba(30, 20, 70, .06), 0 6px 18px rgba(30, 20, 70, .05);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #121117; --card: #1c1b24; --text: #ecebf2; --muted: #9c99a8; --line: #2d2b38;
-      --accent: #a58bff; --accent-text: #15112b;
-      --ok: #62d18c; --ok-bg: #16301f; --warn: #f0b95a; --warn-bg: #36280f; --bad: #ff8a80; --bad-bg: #3a1916;
-      --idle: #c8c5d4; --idle-bg: #272532;
+      --bg: #100f15; --card: #1a1922; --card-2: #232130; --text: #eceaf4; --muted: #a09db0; --line: #2c2a39;
+      --accent: #a58bff; --accent-2: #2b2450; --accent-text: #160f33;
+      --ok: #67d592; --ok-bg: #14301f; --warn: #f2bd5e; --warn-bg: #36280e; --bad: #ff8d83; --bad-bg: #3b1a17;
+      --info: #9fb0ff; --info-bg: #1d2447; --idle: #c9c6d6; --idle-bg: #262431;
+      --shadow: none;
     }
   }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0; background: var(--bg); color: var(--text);
     font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    padding: max(16px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
   }
-  main { max-width: 640px; margin: 0 auto; display: grid; gap: 14px; }
-  header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 4px 2px; }
-  h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
-  h2 { font-size: 13px; margin: 0 0 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
-  .ver { color: var(--muted); font-size: 13px; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
-  .verdict { border-radius: 12px; padding: 12px 14px; font-weight: 600; }
-  .verdict small { display: block; font-weight: 400; margin-top: 2px; opacity: 0.9; }
-  .v-ok { background: var(--ok-bg); color: var(--ok); }
-  .v-warn { background: var(--warn-bg); color: var(--warn); }
-  .v-bad { background: var(--bad-bg); color: var(--bad); }
-  .v-idle { background: var(--idle-bg); color: var(--idle); }
-  dl { margin: 14px 0 0; display: grid; gap: 0; }
-  .row { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); }
-  .row:first-child { border-top: 0; }
-  dt { color: var(--muted); }
-  dd { margin: 0; text-align: right; font-weight: 500; overflow-wrap: anywhere; }
-  .y { color: var(--ok); } .n { color: var(--bad); } .q { color: var(--muted); }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
   [hidden] { display: none !important; }
-  .actions { display: grid; gap: 10px; }
-  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  button {
-    font: inherit; font-weight: 600; border: 0; border-radius: 12px; padding: 13px 14px; min-height: 48px;
-    background: var(--idle-bg); color: var(--text); cursor: pointer;
+
+  .app { max-width: 680px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+  .top {
+    position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(10px); padding: max(14px, env(safe-area-inset-top)) 16px 10px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
   }
-  button.primary { background: var(--accent); color: var(--accent-text); }
-  button.danger { background: var(--bad-bg); color: var(--bad); }
-  button:disabled { opacity: 0.5; cursor: default; }
-  button:active:not(:disabled) { filter: brightness(0.92); }
-  .hint { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .logo {
+    width: 34px; height: 34px; border-radius: 11px; background: linear-gradient(135deg, var(--accent), #8f6bff);
+    display: grid; place-items: center; color: var(--accent-text); font-weight: 800; flex: none;
+  }
+  h1 { font-size: 18px; margin: 0; letter-spacing: -.01em; line-height: 1.15; }
+  .ver { color: var(--muted); font-size: 12px; }
+  .icon-btn {
+    width: 44px; height: 44px; border-radius: 14px; border: 0; background: var(--card); color: var(--text);
+    display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow); flex: none;
+  }
+  .icon-btn svg { width: 22px; height: 22px; }
+  .spin svg { animation: spin 0.9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  main { flex: 1; padding: 6px 16px calc(92px + env(safe-area-inset-bottom)); display: grid; gap: 14px; align-content: start; }
+  .tab { display: none; gap: 14px; align-content: start; }
+  .tab.on { display: grid; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 16px; box-shadow: var(--shadow); }
+  h2 { font-size: 12px; margin: 0 0 10px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 700; }
+  h3 { font-size: 16px; margin: 0 0 4px; }
+  p { margin: 0 0 8px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+
+  /* Tarjeta principal */
+  .hero { padding: 20px 18px; }
+  .hero .pill {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 5px 10px;
+    border-radius: 999px; margin-bottom: 12px;
+  }
+  .hero .pill svg { width: 14px; height: 14px; }
+  .hero h3 { font-size: 22px; letter-spacing: -.015em; line-height: 1.2; margin-bottom: 6px; }
+  .hero .why { color: var(--muted); margin-bottom: 16px; }
+  .t-ok .pill { background: var(--ok-bg); color: var(--ok); }
+  .t-warn .pill { background: var(--warn-bg); color: var(--warn); }
+  .t-bad .pill { background: var(--bad-bg); color: var(--bad); }
+  .t-info .pill { background: var(--info-bg); color: var(--info); }
+  .t-idle .pill { background: var(--idle-bg); color: var(--idle); }
+
+  .btn {
+    font: inherit; font-weight: 650; border: 0; border-radius: 14px; padding: 14px 16px; min-height: 52px;
+    background: var(--card-2); color: var(--text); cursor: pointer; width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center;
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-text); }
+  .btn.danger { background: var(--bad-bg); color: var(--bad); }
+  .btn.ghost { background: transparent; border: 1.5px solid var(--line); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .btn:active:not(:disabled) { filter: brightness(.93); transform: scale(.995); }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .stack { display: grid; gap: 10px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* Pasos */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .steps li { background: var(--card-2); border-radius: 14px; padding: 10px 10px 12px; font-size: 13px; position: relative; }
+  .steps .n {
+    width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 12px;
+    background: var(--idle-bg); color: var(--idle); margin-bottom: 6px;
+  }
+  .steps b { display: block; font-size: 13px; }
+  .steps li.done .n { background: var(--ok-bg); color: var(--ok); }
+  .steps li.now { outline: 2px solid var(--accent); }
+  .steps li.now .n { background: var(--accent); color: var(--accent-text); }
+  .steps li.fail .n { background: var(--bad-bg); color: var(--bad); }
+  .steps li span { color: var(--muted); }
+
+  /* Listas */
+  .list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .item { display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); align-items: flex-start; }
+  .item:first-child { border-top: 0; padding-top: 2px; }
+  .ico { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; flex: none; }
+  .ico svg { width: 16px; height: 16px; }
+  .ico.ok { background: var(--ok-bg); color: var(--ok); }
+  .ico.warn { background: var(--warn-bg); color: var(--warn); }
+  .ico.bad { background: var(--bad-bg); color: var(--bad); }
+  .ico.info { background: var(--info-bg); color: var(--info); }
+  .item .body { min-width: 0; flex: 1; }
+  .item .t { font-weight: 600; }
+  .item .d { color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+  .item time { color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+  .reco { display: flex; gap: 12px; align-items: flex-start; border-radius: 16px; padding: 14px; }
+  .reco.ok { background: var(--ok-bg); color: var(--ok); }
+  .reco.go { background: var(--accent-2); color: var(--text); }
+  .reco.warn { background: var(--warn-bg); color: var(--warn); }
+  .reco.go .ico { background: var(--card); color: var(--accent); }
+  .reco .ico { width: 32px; height: 32px; }
+  .reco b { display: block; }
+  .reco .small { color: inherit; opacity: .9; }
+
+  /* Interruptor */
+  .switch-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+  .chip { font-size: 12px; font-weight: 700; padding: 4px 9px; border-radius: 999px; background: var(--idle-bg); color: var(--idle); white-space: nowrap; }
+  .chip.on { background: var(--ok-bg); color: var(--ok); }
+
   pre {
-    margin: 12px 0 0; padding: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px;
+    margin: 10px 0 0; padding: 12px; background: var(--card-2); border: 1px solid var(--line); border-radius: 12px;
     font: 12px/1.45 ui-monospace, "SF Mono", Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere;
-    max-height: 340px; overflow: auto;
+    max-height: 340px; overflow: auto; user-select: text; -webkit-user-select: text;
   }
   pre:empty { display: none; }
-  dialog { border: 1px solid var(--line); border-radius: 18px; background: var(--card); color: var(--text); padding: 20px; width: min(92vw, 420px); }
-  dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
-  dialog h3 { margin: 0 0 8px; font-size: 18px; }
-  dialog p { margin: 0 0 12px; color: var(--muted); }
-  label.check { display: flex; gap: 10px; align-items: flex-start; margin: 4px 0 16px; }
-  label.check input { margin-top: 3px; width: 18px; height: 18px; flex: none; }
-  .notice { background: var(--warn-bg); color: var(--warn); border-radius: 12px; padding: 12px 14px; }
-  .busy { opacity: 0.6; pointer-events: none; }
+  details > summary { cursor: pointer; font-weight: 600; padding: 4px 0; list-style: none; display: flex; justify-content: space-between; }
+  details > summary::-webkit-details-marker { display: none; }
+  details > summary::after { content: "▾"; color: var(--muted); }
+  details[open] > summary::after { content: "▴"; }
+
+  /* Navegación */
+  nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; display: flex; justify-content: center;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); background: color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter: blur(12px); border-top: 1px solid var(--line);
+  }
+  nav .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 100%; max-width: 656px; }
+  nav button {
+    font: inherit; font-size: 12px; font-weight: 600; border: 0; background: transparent; color: var(--muted);
+    border-radius: 14px; padding: 8px 4px 6px; min-height: 54px; cursor: pointer; display: grid; justify-items: center; gap: 2px;
+  }
+  nav button svg { width: 22px; height: 22px; }
+  nav button[aria-selected="true"] { color: var(--accent); background: var(--accent-2); }
+  nav .dot { position: relative; }
+  nav .dot::after {
+    content: ""; position: absolute; top: -2px; right: -5px; width: 9px; height: 9px; border-radius: 50%;
+    background: var(--bad); border: 2px solid var(--bg);
+  }
+  nav .dot.warn::after { background: var(--warn); }
+
+  /* Diálogos */
+  dialog { border: 1px solid var(--line); border-radius: 22px; background: var(--card); color: var(--text); padding: 20px; width: min(92vw, 440px); }
+  dialog::backdrop { background: rgba(0, 0, 0, .55); }
+  dialog h3 { font-size: 19px; margin-bottom: 8px; }
+  label.check { display: flex; gap: 12px; align-items: flex-start; margin: 4px 0 14px; cursor: pointer; }
+  label.check input { margin-top: 3px; width: 20px; height: 20px; flex: none; accent-color: var(--accent); }
+  label.check .t { font-weight: 600; display: block; }
+  label.check .d { color: var(--muted); font-size: 13px; display: block; }
+
+  .notice { background: var(--warn-bg); color: var(--warn); border-radius: 16px; padding: 14px; }
+  .toast {
+    position: fixed; left: 50%; bottom: calc(88px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px);
+    background: var(--text); color: var(--bg); padding: 11px 16px; border-radius: 999px; font-weight: 600; font-size: 14px;
+    opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 20; max-width: 90vw; text-align: center;
+  }
+  .toast.on { opacity: 1; transform: translateX(-50%); }
+  .busy .btn, .busy .icon-btn { pointer-events: none; opacity: .65; }
+  .skeleton { height: 14px; border-radius: 7px; background: var(--card-2); margin: 8px 0; animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .5; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
-<main id="app">
-  <header>
-    <h1>Nexus Quickstep</h1>
-    <span class="ver" id="ver"></span>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M12 6v7m0 4.2v.1"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M7 7l10 10M17 7L7 17"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M12 11v6m0-10.2v.1"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 11a8 8 0 10-2.3 6M20 5v6h-6"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-4v-6H9v6H5a1 1 0 01-1-1z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 100-6 3 3 0 000 6zM19 12a7 7 0 00-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 00-2-1.2L14.2 3h-4l-.4 2.6a7 7 0 00-2 1.2l-2.3-.9-2 3.4 2 1.5a7 7 0 000 2.4l-2 1.5 2 3.4 2.3-.9a7 7 0 002 1.2l.4 2.6h4l.4-2.6a7 7 0 002-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></symbol>
+  </defs>
+</svg>
+
+<div class="app" id="app">
+  <header class="top">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">N</div>
+      <div>
+        <h1>Nexus Quickstep</h1>
+        <div class="ver" id="ver">&nbsp;</div>
+      </div>
+    </div>
+    <button class="icon-btn" id="btn-refresh" aria-label="Actualizar estado"><svg><use href="#i-refresh"/></svg></button>
   </header>
 
-  <div class="notice" id="noksu" hidden>
-    Esta página solo funciona dentro del gestor de root: en KernelSU abre Módulos y pulsa el módulo (WebUI).
-  </div>
+  <main>
+    <div class="notice" id="noksu" hidden role="alert">
+      <b>Sin conexión con el gestor de root.</b>
+      <p class="small" style="margin:6px 0 0">Abre esta página desde KernelSU o APatch (módulo → Nexus Quickstep). En Magisk hace falta una app con WebUI (por ejemplo KsuWebUI o MMRL). Sin WebUI también vale la terminal: <code>su -c nexus-quickstep status</code>.</p>
+    </div>
 
-  <section class="card">
-    <h2>Estado</h2>
-    <div class="verdict v-idle" id="verdict">Leyendo estado…</div>
-    <dl id="rows"></dl>
-  </section>
-
-  <section class="card">
-    <h2>Acciones</h2>
-    <div class="actions">
-      <button class="primary" id="btn-enable">Activar gestos de Nexus (Quickstep)</button>
-      <div class="pair">
-        <button id="btn-disable">Desactivar</button>
-        <button class="danger" id="btn-reboot">Reiniciar</button>
+    <!-- INICIO -->
+    <section class="tab on" id="tab-home" role="tabpanel" aria-labelledby="t-home">
+      <div class="card hero t-idle" id="hero">
+        <span class="pill" id="hero-pill"><svg><use href="#i-info"/></svg><span id="hero-pill-t">Leyendo…</span></span>
+        <h3 id="hero-title">Leyendo estado…</h3>
+        <p class="why" id="hero-why"></p>
+        <div class="stack" id="hero-actions"></div>
       </div>
-      <button id="btn-refresh">Actualizar estado</button>
-      <button id="btn-restore-hybrid" hidden>Restaurar la configuración original de hybrid_mount</button>
-    </div>
-    <p class="hint">
-      El cambio se aplica al reiniciar. Si el arranque falla, el módulo lo detecta: si el móvil se cuelga lo reinicia
-      solo pasados unos minutos, y el arranque siguiente va sin Quickstep y guarda un registro para diagnosticar.
-    </p>
-    <pre id="action-out"></pre>
-  </section>
 
-  <section class="card">
-    <h2>Diagnóstico</h2>
-    <div class="pair">
-      <button id="btn-diag">Generar informe</button>
-      <button id="btn-export">Guardar en Descargas</button>
-    </div>
-    <button id="btn-logs" style="margin-top:10px;width:100%">Copiar registros a Nexus-Logs</button>
-    <p class="hint">
-      Los registros también se copian solos a la carpeta <b>Nexus-Logs</b> del almacenamiento interno en cuanto el móvil
-      se desbloquea. Abre <b>RESUMEN.txt</b>: dice en claro si el arranque fue bien o falló.
-      El .tar.gz de Descargas lleva además el informe del sistema.
-    </p>
-    <pre id="diag-out"></pre>
-    <button id="btn-log" style="margin-top:10px;width:100%">Ver registro del vigilante</button>
-    <pre id="log-out"></pre>
-  </section>
-</main>
+      <div class="card">
+        <h2>Cómo va</h2>
+        <ol class="steps" id="steps">
+          <li id="st-1"><div class="n">1</div><b>Pedir</b><span>Activar</span></li>
+          <li id="st-2"><div class="n">2</div><b>Reiniciar</b><span>Aplica el overlay</span></li>
+          <li id="st-3"><div class="n">3</div><b>Verificar</b><span>SystemUI enlaza</span></li>
+        </ol>
+        <p class="small muted" id="steps-note" style="margin:10px 0 0"></p>
+      </div>
 
-<dialog id="dlg-enable">
-  <h3>Activar gestos de Nexus</h3>
-  <p>
+      <div class="card" id="reco-card" hidden>
+        <h2>Recomendación</h2>
+        <div class="reco" id="reco"></div>
+      </div>
+
+      <div class="card" id="last-card" hidden>
+        <h2>Último suceso</h2>
+        <ul class="list" id="last"></ul>
+      </div>
+    </section>
+
+    <!-- COMPROBACIONES -->
+    <section class="tab" id="tab-checks" role="tabpanel" aria-labelledby="t-checks">
+      <div class="card">
+        <h2>Antes de activar</h2>
+        <div id="reco2"></div>
+        <ul class="list" id="checks" style="margin-top:8px"><li class="item"><div class="body"><div class="skeleton"></div><div class="skeleton" style="width:70%"></div></div></li></ul>
+        <button class="btn" id="btn-recheck" style="margin-top:12px"><svg><use href="#i-refresh"/></svg>Comprobar de nuevo</button>
+      </div>
+      <div class="card">
+        <h2>Estado en detalle</h2>
+        <ul class="list" id="rows"></ul>
+      </div>
+    </section>
+
+    <!-- REGISTROS -->
+    <section class="tab" id="tab-logs" role="tabpanel" aria-labelledby="t-logs">
+      <div class="card">
+        <h2>Historial</h2>
+        <ul class="list" id="history"><li class="item"><div class="body muted small">Sin sucesos todavía.</div></li></ul>
+      </div>
+      <div class="card">
+        <h2>Registros para diagnosticar</h2>
+        <div class="stack">
+          <button class="btn primary" id="btn-logs"><svg><use href="#i-doc"/></svg>Copiar registros a Nexus-Logs</button>
+          <div class="pair">
+            <button class="btn" id="btn-diag">Ver informe</button>
+            <button class="btn" id="btn-copy">Copiar informe</button>
+          </div>
+          <button class="btn" id="btn-export">Guardar informe en Descargas</button>
+        </div>
+        <p class="small muted" style="margin:10px 0 0">
+          Los registros también se copian solos a la carpeta <b>Nexus-Logs</b> del almacenamiento interno en cuanto el móvil
+          se desbloquea. Abre <b>RESUMEN.txt</b>: dice en claro si el arranque fue bien o falló.
+        </p>
+        <pre id="diag-out" tabindex="0"></pre>
+        <details style="margin-top:12px">
+          <summary>Registro del vigilante</summary>
+          <pre id="log-out" tabindex="0"></pre>
+        </details>
+      </div>
+    </section>
+
+    <!-- AJUSTES -->
+    <section class="tab" id="tab-settings" role="tabpanel" aria-labelledby="t-settings">
+      <div class="card" id="plan-a-card">
+        <h2>Plan A · ajuste de hybrid_mount</h2>
+        <div class="switch-row">
+          <div>
+            <h3>disable_umount</h3>
+            <p class="small muted" style="margin:0" id="plan-a-text">—</p>
+          </div>
+          <span class="chip" id="plan-a-chip">—</span>
+        </div>
+        <p class="small muted" style="margin:10px 0 12px">
+          Con hybrid_mount y Zygisk, zygote perdía el montaje del overlay y todas las apps abortaban. Este ajuste hace que
+          hybrid_mount no oculte los montajes del módulo a las apps. Se guarda una copia y se restaura sola si el arranque falla.
+          Coste: la ocultación de root queda algo más débil (Play Integrity, apps que detectan root).
+        </p>
+        <div class="pair">
+          <button class="btn" id="btn-plan-a-on">Aplicar ajuste</button>
+          <button class="btn" id="btn-plan-a-off">Restaurar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Plan B · mismo paquete que el launcher de la ROM</h2>
+        <p class="small" style="margin:0 0 6px"><b>En preparación.</b> Probado solo en emulador.</p>
+        <p class="small muted" style="margin:0" id="plan-b-text">
+          Nexus se instalaría con el nombre de paquete del launcher que la ROM ya usa para recientes, en vez de usar un overlay.
+          Se necesita el informe de diagnóstico de tu móvil para elegir la versión correcta; no se activa desde aquí todavía.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Acciones</h2>
+        <div class="stack">
+          <button class="btn" id="btn-disable">Desactivar gestos de Nexus</button>
+          <button class="btn danger" id="btn-reboot">Reiniciar el móvil</button>
+        </div>
+        <p class="small muted" style="margin:10px 0 0">
+          Los cambios se aplican al reiniciar. Si el arranque con Quickstep falla, el módulo lo detecta: reinicia solo y el
+          arranque siguiente va sin Quickstep y guarda un registro.
+        </p>
+        <pre id="action-out" tabindex="0"></pre>
+      </div>
+    </section>
+  </main>
+
+  <nav aria-label="Secciones">
+    <div class="tabs" role="tablist">
+      <button role="tab" id="t-home" aria-selected="true" data-tab="home"><svg><use href="#i-home"/></svg>Inicio</button>
+      <button role="tab" id="t-checks" aria-selected="false" data-tab="checks"><svg><use href="#i-check"/></svg>Comprobar</button>
+      <button role="tab" id="t-logs" aria-selected="false" data-tab="logs"><svg><use href="#i-doc"/></svg>Registros</button>
+      <button role="tab" id="t-settings" aria-selected="false" data-tab="settings"><svg><use href="#i-gear"/></svg>Ajustes</button>
+    </div>
+  </nav>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<dialog id="dlg-enable" aria-labelledby="dlg-enable-title">
+  <h3 id="dlg-enable-title">Activar gestos de Nexus</h3>
+  <p class="muted">
     Nexus pasará a ser el proveedor de recientes del sistema en el próximo arranque. Si algo falla, el módulo vuelve
-    solo al launcher de serie, pero ese arranque puede tardar unos minutos.
+    solo al launcher de serie, aunque ese arranque puede tardar unos minutos.
   </p>
+  <label class="check" id="lbl-umount">
+    <input type="checkbox" id="chk-umount">
+    <span><span class="t">Plan A: ajustar hybrid_mount</span><span class="d">Pone <code>disable_umount = true</code> con copia y restauración automática si falla.</span></span>
+  </label>
   <label class="check">
     <input type="checkbox" id="chk-force">
-    <span>Forzar: necesario tras un arranque fallido, o si Nexus aún no ha comprobado la compatibilidad.</span>
-  </label>
-  <label class="check" id="lbl-umount">
-    <input type="checkbox" id="chk-umount" checked>
-    <span>Plan A: ajustar hybrid_mount (<code>disable_umount = true</code>) para que zygote no pierda el montaje del overlay. Es la causa probable del arranque fallido con hybrid_mount + NeoZygisk. Se guarda una copia y se restaura sola si falla; debilita un poco la ocultación de root.</span>
+    <span><span class="t">Forzar</span><span class="d">Necesario tras un arranque fallido o si Nexus aún no comprobó la compatibilidad.</span></span>
   </label>
   <div class="pair">
-    <button id="dlg-cancel">Cancelar</button>
-    <button class="primary" id="dlg-ok">Activar</button>
+    <button class="btn" id="dlg-cancel">Cancelar</button>
+    <button class="btn primary" id="dlg-ok">Activar</button>
   </div>
 </dialog>
 
-<dialog id="dlg-reboot">
-  <h3>Reiniciar ahora</h3>
-  <p id="dlg-reboot-text">El móvil se reiniciará.</p>
+<dialog id="dlg-reboot" aria-labelledby="dlg-reboot-title">
+  <h3 id="dlg-reboot-title">Reiniciar ahora</h3>
+  <p class="muted" id="dlg-reboot-text">El móvil se reiniciará.</p>
   <div class="pair">
-    <button id="dlg-reboot-cancel">Ahora no</button>
-    <button class="danger" id="dlg-reboot-ok">Reiniciar</button>
+    <button class="btn" id="dlg-reboot-cancel">Ahora no</button>
+    <button class="btn danger" id="dlg-reboot-ok">Reiniciar</button>
   </div>
 </dialog>
 
@@ -164,32 +390,86 @@
   var hasKsu = typeof window.ksu !== 'undefined' && typeof window.ksu.exec === 'function';
   var counter = 0;
 
+  var S = {};            // estado (clave=valor de `state`)
+  var checks = [];       // comprobaciones previas
+  var reco = null;       // recomendación {id, text}
+  var history = [];      // historial
+  var pollTimer = null;
+  var loading = 0;
+  var lastDiag = '';
+
   function $(id) { return document.getElementById(id); }
 
-  // API de KernelSU (también la ofrecen APatch y MMRL): ksu.exec(comando, opciones, nombreDeCallback);
-  // el callback recibe (código, stdout, stderr).
-  function run(cmd) {
+  /* ---------- Acceso al gestor de root ----------
+     API de KernelSU (también APatch y MMRL): ksu.exec(comando, opciones, nombreDeCallback);
+     el callback recibe (código, stdout, stderr). */
+  function run(cmd, timeoutMs) {
     return new Promise(function (resolve, reject) {
       if (!hasKsu) { reject(new Error('Sin acceso al gestor de root')); return; }
       var name = 'nexusExec' + Date.now() + '_' + (counter++);
+      var timer = setTimeout(function () {
+        delete window[name];
+        reject(new Error('El comando tardó demasiado (' + Math.round((timeoutMs || 90000) / 1000) + ' s)'));
+      }, timeoutMs || 90000);
       window[name] = function (errno, stdout, stderr) {
+        clearTimeout(timer);
         delete window[name];
         resolve({ code: errno, out: String(stdout || ''), err: String(stderr || '') });
       };
       try {
         window.ksu.exec(cmd, '{}', name);
       } catch (e) {
+        clearTimeout(timer);
         delete window[name];
         reject(e);
       }
     });
   }
 
+  /* ---------- DOM ---------- */
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    if (attrs) {
+      Object.keys(attrs).forEach(function (k) {
+        if (k === 'class') { n.className = attrs[k]; }
+        else if (k === 'text') { n.textContent = attrs[k]; }
+        else if (k === 'on') { Object.keys(attrs.on).forEach(function (ev) { n.addEventListener(ev, attrs.on[ev]); }); }
+        else { n.setAttribute(k, attrs[k]); }
+      });
+    }
+    (kids || []).forEach(function (c) { if (c) { n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); } });
+    return n;
+  }
+  function icon(name) {
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns, 'svg');
+    var use = document.createElementNS(ns, 'use');
+    use.setAttribute('href', '#i-' + name);
+    svg.appendChild(use);
+    return svg;
+  }
+  function clear(n) { while (n.firstChild) { n.removeChild(n.firstChild); } }
+  function show(id, text) { $(id).textContent = text; }
+  function out(r) { return (r.out + (r.err ? '\n' + r.err : '')).trim() || '(sin salida)'; }
+
+  var toastTimer = null;
   function toast(msg) {
-    try { if (hasKsu && window.ksu.toast) { window.ksu.toast(msg); } } catch (e) { /* sin aviso */ }
+    var t = $('toast');
+    t.textContent = msg;
+    t.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove('on'); }, 2600);
   }
 
-  function parseState(text) {
+  function busy(on) {
+    loading += on ? 1 : -1;
+    if (loading < 0) { loading = 0; }
+    $('app').classList.toggle('busy', loading > 0);
+    $('btn-refresh').classList.toggle('spin', loading > 0);
+  }
+
+  /* ---------- Parseo ---------- */
+  function parseKV(text) {
     var s = {};
     text.split('\n').forEach(function (line) {
       var i = line.indexOf('=');
@@ -197,207 +477,441 @@
     });
     return s;
   }
-
-  function yn(v, yesText, noText) {
-    if (v === '1') { return ['y', yesText || 'Sí']; }
-    if (v === '0') { return ['n', noText || 'No']; }
-    return ['q', 'Sin datos'];
+  function parsePreflight(text) {
+    var list = [], r = null;
+    text.split('\n').forEach(function (line) {
+      var p = line.split('|');
+      if (p[0] === 'check' && p.length >= 5) {
+        list.push({ id: p[1], level: p[2], title: p[3], detail: p.slice(4).join('|') });
+      } else if (p[0] === 'recommend' && p.length >= 3) {
+        r = { id: p[1], text: p.slice(2).join('|') };
+      }
+    });
+    return { checks: list, reco: r };
+  }
+  function parseHistory(text) {
+    var list = [];
+    text.split('\n').forEach(function (line) {
+      var p = line.split('|');
+      if (p.length >= 3) { list.push({ when: p[0], kind: p[1], detail: p.slice(2).join('|') }); }
+    });
+    return list.reverse();
+  }
+  function fmtWhen(w) {
+    var m = /^(\d{4})-(\d\d)-(\d\d) (\d\d):(\d\d)/.exec(w);
+    if (!m) { return ''; }
+    if (parseInt(m[1], 10) < 2000) { return 'al arrancar'; }   // reloj aún sin ajustar
+    var d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
+    var now = new Date();
+    var same = d.toDateString() === now.toDateString();
+    var hh = ('0' + m[4]).slice(-2) + ':' + m[5];
+    return same ? 'hoy ' + hh : m[3] + '/' + m[2] + ' ' + hh;
   }
 
-  function row(label, cls, text) {
-    var wrap = document.createElement('div');
-    wrap.className = 'row';
-    var dt = document.createElement('dt');
-    dt.textContent = label;
-    var dd = document.createElement('dd');
-    dd.className = cls;
-    dd.textContent = text;
-    wrap.appendChild(dt);
-    wrap.appendChild(dd);
-    return wrap;
+  var KIND = {
+    'pedido': ['Activación pedida', 'info', 'check'],
+    'desactivado': ['Desactivado', 'info', 'info'],
+    'desactivado-auto': ['Desactivado por seguridad', 'bad', 'x'],
+    'arranque-fallido': ['Arranque fallido', 'bad', 'x'],
+    'verificado': ['Verificado', 'ok', 'check'],
+    'hybrid': ['Ajuste de hybrid_mount', 'info', 'info']
+  };
+
+  /* ---------- Estado derivado ---------- */
+  function flags() {
+    return {
+      enabled: S.enabled === '1',
+      effective: S.effective === '1',
+      bound: S.bound === '1',
+      booting: S.booting === '1',
+      tripped: !!(S.tripped && S.tripped.length),
+      kind: S.tripped_kind || '',
+      mounted: S.nexus_in_product !== '0',
+      priv: S.nexus_privileged,
+      hybrid: !!S.hybrid_umount && S.hybrid_umount !== 'sin-config',
+      umountOn: S.hybrid_umount === 'true',
+      changed: S.hybrid_changed === '1',
+      planAFailed: S.plan_a_failed === '1'
+    };
   }
 
-  function setVerdict(cls, title, detail) {
-    var el = $('verdict');
-    el.className = 'verdict ' + cls;
-    el.textContent = title;
-    if (detail) {
-      var small = document.createElement('small');
-      small.textContent = detail;
-      el.appendChild(small);
-    }
+  /* ---------- Render: Inicio ---------- */
+  function setHero(tone, pill, pillIcon, title, why, actions) {
+    var hero = $('hero');
+    hero.className = 'card hero t-' + tone;
+    clear($('hero-pill'));
+    $('hero-pill').appendChild(icon(pillIcon));
+    $('hero-pill').appendChild(el('span', { text: pill }));
+    $('hero-title').textContent = title;
+    $('hero-why').textContent = why || '';
+    var box = $('hero-actions');
+    clear(box);
+    (actions || []).forEach(function (a) { box.appendChild(a); });
+  }
+  function btn(text, cls, handler, iconName) {
+    return el('button', { class: 'btn ' + (cls || ''), on: { click: handler } }, [iconName ? icon(iconName) : null, text]);
   }
 
-  function render(s) {
-    $('ver').textContent = s.module_version ? 'v' + s.module_version : '';
-    hasHybrid = !!s.hybrid_umount && s.hybrid_umount !== 'sin-config';
-    $('btn-restore-hybrid').hidden = s.hybrid_changed !== '1';
-    var enabled = s.enabled === '1';
-    var effective = s.effective === '1';
-    var bound = s.bound === '1';
-    var tripped = s.tripped && s.tripped.length > 0;
+  var KIND_TEXT = {
+    'zygote-overlay': 'El overlay hizo que zygote perdiera el acceso a su APK y todas las apps abortaron. El módulo reinició solo y el móvil volvió al estado de serie.',
+    'boot-incomplete': 'El arranque con el overlay no terminó. El módulo lo desactivó y el siguiente arranque fue normal.',
+    'not-bound': 'El sistema arrancó, pero SystemUI no llegó a enlazarse con Nexus; el módulo lo desactivó.',
+    'other': 'El vigilante desactivó el overlay por un fallo.'
+  };
 
-    if (s.nexus_in_product === '0') {
-      setVerdict('v-warn', 'El módulo no está montado',
-        'Nexus no aparece en /product. Reinicia tras flashear; en KernelSU hace falta un metamódulo de montaje (p. ej. meta-overlayfs), sin él no se monta nada.');
-    } else if (tripped) {
-      setVerdict('v-bad', 'Desactivado por seguridad', s.tripped);
-    } else if (effective && bound) {
-      setVerdict('v-ok', 'Gestos de Nexus activos', 'SystemUI está enlazado al servicio de Nexus.');
-    } else if (effective) {
-      setVerdict('v-warn', 'Overlay activo, SystemUI sin enlazar', 'Si no se enlaza, el vigilante lo desactivará.');
-    } else if (enabled) {
-      setVerdict('v-warn', 'Pedido: falta reiniciar', 'Se aplicará en el próximo arranque.');
+  function renderHome() {
+    var f = flags();
+    var recoId = reco ? reco.id : '';
+
+    if (!f.mounted) {
+      setHero('warn', 'Falta montar el módulo', 'alert', 'Nexus no está montado en /product',
+        'Reinicia tras flashear. En KernelSU hace falta un metamódulo de montaje (hybrid_mount, meta-overlayfs…): sin él no se monta nada.',
+        [btn('Ver comprobaciones', '', function () { goTab('checks'); }, 'check'), btn('Reiniciar', 'danger', function () { askReboot('El módulo se monta en el arranque. ¿Reiniciar ahora?'); })]);
+    } else if (f.effective && f.bound) {
+      setHero('ok', 'Activo', 'check', 'Gestos de Nexus activos',
+        'Nexus es el proveedor de recientes del sistema y SystemUI está enlazado a su servicio.',
+        [btn('Desactivar', '', doDisable)]);
+    } else if (f.effective) {
+      setHero('info', 'Verificando', 'info', 'Overlay aplicado, esperando a SystemUI',
+        'El módulo vigila que SystemUI se enlace con Nexus. Si no ocurre a tiempo, lo desactiva y reinicia solo.',
+        [btn('Actualizar', '', function () { refresh(); }, 'refresh')]);
+    } else if (f.enabled) {
+      setHero('warn', 'Pedido', 'info', 'Pedido: falta reiniciar',
+        'El overlay se aplica en el arranque, antes de que el sistema decida el launcher de recientes.',
+        [btn('Reiniciar ahora', 'primary', function () { askReboot('Los gestos de Nexus se aplican en el arranque. ¿Reiniciar ahora?'); }), btn('Cancelar el pedido', '', doDisable)]);
+    } else if (f.tripped) {
+      var acts = [];
+      var planAtext = 'Probar el Plan A';
+      if (recoId === 'plan-a') {
+        acts.push(btn(planAtext, 'primary', function () { openEnable({ umount: true, force: true }); }));
+      } else if (recoId === 'plan-b') {
+        acts.push(btn('Ver el Plan B', 'primary', function () { goTab('settings'); }));
+      } else {
+        acts.push(btn('Volver a intentarlo', 'primary', function () { openEnable({ force: true }); }));
+      }
+      acts.push(btn('Ver registros', '', function () { goTab('logs'); }, 'doc'));
+      setHero('bad', 'Desactivado por seguridad', 'x',
+        f.kind === 'zygote-overlay' ? 'El último intento rompió el arranque' : 'El módulo desactivó los gestos',
+        (KIND_TEXT[f.kind] || KIND_TEXT.other) + ' ' + (f.planAFailed ? 'El Plan A ya se probó y tampoco bastó.' : ''), acts);
     } else {
-      setVerdict('v-idle', 'Desactivado (estado de serie)', 'El sistema usa su launcher para los gestos.');
+      var label = recoId === 'plan-a' ? 'Activar con el Plan A (recomendado)' : 'Activar gestos de Nexus';
+      setHero('idle', 'Desactivado', 'info', 'Estado de serie',
+        'El sistema usa su propio launcher para los gestos. Activa Quickstep para que Inicio y Recientes los gestione Nexus.',
+        [btn(label, 'primary', function () { openEnable({ umount: recoId === 'plan-a' }); })]);
     }
 
-    var rows = $('rows');
-    rows.textContent = '';
-    var a = yn(s.enabled, 'Sí', 'No');
-    rows.appendChild(row('Pedido para el arranque', a[0] === 'n' ? 'q' : a[0], a[1]));
-    a = yn(s.effective, 'Sí', 'No');
-    rows.appendChild(row('Overlay efectivo ahora', a[0] === 'n' ? 'q' : a[0], a[1]));
-    a = s.effective === '1' ? yn(s.bound) : ['q', '—'];
-    rows.appendChild(row('SystemUI enlazado a Nexus', a[0], a[1]));
-    rows.appendChild(row('Recientes del sistema', 'q', (s.current_recents || '?').replace('/com.android.quickstep.RecentsActivity', '')));
-    a = yn(s.nexus_in_product, 'Sí', 'No');
-    rows.appendChild(row('Nexus instalado por el módulo', a[0], a[1]));
-    a = s.nexus_privileged === '?' ? ['q', 'No se pudo leer'] : yn(s.nexus_privileged);
-    rows.appendChild(row('Nexus es app privilegiada', a[0], a[1]));
-    a = s.probe_passed ? yn(s.probe_passed === 'true' ? '1' : '0', 'Compatible', 'No compatible') : ['q', 'Abre Nexus una vez'];
-    rows.appendChild(row('Comprobación de Nexus', a[0], a[1]));
-    if (s.probe_denied) { rows.appendChild(row('Permisos sin conceder', 'n', s.probe_denied)); }
-    if (s.hybrid_umount && s.hybrid_umount !== 'sin-config') {
-      var changed = s.hybrid_changed === '1';
-      rows.appendChild(row('hybrid_mount: disable_umount', s.hybrid_umount === 'true' ? 'y' : 'q',
-        s.hybrid_umount + (changed ? ' (cambiado por Nexus)' : '')));
+    // Pasos
+    var steps = [$('st-1'), $('st-2'), $('st-3')];
+    steps.forEach(function (n) { n.className = ''; });
+    var note = '';
+    if (f.effective && f.bound) { steps.forEach(function (n) { n.className = 'done'; }); note = 'Los tres pasos hechos.'; }
+    else if (f.effective) { steps[0].className = 'done'; steps[1].className = 'done'; steps[2].className = 'now'; note = 'Esperando el enlace de SystemUI (hasta 3 min).'; }
+    else if (f.enabled) { steps[0].className = 'done'; steps[1].className = 'now'; note = 'Reinicia para que el overlay entre en el arranque.'; }
+    else if (f.tripped) { steps[0].className = 'done'; steps[1].className = 'done'; steps[2].className = 'fail'; note = 'Algo falló en el último intento: ' + (S.tripped || ''); }
+    else { steps[0].className = 'now'; note = 'Todavía no se ha pedido nada.'; }
+    $('steps-note').textContent = note;
+
+    // Recomendación
+    if (reco) {
+      $('reco-card').hidden = false;
+      renderReco($('reco'), reco);
+    } else {
+      $('reco-card').hidden = true;
     }
-    var failed = s.failed_boot && s.failed_boot !== '0';
-    rows.appendChild(row('Registro de un arranque fallido', failed ? 'n' : 'q', failed ? s.failed_boot : 'No hay'));
+
+    // Último suceso
+    var last = $('last');
+    clear(last);
+    if (history.length) {
+      $('last-card').hidden = false;
+      last.appendChild(historyItem(history[0]));
+    } else {
+      $('last-card').hidden = true;
+    }
   }
 
-  var hasHybrid = false;
-  function busy(on) { $('app').classList.toggle('busy', on); }
+  function renderReco(box, r) {
+    clear(box);
+    var tone = r.id === 'active' ? 'ok' : (r.id === 'install' ? 'warn' : 'go');
+    box.className = 'reco ' + tone;
+    var title = { 'active': 'Todo en marcha', 'install': 'Primero el montaje', 'plan-a': 'Prueba el Plan A', 'plan-b': 'Siguiente: Plan B', 'enable': 'Puedes activar' }[r.id] || 'Recomendación';
+    box.appendChild(el('div', { class: 'ico ' + (tone === 'go' ? 'info' : tone) }, [icon(tone === 'ok' ? 'check' : 'info')]));
+    box.appendChild(el('div', null, [el('b', { text: title }), el('span', { class: 'small', text: r.text })]));
+  }
 
-  function refresh() {
+  function historyItem(h) {
+    var k = KIND[h.kind] || [h.kind, 'info', 'info'];
+    return el('li', { class: 'item' }, [
+      el('div', { class: 'ico ' + k[1] }, [icon(k[2])]),
+      el('div', { class: 'body' }, [el('div', { class: 't', text: k[0] }), el('div', { class: 'd', text: h.detail })]),
+      el('time', { text: fmtWhen(h.when) })
+    ]);
+  }
+
+  /* ---------- Render: Comprobaciones, historial, ajustes ---------- */
+  function renderChecks() {
+    var ul = $('checks');
+    clear(ul);
+    if (!checks.length) {
+      ul.appendChild(el('li', { class: 'item' }, [el('div', { class: 'body muted small', text: 'Sin datos todavía.' })]));
+    }
+    checks.forEach(function (c) {
+      var ic = { ok: 'check', warn: 'alert', bad: 'x', info: 'info' }[c.level] || 'info';
+      ul.appendChild(el('li', { class: 'item' }, [
+        el('div', { class: 'ico ' + (c.level || 'info') }, [icon(ic)]),
+        el('div', { class: 'body' }, [el('div', { class: 't', text: c.title }), el('div', { class: 'd', text: c.detail })])
+      ]));
+    });
+    var box = $('reco2');
+    clear(box);
+    if (reco) { var d = el('div', { class: 'reco' }); renderReco(d, reco); box.appendChild(d); }
+
+    // Punto de aviso en la pestaña
+    var bad = checks.some(function (c) { return c.level === 'bad'; });
+    var warn = checks.some(function (c) { return c.level === 'warn'; });
+    var tab = $('t-checks').querySelector('svg');
+    tab.parentNode.classList.remove('dot', 'warn');
+    if (bad) { tab.parentNode.classList.add('dot'); } else if (warn) { tab.parentNode.classList.add('dot', 'warn'); }
+  }
+
+  function renderRows() {
+    var rows = $('rows');
+    clear(rows);
+    function row(label, ok, text) {
+      rows.appendChild(el('li', { class: 'item' }, [
+        el('div', { class: 'ico ' + ok }, [icon(ok === 'ok' ? 'check' : ok === 'bad' ? 'x' : 'info')]),
+        el('div', { class: 'body' }, [el('div', { class: 't', text: label }), el('div', { class: 'd', text: text })])
+      ]));
+    }
+    var f = flags();
+    row('Pedido para el arranque', f.enabled ? 'ok' : 'info', f.enabled ? 'Sí' : 'No');
+    row('Overlay efectivo ahora', f.effective ? 'ok' : 'info', f.effective ? 'Sí' : 'No');
+    row('SystemUI enlazado a Nexus', f.effective ? (f.bound ? 'ok' : 'bad') : 'info', f.effective ? (f.bound ? 'Sí' : 'No') : '—');
+    row('Recientes del sistema', 'info', (S.current_recents || '?').replace('/com.android.quickstep.RecentsActivity', ''));
+    row('Nexus es app privilegiada', S.nexus_privileged === '1' ? 'ok' : S.nexus_privileged === '0' ? 'bad' : 'info',
+      S.nexus_privileged === '1' ? 'Sí' : S.nexus_privileged === '0' ? 'No' : 'No se pudo leer');
+    row('Comprobación de Nexus', S.probe_passed === 'true' ? 'ok' : 'info', S.probe_passed ? (S.probe_passed === 'true' ? 'Compatible' : 'No compatible') : 'Abre Nexus una vez');
+    if (S.probe_denied) { row('Permisos sin conceder', 'bad', S.probe_denied); }
+    var failed = S.failed_boot && S.failed_boot !== '0';
+    row('Registro de un arranque fallido', failed ? 'bad' : 'info', failed ? S.failed_boot : 'No hay');
+  }
+
+  function renderHistory() {
+    var ul = $('history');
+    clear(ul);
+    if (!history.length) {
+      ul.appendChild(el('li', { class: 'item' }, [el('div', { class: 'body muted small', text: 'Sin sucesos todavía.' })]));
+      return;
+    }
+    history.slice(0, 30).forEach(function (h) { ul.appendChild(historyItem(h)); });
+  }
+
+  function renderSettings() {
+    var f = flags();
+    $('plan-a-card').hidden = !f.hybrid;
+    if (f.hybrid) {
+      $('plan-a-chip').textContent = f.umountOn ? 'true' : (S.hybrid_umount || '?');
+      $('plan-a-chip').className = 'chip' + (f.umountOn ? ' on' : '');
+      $('plan-a-text').textContent = f.changed ? 'Cambiado por Nexus (hay copia del original).' : (f.umountOn ? 'Ya estaba así en tu configuración.' : 'Sin cambiar.');
+      $('btn-plan-a-on').disabled = f.umountOn;
+      $('btn-plan-a-off').disabled = !f.changed;
+    }
+    $('ver').textContent = S.module_version ? 'módulo v' + S.module_version : '';
+  }
+
+  function renderAll() { renderHome(); renderChecks(); renderRows(); renderHistory(); renderSettings(); }
+
+  /* ---------- Carga ---------- */
+  function refresh(opts) {
     busy(true);
-    return run(TOOL + ' state')
+    return run(TOOL + ' state', 60000)
       .then(function (r) {
         if (r.code !== 0 && !r.out) { throw new Error(r.err || 'El comando falló'); }
-        render(parseState(r.out));
+        S = parseKV(r.out);
+        renderAll();
+        schedulePoll();
+        return Promise.all([
+          run(TOOL + ' history', 20000).then(function (h) { history = parseHistory(h.out); }).catch(function () { /* sin historial */ }),
+          loadChecks()
+        ]);
       })
+      .then(renderAll)
       .catch(function (e) {
-        setVerdict('v-bad', 'No se pudo leer el estado', e.message);
+        setHero('bad', 'Error', 'x', 'No se pudo leer el estado', e.message,
+          [btn('Reintentar', 'primary', function () { refresh(); }, 'refresh')]);
       })
       .then(function () { busy(false); });
   }
 
-  function show(id, text) { $(id).textContent = text; }
+  function loadChecks() {
+    return run(TOOL + ' preflight', 60000).then(function (r) {
+      var p = parsePreflight(r.out);
+      checks = p.checks; reco = p.reco;
+    }).catch(function () { /* se queda con lo anterior */ });
+  }
 
-  function cmdOutput(r) { return (r.out + (r.err ? '\n' + r.err : '')).trim() || '(sin salida)'; }
+  // Mientras se espera el enlace de SystemUI o el arranque, se vuelve a mirar solo (y solo con la pantalla a la vista).
+  function schedulePoll() {
+    clearTimeout(pollTimer);
+    var f = flags();
+    if (f.effective && !f.bound) {
+      pollTimer = setTimeout(function () {
+        if (document.visibilityState === 'visible' && loading === 0) { refresh(); } else { schedulePoll(); }
+      }, 8000);
+    }
+  }
+
+  /* ---------- Acciones ---------- */
+  function goTab(name) {
+    ['home', 'checks', 'logs', 'settings'].forEach(function (t) {
+      $('tab-' + t).classList.toggle('on', t === name);
+      $('t-' + t).setAttribute('aria-selected', t === name ? 'true' : 'false');
+    });
+    window.scrollTo(0, 0);
+  }
 
   function askReboot(text) {
-    $('dlg-reboot-text').textContent = text;
+    $('dlg-reboot-text').textContent = text || 'El móvil se reiniciará.';
     $('dlg-reboot').showModal();
   }
 
-  $('btn-refresh').addEventListener('click', refresh);
-
-  $('btn-enable').addEventListener('click', function () {
-    $('chk-force').checked = false;
-    $('lbl-umount').hidden = !hasHybrid;
-    $('chk-umount').checked = hasHybrid;
+  function openEnable(pre) {
+    pre = pre || {};
+    var f = flags();
+    $('lbl-umount').hidden = !f.hybrid;
+    $('chk-umount').checked = f.hybrid && !!pre.umount && !f.umountOn;
+    $('chk-force').checked = !!pre.force || f.tripped;
     $('dlg-enable').showModal();
-  });
-  $('dlg-cancel').addEventListener('click', function () { $('dlg-enable').close(); });
-  $('dlg-ok').addEventListener('click', function () {
+  }
+
+  function doEnable() {
+    var f = flags();
     var force = $('chk-force').checked;
-    var fix = hasHybrid && $('chk-umount').checked;
+    var fix = f.hybrid && $('chk-umount').checked;
     $('dlg-enable').close();
     busy(true);
     run(TOOL + ' enable' + (force ? ' --force' : '') + (fix ? ' --umount-fix' : ''))
       .then(function (r) {
-        show('action-out', cmdOutput(r));
+        show('action-out', out(r));
         if (r.code === 0) {
           toast('Pedido: reinicia para aplicarlo');
           askReboot('Los gestos de Nexus se aplican en el arranque. ¿Reiniciar ahora?');
+        } else {
+          toast('No se pudo activar: ' + (r.err || r.out).trim().split('\n').pop());
+          goTab('settings');
         }
       })
-      .catch(function (e) { show('action-out', e.message); })
+      .catch(function (e) { toast(e.message); })
       .then(function () { busy(false); return refresh(); });
-  });
+  }
 
-  $('btn-disable').addEventListener('click', function () {
+  function doDisable() {
     busy(true);
     run(TOOL + ' disable')
       .then(function (r) {
-        show('action-out', cmdOutput(r));
+        show('action-out', out(r));
         if (r.code === 0) { askReboot('Se desactiva en el próximo arranque. ¿Reiniciar ahora para volver al launcher de serie?'); }
       })
-      .catch(function (e) { show('action-out', e.message); })
+      .catch(function (e) { toast(e.message); })
       .then(function () { busy(false); return refresh(); });
-  });
+  }
 
-  $('btn-restore-hybrid').addEventListener('click', function () {
+  function planA(on) {
     busy(true);
-    run(TOOL + ' umount-fix restore')
+    run(TOOL + ' umount-fix ' + (on ? 'on' : 'restore'))
       .then(function (r) {
-        show('action-out', cmdOutput(r));
-        if (r.code === 0) { askReboot('hybrid_mount vuelve a su configuración al reiniciar. ¿Reiniciar ahora?'); }
+        show('action-out', out(r));
+        toast(r.code === 0 ? (on ? 'Ajuste aplicado: reinicia' : 'Configuración restaurada: reinicia') : 'No se pudo cambiar');
       })
-      .catch(function (e) { show('action-out', e.message); })
+      .catch(function (e) { toast(e.message); })
       .then(function () { busy(false); return refresh(); });
+  }
+
+  function copyText(text) {
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      return ok;
+    }
+    return new Promise(function (resolve) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { resolve(true); }, function () { resolve(fallback()); });
+      } else { resolve(fallback()); }
+    });
+  }
+
+  function getDiag() {
+    if (lastDiag) { return Promise.resolve(lastDiag); }
+    return run(TOOL + ' diag', 120000).then(function (r) { lastDiag = out(r); return lastDiag; });
+  }
+
+  /* ---------- Eventos ---------- */
+  $('btn-refresh').addEventListener('click', function () { lastDiag = ''; refresh(); });
+  $('btn-recheck').addEventListener('click', function () {
+    busy(true);
+    loadChecks().then(function () { renderChecks(); renderHome(); toast('Comprobado'); }).then(function () { busy(false); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('nav [data-tab]'), function (b) {
+    b.addEventListener('click', function () { goTab(b.getAttribute('data-tab')); });
   });
 
+  $('dlg-cancel').addEventListener('click', function () { $('dlg-enable').close(); });
+  $('dlg-ok').addEventListener('click', doEnable);
+  $('btn-disable').addEventListener('click', doDisable);
   $('btn-reboot').addEventListener('click', function () { askReboot('El móvil se reiniciará.'); });
   $('dlg-reboot-cancel').addEventListener('click', function () { $('dlg-reboot').close(); });
   $('dlg-reboot-ok').addEventListener('click', function () {
     $('dlg-reboot').close();
-    run('reboot').catch(function (e) { show('action-out', e.message); });
+    run('reboot').catch(function (e) { toast(e.message); });
   });
+  $('btn-plan-a-on').addEventListener('click', function () { planA(true); });
+  $('btn-plan-a-off').addEventListener('click', function () { planA(false); });
 
   $('btn-diag').addEventListener('click', function () {
     busy(true);
-    show('diag-out', 'Generando…');
-    run(TOOL + ' diag')
-      .then(function (r) { show('diag-out', cmdOutput(r)); })
-      .catch(function (e) { show('diag-out', e.message); })
-      .then(function () { busy(false); });
+    lastDiag = '';
+    getDiag().then(function (t) { show('diag-out', t); }).catch(function (e) { show('diag-out', e.message); }).then(function () { busy(false); });
   });
-
+  $('btn-copy').addEventListener('click', function () {
+    busy(true);
+    getDiag().then(function (t) {
+      show('diag-out', t);
+      return copyText(t).then(function (ok) { toast(ok ? 'Informe copiado' : 'Mantén pulsado el texto para copiarlo'); });
+    }).catch(function (e) { toast(e.message); }).then(function () { busy(false); });
+  });
   $('btn-export').addEventListener('click', function () {
     busy(true);
-    run(TOOL + ' diag --export')
-      .then(function (r) {
-        show('diag-out', cmdOutput(r));
-        if (r.code === 0) { toast('Guardado en Descargas'); }
-      })
+    run(TOOL + ' diag --export', 120000)
+      .then(function (r) { show('diag-out', out(r)); if (r.code === 0) { toast('Guardado en Descargas'); } })
       .catch(function (e) { show('diag-out', e.message); })
       .then(function () { busy(false); });
   });
-
   $('btn-logs').addEventListener('click', function () {
     busy(true);
     run(TOOL + ' logs')
-      .then(function (r) {
-        show('diag-out', cmdOutput(r));
-        if (r.code === 0) { toast('Copiado a Nexus-Logs'); }
-      })
+      .then(function (r) { show('diag-out', out(r)); if (r.code === 0) { toast('Copiado a Nexus-Logs'); } })
       .catch(function (e) { show('diag-out', e.message); })
       .then(function () { busy(false); });
   });
-
-  $('btn-log').addEventListener('click', function () {
-    run('tail -n 80 ' + STATE_DIR + '/watchdog.log 2>&1')
-      .then(function (r) { show('log-out', cmdOutput(r)); })
-      .catch(function (e) { show('log-out', e.message); });
+  document.querySelector('details > summary').addEventListener('click', function () {
+    if (this.parentNode.open) { return; }
+    run('tail -n 80 ' + STATE_DIR + '/watchdog.log 2>&1').then(function (r) { show('log-out', out(r)); }).catch(function (e) { show('log-out', e.message); });
   });
 
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && hasKsu) { schedulePoll(); }
+  });
+
+  /* ---------- Arranque ---------- */
   if (!hasKsu) {
     $('noksu').hidden = false;
-    setVerdict('v-idle', 'Sin conexión con el gestor de root');
-    document.querySelectorAll('button').forEach(function (b) { b.disabled = true; });
+    setHero('idle', 'Sin conexión', 'info', 'Sin conexión con el gestor de root', 'Esta página solo funciona dentro de KernelSU, APatch o una app compatible.', []);
+    Array.prototype.forEach.call(document.querySelectorAll('.btn'), function (b) { b.disabled = true; });
   } else {
     refresh();
   }

@@ -14,6 +14,7 @@
 #   system/bin/nexus-quickstep
 #   post-fs-data.sh                                  (monta el overlay solo si se pidió con `enable`)
 #   service.sh                                       (vigilante de Quickstep)
+#   uninstall.sh                                     (al quitar el módulo: restaura hybrid_mount y borra el estado)
 #   webroot/index.html                               (WebUI: estado y control desde el gestor de root)
 
 MIN_API=34
@@ -36,6 +37,7 @@ fi
 [ -f "$TOOL" ] || abort "! El zip no lleva nexus-quickstep: está incompleto"
 [ -f "$MODPATH/service.sh" ] || abort "! El zip no lleva service.sh: está incompleto"
 [ -f "$MODPATH/post-fs-data.sh" ] || abort "! El zip no lleva post-fs-data.sh: está incompleto"
+[ -f "$MODPATH/uninstall.sh" ] || abort "! El zip no lleva uninstall.sh: está incompleto"
 [ -f "$MODPATH/webroot/index.html" ] || abort "! El zip no lleva el WebUI (webroot/index.html): está incompleto"
 # El overlay no debe estar en system/: si lo estuviera se aplicaría en todos los arranques.
 [ ! -e "$MODPATH/system/product/overlay" ] || abort "! El zip lleva un overlay montable de serie: está mal construido"
@@ -44,6 +46,7 @@ set_perm_recursive "$MODPATH/system/product" 0 0 0755 0644
 set_perm "$TOOL" 0 2000 0755
 set_perm "$MODPATH/post-fs-data.sh" 0 0 0755
 set_perm "$MODPATH/service.sh" 0 0 0755
+set_perm "$MODPATH/uninstall.sh" 0 0 0755
 set_perm_recursive "$MODPATH/webroot" 0 0 0755 0644
 
 ui_print "- Nexus pasará a ser app privilegiada de /product"

@@ -38,12 +38,16 @@ if [ -f "$STATE/booting" ]; then
   [ -f "$TOOL" ] && sh "$TOOL" capture keep >/dev/null 2>&1
   rm -f "$STATE/enabled" "$STATE/booting"
   # Si el overlay se probó con el ajuste de hybrid_mount (disable_umount) y no arrancó, se deja como estaba.
-  [ -f "$STATE/hybrid-changed" ] && [ -f "$TOOL" ] && sh "$TOOL" umount-fix restore >/dev/null 2>&1
+  if [ -f "$STATE/hybrid-changed" ]; then
+    touch "$STATE/plan-a-failed"
+    [ -f "$TOOL" ] && sh "$TOOL" umount-fix restore >/dev/null 2>&1
+  fi
   # Sin fecha: en este punto del arranque el reloj aún no está ajustado (sale 1970).
   reason=$(cat "$STATE/abort-reason" 2>/dev/null)
   echo "el arranque anterior con el overlay no terminó${reason:+ ($reason)}" > "$STATE/tripped"
   rm -f "$STATE/abort-reason"
   echo "version=bootloop" > "$STATE/tripped.meta"
+  [ -f "$TOOL" ] && sh "$TOOL" hist-add arranque-fallido "el arranque con el overlay no terminó${reason:+: $reason}" >/dev/null 2>&1
   log "el arranque anterior no terminó: overlay desactivado"
   exit 0
 fi

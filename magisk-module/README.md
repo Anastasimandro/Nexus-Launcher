@@ -15,8 +15,21 @@ system/product/etc/permissions/privapp-permissions-nexus.xml   lista blanca de p
 overlay-static/NexusRecentsOverlay.apk                   overlay ESTÁTICO que hace de Nexus el proveedor de Quickstep (fuera de system/: no se monta de serie)
 post-fs-data.sh                                          copia ese overlay a /product/overlay solo si se pidió con `enable`
 service.sh                                               vigilante: si SystemUI no se enlaza a Nexus, lo desactiva y reinicia
+uninstall.sh                                             al quitar el módulo: restaura hybrid_mount si Nexus lo cambió y borra el estado
+webroot/index.html                                       WebUI (KernelSU, APatch; en Magisk con KsuWebUI o MMRL)
 system/bin/nexus-quickstep                               pide, quita y comprueba el overlay
 ```
+
+## WebUI
+
+Cuatro pestañas: **Inicio** (qué pasa y un botón con lo que conviene hacer, los tres pasos pedir → reiniciar → verificar), **Comprobar** (comprobaciones previas con semáforo y una recomendación), **Registros** (historial de intentos, informe, copia a `Nexus-Logs`) y **Ajustes** (plan A, plan B, desactivar, reiniciar). Por debajo usa estos comandos, que también valen en terminal: `nexus-quickstep state | preflight | history | diag | logs`.
+
+- `preflight` solo lee. Imprime `check|id|nivel|título|detalle` y una línea `recommend|camino|texto` (`install`, `active`, `plan-a`, `plan-b` o `enable`).
+- `history` es la cronología (`fecha|suceso|detalle`). Los sucesos de antes de que el reloj esté ajustado salen con fecha 1970 y el WebUI los muestra como «al arrancar».
+- Si el Plan A (ajuste de hybrid_mount) falla, se anota (`plan-a-failed`) y la recomendación pasa al Plan B.
+
+Se probó en un navegador real con la herramienta de verdad detrás y un móvil simulado (sin hybrid_mount, con hybrid_mount, tras un fallo de zygote, activo y sin montar): no sustituye una prueba en el móvil.
+
 
 En este directorio están `module.prop` (con `@VERSION@` y `@VERSION_CODE@`), `customize.sh`, `META-INF/`, las listas de `permissions/`, el código del overlay en `overlay/` y la herramienta en `tools/`. El APK y el XML los pone el script, que también compila y firma el overlay (`.github/scripts/build-recents-overlay.sh`).
 

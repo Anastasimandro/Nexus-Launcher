@@ -57,7 +57,9 @@ GUARD_LOST="${NEXUS_GUARD_LOST:-60}"
 # El registro vive en capture/; si el arranque no termina, post-fs-data.sh lo copia a failed-boot/
 # en el arranque siguiente (el que ya va sin overlay) para que se pueda exportar.
 CAPTURE_DIR="$STATE_DIR/capture"
-OVERLAY_PATH="/product/overlay/NexusRecentsOverlay.apk"
+# /product se puede cambiar (NEXUS_PRODUCT_DIR) para probar la herramienta fuera de un móvil.
+PRODUCT_DIR="${NEXUS_PRODUCT_DIR:-/product}"
+OVERLAY_PATH="$PRODUCT_DIR/overlay/NexusRecentsOverlay.apk"
 FAILED_DIR="$STATE_DIR/failed-boot"
 BOOT_TIMEOUT="${NEXUS_BOOT_TIMEOUT:-360}"
 EXPORT_DIR="${NEXUS_EXPORT_DIR:-/storage/emulated/0/Download}"
@@ -70,6 +72,9 @@ SDCARD_READY="${NEXUS_SDCARD_READY:-/storage/emulated/0/Android}"
 HYBRID_CONFIG="${NEXUS_HYBRID_CONFIG:-/data/adb/hybrid-mount/config.toml}"
 HYBRID_BACKUP="$STATE_DIR/hybrid-config.orig"
 HYBRID_MARK="$STATE_DIR/hybrid-changed"
+# Historial de intentos (una línea por suceso: fecha|suceso|detalle) y carpeta de módulos de root.
+HISTORY_FILE="$STATE_DIR/history.log"
+MODULES_DIR="${NEXUS_MODULES_DIR:-/data/adb/modules}"
 
 say() { echo "$*"; }
 die() { echo "nexus-quickstep: $*" >&2; exit 1; }
@@ -80,7 +85,7 @@ log() {
 }
 
 usage() {
-  say "Uso: nexus-quickstep status | enable [--force] [--umount-fix] | disable [--reboot] | bound | state | diag [--export] | logs | umount-fix on|restore|status"
+  say "Uso: nexus-quickstep status | enable [--force] [--umount-fix] | disable [--reboot] | bound | state | diag [--export] | logs | umount-fix on|restore|status | preflight | history"
   exit "${1:-2}"
 }
 
@@ -150,7 +155,7 @@ overlay_effective() {
 
 # Línea de `ls` del APK que el módulo ha puesto en /product/overlay (vacío si no está).
 applied_apk() {
-  ls -l /product/overlay/NexusRecentsOverlay.apk 2>/dev/null
+  ls -l "$OVERLAY_PATH" 2>/dev/null
 }
 
 show_status() {
@@ -242,6 +247,7 @@ hybrid_apply() {
   rm -f "$tmp"
   date '+%Y-%m-%d %H:%M:%S' > "$HYBRID_MARK"
   log "hybrid_mount: disable_umount = true (copia en $HYBRID_BACKUP)"
+  hist hybrid "disable_umount = true (copia guardada)"
   say "hybrid_mount: disable_umount = true. Copia del original guardada; se restaura sola si el overlay falla."
 }
 
@@ -250,10 +256,172 @@ hybrid_restore() {
   if cat "$HYBRID_BACKUP" > "$HYBRID_CONFIG"; then
     rm -f "$HYBRID_BACKUP" "$HYBRID_MARK"
     log "hybrid_mount: configuración original restaurada"
+    hist hybrid "configuración original restaurada"
     [ "$1" = "quiet" ] || say "hybrid_mount: configuración original restaurada (surte efecto al reiniciar)."
   else
     log "hybrid_mount: NO se pudo restaurar $HYBRID_CONFIG (copia en $HYBRID_BACKUP)"
     [ "$1" = "quiet" ] || say "No se pudo restaurar. La copia original está en $HYBRID_BACKUP."
+  fi
+}
+
+# --- Historial de intentos ---
+# Una línea por suceso en history.log, que el WebUI muestra como cronología. Durante el arranque temprano
+# (post-fs-data) el reloj aún no está ajustado y la fecha sale 1970: el WebUI lo trata como "al arrancar".
+hist() {
+  mkdir -p "$STATE_DIR" 2>/dev/null
+  # El detalle va en una línea y sin "|" (separador).
+  d=$(printf '%s' "$2" | tr '\n|' '  ')
+  echo "$(date '+%Y-%m-%d %H:%M:%S')|$1|$d" >> "$HISTORY_FILE" 2>/dev/null
+  if [ "$(wc -l < "$HISTORY_FILE" 2>/dev/null || echo 0)" -gt 120 ]; then
+    tail -n 80 "$HISTORY_FILE" > "$HISTORY_FILE.tmp" 2>/dev/null && cat "$HISTORY_FILE.tmp" > "$HISTORY_FILE"
+    rm -f "$HISTORY_FILE.tmp"
+  fi
+}
+
+do_history() {
+  [ -r "$HISTORY_FILE" ] && cat "$HISTORY_FILE"
+  return 0
+}
+
+# Por qué se desactivó el overlay, en una palabra (para que el WebUI explique y recomiende).
+tripped_kind() {
+  t=$(cat "$STATE_DIR/tripped" 2>/dev/null)
+  [ -n "$t" ] || { echo ""; return; }
+  case "$t" in
+    *"zygote no puede abrir"*) echo "zygote-overlay" ;;
+    *"no terminó"*) echo "boot-incomplete" ;;
+    *"no se enlazó"* | *"se perdió el enlace"*) echo "not-bound" ;;
+    *) echo "other" ;;
+  esac
+}
+
+# Nexus como app de sistema privilegiada: NX_SYSTEM y NX_PRIV valen 1, 0 o ? (si `dumpsys package` no
+# trae la línea; el formato no está verificado en todas las ROM).
+nexus_flags() {
+  pk=$(dumpsys package "$PKG" 2>/dev/null)
+  NX_PRIV="?"; NX_SYSTEM="?"
+  if echo "$pk" | grep -q 'privateFlags='; then
+    if echo "$pk" | grep 'privateFlags=' | head -n 1 | grep -q 'PRIVILEGED'; then NX_PRIV=1; else NX_PRIV=0; fi
+  fi
+  if echo "$pk" | grep -q 'pkgFlags='; then
+    if echo "$pk" | grep 'pkgFlags=' | head -n 1 | grep -q ' SYSTEM'; then NX_SYSTEM=1; else NX_SYSTEM=0; fi
+  fi
+}
+
+# Ids de los módulos de root activos (sin disable ni remove).
+active_module_ids() {
+  for d in "$MODULES_DIR"/*/; do
+    [ -f "${d}module.prop" ] || continue
+    [ -f "${d}disable" ] && continue
+    [ -f "${d}remove" ] && continue
+    sed -n 's/^id=//p' "${d}module.prop" | head -n 1
+  done
+}
+
+# --- Comprobaciones previas ---
+# Salida: líneas `check|id|nivel|título|detalle` (nivel: ok, warn, bad o info) y una línea
+# `recommend|camino|explicación`. Solo lee: no cambia nada. La lee el WebUI (pestaña Comprobaciones).
+pf() { echo "check|$1|$2|$3|$(printf '%s' "$4" | tr '\n|' '  ')"; }
+
+do_preflight() {
+  need_root
+  ids=$(active_module_ids)
+  # Gestor de root (orientativo).
+  if [ -d /data/adb/ksu ] || command -v ksud >/dev/null 2>&1; then root_mgr="KernelSU"
+  elif [ -d /data/adb/ap ]; then root_mgr="APatch"
+  elif [ -d /data/adb/magisk ]; then root_mgr="Magisk"
+  else root_mgr="desconocido"; fi
+  zy=$(echo "$ids" | grep -i 'zygisk' | tr '\n' ' ')
+  has_hybrid=0
+  { [ -f "$HYBRID_CONFIG" ] || echo "$ids" | grep -qi 'hybrid'; } && has_hybrid=1
+  stack="$root_mgr"
+  [ "$has_hybrid" = "1" ] && stack="$stack, hybrid_mount"
+  [ -n "$zy" ] && stack="$stack, ${zy% }"
+  pf stack info "Root detectado" "$stack"
+
+  if [ -f "$MODDIR/disable" ]; then
+    pf module bad "Módulo desactivado en el gestor" "Actívalo en el gestor de root y reinicia."
+  else
+    pf module ok "Módulo activo" "versión $(sed -n 's/^version=//p' "$MODDIR/module.prop" 2>/dev/null | head -n 1)"
+  fi
+
+  if [ -f "$PRODUCT_DIR/priv-app/Nexus/Nexus.apk" ]; then
+    nexus_flags
+    case "$NX_PRIV" in
+      1) pf nexus ok "Nexus es app privilegiada de /product" "El módulo la montó y Android la registró como app de sistema." ;;
+      0) pf nexus bad "Nexus está montado pero no es privilegiada" "Reinicia una vez tras flashear. Si sigue igual, revisa el metamódulo de montaje." ;;
+      *) pf nexus warn "Nexus está montado" "No se pudo leer si es privilegiada (dumpsys package sin esa línea)." ;;
+    esac
+  else
+    pf nexus bad "Nexus no está montado en /product" "Reinicia tras flashear. En KernelSU hace falta un metamódulo de montaje (hybrid_mount, meta-overlayfs…): sin él no se monta nada."
+  fi
+
+  if [ -f "$MODDIR/overlay-static/NexusRecentsOverlay.apk" ]; then
+    pf overlayapk ok "El módulo lleva el overlay" "overlay-static/NexusRecentsOverlay.apk"
+  else
+    pf overlayapk bad "Falta el overlay en el módulo" "Reflashea el módulo."
+  fi
+
+  if [ -r "$PROBE_FILE" ]; then
+    if [ "$(probe_value passed)" = "true" ]; then
+      pf compat ok "Quickstep es compatible con este Android" "sdk $(probe_value sdk)"
+    else
+      pf compat warn "Quickstep puede no ser compatible" "sdk $(probe_value sdk); falta: $(probe_value missing). Con «Forzar» se activa igualmente."
+    fi
+  else
+    pf compat warn "Nexus aún no comprobó la compatibilidad" "Abre Nexus una vez y vuelve aquí (o usa «Forzar»)."
+  fi
+
+  if [ -e "$PRODUCT_DIR/overlay/config/config.xml" ]; then
+    pf oemconfig bad "Hay un overlay/config/config.xml en /product" "El sistema ignoraría un overlay estático que no esté en él."
+  else
+    pf oemconfig ok "Sin overlay/config/config.xml" "Un overlay estático nuevo no será ignorado."
+  fi
+
+  if [ "$has_hybrid" = "1" ]; then
+    hv=$(hybrid_value)
+    if [ "$hv" = "true" ]; then
+      pf hybrid ok "hybrid_mount: disable_umount = true" "Las apps ven los montajes del módulo$([ -f "$HYBRID_MARK" ] && echo " (cambiado por Nexus)")."
+    elif [ -n "$zy" ]; then
+      pf hybrid warn "hybrid_mount + Zygisk: riesgo de fallo con el overlay" "Con esta combinación zygote perdió el montaje del overlay en un arranque anterior. El Plan A ajusta disable_umount."
+    else
+      pf hybrid info "hybrid_mount detectado" "disable_umount = $hv"
+    fi
+  fi
+
+  kind=$(tripped_kind)
+  pa_failed=0; [ -f "$STATE_DIR/plan-a-failed" ] && pa_failed=1
+  [ "$pa_failed" = "1" ] && pf plana bad "El Plan A ya se probó y no bastó" "Con disable_umount = true el arranque con el overlay también falló. La configuración de hybrid_mount se restauró sola."
+  if [ -n "$kind" ]; then
+    case "$kind" in
+      zygote-overlay) pf previous bad "El último intento rompió el arranque" "Zygote no pudo abrir el APK del overlay y todas las apps abortaron. El módulo reinició solo." ;;
+      boot-incomplete) pf previous bad "El último arranque con overlay no terminó" "$(cat "$STATE_DIR/tripped")" ;;
+      not-bound) pf previous warn "Se desactivó: SystemUI no se enlazó" "$(cat "$STATE_DIR/tripped")" ;;
+      *) pf previous warn "El vigilante desactivó el overlay" "$(cat "$STATE_DIR/tripped")" ;;
+    esac
+  fi
+
+  rc=$(current_recents)
+  rpkg=${rc%%/*}
+  if [ -n "$rpkg" ] && [ "$rpkg" != "$PKG" ]; then
+    pf rom info "Recientes de la ROM" "$rpkg (el Plan B pondría a Nexus con ese mismo paquete; aún no disponible en esta versión)"
+  elif [ "$rpkg" = "$PKG" ]; then
+    pf rom ok "Nexus ya es el proveedor de recientes" "$rc"
+  fi
+
+  # Recomendación: lo primero que no esté bien manda.
+  if [ -f "$MODDIR/disable" ] || [ ! -f "$PRODUCT_DIR/priv-app/Nexus/Nexus.apk" ]; then
+    echo "recommend|install|Primero hay que dejar el módulo montado: actívalo, reinicia y vuelve aquí."
+  elif overlay_effective && is_bound; then
+    echo "recommend|active|Todo en marcha: Nexus es el proveedor de recientes y SystemUI está enlazado."
+  elif [ "$pa_failed" = "1" ] || { [ "$kind" = "zygote-overlay" ] && { [ "$has_hybrid" != "1" ] || [ "$(hybrid_value)" = "true" ]; }; }; then
+    echo "recommend|plan-b|El overlay no sirve en este móvil ni con el ajuste de hybrid_mount: el siguiente camino es el Plan B (Nexus con el paquete del launcher de la ROM)."
+  elif [ "$kind" = "zygote-overlay" ]; then
+    echo "recommend|plan-a|El fallo fue el de zygote con hybrid_mount: prueba el Plan A (ajuste disable_umount). Se restaura solo si falla."
+  elif [ "$has_hybrid" = "1" ] && [ -n "$zy" ] && [ "$(hybrid_value)" != "true" ]; then
+    echo "recommend|plan-a|Tu pila de root (hybrid_mount + Zygisk) ya dio este fallo: empieza por el Plan A."
+  else
+    echo "recommend|enable|Puedes activar los gestos. Si el arranque falla, el módulo vuelve solo al estado de serie."
   fi
 }
 
@@ -286,7 +454,7 @@ do_enable() {
   [ -f "$MODDIR/disable" ] && die "el módulo está desactivado en el gestor (archivo disable)."
   # Con un overlay/config/config.xml en /product los overlays estáticos de esa partición que no
   # aparezcan en él se ignoran, y los que sí se ignoran dejan de aplicarse: no se toca.
-  if [ -e /product/overlay/config/config.xml ] && [ "$force" != "1" ]; then
+  if [ -e "$PRODUCT_DIR/overlay/config/config.xml" ] && [ "$force" != "1" ]; then
     die "/product/overlay/config/config.xml existe: el sistema ignoraría un overlay estático que no esté en él. Con --force se prueba igualmente."
   fi
   version=$(nexus_version_code)
@@ -306,6 +474,7 @@ do_enable() {
   [ "$umount_fix" = "1" ] && hybrid_apply
   rm -f "$STATE_DIR/tripped" "$STATE_DIR/tripped.meta" "$STATE_DIR/healthy" "$STATE_DIR/booting"
   echo "$(date '+%Y-%m-%d %H:%M:%S') version=$version" > "$STATE_DIR/enabled"
+  hist pedido "overlay pedido$([ "$force" = "1" ] && echo ", forzado")$([ "$umount_fix" = "1" ] && echo ", con ajuste de hybrid_mount")"
   say "Overlay pedido. REINICIA para que el sistema lo aplique en el arranque."
   say "Tras reiniciar: nexus-quickstep status  y  nexus-quickstep bound"
   say "Si SystemUI no llega a enlazarse con Nexus, el vigilante lo desactiva y reinicia solo."
@@ -315,6 +484,7 @@ do_enable() {
 do_disable() {
   need_root
   rm -f "$STATE_DIR/enabled" "$STATE_DIR/booting" "$STATE_DIR/healthy"
+  hist desactivado "desactivado a mano"
   # Se borra también la copia ya montada (por si el módulo no se reinicia limpio).
   rm -f "$MODDIR/system/product/overlay/NexusRecentsOverlay.apk" 2>/dev/null
   if [ "$1" = "--reboot" ]; then
@@ -344,10 +514,13 @@ do_bound() {
 trip() {
   reason="$1"
   log "DESACTIVO el overlay: $reason"
+  hist desactivado-auto "$reason"
   mkdir -p "$STATE_DIR"
   echo "$(date '+%Y-%m-%d %H:%M:%S') $reason" > "$STATE_DIR/tripped"
   echo "version=$(nexus_version_code)" > "$STATE_DIR/tripped.meta"
   rm -f "$STATE_DIR/enabled" "$STATE_DIR/booting" "$STATE_DIR/healthy"
+  # Si el overlay se probó con el ajuste de hybrid_mount, se anota que el Plan A no bastó antes de restaurarlo.
+  [ -f "$HYBRID_MARK" ] && touch "$STATE_DIR/plan-a-failed"
   hybrid_restore quiet
   capture_stop
   logs_sync
@@ -398,6 +571,12 @@ do_guard() {
   log "SystemUI enlazado al servicio de Nexus tras ${waited}s"
   mkdir -p "$STATE_DIR"
   date '+%Y-%m-%d %H:%M:%S' > "$STATE_DIR/healthy"
+  if [ -f "$HYBRID_MARK" ]; then
+    rm -f "$STATE_DIR/plan-a-failed"
+    hist verificado "arrancó con el overlay y SystemUI se enlazó a Nexus (con el Plan A)"
+  else
+    hist verificado "arrancó con el overlay y SystemUI se enlazó a Nexus"
+  fi
   rm -f "$STATE_DIR/booting"
   capture_stop
   logs_sync_later
@@ -646,7 +825,7 @@ show_state() {
   kv boot_completed "$(boot_completed && echo 1 || echo 0)"
   kv enabled "$([ -f "$STATE_DIR/enabled" ] && echo 1 || echo 0)"
   kv overlay_apk_in_module "$([ -f "$MODDIR/overlay-static/NexusRecentsOverlay.apk" ] && echo 1 || echo 0)"
-  kv overlay_apk_applied "$([ -f /product/overlay/NexusRecentsOverlay.apk ] && echo 1 || echo 0)"
+  kv overlay_apk_applied "$([ -f "$OVERLAY_PATH" ] && echo 1 || echo 0)"
   kv current_recents "$(current_recents)"
   if overlay_effective; then
     kv effective 1
@@ -658,25 +837,20 @@ show_state() {
   kv healthy "$([ -e "$STATE_DIR/healthy" ] && echo 1 || echo 0)"
   kv booting "$([ -f "$STATE_DIR/booting" ] && echo 1 || echo 0)"
   kv tripped "$(cat "$STATE_DIR/tripped" 2>/dev/null | tr '\n' ' ')"
+  kv tripped_kind "$(tripped_kind)"
   kv failed_boot "$([ -f "$FAILED_DIR/saved-at" ] && cat "$FAILED_DIR/saved-at" || echo 0)"
-  # Nexus como app de sistema privilegiada: se lee de `dumpsys package` (formato sin verificar en
-  # todas las ROM: si no aparece la línea, queda "?").
-  pk=$(dumpsys package "$PKG" 2>/dev/null)
-  priv="?"
-  system="?"
-  if echo "$pk" | grep -q 'privateFlags='; then
-    if echo "$pk" | grep 'privateFlags=' | head -n 1 | grep -q 'PRIVILEGED'; then priv=1; else priv=0; fi
-  fi
-  if echo "$pk" | grep -q 'pkgFlags='; then
-    if echo "$pk" | grep 'pkgFlags=' | head -n 1 | grep -q ' SYSTEM'; then system=1; else system=0; fi
-  fi
+  # Nexus como app de sistema privilegiada (ver nexus_flags).
+  nexus_flags
+  system=$NX_SYSTEM
+  priv=$NX_PRIV
   kv nexus_system "$system"
   kv nexus_privileged "$priv"
-  kv nexus_in_product "$([ -f /product/priv-app/Nexus/Nexus.apk ] && echo 1 || echo 0)"
+  kv nexus_in_product "$([ -f "$PRODUCT_DIR/priv-app/Nexus/Nexus.apk" ] && echo 1 || echo 0)"
   kv probe_passed "$(probe_value passed)"
   kv probe_denied "$(probe_value denied)"
   kv hybrid_umount "$(hybrid_value)"
   kv hybrid_changed "$([ -f "$HYBRID_MARK" ] && echo 1 || echo 0)"
+  kv plan_a_failed "$([ -f "$STATE_DIR/plan-a-failed" ] && echo 1 || echo 0)"
 }
 
 section() { echo; echo "=== $1 ==="; }
@@ -792,6 +966,9 @@ case "$1" in
   status) show_status ;;
   enable) shift; do_enable "$@" ;;
   umount-fix) do_umount_fix "$2" ;;
+  preflight) do_preflight ;;
+  history) do_history ;;
+  hist-add) need_root; hist "$2" "$3" ;;
   disable) do_disable "$2" ;;
   bound) do_bound ;;
   state) need_root; show_state ;;
