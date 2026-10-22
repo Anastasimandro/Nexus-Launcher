@@ -68,7 +68,7 @@ snapshot() {
   dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-$tag.txt"
   if sed '/Destroying services:/,$d' "$out/dumpsys-tis-$tag.txt" | grep -q "received=true"; then bound=sí; else bound=no; fi
   echo "| $tag | $granted/6 | ${missing:-ninguno} | ${rc:-?} | $bound | ${home:-?} |" >> "$out/table.md"
-  dsh logcat -d -b crash | grep -E "FATAL|Process:" | head -n 20 > "$out/crashes-$tag.txt"
+  dsh logcat -d -b crash | head -n 120 > "$out/crashes-$tag.txt"
 }
 : > "$out/table.md"
 echo "| paso | permisos clave | faltan | config_recentsComponentName | SystemUI enlazado | launcher de Inicio |" >> "$out/table.md"
@@ -142,6 +142,14 @@ snapshot "1-sustituido-reinicio-1"
 dsh input keyevent KEYCODE_HOME > /dev/null
 sleep 15
 snapshot "2-tras-inicio"
+
+# ¿Son los datos del Pixel Launcher (mismo paquete, otra firma y otro código) los que hacen caer la app?
+dsh ls -laZ /data/data/$PKG > "$out/data-dir-before-clear.txt"
+dsh pm clear "$PKG" > "$out/pm-clear.txt"
+dsh logcat -c
+dsh input keyevent KEYCODE_HOME > /dev/null
+sleep 20
+snapshot "2b-tras-pm-clear"
 
 # Segundo reinicio completo (estado persistido, caché de PackageManager ya reconstruida).
 reboot_device
