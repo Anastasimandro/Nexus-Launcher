@@ -610,6 +610,36 @@ build_diag() {
   pm path "$PKG" 2>&1
   dumpsys package "$PKG" 2>&1 | grep -E 'codePath|versionCode|versionName|pkgFlags|privateFlags|lastUpdateTime|installerPackageName' | head -n 24
   ls -laZ /product/priv-app/Nexus 2>&1
+  section "Launcher de recientes de la ROM (para valorar sustituirlo)"
+  rc=$(current_recents)
+  echo "config_recentsComponentName: $rc"
+  rpkg=${rc%%/*}
+  if [ -n "$rpkg" ] && [ "$rpkg" != "$PKG" ]; then
+    echo "paquete: $rpkg"
+    pm path "$rpkg" 2>&1
+    rpk=$(dumpsys package "$rpkg" 2>/dev/null)
+    echo "$rpk" | grep -E 'codePath|versionName|versionCode|pkgFlags|privateFlags|primaryCpuAbi|nativeLibraryDir|legacyNativeLibraryDir|firstInstallTime|lastUpdateTime|installerPackageName|signatures|Signatures' | head -n 16
+    echo "--- ¿tiene actualización en /data? (rutas del paquete)"
+    pm path "$rpkg" 2>&1 | sed 's/^package://'
+    for apk in $(pm path "$rpkg" 2>/dev/null | sed 's/^package://'); do
+      d=$(dirname "$apk")
+      echo "--- directorio $d"
+      ls -laZ "$d" 2>&1 | head -n 20
+      ls -la "$d/lib" "$d/oat" 2>&1 | head -n 12
+    done
+    echo "--- versión, ABI del dispositivo y datos del paquete"
+    pm list packages --show-versioncode "$rpkg" 2>&1 | head -n 2
+    echo "abilist=$(getprop ro.product.cpu.abilist) control_privapp_permissions=$(getprop ro.control_privapp_permissions) selinux=$(getenforce 2>&1)"
+    ls -ldZ "/data/data/$rpkg" 2>&1
+    echo "--- permisos privilegiados que la ROM ya permite a ese paquete"
+    grep -l "package=\"$rpkg\"" /system/etc/permissions/*.xml /system_ext/etc/permissions/*.xml /product/etc/permissions/*.xml /vendor/etc/permissions/*.xml 2>/dev/null | head -n 5
+  else
+    echo "(el proveedor de recientes ya es Nexus o no se pudo leer)"
+  fi
+  echo "--- actividades de inicio (HOME) instaladas"
+  cmd package query-activities --brief -a android.intent.action.MAIN -c android.intent.category.HOME 2>&1 | head -n 20
+  echo "--- servicios QUICKSTEP en el sistema"
+  cmd package query-services --brief -a android.intent.action.QUICKSTEP_SERVICE 2>&1 | head -n 10
   section "Lista de permisos privilegiados"
   ls -laZ /product/etc/permissions 2>&1 | grep -i nexus
   head -n 12 /product/etc/permissions/privapp-permissions-nexus.xml 2>&1
