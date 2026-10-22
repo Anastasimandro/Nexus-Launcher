@@ -1,0 +1,2 @@
+/system/bin/sh: no closing quote
+/system/bin/sh: no closing quote
