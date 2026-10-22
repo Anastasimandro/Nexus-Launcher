@@ -79,6 +79,10 @@ adb root > /dev/null 2>&1; adb wait-for-device; sleep 3
 for p in ro.build.version.release ro.build.version.sdk ro.build.fingerprint; do echo "$p=$(adb shell getprop $p | tr -d '\r')" | tee -a "$out/summary.md"; done
 
 # --- Qué launcher de recientes trae la ROM y dónde vive ---
+for _ in $(seq 1 60); do
+  dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName | head -n 1 | grep -q '/' && break
+  sleep 5
+done
 RC="$(dsh cmd overlay lookup --user 0 android android:string/config_recentsComponentName | head -n 1)"
 ROM_PKG="${RC%%/*}"
 say "config_recentsComponentName de la ROM: $RC"
