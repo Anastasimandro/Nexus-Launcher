@@ -67,12 +67,13 @@ snapshot() {
   home="$(dsh cmd shortcut get-default-launcher | head -n 1)"
   dsh dumpsys activity services "$SERVICE" > "$out/dumpsys-tis-$tag.txt"
   if sed '/Destroying services:/,$d' "$out/dumpsys-tis-$tag.txt" | grep -q "received=true"; then bound=sí; else bound=no; fi
-  echo "| $tag | $granted/6 | ${missing:-ninguno} | ${rc:-?} | $bound | ${home:-?} |" >> "$out/table.md"
+  local abi; abi="$(grep -m1 -oE 'primaryCpuAbi=[^ ]+' "$out/dumpsys-package-$tag.txt")"
+  echo "| $tag | $granted/6 | ${missing:-ninguno} | ${rc:-?} | $bound | ${home:-?} | $abi |" >> "$out/table.md"
   dsh logcat -d -b crash | head -n 120 > "$out/crashes-$tag.txt"
 }
 : > "$out/table.md"
-echo "| paso | permisos clave | faltan | config_recentsComponentName | SystemUI enlazado | launcher de Inicio |" >> "$out/table.md"
-echo "|---|---|---|---|---|---|" >> "$out/table.md"
+echo "| paso | permisos clave | faltan | config_recentsComponentName | SystemUI enlazado | launcher de Inicio | ABI |" >> "$out/table.md"
+echo "|---|---|---|---|---|---|---|" >> "$out/table.md"
 
 adb root > /dev/null 2>&1; adb wait-for-device; sleep 3
 for p in ro.build.version.release ro.build.version.sdk ro.build.fingerprint; do echo "$p=$(adb shell getprop $p | tr -d '\r')" | tee -a "$out/summary.md"; done
@@ -150,6 +151,17 @@ dsh logcat -c
 dsh input keyevent KEYCODE_HOME > /dev/null
 sleep 20
 snapshot "2b-tras-pm-clear"
+
+# El Pixel Launcher no tiene código nativo, así que PackageManager guardó primaryCpuAbi=null y no lo recalcula
+# al cambiar el APK de la partición: faltan las librerías (libnrb.so...). Instalar Nexus encima, como
+# actualización de la app de sistema (misma firma), recalcula ABI y librerías.
+adb push "$apk" /data/local/tmp/nexus-update.apk > /dev/null
+dsh pm install -r -d /data/local/tmp/nexus-update.apk > "$out/pm-install-update.txt"
+dsh logcat -c
+dsh input keyevent KEYCODE_HOME > /dev/null
+sleep 25
+dsh pm path "$PKG" > "$out/pm-path-after-update.txt"
+snapshot "2c-actualizado-por-pm-install"
 
 # Segundo reinicio completo (estado persistido, caché de PackageManager ya reconstruida).
 reboot_device
