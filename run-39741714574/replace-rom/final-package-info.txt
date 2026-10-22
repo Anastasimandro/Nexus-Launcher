@@ -1,0 +1,4 @@
+    codePath=/system_ext/priv-app/NexusLauncherRelease
+    versionName=0.99
+    privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE BACKUP_IN_FOREGROUND PARTIALLY_DIRECT_BOOT_AWARE PRIVILEGED SYSTEM_EXT PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    signatures=PackageSignatures{46cee35 version:2, signatures:[bcd91f33], past signatures:[]}

@@ -1,0 +1,150 @@
+10-22 07:51:10.861   641   641 V SystemServerTimingAsync: ssm.onStartUser-0_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 07:51:11.382   641   655 D LauncherAppsService: Started watching for package broadcasts
+10-22 07:51:11.431   902   902 D LauncherProxyService: disconnectFromLauncherService bound?: false currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-22 07:51:11.431   902   902 D LauncherProxyService: java.lang.Throwable
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.updateEnabledAndBinding(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:29)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.<init>(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:462)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get3(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:1309)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4566)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at dagger.internal.DelegateFactory.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get14(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:2584)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.google.android.systemui.dagger.DaggerSysUIGoogleGlobalRootComponent$SysUIGoogleSysUIComponentImpl$SwitchingProvider.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:4511)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at dagger.internal.DoubleCheck.get(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:13)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl$$ExternalSyntheticLambda1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:46)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.timeInitialization(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:27)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:232)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.systemui.application.impl.SystemUIApplicationImpl.startSystemUserServicesIfNeeded(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:69)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.systemui.SystemUIService.onCreate(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:9)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5644)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(ActivityThread.java:0)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2804)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-22 07:51:11.431   902   902 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-22 07:51:11.467   641   672 I ActivityManager: Start proc 1163:com.google.android.apps.nexuslauncher/u0a198 for bound-service {com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService}
+10-22 07:51:11.948  1163  1163 D nativeloader: Configuring clns-shared-9 for other apk /system_ext/priv-app/NexusLauncherRelease/NexusLauncherRelease.apk. target_sdk_version=37, uses_libraries=, library_path=/system_ext/priv-app/NexusLauncherRelease/lib/x86_64:/system/lib64:/system_ext/lib64, permitted_path=/data:/mnt/expand:/data/user/0/com.google.android.apps.nexuslauncher:/system_ext/priv-app/NexusLauncherRelease:/system/lib64:/system_ext/lib64
+10-22 07:51:11.980  1163  1163 D nativeloader: Load libnrb.so using class loader ns clns-shared-9 (caller=/system_ext/priv-app/NexusLauncherRelease/NexusLauncherRelease.apk!classes2.dex): dlopen failed: library "libnrb.so" not found
+10-22 07:51:11.980  1163  1163 E AndroidRuntime: FATAL EXCEPTION: main
+10-22 07:51:11.980  1163  1163 E AndroidRuntime: 	at com.android.launcher3.LauncherApplication.onCreate(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:4)
+10-22 07:51:12.585   902   902 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-22 07:51:12.641   902   902 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-22 07:51:13.050   902   902 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-22 07:51:13.547   902   902 E BatteryInfoBroadcast: java.lang.SecurityException: Failed to find provider com.google.android.apps.turbo.estimated_time_remaining for user 0; expected to find a valid ContentProvider for this authority
+10-22 07:51:13.714   641   665 D ActivityManagerTiming: OnBootPhase_1000_com.android.server.GestureLauncherService
+10-22 07:51:13.714   641   665 V ActivityManagerTiming: OnBootPhase_1000_com.android.server.GestureLauncherService took to complete: 0ms
+10-22 07:51:13.762   641   665 D ActivityManagerTiming: OnBootPhase_1000_com.android.server.pm.LauncherAppsService
+10-22 07:51:13.762   641   665 V ActivityManagerTiming: OnBootPhase_1000_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 07:51:15.512   902   902 E LauncherProxyService: Failed to get launcher proxy for disable flags.
+10-22 07:51:15.968   641   671 D SystemServerTimingAsync: ssm.onUnlockingUser-0_com.android.server.GestureLauncherService
+10-22 07:51:15.968   641   671 V SystemServerTimingAsync: ssm.onUnlockingUser-0_com.android.server.GestureLauncherService took to complete: 0ms
+10-22 07:51:16.006   641   671 D SystemServerTimingAsync: ssm.onUnlockingUser-0_com.android.server.pm.LauncherAppsService
+10-22 07:51:16.006   641   671 V SystemServerTimingAsync: ssm.onUnlockingUser-0_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 07:51:17.154   902   902 E LauncherProxyService: Failed to get launcher proxy for system bar attr change.
+10-22 07:51:17.227   641   671 D SystemServerTimingAsync: ssm.onUnlockedUser-0_com.android.server.GestureLauncherService
+10-22 07:51:17.227   641   671 V SystemServerTimingAsync: ssm.onUnlockedUser-0_com.android.server.GestureLauncherService took to complete: 0ms
+10-22 07:51:17.231   641   671 D SystemServerTimingAsync: ssm.onUnlockedUser-0_com.android.server.pm.LauncherAppsService
+10-22 07:51:17.231   641   671 V SystemServerTimingAsync: ssm.onUnlockedUser-0_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 07:51:17.444   641   959 V ActivityTaskManager: TaskLaunchParamsModifier: phase=3 task=Task{50f971b #7 type=home I=com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher} activity=ActivityRecord{31273932 u0 com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher t-1} display-area-token-from-option=DefaultTaskDisplayArea@79529361 display-id=0 task-display-area-windowing-mode=1 suggested-display-area=DefaultTaskDisplayArea@79529361 non-freeform-task-display-area display-area=DefaultTaskDisplayArea@79529361 skip-bounds-fullscreen
+10-22 07:51:17.444   641   959 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10000100 cmp=com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher (has extras)} with LAUNCH_SINGLE_TASK from uid 0 (BAL_ALLOW_ALLOWLISTED_UID) result code=0
+10-22 07:51:17.912   641   672 I ActivityManager: Start proc 1596:com.google.android.apps.nexuslauncher/u0a198 for top-activity {com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher}
+10-22 07:51:18.423  1596  1596 D nativeloader: Configuring clns-shared-9 for other apk /system_ext/priv-app/NexusLauncherRelease/NexusLauncherRelease.apk. target_sdk_version=37, uses_libraries=, library_path=/system_ext/priv-app/NexusLauncherRelease/lib/x86_64:/system/lib64:/system_ext/lib64, permitted_path=/data:/mnt/expand:/data/user/0/com.google.android.apps.nexuslauncher:/system_ext/priv-app/NexusLauncherRelease:/system/lib64:/system_ext/lib64
+10-22 07:51:18.966  1596  1596 D nativeloader: Load libnrb.so using class loader ns clns-shared-9 (caller=/system_ext/priv-app/NexusLauncherRelease/NexusLauncherRelease.apk!classes2.dex): dlopen failed: library "libnrb.so" not found
+10-22 07:51:18.966  1596  1596 E AndroidRuntime: FATAL EXCEPTION: main
+10-22 07:51:18.966  1596  1596 E AndroidRuntime: 	at com.android.launcher3.LauncherApplication.onCreate(r8-map-id-9cd8686e8c098a1314934d29f62def522b55eafd003497b5174f9dc71d99390d:4)
+10-22 07:51:19.992   902   902 W LauncherProxyService: Binder supposed established connection but actual connection to service timed out, trying again
+10-22 07:51:19.992   902   902 W LauncherProxyService: Failed to connect on attempt 1 will try again in 1000ms
+10-22 07:51:20.428  1320  1513 I LauncherIconVisibilityModule: LauncherIconVisibilityModule.updateLauncherIconVisibility():76 updateLauncherIconVisibility() : Visible = false
+10-22 07:51:22.359   902   902 D LauncherProxyService: disconnectFromLauncherService bound?: true currentProxy: null disconnectReason: startConnectionToCurrentUser
+10-22 07:51:22.359   902   902 D LauncherProxyService: java.lang.Throwable
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.startConnectionToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService$2.onReceive(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:118)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at com.android.systemui.broadcast.ActionReceiver$onReceive$1$1$1.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:21)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-22 07:51:22.359   902   902 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-22 07:51:22.402   641  1867 D SystemServerTimingAsync: ssm.onCompletedEventUser-0_{|Unlocked|}_com.android.server.GestureLauncherService
+10-22 07:51:22.402   641  1867 V SystemServerTimingAsync: ssm.onCompletedEventUser-0_{|Unlocked|}_com.android.server.GestureLauncherService took to complete: 0ms
+10-22 07:51:22.403   641  1867 D SystemServerTimingAsync: ssm.onCompletedEventUser-0_{|Unlocked|}_com.android.server.pm.LauncherAppsService
+10-22 07:51:22.403   641  1867 V SystemServerTimingAsync: ssm.onCompletedEventUser-0_{|Unlocked|}_com.android.server.pm.LauncherAppsService took to complete: 0ms
+10-22 07:51:22.426   641   665 I BLASTSyncEngine: Unfinished container: Task{50f971b #7 type=home I=com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher}
+10-22 07:51:22.426   641   665 I BLASTSyncEngine: Unfinished container: ActivityRecord{31273932 u0 com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher t7}
+10-22 07:51:22.437   641   662 V WindowManager:         {WCT{RemoteToken{4f47eae Task{50f971b #7 type=home I=com.google.android.apps.nexuslauncher/app.lawnchair.LawnchairLauncher}}} m=OPEN f=MOVE_TO_TOP|FLAG_CHANGED_INTERACTIVE p=WCT{RemoteToken{347244f Display{#0 state=ON size=1080x2400 ROTATION_0}}} leash=Surface(name=Task=7#70)/@0x3c2de62 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1 winMode=1 userId=0},
+10-22 07:51:25.118   902   902 E LauncherProxyService: Failed to get launcher proxy for system bar attr change.
+10-22 07:51:25.118   902   902 E LauncherProxyService: Failed to get launcher proxy for system bar attr change.
+10-22 07:51:25.156   902   902 E LauncherProxyService: Failed to get launcher proxy for system bar attr change.
+10-22 07:51:26.407  1339  1339 D CellBroadcastReceiver: disable launcher activity: com.android.cellbroadcastreceiver.CellBroadcastListLauncherActivity
+10-22 07:51:26.867  1420  1793 I aqet    : (REDACTED) isRobinOptIn:%s, isLauncherIconEnabled:%s
+10-22 07:51:27.853   902   902 W LauncherProxyService: Binder supposed established connection but actual connection to service timed out, trying again
+10-22 07:51:27.853   902   902 W LauncherProxyService: Failed to connect on attempt 2 will try again in 2000ms
+10-22 07:51:29.855   902   902 D LauncherProxyService: disconnectFromLauncherService bound?: true currentProxy: null disconnectReason: runnable: startConnectionToCurrentUser
+10-22 07:51:29.855   902   902 D LauncherProxyService: java.lang.Throwable
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService$$ExternalSyntheticLambda0.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:33)
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-22 07:51:29.855   902   902 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-22 07:51:30.914  2006  2771 E GoogleApiManager: java.lang.SecurityException: Unknown calling package name 'com.google.android.gms'.
+10-22 07:51:31.184   902   990 E ServiceManager: java.lang.SecurityException: SELinux denied for service.
+10-22 07:51:34.859   902   902 W LauncherProxyService: Binder supposed established connection but actual connection to service timed out, trying again
+10-22 07:51:34.859   902   902 W LauncherProxyService: Failed to connect on attempt 3 will try again in 4000ms
+10-22 07:51:37.634  2156  3134 E GoogleApiManager: java.lang.SecurityException: Unknown calling package name 'com.google.android.gms'.
+10-22 07:51:38.861   902   902 D LauncherProxyService: disconnectFromLauncherService bound?: true currentProxy: null disconnectReason: runnable: startConnectionToCurrentUser
+10-22 07:51:38.861   902   902 D LauncherProxyService: java.lang.Throwable
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService$$ExternalSyntheticLambda0.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:33)
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-22 07:51:38.861   902   902 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-22 07:51:40.909  2006  2771 E GoogleApiManager: java.lang.SecurityException: Unknown calling package name 'com.google.android.gms'.
+10-22 07:51:43.866   902   902 W LauncherProxyService: Binder supposed established connection but actual connection to service timed out, trying again
+10-22 07:51:43.867   902   902 W LauncherProxyService: Failed to connect on attempt 4 will try again in 8000ms
+10-22 07:51:47.640  2156  3134 E GoogleApiManager: java.lang.SecurityException: Unknown calling package name 'com.google.android.gms'.
+10-22 07:51:51.869   902   902 D LauncherProxyService: disconnectFromLauncherService bound?: true currentProxy: null disconnectReason: runnable: startConnectionToCurrentUser
+10-22 07:51:51.869   902   902 D LauncherProxyService: java.lang.Throwable
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.disconnectFromLauncherService(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:36)
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService.internalConnectToCurrentUser(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:12)
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at com.android.systemui.LauncherProxyService$$ExternalSyntheticLambda0.run(go/retraceme c3274dba9613c14089c884cae516646c18fdc40b5a0d777658c4d309489fa7a2:33)
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at android.os.Handler.handleCallback(Handler.java:1095)
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at android.os.Looper.loopOnce(Looper.java:296)
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at android.os.Looper.loop(Looper.java:397)
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at android.app.ActivityThread.main(ActivityThread.java:9523)
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at java.lang.reflect.Method.invoke(Native Method)
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+10-22 07:51:51.869   902   902 D LauncherProxyService: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+10-22 07:51:56.871   902   902 W LauncherProxyService: Binder supposed established connection but actual connection to service timed out, trying again
+10-22 07:51:56.871   902   902 W LauncherProxyService: Failed to connect on attempt 5 will try again in 16000ms
+10-22 07:52:04.721  3258  3259 I artd    : GetBestInfo: /system_ext/priv-app/NexusLauncherRelease/NexusLauncherRelease.apk has no usable artifacts
+10-22 07:52:04.767  3198  3198 I adbd    : adbd service requested 'shell,v2,raw:dumpsys activity services com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService'

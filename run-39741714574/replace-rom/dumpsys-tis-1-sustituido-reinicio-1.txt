@@ -1,0 +1,94 @@
+ACTIVITY MANAGER SERVICES (dumpsys activity services)
+  User 0 active services:
+  * ServiceRecord{91307d7 u0 com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService c:com.android.systemui}
+    intent={act=android.intent.action.QUICKSTEP_SERVICE pkg=com.google.android.apps.nexuslauncher}
+    packageName=com.google.android.apps.nexuslauncher
+    processName=com.google.android.apps.nexuslauncher
+    targetSdkVersion=37
+    permission=android.permission.STATUS_BAR_SERVICE
+    baseDir=/system_ext/priv-app/NexusLauncherRelease/NexusLauncherRelease.apk
+    dataDir=/data/user/0/com.google.android.apps.nexuslauncher
+    app=null
+    useNewWiuLogic_forCapabilities()=true
+    useNewWiuLogic_forStart()=true
+    useNewBfslLogic()=true
+    mAllowWiu_noBinding=DENIED
+    mAllowWiu_inBindService=PROC_STATE_PERSISTENT
+    mAllowWiu_byBindings=DENIED
+    getFgsAllowWiu_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowWiu_new=DENIED
+    getFgsAllowWiu_forStart=DENIED
+    getFgsAllowWiu_forCapabilities=DENIED
+    allowUiJobScheduling=false
+    recentCallingPackage=com.android.systemui
+    recentCallingUid=10189
+    mAllowStart_noBinding=DENIED
+    mAllowStart_inBindService=PROC_STATE_PERSISTENT
+    mAllowStart_byBindings=DENIED
+    getFgsAllowStart_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowStart_new=DENIED
+    getFgsAllowStart=DENIED
+    startForegroundCount=0
+    infoAllowStartForeground=[callingPackage: com.android.systemui; callingUid: 10189; uidState: PER ; uidBFSL: [BFSL]; BFGS denied: false; intent: Intent { act=android.intent.action.QUICKSTEP_SERVICE xflg=0x4 pkg=com.google.android.apps.nexuslauncher }; code:PROC_STATE_PERSISTENT; tempAllowListReason:<null>; allowWiu:10; targetSdkVersion:37; callerTargetSdkVersion:37; startForegroundCount:0; bindFromPackage:null; isBindService:true]
+    createTime=-696ms startingBgTimeout=--
+    lastActivity=-696ms restartTime=-- createdFromFg=true
+    Bindings:
+    * IntentBindRecord{363ced9 CREATE}:
+      intent={act=android.intent.action.QUICKSTEP_SERVICE xflg=0x4 pkg=com.google.android.apps.nexuslauncher}
+      binder=null
+      requested=false received=false hasBound=false doRebind=false
+      * Client AppBindRecord{f5b609e ProcessRecord{5927fc0 900:com.android.systemui/u0a189}}
+        Per-process Connections:
+          ConnectionRecord{58b1b56 u0 CR FGSA com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService:@3976171 flags=0x2000001}
+    All Connections:
+      ConnectionRecord{58b1b56 u0 CR FGSA com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService:@3976171 flags=0x2000001}
+
+  Pending services:
+  * Pending ServiceRecord{91307d7 u0 com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService c:com.android.systemui}
+    intent={act=android.intent.action.QUICKSTEP_SERVICE pkg=com.google.android.apps.nexuslauncher}
+    packageName=com.google.android.apps.nexuslauncher
+    processName=com.google.android.apps.nexuslauncher
+    targetSdkVersion=37
+    permission=android.permission.STATUS_BAR_SERVICE
+    baseDir=/system_ext/priv-app/NexusLauncherRelease/NexusLauncherRelease.apk
+    dataDir=/data/user/0/com.google.android.apps.nexuslauncher
+    app=null
+    useNewWiuLogic_forCapabilities()=true
+    useNewWiuLogic_forStart()=true
+    useNewBfslLogic()=true
+    mAllowWiu_noBinding=DENIED
+    mAllowWiu_inBindService=PROC_STATE_PERSISTENT
+    mAllowWiu_byBindings=DENIED
+    getFgsAllowWiu_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowWiu_new=DENIED
+    getFgsAllowWiu_forStart=DENIED
+    getFgsAllowWiu_forCapabilities=DENIED
+    allowUiJobScheduling=false
+    recentCallingPackage=com.android.systemui
+    recentCallingUid=10189
+    mAllowStart_noBinding=DENIED
+    mAllowStart_inBindService=PROC_STATE_PERSISTENT
+    mAllowStart_byBindings=DENIED
+    getFgsAllowStart_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowStart_new=DENIED
+    getFgsAllowStart=DENIED
+    startForegroundCount=0
+    infoAllowStartForeground=[callingPackage: com.android.systemui; callingUid: 10189; uidState: PER ; uidBFSL: [BFSL]; BFGS denied: false; intent: Intent { act=android.intent.action.QUICKSTEP_SERVICE xflg=0x4 pkg=com.google.android.apps.nexuslauncher }; code:PROC_STATE_PERSISTENT; tempAllowListReason:<null>; allowWiu:10; targetSdkVersion:37; callerTargetSdkVersion:37; startForegroundCount:0; bindFromPackage:null; isBindService:true]
+    createTime=-696ms startingBgTimeout=--
+    lastActivity=-696ms restartTime=-- createdFromFg=true
+    Bindings:
+    * IntentBindRecord{363ced9 CREATE}:
+      intent={act=android.intent.action.QUICKSTEP_SERVICE xflg=0x4 pkg=com.google.android.apps.nexuslauncher}
+      binder=null
+      requested=false received=false hasBound=false doRebind=false
+      * Client AppBindRecord{f5b609e ProcessRecord{5927fc0 900:com.android.systemui/u0a189}}
+        Per-process Connections:
+          ConnectionRecord{58b1b56 u0 CR FGSA com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService:@3976171 flags=0x2000001}
+    All Connections:
+      ConnectionRecord{58b1b56 u0 CR FGSA com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService:@3976171 flags=0x2000001}
+
+  Connection bindings to services:
+  * ConnectionRecord{58b1b56 u0 CR FGSA com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService:@3976171 flags=0x2000001}
+    binding=AppBindRecord{f5b609e com.google.android.apps.nexuslauncher/com.android.quickstep.TouchInteractionService:com.android.systemui}
+    conn=android.os.BinderProxy@3976171 flags=0x2000001
+    ongoingCalls=false
