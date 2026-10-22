@@ -48,7 +48,8 @@ jobs:
           [ "${#apks[@]}" -eq 1 ] || { echo "::error::Esperaba un APK y hay ${#apks[@]}"; exit 1; }
           mkdir -p dist
           cp "${apks[0]}" dist/Nexus-rom-package.apk
-          /usr/local/lib/android/sdk/build-tools/*/aapt2 dump badging dist/Nexus-rom-package.apk | sed -n 1p
+          aapt2=$(ls /usr/local/lib/android/sdk/build-tools/*/aapt2 | sort -V | tail -n 1)
+          "$aapt2" dump badging dist/Nexus-rom-package.apk | sed -n 1p || true
       - uses: actions/upload-artifact@v7
         with:
           name: dist
