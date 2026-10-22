@@ -102,7 +102,8 @@ fi
 dsh 'touch /product/.qs_probe && echo PRODUCT_WRITABLE && rm /product/.qs_probe' > "$out/product-writable.txt"
 if ! grep -q PRODUCT_WRITABLE "$out/product-writable.txt"; then say "!! /product no es escribible"; exit 0; fi
 
-# Línea base: el launcher de la ROM, sin tocar nada.
+# Línea base: el launcher de la ROM, sin tocar nada (tras el reinicio de disable-verity el emulador necesita un rato).
+sleep 40
 snapshot "0-rom-original"
 
 # Quitar actualizaciones del paquete en /data (si las hubiera) para que mande la copia de la partición.
@@ -122,12 +123,17 @@ dsh pm uninstall-system-updates "$PKG" > "$out/uninstall-updates.txt"
   echo '    </privapp-permissions>'
   echo '</permissions>'
 } > "$out/privapp-permissions-experiment.xml"
-adb push "$out/privapp-permissions-experiment.xml" /product/etc/permissions/privapp-permissions-nexus-experiment.xml > /dev/null
+# La allowlist se lee de la MISMA partición que la app (el Pixel Launcher vive en /system_ext: un XML en
+# /product no le afecta y la ROM aborta el arranque).
+ROM_PART="/$(cut -d/ -f2 <<<"$ROM_APK")"
+say "Partición del launcher de la ROM: $ROM_PART"
+adb shell "mkdir -p $ROM_PART/etc/permissions" > /dev/null
+adb push "$out/privapp-permissions-experiment.xml" "$ROM_PART/etc/permissions/privapp-permissions-nexus-experiment.xml" > /dev/null
 
 # Sustituir el APK de la ROM por el de Nexus; fuera los restos compilados del original.
 adb shell "rm -rf $ROM_DIR/oat $ROM_DIR/lib $ROM_DIR/*.apk" > /dev/null 2>&1
 adb push "$apk" "$ROM_APK" > /dev/null
-adb shell "chmod 644 $ROM_APK; restorecon -RF $ROM_DIR /product/etc/permissions" > /dev/null 2>&1
+adb shell "chmod 644 $ROM_APK; restorecon -RF $ROM_DIR $ROM_PART/etc/permissions" > /dev/null 2>&1
 dsh "ls -laZR $ROM_DIR" > "$out/rom-dir-after.txt"
 reboot_device
 snapshot "1-sustituido-reinicio-1"
