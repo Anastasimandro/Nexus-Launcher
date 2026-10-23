@@ -255,8 +255,7 @@ internal class TransitionSession(
      * Intenta absorber una transición que llega mientras esta se anima. `true` solo si se absorbió;
      * en ese caso la transacción [t] ya se aplicó y se cerró aquí.
      */
-    fun tryMerge(info: TransitionInfo, t: SurfaceControl.Transaction): Boolean =
-        synchronized(lock) { tryMergeLocked(info, t) }
+    fun tryMerge(info: TransitionInfo, t: SurfaceControl.Transaction): Boolean = synchronized(lock) { tryMergeLocked(info, t) }
 
     private fun tryMergeLocked(info: TransitionInfo, t: SurfaceControl.Transaction): Boolean {
         if (core.finished) return false
