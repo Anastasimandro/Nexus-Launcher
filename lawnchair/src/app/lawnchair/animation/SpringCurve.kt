@@ -123,7 +123,6 @@ class SpringCurve(
         private const val STEP_SECONDS = 0.001
         private const val MAX_SETTLE_STEPS = 10_000
 
-        fun of(spec: MotionSpec, tempo: Float = 1f): SpringCurve =
-            SpringCurve(spec.stiffness, spec.dampingRatio, tempo)
+        fun of(spec: MotionSpec, tempo: Float = 1f): SpringCurve = SpringCurve(spec.stiffness, spec.dampingRatio, tempo)
     }
 }
