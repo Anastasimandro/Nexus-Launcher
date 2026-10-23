@@ -30,7 +30,8 @@ internal class NexusAppLaunchTransition(
     private val cornerRadius: Float,
     private val systemScale: Float,
     private val progressProvider: () -> Float,
-) : RemoteTransitionStub(), CancellableTransition {
+) : RemoteTransitionStub(),
+    CancellableTransition {
 
     private val icon = Rect(iconBounds)
 
@@ -136,11 +137,13 @@ internal class NexusAppLaunchTransition(
             val mode = change.mode
             if (mode != WindowManager.TRANSIT_OPEN && mode != WindowManager.TRANSIT_TO_FRONT) continue
             val flags = change.flags
-            if (flags and (TransitionInfo.FLAG_IS_WALLPAPER or
-                    TransitionInfo.FLAG_IS_INPUT_METHOD or
-                    TransitionInfo.FLAG_IS_SYSTEM_WINDOW or
-                    TransitionInfo.FLAG_NO_ANIMATION or
-                    TransitionInfo.FLAG_IS_OCCLUDED) != 0
+            if (flags and (
+                    TransitionInfo.FLAG_IS_WALLPAPER or
+                        TransitionInfo.FLAG_IS_INPUT_METHOD or
+                        TransitionInfo.FLAG_IS_SYSTEM_WINDOW or
+                        TransitionInfo.FLAG_NO_ANIMATION or
+                        TransitionInfo.FLAG_IS_OCCLUDED
+                    ) != 0
             ) {
                 continue
             }
