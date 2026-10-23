@@ -17,10 +17,12 @@ import app.lawnchair.util.supportsRoundedCornersOnWindows
 import com.android.launcher3.BubbleTextView
 import com.android.launcher3.R
 import com.android.launcher3.Utilities
+import com.android.launcher3.model.data.ItemInfo
 import com.android.launcher3.util.ActivityOptionsWrapper
 import com.android.launcher3.util.Executors
 import com.android.launcher3.util.RunnableList
 import java.lang.ref.WeakReference
+import java.util.WeakHashMap
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -47,9 +49,15 @@ import kotlin.math.max
  */
 class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
-    /** Zoom de icono en curso (abriéndose o plegándose), si lo hay. */
+    /** Zoom del último lanzamiento: el que acompaña a la app que se está abriendo ahora. */
     @Volatile
     private var session: ZoomSession? = null
+
+    /**
+     * Todos los zooms vivos, incluidos los que aún vuelven a su celda mientras se lanza otra app.
+     * Conviven para que abrir otra app a medio cerrar la anterior no corte ninguna animación.
+     */
+    private val zooms = ArrayList<ZoomSession>(MAX_ZOOMS)
 
     /**
      * Última transición de superficie entregada al sistema. Se conserva para poder marcarla como
@@ -147,10 +155,13 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
                 iconBounds = Rect().also { icon.round(it) },
                 cornerRadius = radius,
                 systemScale = NexusMotion.systemScale(launcher),
+                expectedPackage = (target.view.tag as? ItemInfo)?.targetComponent?.packageName,
                 progressProvider = { session?.driver?.progress ?: 0f },
+                velocityProvider = { session?.driver?.velocity ?: 0f },
             )
             lastSurfaceTransition?.cancelIfPending()
             lastSurfaceTransition = transition
+            LaunchHub.register(transition)
 
             val remote = LawnchairQuickstepCompat.remoteTransitionCompat
                 .getRemoteTransition(transition, null, "NexusAppLaunch")
@@ -244,14 +255,16 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
     private fun startZoomInternal(target: LaunchTarget) {
         val v = target.view
         val profile = NexusMotion.profile
-        val current = session
-        if (current != null && current.isFor(v, target.bounds)) {
-            // Abrir y cerrar rápido la misma app: el resorte cambia de objetivo en caliente.
-            current.driver.animateTo(1f, profile.open, profile.speed)
+        val same = zooms.firstOrNull { it.isFor(v, target.bounds) }
+        if (same != null) {
+            // Abrir y cerrar rápido la misma app: el resorte cambia de rumbo en caliente. Si había
+            // otro zoom abriéndose, ese pasa a volver a su celda.
+            session?.takeIf { it !== same }?.let { fold(it) }
+            session = same
+            same.driver.animateTo(1f, profile.open, profile.speed)
             backdrop.enter(profile)
             return
         }
-        if (current != null) endZoomNow()
 
         val viewRect = Rect()
         val scale = launcher.dragLayer.getDescendantRectRelativeToSelf(v, viewRect)
@@ -260,33 +273,60 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
             backdrop.enter(profile)
             return
         }
+
+        // Otra app: el zoom anterior no se corta, sigue su camino de vuelta a la celda mientras
+        // nace el nuevo.
+        session?.let { fold(it) }
         val newSession = ZoomSession(v, v.tag, target.bounds, viewRect, scale)
+        zooms.add(newSession)
         session = newSession
+        trimZooms()
         newSession.driver.snapTo(0f)
         newSession.driver.animateTo(1f, profile.open, profile.speed)
         backdrop.enter(profile)
     }
 
     /**
-     * Vuelta al inicio: redirige el resorte hacia el icono conservando la velocidad residual
-     * (interrupción en tiempo real) o lo pliega desde su estado actual con el resorte de cierre.
+     * Vuelta al inicio: todos los zooms vivos redirigen su resorte hacia su icono conservando la
+     * velocidad residual (interrupción en tiempo real). Los de [keep] se dejan como están.
      */
-    private fun returnZoom() {
-        val current = session ?: return
-        if (!current.driver.isRunning && current.driver.progress == 0f) {
-            endZoomNow()
-            return
-        }
-        val profile = NexusMotion.profile
-        current.driver.animateTo(0f, profile.close, profile.speed) { finished ->
-            if (finished && session === current) endZoomNow()
+    private fun returnZoom(keep: ZoomSession? = null) {
+        for (zoom in ArrayList(zooms)) {
+            if (zoom !== keep) fold(zoom)
         }
     }
 
+    /** Pliega un zoom hacia su celda desde su estado actual, y lo libera al llegar. */
+    private fun fold(zoom: ZoomSession) {
+        if (!zoom.driver.isRunning && zoom.driver.progress == 0f) {
+            endZoom(zoom)
+            return
+        }
+        val profile = NexusMotion.profile
+        zoom.driver.animateTo(0f, profile.close, profile.speed) { finished ->
+            if (finished) endZoom(zoom)
+        }
+    }
+
+    /** Libera un zoom y deja su icono como estaba. */
+    private fun endZoom(zoom: ZoomSession) {
+        zooms.remove(zoom)
+        if (session === zoom) session = null
+        zoom.release()
+    }
+
+    /** Libera todos los zooms sin animar. */
     private fun endZoomNow() {
-        val current = session ?: return
+        for (zoom in ArrayList(zooms)) endZoom(zoom)
         session = null
-        current.release()
+    }
+
+    /** Evita que se acumulen zooms si el usuario lanza apps más rápido de lo que vuelven. */
+    private fun trimZooms() {
+        while (zooms.size > MAX_ZOOMS) {
+            val oldest = zooms.firstOrNull { it !== session } ?: return
+            endZoom(oldest)
+        }
     }
 
     /** Deja armado el temporizador de seguridad del lanzamiento. */
@@ -345,7 +385,8 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         launcher.dragLayer.removeCallbacks(failSafe)
         lastSurfaceTransition?.cancelIfPending()
         lastSurfaceTransition = null
-        endZoomNow()
+        // Solo el zoom de este lanzamiento: los de apps anteriores siguen volviendo a su celda.
+        session?.let { endZoom(it) }
         backdrop.leave(NexusMotion.profile)
     }
 
@@ -365,20 +406,30 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     fun onLauncherResumed() {
         launcherResumed = true
-        Log.i(TAG, "Launcher reanudado (venía de una apertura de Nexus=$wentToBackground)")
+        // Si hay un lanzamiento armado y el launcher aún no pasó a segundo plano, este "resumed"
+        // es anterior a ese lanzamiento (por ejemplo, el cierre de la app anterior que llega
+        // tarde): no debe replegar el zoom de la app que se está abriendo ahora.
+        val launching = launchPending && !wentToBackground
+        Log.i(TAG, "Launcher reanudado (venía de una apertura de Nexus=$wentToBackground, lanzando=$launching)")
         wentToBackground = false
-        launchPending = false
-        launcher.dragLayer.removeCallbacks(failSafe)
+        if (!launching) {
+            launchPending = false
+            launcher.dragLayer.removeCallbacks(failSafe)
+        }
 
         if (!NexusMotion.isEnabled(launcher)) {
             endZoomNow()
             backdrop.reset()
             return
         }
+        if (launching) {
+            returnZoom(keep = session)
+            return
+        }
         // El fondo vuelve a su sitio con el mismo resorte, redirigido desde donde esté.
         backdrop.leave(NexusMotion.profile)
-        // Interrupción: el icono cambia de rumbo y se pliega a su celda conservando la velocidad
-        // que llevaba, en vez de cortarse de golpe.
+        // Interrupción: los iconos cambian de rumbo y se pliegan a su celda conservando la
+        // velocidad que llevaban, en vez de cortarse de golpe.
         returnZoom()
     }
 
@@ -590,6 +641,9 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         private var optionsRejected = false
 
         private const val FAIL_SAFE_MS = 2500L
+
+        /** Zooms de icono que pueden convivir (una app abriéndose y las que aún vuelven). */
+        private const val MAX_ZOOMS = 3
         private const val POSITION_TOLERANCE_PX = 1.5f
 
         /** A partir de este progreso el icono ya se ha desvanecido del todo. */
@@ -616,25 +670,20 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
  * Desactiva el recorte en la cadena de padres de [view] hasta [root] para que el icono pueda crecer
  * por encima de su celda (igual que hace el sistema al abrir una carpeta), y lo restaura después.
  * Solo asigna al crearse; no toca nada por fotograma.
+ *
+ * Varios iconos de la misma página pueden estar animándose a la vez: el estado original de cada
+ * padre se guarda una sola vez y solo se restaura cuando se libera el último.
  */
 private class ClippingGuard(root: View, view: View?) {
 
     private val parents = ArrayList<ViewGroup>(4)
-    private val clipChildren = ArrayList<Boolean>(4)
-    private val clipToPadding = ArrayList<Boolean>(4)
-    private val clipToOutline = ArrayList<Boolean>(4)
     private var released = false
 
     init {
         var parent: ViewParent? = view?.parent
         while (parent is ViewGroup && parent !== root) {
             parents.add(parent)
-            clipChildren.add(parent.clipChildren)
-            clipToPadding.add(parent.clipToPadding)
-            clipToOutline.add(parent.clipToOutline)
-            parent.clipChildren = false
-            parent.clipToPadding = false
-            parent.clipToOutline = false
+            ClippingRegistry.acquire(parent)
             parent = parent.parent
         }
     }
@@ -642,12 +691,42 @@ private class ClippingGuard(root: View, view: View?) {
     fun release() {
         if (released) return
         released = true
-        for (i in parents.indices) {
-            val parent = parents[i]
-            parent.clipChildren = clipChildren[i]
-            parent.clipToPadding = clipToPadding[i]
-            parent.clipToOutline = clipToOutline[i]
-        }
+        for (parent in parents) ClippingRegistry.release(parent)
         parents.clear()
+    }
+}
+
+/** Cuenta quién ha desactivado el recorte de cada vista y recuerda cómo estaba. */
+private object ClippingRegistry {
+
+    private class Entry(
+        var count: Int,
+        val clipChildren: Boolean,
+        val clipToPadding: Boolean,
+        val clipToOutline: Boolean,
+    )
+
+    private val entries = WeakHashMap<ViewGroup, Entry>()
+
+    fun acquire(group: ViewGroup) {
+        val entry = entries[group]
+        if (entry != null) {
+            entry.count += 1
+            return
+        }
+        entries[group] = Entry(1, group.clipChildren, group.clipToPadding, group.clipToOutline)
+        group.clipChildren = false
+        group.clipToPadding = false
+        group.clipToOutline = false
+    }
+
+    fun release(group: ViewGroup) {
+        val entry = entries[group] ?: return
+        entry.count -= 1
+        if (entry.count > 0) return
+        entries.remove(group)
+        group.clipChildren = entry.clipChildren
+        group.clipToPadding = entry.clipToPadding
+        group.clipToOutline = entry.clipToOutline
     }
 }

@@ -40,6 +40,14 @@ class MotionDriver(
     var progress = 0f
         private set
 
+    /**
+     * Velocidad actual del progreso, en unidades por segundo (positiva hacia 1). Sirve para que
+     * otro resorte arranque con el mismo impulso y el traspaso no tenga un tirón de velocidad.
+     */
+    @Volatile
+    var velocity = 0f
+        private set
+
     val isRunning: Boolean
         get() = spring.isRunning
 
@@ -52,7 +60,10 @@ class MotionDriver(
         spring.setSpring(SpringForce(0f))
         // El umbral por defecto es 1 unidad: con un rango de 0 a 1 terminaría al instante.
         spring.setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_SCALE)
-        spring.addUpdateListener { _, value, _ -> publish(value) }
+        spring.addUpdateListener { _, value, v ->
+            velocity = v
+            publish(value)
+        }
         spring.addEndListener { _, canceled, _, _ ->
             if (!canceled) {
                 publish(spring.spring.finalPosition)
@@ -65,6 +76,7 @@ class MotionDriver(
     fun snapTo(value: Float) {
         stop()
         holder.value = value
+        velocity = 0f
         publish(value)
     }
 
@@ -78,11 +90,14 @@ class MotionDriver(
      * conservando la velocidad) y a quien la pidió se le avisa con `finished = false`.
      *
      * @param tempo multiplicador de velocidad (normalmente `MotionProfile.speed`).
+     * @param startVelocity velocidad con la que arranca si no había nada en marcha; si el resorte
+     *   ya corría se ignora y se conserva la suya, que es la real.
      */
     fun animateTo(
         target: Float,
         spec: MotionSpec,
         tempo: Float = 1f,
+        startVelocity: Float = 0f,
         onEnd: ((finished: Boolean) -> Unit)? = null,
     ) {
         // El callback anterior se desengancha ANTES de arrancar: si redirige, no reentra en un
@@ -101,7 +116,7 @@ class MotionDriver(
         force.setDampingRatio(spec.dampingRatio.coerceIn(0.05f, 1f))
         if (!spring.isRunning) {
             holder.value = progress
-            spring.setStartVelocity(0f)
+            spring.setStartVelocity(startVelocity)
         }
         spring.animateToFinalPosition(target)
     }
@@ -112,6 +127,7 @@ class MotionDriver(
     }
 
     private fun finish(finished: Boolean) {
+        velocity = 0f
         endBoost()
         val callback = onEnd
         onEnd = null
@@ -121,6 +137,7 @@ class MotionDriver(
     private fun stop() {
         onEnd = null
         if (spring.isRunning) spring.cancel()
+        velocity = 0f
         endBoost()
     }
 
