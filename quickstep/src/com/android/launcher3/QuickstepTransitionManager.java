@@ -183,6 +183,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import app.lawnchair.animation.NexusMotion;
+import app.lawnchair.animation.SpringInterpolator;
 import app.lawnchair.compat.LawnchairQuickstepCompat;
 
 /**
@@ -203,7 +205,8 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
      */
     public static final int STATUS_BAR_TRANSITION_PRE_DELAY = 96;
 
-    // Nexus: apertura de apps en 400 ms (valor de referencia del prototipo de animaciones).
+    // Duración de referencia para las animaciones que no usan el resorte de Nexus (dividida de
+    // pantalla). La apertura de apps usa NexusMotion.appLaunchDurationMs(), que sale del resorte.
     public static final long APP_LAUNCH_DURATION = 400;
 
     public static final long APP_LAUNCH_ALPHA_DURATION = 50;
@@ -222,11 +225,6 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
     private static final int LAUNCHER_RESUME_START_DELAY = 100;
     // Nexus: cierre de apps hacia el inicio en 400 ms (antes 250).
     private static final int CLOSING_TRANSITION_DURATION_MS = 400;
-    // Nexus: curva de apertura (arranque rápido y frenada muy suave).
-    private static final float NEXUS_OPEN_X1 = 0.15f;
-    private static final float NEXUS_OPEN_Y1 = 0.1f;
-    private static final float NEXUS_OPEN_X2 = 0.15f;
-    private static final float NEXUS_OPEN_Y2 = 1f;
     public static final int SPLIT_LAUNCH_DURATION = 370;
     public static final int SPLIT_DIVIDER_ANIM_DURATION = 100;
 
@@ -293,7 +291,6 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
     private LinkedHashMap<Integer, Pair<Integer, Integer>> mTaskStartParams;
 
     private final Interpolator mOpeningXInterpolator;
-    private final Interpolator mOpeningInterpolator;
 
     private final SystemUiProxy mSystemUiProxy;
 
@@ -326,9 +323,6 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
         mOpeningXInterpolator = AnimationUtils.loadInterpolator(
                 launcher, R.interpolator.app_open_x);
-        // Se crea una sola vez y se reutiliza en todos los fotogramas (sin reservas de memoria).
-        mOpeningInterpolator = new PathInterpolator(
-                NEXUS_OPEN_X1, NEXUS_OPEN_Y1, NEXUS_OPEN_X2, NEXUS_OPEN_Y2);
         mCoordinateTransfer = new RemoteAnimationCoordinateTransfer(mLauncher);
         mLatencyTracker = LatencyTracker.getInstance(launcher);
     }
@@ -366,7 +360,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
         // recents launch or not for sure until we know the opening app targets.
         long duration = fromRecents
                 ? RECENTS_LAUNCH_DURATION
-                : APP_LAUNCH_DURATION;
+                : NexusMotion.appLaunchDurationMs();
 
         long statusBarTransitionDelay = duration - STATUS_BAR_TRANSITION_DURATION
                 - STATUS_BAR_TRANSITION_PRE_DELAY;
@@ -709,6 +703,14 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
     }
 
     /**
+     * Curva de la apertura: la respuesta exacta del resorte de apertura de Nexus (no una curva
+     * Bézier). Se crea una vez por animación y se reutiliza en todos los fotogramas.
+     */
+    private static Interpolator createOpeningInterpolator() {
+        return new SpringInterpolator(NexusMotion.openCurve());
+    }
+
+    /**
      * @return Animator that controls the window of the opening targets from app icons.
      */
     private Animator getOpeningWindowAnimators(View v,
@@ -716,6 +718,10 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             RemoteAnimationTarget[] wallpaperTargets,
             RemoteAnimationTarget[] nonAppTargets,
             boolean launcherClosing) {
+        final Interpolator openingInterpolator = createOpeningInterpolator();
+        final long launchDuration = NexusMotion.appLaunchDurationMs();
+        final long navFadeInDelay =
+                Math.max(0, launchDuration - ANIMATION_NAV_FADE_IN_DURATION);
         RemoteAnimationTargets openingTargets = new RemoteAnimationTargets(appTargets,
                 wallpaperTargets, nonAppTargets, MODE_OPENING);
         int rotationChange = getRotationChange(appTargets);
@@ -777,7 +783,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
         AnimatorSet animatorSet = new AnimatorSet();
         ValueAnimator appAnimator = ValueAnimator.ofFloat(0, 1);
-        appAnimator.setDuration(APP_LAUNCH_DURATION);
+        appAnimator.setDuration(launchDuration);
         appAnimator.setInterpolator(LINEAR);
         appAnimator.addListener(floatingView);
         appAnimator.addListener(new AnimatorListenerAdapter() {
@@ -815,34 +821,34 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
         MultiValueUpdateListener listener = new MultiValueUpdateListener() {
             FloatProp mDx = new FloatProp(0, prop.dX, mOpeningXInterpolator);
-            FloatProp mDy = new FloatProp(0, prop.dY, mOpeningInterpolator);
+            FloatProp mDy = new FloatProp(0, prop.dY, openingInterpolator);
 
             FloatProp mIconScaleToFitScreen = new FloatProp(prop.initialAppIconScale,
-                    prop.finalAppIconScale, mOpeningInterpolator);
+                    prop.finalAppIconScale, openingInterpolator);
             FloatProp mIconAlpha = new FloatProp(prop.iconAlphaStart, 0f,
                     clampToDuration(LINEAR, APP_LAUNCH_ALPHA_START_DELAY, APP_LAUNCH_ALPHA_DURATION,
-                            APP_LAUNCH_DURATION));
+                            launchDuration));
 
             FloatProp mWindowRadius = new FloatProp(initialWindowRadius, finalWindowRadius,
-                    mOpeningInterpolator);
+                    openingInterpolator);
             FloatProp mShadowRadius = new FloatProp(0, finalShadowRadius,
-                    mOpeningInterpolator);
+                    openingInterpolator);
 
             FloatProp mCropRectCenterX = new FloatProp(prop.cropCenterXStart, prop.cropCenterXEnd,
-                    mOpeningInterpolator);
+                    openingInterpolator);
             FloatProp mCropRectCenterY = new FloatProp(prop.cropCenterYStart, prop.cropCenterYEnd,
-                    mOpeningInterpolator);
+                    openingInterpolator);
             FloatProp mCropRectWidth = new FloatProp(prop.cropWidthStart, prop.cropWidthEnd,
-                    mOpeningInterpolator);
+                    openingInterpolator);
             FloatProp mCropRectHeight = new FloatProp(prop.cropHeightStart, prop.cropHeightEnd,
-                    mOpeningInterpolator);
+                    openingInterpolator);
 
             FloatProp mNavFadeOut = new FloatProp(1f, 0f, clampToDuration(
                     NAV_FADE_OUT_INTERPOLATOR, 0, ANIMATION_NAV_FADE_OUT_DURATION,
-                    APP_LAUNCH_DURATION));
+                    launchDuration));
             FloatProp mNavFadeIn = new FloatProp(0f, 1f, clampToDuration(
-                    NAV_FADE_IN_INTERPOLATOR, ANIMATION_DELAY_NAV_FADE_IN,
-                    ANIMATION_NAV_FADE_IN_DURATION, APP_LAUNCH_DURATION));
+                    NAV_FADE_IN_INTERPOLATOR, navFadeInDelay,
+                    ANIMATION_NAV_FADE_IN_DURATION, launchDuration));
 
             @Override
             public void onUpdate(float percent, boolean initOnly) {
@@ -863,13 +869,13 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                             dragLayerBounds[0], dragLayerBounds[1], hasSplashScreen,
                             floatingView.isDifferentFromAppIcon());
                     mCropRectCenterY = new FloatProp(prop.cropCenterYStart, prop.cropCenterYEnd,
-                            mOpeningInterpolator);
+                            openingInterpolator);
                     mCropRectHeight = new FloatProp(prop.cropHeightStart, prop.cropHeightEnd,
-                            mOpeningInterpolator);
-                    mDy = new FloatProp(0, prop.dY, mOpeningInterpolator);
+                            openingInterpolator);
+                    mDy = new FloatProp(0, prop.dY, openingInterpolator);
                     mIconScaleToFitScreen = new FloatProp(prop.initialAppIconScale,
-                            prop.finalAppIconScale, mOpeningInterpolator);
-                    float interpolatedPercent = mOpeningInterpolator.getInterpolation(percent);
+                            prop.finalAppIconScale, openingInterpolator);
+                    float interpolatedPercent = openingInterpolator.getInterpolation(percent);
                     mCropRectHeight.value = Utilities.mapRange(interpolatedPercent,
                             prop.cropHeightStart, prop.cropHeightEnd);
                     mCropRectCenterY.value = Utilities.mapRange(interpolatedPercent,
@@ -1018,6 +1024,10 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             RemoteAnimationTarget[] appTargets,
             RemoteAnimationTarget[] wallpaperTargets,
             RemoteAnimationTarget[] nonAppTargets, boolean launcherClosing) {
+        final Interpolator openingInterpolator = createOpeningInterpolator();
+        final long launchDuration = NexusMotion.appLaunchDurationMs();
+        final long navFadeInDelay =
+                Math.max(0, launchDuration - ANIMATION_NAV_FADE_IN_DURATION);
         Rect windowTargetBounds = getWindowTargetBounds(appTargets, getRotationChange(appTargets));
         boolean appTargetsAreTranslucent = areAllTargetsTranslucent(appTargets);
 
@@ -1055,7 +1065,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
         AnimatorSet animatorSet = new AnimatorSet();
         ValueAnimator appAnimator = ValueAnimator.ofFloat(0, 1);
-        appAnimator.setDuration(APP_LAUNCH_DURATION);
+        appAnimator.setDuration(launchDuration);
         appAnimator.setInterpolator(LINEAR);
         appAnimator.addListener(floatingView);
         appAnimator.addListener(new AnimatorListenerAdapter() {
@@ -1069,35 +1079,35 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
         appAnimator.addUpdateListener(new MultiValueUpdateListener() {
             float mAppWindowScale = 1;
             final FloatProp mWidgetForegroundAlpha = new FloatProp(1, 0, clampToDuration(
-                    LINEAR, 0, WIDGET_CROSSFADE_DURATION_MILLIS / 2, APP_LAUNCH_DURATION));
+                    LINEAR, 0, WIDGET_CROSSFADE_DURATION_MILLIS / 2, launchDuration));
 
             final FloatProp mWidgetFallbackBackgroundAlpha = new FloatProp(0, 1,
-                    clampToDuration(LINEAR, 0, 75, APP_LAUNCH_DURATION));
+                    clampToDuration(LINEAR, 0, 75, launchDuration));
             final FloatProp mPreviewAlpha = new FloatProp(0, 1, clampToDuration(
                     LINEAR,
                     WIDGET_CROSSFADE_DURATION_MILLIS / 2 /* delay */,
                     WIDGET_CROSSFADE_DURATION_MILLIS / 2 /* duration */,
-                    APP_LAUNCH_DURATION));
+                    launchDuration));
             final FloatProp mWindowRadius = new FloatProp(initialWindowRadius, finalWindowRadius,
-                    mOpeningInterpolator);
-            final FloatProp mCornerRadiusProgress = new FloatProp(0, 1, mOpeningInterpolator);
+                    openingInterpolator);
+            final FloatProp mCornerRadiusProgress = new FloatProp(0, 1, openingInterpolator);
 
             // Window & widget background positioning bounds
             final FloatProp mDx = new FloatProp(widgetBackgroundBounds.centerX(),
                     windowTargetBounds.centerX(), mOpeningXInterpolator);
             final FloatProp mDy = new FloatProp(widgetBackgroundBounds.centerY(),
-                    windowTargetBounds.centerY(), mOpeningInterpolator);
+                    windowTargetBounds.centerY(), openingInterpolator);
             final FloatProp mWidth = new FloatProp(widgetBackgroundBounds.width(),
-                    windowTargetBounds.width(), mOpeningInterpolator);
+                    windowTargetBounds.width(), openingInterpolator);
             final FloatProp mHeight = new FloatProp(widgetBackgroundBounds.height(),
-                    windowTargetBounds.height(), mOpeningInterpolator);
+                    windowTargetBounds.height(), openingInterpolator);
 
             final FloatProp mNavFadeOut = new FloatProp(1f, 0f, clampToDuration(
                     NAV_FADE_OUT_INTERPOLATOR, 0, ANIMATION_NAV_FADE_OUT_DURATION,
-                    APP_LAUNCH_DURATION));
+                    launchDuration));
             final FloatProp mNavFadeIn = new FloatProp(0f, 1f, clampToDuration(
-                    NAV_FADE_IN_INTERPOLATOR, ANIMATION_DELAY_NAV_FADE_IN,
-                    ANIMATION_NAV_FADE_IN_DURATION, APP_LAUNCH_DURATION));
+                    NAV_FADE_IN_INTERPOLATOR, navFadeInDelay,
+                    ANIMATION_NAV_FADE_IN_DURATION, launchDuration));
 
             @Override
             public void onUpdate(float percent, boolean initOnly) {
@@ -1171,7 +1181,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
         ObjectAnimator backgroundRadiusAnim = ObjectAnimator.ofFloat(
                         mLauncher.getDepthController().stateDepth, MULTI_PROPERTY_VALUE,
                         BACKGROUND_APP.getDepth(mLauncher))
-                .setDuration(APP_LAUNCH_DURATION);
+                .setDuration(NexusMotion.appLaunchDurationMs());
 
         if (allowBlurringLauncher) {
             // Create a temporary effect layer, that lives on top of launcher, so we can apply

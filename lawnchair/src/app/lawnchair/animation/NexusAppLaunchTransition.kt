@@ -11,7 +11,6 @@ import android.window.IRemoteTransitionFinishedCallback
 import android.window.RemoteTransitionStub
 import android.window.TransitionInfo
 import com.android.launcher3.util.Executors
-import kotlin.math.min
 
 /** Forma segura de guardar una transición sin nombrar las clases de Android 14+ en el campo. */
 internal interface CancellableTransition {
@@ -173,22 +172,27 @@ internal class NexusAppLaunchTransition(
         private val rootOffsetX: Float,
         private val rootOffsetY: Float,
     ) {
-        private val targetWidth = endBounds.width().toFloat()
-        private val targetHeight = endBounds.height().toFloat()
-        private val windowCenterX = endBounds.exactCenterX() - rootOffsetX
-        private val windowCenterY = endBounds.exactCenterY() - rootOffsetY
         private val endPositionX = endBounds.left - rootOffsetX
         private val endPositionY = endBounds.top - rootOffsetY
+        private val finalCrop = Rect(0, 0, endBounds.width(), endBounds.height())
 
-        private val iconWidth = icon.width().toFloat().coerceAtLeast(1f)
-        private val iconHeight = icon.height().toFloat().coerceAtLeast(1f)
-        private val iconCenterX = icon.exactCenterX() - rootOffsetX
-        private val iconCenterY = icon.exactCenterY() - rootOffsetY
-        private val startRadius = if (cornerRadius > 0f) min(iconWidth, iconHeight) / 2f else 0f
+        /** Misma geometría que el cierre de Quickstep: escala uniforme y recorte. */
+        private val geometry = IconWindowGeometry(
+            iconCenterX = icon.exactCenterX() - rootOffsetX,
+            iconCenterY = icon.exactCenterY() - rootOffsetY,
+            iconWidth = icon.width().toFloat(),
+            iconHeight = icon.height().toFloat(),
+            windowLeft = endPositionX,
+            windowTop = endPositionY,
+            windowWidth = endBounds.width().toFloat(),
+            windowHeight = endBounds.height().toFloat(),
+            endRadius = cornerRadius,
+            roundIcon = cornerRadius > 0f,
+        )
+        private val geometryFrame = IconWindowGeometry.Frame()
         private val startProgress = progressProvider().coerceIn(0f, 1f)
 
         private val crop = Rect()
-        private val finalCrop = Rect(0, 0, targetWidth.toInt(), targetHeight.toInt())
         private var frame: SurfaceControl.Transaction? = null
         private var driver: MotionDriver? = null
         private var finishCallback: IRemoteTransitionFinishedCallback? = null
@@ -243,28 +247,13 @@ internal class NexusAppLaunchTransition(
         }
 
         private fun setTransform(t: SurfaceControl.Transaction, p: Float) {
-            val cropWidth = iconWidth + (targetWidth - iconWidth) * p
-            val cropHeight = iconHeight + (targetHeight - iconHeight) * p
-            val left = (targetWidth - cropWidth) * 0.5f
-            val top = (targetHeight - cropHeight) * 0.5f
-            crop.set(
-                left.toInt(),
-                top.toInt(),
-                (left + cropWidth).toInt(),
-                (top + cropHeight).toInt(),
-            )
-
-            val scale = SCALE_START + (1f - SCALE_START) * p
-            val centerX = iconCenterX + (windowCenterX - iconCenterX) * p
-            val centerY = iconCenterY + (windowCenterY - iconCenterY) * p
-            val x = centerX - cropWidth * scale * 0.5f - crop.left * scale
-            val y = centerY - cropHeight * scale * 0.5f - crop.top * scale
-
+            val g = geometry.at(p, geometryFrame)
+            crop.set(g.cropLeft, g.cropTop, g.cropRight, g.cropBottom)
             t.setAlpha(leash, 1f)
-            t.setPosition(leash, x, y)
-            t.setMatrix(leash, scale, 0f, 0f, scale)
+            t.setPosition(leash, g.x, g.y)
+            t.setMatrix(leash, g.scale, 0f, 0f, g.scale)
             t.setCrop(leash, crop)
-            t.setCornerRadius(leash, startRadius + (cornerRadius - startRadius) * p)
+            t.setCornerRadius(leash, g.localRadius)
         }
 
         private fun finish() {
@@ -300,7 +289,5 @@ internal class NexusAppLaunchTransition(
 
     private companion object {
         private const val TAG = "NexusAppLaunch"
-
-        private const val SCALE_START = 0.97f
     }
 }

@@ -18,6 +18,30 @@ object NexusMotion {
     @Volatile
     var profile: MotionProfile = MotionProfile.Nexus
 
+    private var curveProfile: MotionProfile? = null
+    private var openCurve: SpringCurve? = null
+
+    /**
+     * Respuesta temporal del resorte de apertura del perfil actual, para las animaciones de
+     * duración fija que gestiona el sistema (transiciones remotas de Quickstep). Asentar el
+     * resorte cuesta ~1 ms, así que se recalcula solo cuando cambia el perfil.
+     */
+    @JvmStatic
+    @Synchronized
+    fun openCurve(): SpringCurve {
+        val current = profile
+        val cached = openCurve
+        if (cached != null && curveProfile === current) return cached
+        return SpringCurve.of(current.open, current.speed).also {
+            openCurve = it
+            curveProfile = current
+        }
+    }
+
+    /** Duración, en ms, de una apertura con el perfil actual (hasta que el resorte se asienta). */
+    @JvmStatic
+    fun appLaunchDurationMs(): Long = openCurve().durationMs
+
     /** Escala de animación del sistema (opciones de desarrollador). 1 = normal. */
     fun systemScale(context: Context): Float = Settings.Global.getFloat(
         context.contentResolver,
