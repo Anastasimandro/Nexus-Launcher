@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import android.view.View
+import android.view.animation.Interpolator
 import java.util.WeakHashMap
 
 /**
@@ -41,6 +42,24 @@ object NexusMotion {
     /** Duración, en ms, de una apertura con el perfil actual (hasta que el resorte se asienta). */
     @JvmStatic
     fun appLaunchDurationMs(): Long = openCurve().durationMs
+
+    /**
+     * Curva para terminar un gesto que el sistema completa solo (volver a la app al cancelar):
+     * resorte de cierre del perfil, ajustado a [durationMs] y arrancando con la velocidad con la
+     * que el dedo se acercaba al destino, para que no haya tirón al soltar.
+     *
+     * @param travel recorrido que queda, en unidades de progreso del gesto.
+     * @param velocityTowardPerMs velocidad hacia el destino, en unidades de progreso por ms
+     *   (negativa si el dedo se alejaba).
+     */
+    @JvmStatic
+    fun gestureEndInterpolator(travel: Float, velocityTowardPerMs: Float, durationMs: Long): Interpolator {
+        val perSecond = if (travel > MIN_TRAVEL) velocityTowardPerMs * MS_PER_SECOND / travel else 0f
+        return SpringInterpolator(SpringCurve.fitted(profile.close, durationMs, perSecond))
+    }
+
+    private const val MIN_TRAVEL = 1e-4f
+    private const val MS_PER_SECOND = 1000f
 
     /** Escala de animación del sistema (opciones de desarrollador). 1 = normal. */
     fun systemScale(context: Context): Float = Settings.Global.getFloat(

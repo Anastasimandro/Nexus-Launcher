@@ -189,6 +189,8 @@ import java.util.OptionalInt;
 import java.util.function.Consumer;
 import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat;
 
+import app.lawnchair.animation.NexusMotion;
+
 /**
  * Handles the navigation gestures when Launcher is the default home activity.
  */
@@ -1452,6 +1454,13 @@ public abstract class AbsSwipeUpHandler<
             interpolator = ACCELERATE_DECELERATE;
         } else if (endTarget == RECENTS) {
             interpolator = OVERSHOOT_1_2;
+        } else if (endTarget == LAST_TASK && mTransitionDragLength > 0) {
+            // Cancelar el gesto: volver a la app con un resorte que parte de la velocidad real del
+            // dedo, en lugar de una curva de frenada que arranca a su propia velocidad.
+            float shiftVelocityPerMs = -velocityPxPerMs.y / mTransitionDragLength;
+            float towardPerMs = endShift >= startShift ? shiftVelocityPerMs : -shiftVelocityPerMs;
+            interpolator = NexusMotion.gestureEndInterpolator(
+                    Math.abs(endShift - startShift), towardPerMs, duration);
         } else {
             interpolator = DECELERATE;
         }

@@ -15,12 +15,12 @@ class SpringCurveTest {
     private data class Sample(val position: Double, val velocity: Double)
 
     /** Integración de Euler semi-implícito con paso de 20 µs: el error es muy inferior a 1e-3. */
-    private fun integrate(stiffness: Float, damping: Float, seconds: Double): Sample {
+    private fun integrate(stiffness: Float, damping: Float, seconds: Double, startVelocity: Double = 0.0): Sample {
         val k = stiffness.toDouble()
         val c = 2.0 * damping * kotlin.math.sqrt(k)
         val dt = 0.00002
         var x = 0.0
-        var v = 0.0
+        var v = startVelocity
         var t = 0.0
         while (t < seconds) {
             v += (-k * (x - 1.0) - c * v) * dt
@@ -138,5 +138,88 @@ class SpringCurveTest {
         val soft = SpringCurve(170f, 0.9f)
         val stiff = SpringCurve(320f, 0.9f)
         assertTrue(stiff.durationMs < soft.durationMs)
+    }
+
+    // ---- Velocidad inicial: continuidad con el dedo al soltar
+
+    @Test
+    fun startVelocityMatchesNumericalIntegration() {
+        for ((stiffness, damping, _) in cases) {
+            for (v0 in listOf(0.5f, 2f, 6f)) {
+                val curve = SpringCurve(stiffness, damping, 1f, startVelocity = v0)
+                for (t in listOf(0.02, 0.1, 0.25, 0.5)) {
+                    val reference = integrate(stiffness, damping, t, v0.toDouble())
+                    assertEquals(
+                        "posición k=$stiffness z=$damping v0=$v0 t=$t",
+                        reference.position,
+                        curve.valueAt(t.toFloat()).toDouble(),
+                        3e-3,
+                    )
+                    assertEquals(
+                        "velocidad k=$stiffness z=$damping v0=$v0 t=$t",
+                        reference.velocity,
+                        curve.velocityAt(t.toFloat()).toDouble(),
+                        3e-2 * max(1.0, abs(reference.velocity)),
+                    )
+                }
+            }
+        }
+    }
+
+    @Test
+    fun startsExactlyAtTheReleaseVelocity() {
+        for ((stiffness, damping, _) in cases) {
+            for (v0 in listOf(0f, 1f, 4f)) {
+                val curve = SpringCurve(stiffness, damping, 1f, startVelocity = v0)
+                assertEquals("k=$stiffness z=$damping", v0.toDouble(), curve.velocityAt(0f).toDouble(), 1e-3)
+            }
+        }
+    }
+
+    @Test
+    fun fittedCurveSettlesInTheRequestedDurationAndKeepsTheVelocity() {
+        val spec = MotionSpec(320f, 0.88f)
+        for (duration in listOf(120L, 250L, 350L)) {
+            for (perSecond in listOf(0f, 1f, 3f)) {
+                val curve = SpringCurve.fitted(spec, duration, perSecond)
+                assertTrue(
+                    "duración pedida $duration obtenida ${curve.durationMs}",
+                    abs(curve.durationMs - duration) <= duration * 0.05,
+                )
+                assertEquals(0f, curve.fractionAt(0f), 0f)
+                assertEquals(1f, curve.fractionAt(1f), 0f)
+                // Pendiente de la curva normalizada en el origen = velocidad del dedo × duración.
+                val dt = 1e-3f
+                val slope = curve.fractionAt(dt) / dt
+                assertEquals(
+                    "pendiente inicial d=$duration v=$perSecond",
+                    perSecond * duration / 1000.0,
+                    slope.toDouble(),
+                    0.05 + 0.03 * perSecond,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun releasedAtRestStartsWithoutAJump() {
+        val curve = SpringCurve.fitted(MotionSpec(320f, 0.88f), 300L, 0f)
+        assertTrue(curve.fractionAt(0.01f) < 0.01f)
+    }
+
+    @Test
+    fun fasterReleaseCoversMoreGroundEarly() {
+        val spec = MotionSpec(320f, 0.88f)
+        val slow = SpringCurve.fitted(spec, 300L, 0.5f).fractionAt(0.1f)
+        val fast = SpringCurve.fitted(spec, 300L, 4f).fractionAt(0.1f)
+        assertTrue("slow=$slow fast=$fast", fast > slow)
+    }
+
+    @Test
+    fun releaseVelocityOverridesNegativeAndAbsurdValues() {
+        val negative = SpringCurve(320f, 0.88f, 1f, startVelocity = -5f)
+        assertEquals(0.0, negative.velocityAt(0f).toDouble(), 1e-3)
+        val absurd = SpringCurve(320f, 0.88f, 1f, startVelocity = 1e9f)
+        assertTrue(absurd.durationMs < 5_000)
     }
 }
