@@ -39,6 +39,27 @@ object NexusMotion {
         }
     }
 
+    private var lateralProfile: MotionProfile? = null
+    private var openLateralCurve: SpringCurve? = null
+
+    /**
+     * Respuesta temporal del resorte lateral de la apertura (eje horizontal), más rápido que el de
+     * [openCurve]. Se evalúa en tiempo real con [TimedSpringInterpolator] sobre la duración de la
+     * apertura, de modo que el movimiento horizontal termina antes y el resto de propiedades
+     * siguen sincronizadas con el progreso del resorte principal.
+     */
+    @JvmStatic
+    @Synchronized
+    fun openLateralCurve(): SpringCurve {
+        val current = profile
+        val cached = openLateralCurve
+        if (cached != null && lateralProfile === current) return cached
+        return SpringCurve.of(current.openLateral, current.speed).also {
+            openLateralCurve = it
+            lateralProfile = current
+        }
+    }
+
     /** Duración, en ms, de una apertura con el perfil actual (hasta que el resorte se asienta). */
     @JvmStatic
     fun appLaunchDurationMs(): Long = openCurve().durationMs

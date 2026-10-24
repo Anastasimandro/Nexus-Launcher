@@ -113,6 +113,17 @@ class SpringCurve(
         return (value / endValue).toFloat()
     }
 
+    /**
+     * Como [fractionAt] pero con el tiempo en segundos reales en vez de como fracción de [durationMs].
+     * Sirve para que un resorte más rápido que la animación que lo contiene termine antes y se
+     * quede quieto: pasado [settleSeconds] vale exactamente 1.
+     */
+    fun fractionAtSeconds(seconds: Float): Float {
+        if (seconds <= 0f) return 0f
+        if (seconds >= settleSeconds) return 1f
+        return (raw(seconds.toDouble()) / endValue).toFloat()
+    }
+
     /** Posición (0 → 1): 1 menos la distancia al destino, que es `e^(-ζωt)·(...)`. */
     private fun raw(t: Double): Double {
         if (t <= 0.0) return 0.0
