@@ -222,4 +222,63 @@ class SpringCurveTest {
         val absurd = SpringCurve(320f, 0.88f, 1f, startVelocity = 1e9f)
         assertTrue(absurd.durationMs < 5_000)
     }
+
+    @Test
+    fun realTimeFractionStartsAtZeroAndStaysAtOnceSettled() {
+        for ((stiffness, damping, _) in cases) {
+            val curve = SpringCurve(stiffness, damping)
+            assertEquals(0f, curve.fractionAtSeconds(0f), 0f)
+            assertEquals(0f, curve.fractionAtSeconds(-1f), 0f)
+            assertEquals(1f, curve.fractionAtSeconds(curve.settleSeconds), 0f)
+            assertEquals(1f, curve.fractionAtSeconds(curve.settleSeconds + 5f), 0f)
+        }
+    }
+
+    @Test
+    fun realTimeFractionIsTheSameCurveAsTheNormalizedOne() {
+        val curve = SpringCurve(170f, 0.9f)
+        for (fraction in listOf(0.1f, 0.35f, 0.6f, 0.9f)) {
+            assertEquals(
+                curve.fractionAt(fraction),
+                curve.fractionAtSeconds(fraction * curve.settleSeconds),
+                1e-5f,
+            )
+        }
+    }
+
+    @Test
+    fun lateralSpringFinishesBeforeTheOpeningAndNeverBounces() {
+        val profile = MotionProfile.Nexus
+        val opening = SpringCurve.of(profile.open)
+        val lateral = SpringCurve.of(profile.openLateral)
+        assertTrue(
+            "lateral=${lateral.durationMs} ms apertura=${opening.durationMs} ms",
+            lateral.durationMs < opening.durationMs,
+        )
+        // Con la animación de la apertura como marco temporal, el eje lateral ya está en su sitio
+        // mientras el principal aún se asienta, y nunca se pasa de largo (amortiguación crítica).
+        var previous = 0f
+        for (step in 0..100) {
+            val seconds = step / 100f * opening.settleSeconds
+            val value = lateral.fractionAtSeconds(seconds)
+            assertTrue("retrocede en $seconds s: $previous -> $value", value >= previous - 1e-6f)
+            assertTrue("rebota en $seconds s: $value", value <= 1f + 1e-6f)
+            previous = value
+        }
+        assertEquals(1f, lateral.fractionAtSeconds(lateral.settleSeconds), 0f)
+    }
+
+    @Test
+    fun lateralSpringTracksTheAospPathAfterItsSlowStart() {
+        // La curva lateral de AOSP (app_open_x) es una Bézier por tramos; estos puntos están
+        // evaluados de sus puntos de control. El resorte parte del reposo y no puede copiar su
+        // arranque lento, así que la comparación se hace en el resto del recorrido.
+        val aospX = listOf(0.15f to 0.476f, 0.2f to 0.841f, 0.3f to 0.927f, 0.5f to 0.976f)
+        val opening = SpringCurve.of(MotionProfile.Nexus.open)
+        val lateral = SpringCurve.of(MotionProfile.Nexus.openLateral)
+        for ((fraction, expected) in aospX) {
+            val actual = lateral.fractionAtSeconds(fraction * opening.settleSeconds)
+            assertEquals("fracción $fraction", expected.toDouble(), actual.toDouble(), 0.15)
+        }
+    }
 }

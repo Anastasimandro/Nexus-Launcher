@@ -107,7 +107,6 @@ import android.view.View;
 import android.view.ViewRootImpl;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
 import android.window.DesktopModeFlags;
@@ -185,6 +184,7 @@ import java.util.Map.Entry;
 
 import app.lawnchair.animation.NexusMotion;
 import app.lawnchair.animation.SpringInterpolator;
+import app.lawnchair.animation.TimedSpringInterpolator;
 import app.lawnchair.compat.LawnchairQuickstepCompat;
 
 /**
@@ -290,8 +290,6 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
     // Will never be larger than MAX_NUM_TASKS
     private LinkedHashMap<Integer, Pair<Integer, Integer>> mTaskStartParams;
 
-    private final Interpolator mOpeningXInterpolator;
-
     private final SystemUiProxy mSystemUiProxy;
 
     public QuickstepTransitionManager(QuickstepLauncher launcher) {
@@ -321,8 +319,6 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             mSystemUiProxy.setStartingWindowListener(mStartingWindowListener);
         }
 
-        mOpeningXInterpolator = AnimationUtils.loadInterpolator(
-                launcher, R.interpolator.app_open_x);
         mCoordinateTransfer = new RemoteAnimationCoordinateTransfer(mLauncher);
         mLatencyTracker = LatencyTracker.getInstance(launcher);
     }
@@ -711,6 +707,15 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
     }
 
     /**
+     * Curva del movimiento horizontal de la apertura: el resorte lateral del perfil de Nexus, que
+     * corre en tiempo real sobre la duración de la apertura y se asienta antes que el principal.
+     * Sustituye a la curva Bézier lateral de AOSP.
+     */
+    private static Interpolator createOpeningXInterpolator(long launchDuration) {
+        return new TimedSpringInterpolator(NexusMotion.openLateralCurve(), launchDuration);
+    }
+
+    /**
      * @return Animator that controls the window of the opening targets from app icons.
      */
     private Animator getOpeningWindowAnimators(View v,
@@ -720,6 +725,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             boolean launcherClosing) {
         final Interpolator openingInterpolator = createOpeningInterpolator();
         final long launchDuration = NexusMotion.appLaunchDurationMs();
+        final Interpolator openingXInterpolator = createOpeningXInterpolator(launchDuration);
         final long navFadeInDelay =
                 Math.max(0, launchDuration - ANIMATION_NAV_FADE_IN_DURATION);
         RemoteAnimationTargets openingTargets = new RemoteAnimationTargets(appTargets,
@@ -745,6 +751,8 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 null /* fadeOutView */, !appTargetsAreTranslucent, launcherIconBounds,
                 true /* isOpening */);
         Rect crop = new Rect();
+        // Recorte del objetivo que se cierra: se reutiliza en todos los fotogramas.
+        final Rect closingCrop = new Rect();
         Matrix matrix = new Matrix();
 
         SurfaceTransactionApplier surfaceApplier =
@@ -820,7 +828,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
         final float finalShadowRadius = appTargetsAreTranslucent ? 0 : mMaxShadowRadius;
 
         MultiValueUpdateListener listener = new MultiValueUpdateListener() {
-            FloatProp mDx = new FloatProp(0, prop.dX, mOpeningXInterpolator);
+            FloatProp mDx = new FloatProp(0, prop.dX, openingXInterpolator);
             FloatProp mDy = new FloatProp(0, prop.dY, openingInterpolator);
 
             FloatProp mIconScaleToFitScreen = new FloatProp(prop.initialAppIconScale,
@@ -972,20 +980,20 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                         } else {
                             tmpPos.set(target.position.x, target.position.y);
                         }
-                        final Rect crop = new Rect(target.screenSpaceBounds);
-                        crop.offsetTo(0, 0);
+                        closingCrop.set(target.screenSpaceBounds);
+                        closingCrop.offsetTo(0, 0);
 
                         if ((rotationChange % 2) == 1) {
-                            int tmp = crop.right;
-                            crop.right = crop.bottom;
-                            crop.bottom = tmp;
+                            int tmp = closingCrop.right;
+                            closingCrop.right = closingCrop.bottom;
+                            closingCrop.bottom = tmp;
                             tmp = tmpPos.x;
                             tmpPos.x = tmpPos.y;
                             tmpPos.y = tmp;
                         }
                         matrix.setTranslate(tmpPos.x, tmpPos.y);
                         builder.setMatrix(matrix)
-                                .setWindowCrop(crop)
+                                .setWindowCrop(closingCrop)
                                 .setAlpha(1f);
                     }
                 }
@@ -1026,6 +1034,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             RemoteAnimationTarget[] nonAppTargets, boolean launcherClosing) {
         final Interpolator openingInterpolator = createOpeningInterpolator();
         final long launchDuration = NexusMotion.appLaunchDurationMs();
+        final Interpolator openingXInterpolator = createOpeningXInterpolator(launchDuration);
         final long navFadeInDelay =
                 Math.max(0, launchDuration - ANIMATION_NAV_FADE_IN_DURATION);
         Rect windowTargetBounds = getWindowTargetBounds(appTargets, getRotationChange(appTargets));
@@ -1094,7 +1103,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
             // Window & widget background positioning bounds
             final FloatProp mDx = new FloatProp(widgetBackgroundBounds.centerX(),
-                    windowTargetBounds.centerX(), mOpeningXInterpolator);
+                    windowTargetBounds.centerX(), openingXInterpolator);
             final FloatProp mDy = new FloatProp(widgetBackgroundBounds.centerY(),
                     windowTargetBounds.centerY(), openingInterpolator);
             final FloatProp mWidth = new FloatProp(widgetBackgroundBounds.width(),
@@ -1594,6 +1603,8 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
         Matrix matrix = new Matrix();
         Point tmpPos = new Point();
         Rect tmpRect = new Rect();
+        // Recorte de cada objetivo: se reutiliza en todos los fotogramas.
+        Rect tmpCrop = new Rect();
         ValueAnimator closingAnimator = ValueAnimator.ofFloat(0, 1);
         int duration = CLOSING_TRANSITION_DURATION_MS;
         float windowCornerRadius = mDeviceProfile.getDeviceProperties().isMultiWindowMode()
@@ -1625,14 +1636,14 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                         tmpPos.set(target.position.x, target.position.y);
                     }
 
-                    final Rect crop = new Rect(target.localBounds);
-                    crop.offsetTo(0, 0);
+                    tmpCrop.set(target.localBounds);
+                    tmpCrop.offsetTo(0, 0);
                     if (target.mode == MODE_CLOSING) {
                         tmpRect.set(target.screenSpaceBounds);
                         if ((rotationChange % 2) != 0) {
-                            final int right = crop.right;
-                            crop.right = crop.bottom;
-                            crop.bottom = right;
+                            final int right = tmpCrop.right;
+                            tmpCrop.right = tmpCrop.bottom;
+                            tmpCrop.bottom = right;
                         }
                         matrix.setScale(mScale.value, mScale.value,
                                 tmpRect.centerX(),
@@ -1640,14 +1651,14 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                         matrix.postTranslate(0, mDy.value);
                         matrix.postTranslate(tmpPos.x, tmpPos.y);
                         builder.setMatrix(matrix)
-                                .setWindowCrop(crop)
+                                .setWindowCrop(tmpCrop)
                                 .setAlpha(mAlpha.value)
                                 .setCornerRadius(windowCornerRadius)
                                 .setShadowRadius(mShadowRadius.value);
                     } else if (target.mode == MODE_OPENING) {
                         matrix.setTranslate(tmpPos.x, tmpPos.y);
                         builder.setMatrix(matrix)
-                                .setWindowCrop(crop)
+                                .setWindowCrop(tmpCrop)
                                 .setAlpha(1f);
                     }
                 }

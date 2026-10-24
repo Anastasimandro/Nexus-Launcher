@@ -125,6 +125,7 @@ object NexusLog {
                 "Archivo: ${target.second}\n" +
                 "Android ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT}), ${Build.MANUFACTURER} ${Build.MODEL}\n" +
                 "Perfil: apertura k=${profile.open.stiffness} z=${profile.open.dampingRatio}, " +
+                "apertura lateral k=${profile.openLateral.stiffness} z=${profile.openLateral.dampingRatio}, " +
                 "cierre k=${profile.close.stiffness} z=${profile.close.dampingRatio}, " +
                 "vuelta k=${profile.homeReturn.stiffness} z=${profile.homeReturn.dampingRatio}, velocidad=${profile.speed}\n" +
                 "Escala de animación del sistema: ${systemScale(context)}\n\n",
