@@ -4,7 +4,6 @@ import android.app.ActivityOptions
 import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Build
-import android.util.Log
 import android.view.Display
 import android.view.View
 import android.view.ViewGroup
@@ -112,7 +111,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         }
         options.launchDisplayId = icon.display?.displayId ?: Display.DEFAULT_DISPLAY
         armFailSafe()
-        Log.i(TAG, "Lanzamiento con reveal del sistema (sdk=${Build.VERSION.SDK_INT})")
+        NexusLog.i(TAG, "Lanzamiento con reveal del sistema (sdk=${Build.VERSION.SDK_INT})")
         // No se registra en `lastWrapper`: son opciones normales y no hay nada que reintentar
         // (si falla, es que la app no está instalada y el aviso es el correcto).
         return ActivityOptionsWrapper(options, RunnableList())
@@ -170,7 +169,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
                 options.splashScreenStyle = SplashScreen.SPLASH_SCREEN_STYLE_ICON
             }
             options.launchDisplayId = target.view.display?.displayId ?: Display.DEFAULT_DISPLAY
-            Log.i(
+            NexusLog.i(
                 TAG,
                 "Lanzamiento con transición de superficie " +
                     "(icono=$icon, radio=$radius, sdk=${Build.VERSION.SDK_INT})",
@@ -179,7 +178,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         }.onFailure {
             lastSurfaceTransition?.cancelIfPending()
             lastSurfaceTransition = null
-            Log.w(TAG, "No se pudo crear la transición de superficie; se usa la de ventana", it)
+            NexusLog.w(TAG, "No se pudo crear la transición de superficie; se usa la de ventana", it)
         }.getOrNull()
     }
 
@@ -247,7 +246,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         try {
             startZoomInternal(target)
         } catch (e: Exception) {
-            Log.w(TAG, "No se pudo preparar el zoom del icono; se usa la transición normal", e)
+            NexusLog.w(TAG, "No se pudo preparar el zoom del icono; se usa la transición normal", e)
             endZoomNow()
         }
     }
@@ -347,7 +346,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
      */
     fun onLaunchFailed(options: ActivityOptionsWrapper, error: Exception): Boolean {
         if (lastWrapper?.get() !== options) return false
-        Log.w(
+        NexusLog.w(
             TAG,
             "El sistema rechazó el lanzamiento con las opciones de Nexus " +
                 "(${error.javaClass.simpleName}: ${error.message}); se reintenta con las normales",
@@ -362,7 +361,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
      * la apertura normal, con el reveal del sistema, no quede deformada.
      */
     fun onPrivilegedLaunchFailed() {
-        Log.w(TAG, "El lanzamiento privilegiado falló; se abre con el reveal del sistema")
+        NexusLog.w(TAG, "El lanzamiento privilegiado falló; se abre con el reveal del sistema")
         abortLaunch()
     }
 
@@ -371,7 +370,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
      * ninguna transición de ventana, así que el zoom del icono no tiene nada que acompañar.
      */
     fun onLaunchWithoutTransition() {
-        Log.i(TAG, "La actividad ya estaba delante: no hay transición, se devuelve el icono")
+        NexusLog.i(TAG, "La actividad ya estaba delante: no hay transición, se devuelve el icono")
         val callbacks = lastWrapper?.get()?.onEndCallback
         abortLaunch()
         callbacks?.executeAllAndDestroy()
@@ -400,7 +399,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     fun onLauncherPaused() {
         launcherResumed = false
-        Log.i(TAG, "Launcher en pausa (lanzamiento pendiente=$launchPending)")
+        NexusLog.i(TAG, "Launcher en pausa (lanzamiento pendiente=$launchPending)")
         if (launchPending) wentToBackground = true
     }
 
@@ -410,7 +409,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         // es anterior a ese lanzamiento (por ejemplo, el cierre de la app anterior que llega
         // tarde): no debe replegar el zoom de la app que se está abriendo ahora.
         val launching = launchPending && !wentToBackground
-        Log.i(TAG, "Launcher reanudado (venía de una apertura de Nexus=$wentToBackground, lanzando=$launching)")
+        NexusLog.i(TAG, "Launcher reanudado (venía de una apertura de Nexus=$wentToBackground, lanzando=$launching)")
         wentToBackground = false
         if (!launching) {
             launchPending = false
@@ -444,7 +443,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
 
     /** Anota por qué este lanzamiento no usa la animación de Nexus y devuelve `null`. */
     private fun <T : Any> skip(reason: String): T? {
-        Log.i(TAG, "Sin animación de Nexus: $reason")
+        NexusLog.i(TAG, "Sin animación de Nexus: $reason")
         return null
     }
 
@@ -579,7 +578,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
             )
         }
         if (Build.VERSION.SDK_INT >= TASK_OVERRIDE_MIN_SDK && !overrideTaskTransition(base)) {
-            Log.w(TAG, "No se pudo pedir la animación de tarea: se usa la del sistema")
+            NexusLog.w(TAG, "No se pudo pedir la animación de tarea: se usa la del sistema")
             return null
         }
         val options = Utilities.allowBGLaunch(base)
@@ -605,7 +604,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
                 .invoke(options, true)
         }
         viaMethod.exceptionOrNull()?.let {
-            Log.w(TAG, "$OVERRIDE_TASK_SETTER no disponible: ${it.javaClass.simpleName}: ${it.message}")
+            NexusLog.w(TAG, "$OVERRIDE_TASK_SETTER no disponible: ${it.javaClass.simpleName}: ${it.message}")
         }
 
         // 2) Se comprueba leyendo el campo; si el método no existía, se rellena directamente.
@@ -615,10 +614,10 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
         if (field != null) {
             runCatching { if (!field.getBoolean(options)) field.setBoolean(options, true) }
             val set = runCatching { field.getBoolean(options) }.getOrDefault(false)
-            Log.i(TAG, "overrideTaskTransition: campo=$set (método ok=${viaMethod.isSuccess})")
+            NexusLog.i(TAG, "overrideTaskTransition: campo=$set (método ok=${viaMethod.isSuccess})")
             return set
         }
-        Log.w(TAG, "El campo $OVERRIDE_TASK_FIELD no existe en esta versión de Android")
+        NexusLog.w(TAG, "El campo $OVERRIDE_TASK_FIELD no existe en esta versión de Android")
 
         // 3) Sin el campo, se comprueba con el método de lectura.
         val viaGetter = runCatching {
@@ -626,7 +625,7 @@ class NexusLaunchAnimator(private val launcher: LawnchairLauncher) {
                 .apply { isAccessible = true }
                 .invoke(options) as? Boolean
         }.getOrNull() == true
-        Log.i(TAG, "overrideTaskTransition: lectura por método=$viaGetter")
+        NexusLog.i(TAG, "overrideTaskTransition: lectura por método=$viaGetter")
         return viaGetter
     }
 

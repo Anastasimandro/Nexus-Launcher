@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import app.lawnchair.animation.NexusLog
 import app.lawnchair.backup.LawnchairBackup
 import app.lawnchair.flowerpot.Flowerpot
 import app.lawnchair.preferences.PreferenceManager
@@ -70,6 +71,7 @@ class LawnchairApp : LauncherApplication() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        NexusLog.init(this)
         QuickStepContract.sRecentsDisabled = !recentsEnabled
         Flowerpot.Manager.getInstance(this)
         registerActivityLifecycleCallbacks(activityHandler)

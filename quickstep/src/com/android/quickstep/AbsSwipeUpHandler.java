@@ -189,6 +189,7 @@ import java.util.OptionalInt;
 import java.util.function.Consumer;
 import com.android.wm.shell.shared.desktopmode.DesktopFlagsCompat;
 
+import app.lawnchair.animation.NexusLog;
 import app.lawnchair.animation.NexusMotion;
 
 /**
@@ -1538,6 +1539,9 @@ public abstract class AbsSwipeUpHandler<
             }
         }
         long finalDuration = duration;
+        NexusLog.i("NexusGesture", "Fin del gesto: destino=" + endTarget
+                + " progreso=" + currentShift + " velocidad(px/ms)=" + velocityPxPerMs
+                + " fling=" + isFling + " cancelado=" + isCancel + " duración=" + finalDuration + " ms");
         runOnRecentsAnimationAndLauncherBound(() -> animateGestureEnd(
                 startShift, endShift, finalDuration, interpolator, endTarget, velocityPxPerMs));
     }

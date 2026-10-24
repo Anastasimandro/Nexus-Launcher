@@ -55,7 +55,13 @@ object NexusMotion {
     @JvmStatic
     fun gestureEndInterpolator(travel: Float, velocityTowardPerMs: Float, durationMs: Long): Interpolator {
         val perSecond = if (travel > MIN_TRAVEL) velocityTowardPerMs * MS_PER_SECOND / travel else 0f
-        return SpringInterpolator(SpringCurve.fitted(profile.close, durationMs, perSecond))
+        val curve = SpringCurve.fitted(profile.close, durationMs, perSecond)
+        NexusLog.i(
+            "NexusGesture",
+            "Cancelar gesto: recorrido=$travel velocidad hacia la app=${perSecond}x recorrido/s " +
+                "duración pedida=$durationMs ms, resorte=${curve.durationMs} ms",
+        )
+        return SpringInterpolator(curve)
     }
 
     private const val MIN_TRAVEL = 1e-4f

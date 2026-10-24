@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.RemoteException
-import android.util.Log
 import android.view.SurfaceControl
 import android.view.WindowManager
 import android.window.IRemoteTransitionFinishedCallback
@@ -94,7 +93,7 @@ internal class NexusAppLaunchTransition(
         val merged = try {
             session != null && session.tryMerge(info, t)
         } catch (e: Throwable) {
-            Log.w(TAG, "Fallo al absorber la transición; se rechaza", e)
+            NexusLog.w(TAG, "Fallo al absorber la transición; se rechaza", e)
             false
         }
         if (!merged) {
@@ -106,7 +105,7 @@ internal class NexusAppLaunchTransition(
         try {
             finishCallback.onTransitionFinished(null, null)
         } catch (e: RemoteException) {
-            Log.w(TAG, "No se pudo confirmar la transición absorbida", e)
+            NexusLog.w(TAG, "No se pudo confirmar la transición absorbida", e)
         }
     }
 
@@ -115,7 +114,7 @@ internal class NexusAppLaunchTransition(
         if (started) return
         cancelled = true
         LaunchHub.unregister(this)
-        Log.i(TAG, "Transición consumida antes de empezar (aborted=$aborted)")
+        NexusLog.i(TAG, "Transición consumida antes de empezar (aborted=$aborted)")
     }
 
     internal companion object {
@@ -203,7 +202,7 @@ internal class TransitionSession(
     private val watchdog = Runnable {
         synchronized(lock) {
             if (!core.finished) {
-                Log.w(TAG, "La transición no terminó a tiempo; se fuerza el final")
+                NexusLog.w(TAG, "La transición no terminó a tiempo; se fuerza el final")
                 core.forceFinish()
             }
         }
@@ -222,7 +221,7 @@ internal class TransitionSession(
                 val change = findOpeningChange(info)
                 val layer = if (change != null) buildLayer(launch, info, change) else null
                 if (layer == null) {
-                    Log.i(TAG, "Sin tarea de apertura que animar; se deja terminar la transición")
+                    NexusLog.i(TAG, "Sin tarea de apertura que animar; se deja terminar la transición")
                     startT.apply()
                     startT.close()
                     core.forceFinish()
@@ -237,7 +236,7 @@ internal class TransitionSession(
                 }
             }
         } catch (e: Throwable) {
-            Log.w(TAG, "No se pudo preparar la animación de la superficie", e)
+            NexusLog.w(TAG, "No se pudo preparar la animación de la superficie", e)
             runCatching { startT.apply() }
             runCatching { startT.close() }
             synchronized(lock) { core.forceFinish() }
@@ -271,7 +270,7 @@ internal class TransitionSession(
                 if (layer == null) {
                     false
                 } else {
-                    Log.i(TAG, "Interrupción: la app cierra a medio abrir; la ventana vuelve al icono")
+                    NexusLog.i(TAG, "Interrupción: la app cierra a medio abrir; la ventana vuelve al icono")
                     applyMerged(layer, t)
                     Executors.MAIN_EXECUTOR.execute { layer.reverse() }
                     true
@@ -283,7 +282,7 @@ internal class TransitionSession(
                 if (layer == null) {
                     false
                 } else {
-                    Log.i(TAG, "Interrupción: la app se reabre mientras volvía al icono; cambia de rumbo")
+                    NexusLog.i(TAG, "Interrupción: la app se reabre mientras volvía al icono; cambia de rumbo")
                     // El lanzamiento pendiente de esa misma app queda atendido por esta capa.
                     LaunchHub.takePending(summary.firstOrNull { it.taskId == decision.taskId }?.packageName)
                     applyMerged(layer, t)
@@ -315,7 +314,7 @@ internal class TransitionSession(
         val launch = LaunchHub.takePending(summary.packageName) ?: return false
         val layer = buildLayer(launch, info, change) ?: return false
         if (!core.add(layer)) return false
-        Log.i(TAG, "Interrupción: se abre otra app mientras se anima la anterior; conviven")
+        NexusLog.i(TAG, "Interrupción: se abre otra app mientras se anima la anterior; conviven")
         everyLayer.add(layer)
         layer.writeStart(t)
         t.apply()
@@ -352,14 +351,14 @@ internal class TransitionSession(
         try {
             toFinish?.onTransitionFinished(null, finalState)
         } catch (e: RemoteException) {
-            Log.w(TAG, "No se pudo cerrar la transición de la superficie", e)
+            NexusLog.w(TAG, "No se pudo cerrar la transición de la superficie", e)
         } finally {
             runCatching { finalState.close() }
         }
         val layers = ArrayList(everyLayer)
         everyLayer.clear()
         Executors.MAIN_EXECUTOR.execute { layers.forEach { it.release() } }
-        if (forced) Log.i(TAG, "Transición terminada a la fuerza")
+        if (forced) NexusLog.i(TAG, "Transición terminada a la fuerza")
     }
 
     private fun buildLayer(
@@ -369,12 +368,12 @@ internal class TransitionSession(
     ): WindowLayer? {
         val end = change.endAbsBounds
         if (end.width() <= 0 || end.height() <= 0) {
-            Log.i(TAG, "La tarea de apertura no tiene límites ($end); sin animación")
+            NexusLog.i(TAG, "La tarea de apertura no tiene límites ($end); sin animación")
             return null
         }
         if (change.startRotation != change.endRotation) {
             // La geometría del recorte no contempla rotaciones: mejor dejarla sin animación.
-            Log.i(TAG, "La apertura cambia de rotación; sin animación de superficie")
+            NexusLog.i(TAG, "La apertura cambia de rotación; sin animación de superficie")
             return null
         }
         val taskId = change.taskInfo?.taskId ?: return null
@@ -385,7 +384,7 @@ internal class TransitionSession(
         return try {
             WindowLayer(this, launch, taskId, change.leash, end, offsetX, offsetY)
         } catch (t: Throwable) {
-            Log.w(TAG, "No se pudo preparar la capa de la ventana", t)
+            NexusLog.w(TAG, "No se pudo preparar la capa de la ventana", t)
             null
         }
     }
@@ -506,6 +505,13 @@ internal class WindowLayer(
     @Volatile
     private var dead = false
 
+    // Ritmo de fotogramas de esta animación (hilo principal); se resume en el registro al asentarse.
+    private var startedNanos = 0L
+    private var lastFrameNanos = 0L
+    private var frames = 0
+    private var slowFrames = 0
+    private var longestGapNanos = 0L
+
     private fun currentProgress(): Float = (driver?.progress ?: startProgress).coerceIn(0f, 1f)
 
     // ---- Cualquier hilo: escriben en la transacción que pasa quien llama
@@ -556,6 +562,12 @@ internal class WindowLayer(
 
     fun startForward() {
         if (dead) return
+        startedNanos = System.nanoTime()
+        NexusLog.i(
+            TAG,
+            "Apertura tarea=$taskId: desde progreso=${fmt(startProgress)} velocidad=${fmt(startVelocity)}/s " +
+                "ventana=${neutralCrop.width()}x${neutralCrop.height()} radio=${fmt(cornerRadius)}",
+        )
         frame = SurfaceControl.Transaction()
         val motion = MotionDriver(
             frameRateView = { null },
@@ -570,7 +582,7 @@ internal class WindowLayer(
             NexusMotion.profile.open,
             NexusMotion.profile.speed,
             startVelocity,
-        ) { completed -> if (completed) owner.layerSettled(this) }
+        ) { completed -> settled(completed) }
     }
 
     /** Cambia de rumbo hacia el icono conservando la velocidad que lleve. */
@@ -578,8 +590,12 @@ internal class WindowLayer(
         if (dead) return
         val motion = driver ?: return
         reversing = true
+        NexusLog.i(
+            TAG,
+            "Tarea=$taskId: vuelve al icono desde progreso=${fmt(currentProgress())} velocidad=${fmt(motion.velocity)}/s",
+        )
         motion.animateTo(0f, NexusMotion.profile.close, NexusMotion.profile.speed) { completed ->
-            if (completed) owner.layerSettled(this)
+            settled(completed)
         }
     }
 
@@ -588,8 +604,12 @@ internal class WindowLayer(
         if (dead) return
         val motion = driver ?: return
         reversing = false
+        NexusLog.i(
+            TAG,
+            "Tarea=$taskId: vuelve a abrirse desde progreso=${fmt(currentProgress())} velocidad=${fmt(motion.velocity)}/s",
+        )
         motion.animateTo(1f, NexusMotion.profile.open, NexusMotion.profile.speed) { completed ->
-            if (completed) owner.layerSettled(this)
+            settled(completed)
         }
     }
 
@@ -605,10 +625,45 @@ internal class WindowLayer(
         val transaction = frame ?: return
         write(transaction, progress.coerceIn(0f, 1f), reversing, mainFrame, mainCrop)
         transaction.apply()
+        countFrame()
     }
+
+    private fun countFrame() {
+        val now = System.nanoTime()
+        if (lastFrameNanos != 0L) {
+            val gap = now - lastFrameNanos
+            if (gap > longestGapNanos) longestGapNanos = gap
+            if (gap > SLOW_FRAME_NANOS) slowFrames++
+        }
+        lastFrameNanos = now
+        frames++
+    }
+
+    /** Un resorte llegó a su destino (o lo cambió otro): se anota el resumen de fluidez. */
+    private fun settled(completed: Boolean) {
+        if (!completed) return
+        val elapsedMs = (System.nanoTime() - startedNanos) / NANOS_PER_MS
+        NexusLog.i(
+            TAG,
+            "Tarea=$taskId asentada: ${fmt(elapsedMs)} ms, $frames fotogramas, " +
+                "mayor intervalo ${fmt(longestGapNanos / NANOS_PER_MS)} ms, $slowFrames lentos (>${SLOW_FRAME_MS.toInt()} ms)",
+        )
+        owner.layerSettled(this)
+    }
+
+    private fun fmt(value: Float): String = String.format(java.util.Locale.US, "%.2f", value)
 
     private companion object {
         /** Por debajo de este progreso, al volver, la ventana se desvanece hasta el icono. */
         const val REVERSE_FADE_UNTIL = 0.25f
+
+        /**
+         * Un intervalo mayor que esto entre fotogramas cuenta como lento en el registro: 1,5
+         * fotogramas a 60 Hz. Es solo un umbral de diagnóstico, no afecta al movimiento.
+         */
+        const val SLOW_FRAME_MS = 24f
+        const val SLOW_FRAME_NANOS = 24_000_000L
+        const val NANOS_PER_MS = 1_000_000f
+        const val TAG = NexusAppLaunchTransition.TAG
     }
 }
