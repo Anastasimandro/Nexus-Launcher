@@ -39,10 +39,25 @@ Garantías: la transición original termina exactamente una vez (`SessionCore`);
 
 **Límite de Android:** con el APK sin módulo root, si la app ya terminó de abrirse y se cierra, la animación de cierre la pone el sistema; Nexus solo controla el regreso del icono.
 
+## Auditoría contra el brief (punto por punto)
+
+| Requisito del brief | Estado | Nota |
+|---|---|---|
+| Cierre interactivo real (ventana sigue el dedo, hacia el icono) | Existe en Quickstep del repo | Solo con el módulo root como proveedor de Recientes; no demostrado en el Redmi |
+| Reversible sin reinicios | Quickstep (`RectFSpringAnim`, progreso ligado al dedo) | No se ha tocado; sin medir en dispositivo |
+| Soltar para ir a Inicio: continuidad de velocidad | Sí: resorte con la velocidad del dedo | Código de Quickstep existente |
+| **Cancelar y volver a la app: continuidad de velocidad** | **Corregido en esta fase** | Antes: curva de frenada que arrancaba a su propia velocidad. Ahora: resorte de cierre ajustado a la duración de Quickstep y con la velocidad real al soltar como velocidad inicial (solo `LAST_TASK`) |
+| Apertura desde el icono, inversa del cierre | Sí | `IconWindowGeometry` + resorte; con APK normal la controla Nexus vía Shizuku; sin privilegios, reveal del sistema |
+| Sin curvas Bézier arbitrarias | Sí en apertura y cancelación | Quedan curvas de AOSP en Recientes/cuadrícula y en la ruta de nueva tarea (no se tocan) |
+| Interrupciones (abrir, cerrar a medias, abrir otra) | Implementado | Ver sección anterior; sin probar en el móvil |
+| Ciclo de vida: sin superficies huérfanas ni callbacks obsoletos | Implementado | La transición original termina una vez; temporizador de seguridad; ref-counting del recorte |
+| Constantes no arbitrarias | Parcial | Los resortes salen del perfil; quedan constantes con nombre y comentario (temporizador 2 s, desvanecido al volver `REVERSE_FADE_UNTIL`=0,25, máx. 3 zooms). Son decisiones de diseño sin referencia oficial: se ajustan viéndolo en el móvil |
+| Fidelidad visual a ColorOS 17 / OxygenOS 16 | **No afirmada** | Sin dispositivo ni grabaciones de referencia |
+
 ## Verificado
 
-- 31 pruebas JVM (`SpringCurveTest`, `IconWindowGeometryTest`, `LaunchSessionCoreTest`; esta última cubre las decisiones de `MergePlanner` y que la transición original termina una sola vez): el resorte coincide con una integración numérica independiente (posición y velocidad); el rebote coincide con `exp(-πζ/√(1-ζ²))`; la geometría empieza exactamente en el icono y acaba exactamente en la ventana, cubre siempre el rectángulo sin deformar, es continua y la escala no decrece, en 10 escenarios (vertical, horizontal, tableta, plegable, iconos de 48 a 400 px, ventana desplazada).
-- Compilación y `spotlessCheck` en GitHub Actions sobre el código de interrupciones (commit `80e3b17`: estilo, `GithubDebug` y `PlayDebug` en verde; `NightlyRelease` pendiente al escribir esto).
+- 37 pruebas JVM (`SpringCurveTest`, `IconWindowGeometryTest`, `LaunchSessionCoreTest`; esta última cubre las decisiones de `MergePlanner` y que la transición original termina una sola vez): el resorte coincide con una integración numérica independiente (posición y velocidad); el rebote coincide con `exp(-πζ/√(1-ζ²))`; la geometría empieza exactamente en el icono y acaba exactamente en la ventana, cubre siempre el rectángulo sin deformar, es continua y la escala no decrece, en 10 escenarios (vertical, horizontal, tableta, plegable, iconos de 48 a 400 px, ventana desplazada).
+- Compilación y `spotlessCheck` en GitHub Actions sobre el código de interrupciones (commit `3844216`: estilo y las tres variantes en verde).
 
 ## NO verificado
 
@@ -65,7 +80,7 @@ Con ζ=0,90 el primer pico llega a los 552 ms, pero el resorte se da por asentad
 ## Sin cambios, a propósito
 
 - **Mínimo de velocidad al soltar** (2000 px/s en Y): se dejó. Con rigidez 400 y 800 px de recorrido, el resorte acelera a más de 3000 px/s en 10 ms, así que el mínimo no cambia nada perceptible.
-- **Cancelar el gesto** (volver a la app): sigue siendo el `ValueAnimator` de AOSP con curva de frenada, partiendo de la posición actual. La posición es continua; la velocidad solo se aproxima. Sustituirlo por un resorte toca los flujos de Recientes y no se hizo sin poder probarlo.
+- **Cancelar a Recientes o a otra tarea** (`RECENTS`, `NEW_TASK`): siguen con las curvas de AOSP. Solo se cambió volver a la app (`LAST_TASK`). El `ValueAnimator` y su duración son los mismos; únicamente cambia la curva.
 
 ## Protocolo de interrupciones en el móvil
 
