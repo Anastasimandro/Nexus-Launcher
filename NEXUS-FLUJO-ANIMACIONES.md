@@ -82,15 +82,26 @@ Con ζ=0,90 el primer pico llega a los 552 ms, pero el resorte se da por asentad
 - **Mínimo de velocidad al soltar** (2000 px/s en Y): se dejó. Con rigidez 400 y 800 px de recorrido, el resorte acelera a más de 3000 px/s en 10 ms, así que el mínimo no cambia nada perceptible.
 - **Cancelar a Recientes o a otra tarea** (`RECENTS`, `NEW_TASK`): siguen con las curvas de AOSP. Solo se cambió volver a la app (`LAST_TASK`). El `ValueAnimator` y su duración son los mismos; únicamente cambia la curva.
 
+## Registro de animaciones (`Nexus-Logs`)
+
+`NexusLog` guarda en archivos de texto lo que ocurre: cada lanzamiento, cada interrupción con su decisión (`Reverse`, `Reopen`, `AdoptOpening`, rechazo), el final de cada animación con su ritmo (fotogramas, mayor intervalo entre fotogramas y cuántos pasaron de 24 ms) y el fin de cada gesto con su destino, progreso y velocidad. Los de cancelar el gesto incluyen la velocidad con la que arranca el resorte. No registra nada por fotograma. Cada archivo lleva una cabecera con la versión de Android, el móvil, el perfil de resortes y la escala de animación del sistema.
+
+Dónde cae (el primero que funcione; la cabecera del archivo dice cuál):
+1. `/sdcard/Nexus-Logs/animaciones/`, solo si Nexus tiene acceso a todos los archivos. La carpeta que crea el módulo root la crea root y una app normal no puede escribir en ella.
+2. `Download/Nexus-Logs/` (Android 10+), sin permisos. Es lo que se espera en el Redmi.
+3. `Android/data/<paquete>/files/Nexus-Logs/`.
+
+Se conservan los 8 registros más recientes (máx. 1,5 MB cada uno). Los nombres de los paquetes de las apps que abres quedan en esos archivos, en tu almacenamiento. Si compartes un registro, ten eso en cuenta.
+
 ## Protocolo de interrupciones en el móvil
 
-Con `adb logcat -s NexusAppLaunch NexusLaunchAnimator` (las líneas "Interrupción: …" dicen qué decisión se tomó):
+Mira el archivo más reciente de `Download/Nexus-Logs/` (o `adb logcat -s NexusAppLaunch NexusLaunchAnimator NexusGesture`). Las líneas "Interrupción: …" dicen qué decisión se tomó:
 
 1. Abrir A y pulsar Inicio a los ~150 ms. Esperado: A vuelve a su icono sin salto.
 2. Abrir A, Inicio, y tocar B enseguida. Esperado: A termina de volver mientras B se abre.
 3. Tocar A, Inicio, A otra vez en rápida sucesión.
 4. Repetir 20 veces seguidas y comprobar que la siguiente apertura normal sigue animándose (si no, la cola del Shell se bloqueó).
-5. Mandar el logcat si algo salta, se queda a medias o aparece una superficie huérfana.
+5. Mandar el archivo de `Nexus-Logs` si algo salta, se queda a medias o aparece una superficie huérfana.
 
 ## Protocolo para comparar en el móvil
 
