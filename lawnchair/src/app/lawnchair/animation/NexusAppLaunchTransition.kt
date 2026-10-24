@@ -44,6 +44,9 @@ internal class NexusAppLaunchTransition(
 
     internal val icon = Rect(iconBounds)
 
+    /** Instante del toque (se crea al lanzar): sirve para medir cuándo aparece la ventana. */
+    internal val createdNanos = System.nanoTime()
+
     @Volatile
     private var cancelled = false
 
@@ -471,6 +474,7 @@ internal class WindowLayer(
 ) : SessionCore.Layer {
 
     private val systemScale = launch.systemScale
+    private val launchedNanos = launch.createdNanos
     private val cornerRadius = launch.cornerRadius
     private val endPositionX = endBounds.left - rootOffsetX
     private val endPositionY = endBounds.top - rootOffsetY
@@ -563,9 +567,13 @@ internal class WindowLayer(
     fun startForward() {
         if (dead) return
         startedNanos = System.nanoTime()
+        // Cuánto tarda el sistema en entregar la ventana desde el toque: con una starting window
+        // lenta es el tiempo durante el que el icono ya se mueve sin ventana debajo.
+        val sinceTapMs = (startedNanos - launchedNanos) / NANOS_PER_MS
         NexusLog.i(
             TAG,
-            "Apertura tarea=$taskId: desde progreso=${fmt(startProgress)} velocidad=${fmt(startVelocity)}/s " +
+            "Apertura tarea=$taskId: la ventana aparece ${fmt(sinceTapMs)} ms después del toque, " +
+                "con progreso=${fmt(startProgress)} velocidad=${fmt(startVelocity)}/s " +
                 "ventana=${neutralCrop.width()}x${neutralCrop.height()} radio=${fmt(cornerRadius)}",
         )
         frame = SurfaceControl.Transaction()
