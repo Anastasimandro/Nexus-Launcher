@@ -26,7 +26,7 @@ El módulo lleva dentro el APK de su misma versión. Al flashearlo (si Android e
 
 ## WebUI
 
-Cuatro pestañas: **Inicio** (qué pasa y un botón con lo que conviene hacer, los tres pasos pedir → reiniciar → verificar), **Comprobar** (comprobaciones previas con semáforo y una recomendación), **Registros** (historial de intentos, informe, copia a `Nexus-Logs`) y **Ajustes** (plan A, plan B, desactivar, reiniciar). Por debajo usa estos comandos, que también valen en terminal: `nexus-quickstep state | preflight | history | diag | logs`.
+Cuatro pestañas: **Inicio** (qué pasa y un botón con lo que conviene hacer, los tres pasos pedir → reiniciar → verificar), **Comprobar** (comprobaciones previas con semáforo y una recomendación), **Registros** (historial de intentos, informe, copia a `Nexus-Logs`) y **Ajustes** (plan A, plan B, desactivar, reiniciar). Por debajo usa estos comandos, que también valen en terminal: `nexus-quickstep state | preflight | history | diag | logs | mounts-map`.
 
 - `preflight` solo lee. Imprime `check|id|nivel|título|detalle` y una línea `recommend|camino|texto` (`install`, `active`, `plan-a`, `plan-b` o `enable`).
 - `history` es la cronología (`fecha|suceso|detalle`). Los sucesos de antes de que el reloj esté ajustado salen con fecha 1970 y el WebUI los muestra como «al arrancar».

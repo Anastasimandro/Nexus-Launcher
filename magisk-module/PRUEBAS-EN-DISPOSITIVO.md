@@ -69,3 +69,32 @@ Si P1 dice que no es efectivo: o hay otro overlay de la imagen con más priorida
 ## 6. Qué enviar si algo falla
 
 `nexus-quickstep status`, `/data/adb/nexus_quickstep/watchdog.log`, `adb logcat -b all -v threadtime -d` (justo después del fallo), `dumpsys activity services app.nexus.launcher/com.android.quickstep.TouchInteractionService`, el informe de errores de Nexus (`quickstepProbe:`) y la versión exacta de la ROM (`getprop ro.build.fingerprint`).
+
+## 7. Mapa de montajes (diagnóstico de solo lectura)
+
+Sirve para ver, **en un arranque normal y sin activar el overlay**, qué ve cada proceso de `/product/overlay`, de los montajes del módulo y de `Nexus.apk`. Es la información que faltó cuando zygote abortó al reabrir el APK del overlay. No monta, no desmonta, no escribe configuración ni toca `enabled`: solo guarda sus informes en `/data/adb/nexus_quickstep/` (`mounts-map.txt` y `mounts-probe.txt`).
+
+**Cómo ejecutarlo:** WebUI → pestaña **Registros** → **Mapa de montajes** (con el móvil desbloqueado y el arranque terminado). Sin WebUI: `su -c nexus-quickstep mounts-map`. **Copiar resultado completo** deja todo el texto en el portapapeles; `diag --export` también incluye `mounts-map.txt` si existe.
+
+**Qué sale:** una línea `proc|…` por proceso (init, zygote64, zygote, webview_zygote, app_zygote, system_server, systemui, app.nexus.launcher y una app normal):
+
+| Columna | Qué es |
+|---|---|
+| pid, nombre, uid | El proceso. Un proceso que no está en marcha, o que no se puede leer, sale como `n/d` |
+| ns | Inodo de su espacio de montajes (`/proc/<pid>/ns/mnt`) |
+| frente a init | `igual` o `distinto` respecto al ns de init |
+| `/product/overlay` | Líneas de su `mountinfo` que contienen esa ruta |
+| módulo | Líneas de su `mountinfo` que contienen el **id del módulo** (`nexus_launcher_systemless`). Se busca por el id y no por la ruta completa porque `mountinfo` muestra la ruta relativa al dispositivo (`/adb/modules/…`) o la completa en `lowerdir=` |
+| ve Nexus.apk | `sí` / `no` / `n/d` según `stat` de `/proc/<pid>/root/product/priv-app/Nexus/Nexus.apk`. `n/d` si no se puede mirar dentro de la raíz del proceso o la lectura se cortó por tiempo |
+
+Cada lectura lleva un límite de tiempo (3 s; la lista de procesos 8 s; la de apps de terceros 12 s). Después viene la **sonda detallada**, que es `capture_probe` (la del arranque que falla) reutilizada, con tope de 25 s.
+
+La «app normal» es la primera app de terceros en marcha; si no hay ninguna, la primera con uid de app (10000–19999) cuyo nombre no parezca de sistema. Su nombre sale en la fila.
+
+**Qué mirar:** si `zygote64`/`zygote` ven el módulo y `Nexus.apk` de forma distinta a `init` o a una app normal, esa diferencia es lo que rompía la reapertura del overlay. Si una fila sale con `n/d` en todo, no se pudo leer ese proceso (SELinux o límite de tiempo): dilo, no lo interpretes como «no ve nada».
+
+**`diag` ahora incluye:** versiones de KernelSU (`ksud`), lista de módulos de root con id, nombre, versión y estado (NeoZygisk y hybrid_mount marcados), `disable_umount` y `default_mode` de hybrid_mount (solo lectura) y hasta 40 líneas `avc: denied` de Nexus o `priv_app` de `logcat` y de `dmesg`.
+
+**Qué enviar:** el texto de **Copiar resultado completo** y el informe de `diag` (**Guardar informe en Descargas**).
+
+**Vuelta atrás:** no hay nada que deshacer (no cambia el sistema). Si el módulo da algún problema, `touch /data/adb/modules/nexus_launcher_systemless/disable` desde recovery.

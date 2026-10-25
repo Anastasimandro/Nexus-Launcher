@@ -292,6 +292,20 @@
           <pre id="log-out" tabindex="0"></pre>
         </details>
       </div>
+      <div class="card">
+        <h2>Mapa de montajes</h2>
+        <p class="small muted" style="margin:0 0 10px">
+          Qué ve cada proceso clave (init, zygote, system_server, SystemUI, Nexus y una app normal) de
+          <b>/product/overlay</b>, de los montajes del módulo y de <b>Nexus.apk</b>. Solo lee: no monta, no desmonta
+          ni cambia nada. Úsalo con el móvil desbloqueado y el arranque ya terminado.
+        </p>
+        <div class="stack">
+          <button class="btn primary" id="btn-mounts"><svg><use href="#i-list"/></svg>Mapa de montajes</button>
+          <button class="btn" id="btn-mounts-copy">Copiar resultado completo</button>
+        </div>
+        <ul class="list" id="mounts-list" style="margin-top:12px"></ul>
+        <pre id="mounts-out" tabindex="0"></pre>
+      </div>
     </section>
 
     <!-- AJUSTES -->
@@ -905,6 +919,53 @@
       show('diag-out', t);
       return copyText(t).then(function (ok) { toast(ok ? 'Informe copiado' : 'Mantén pulsado el texto para copiarlo'); });
     }).catch(function (e) { toast(e.message); }).then(function () { busy(false); });
+  });
+  /* Mapa de montajes: líneas `proc|etiqueta|pid|nombre|uid|ns|ns frente a init|ovl|mod|apk`. */
+  var lastMounts = '';
+  function renderMounts(text) {
+    var ul = $('mounts-list');
+    clear(ul);
+    var rows = 0;
+    text.split('\n').forEach(function (line) {
+      var p = line.split('|');
+      if (p[0] !== 'proc' || p.length < 10) { return; }
+      rows++;
+      var missing = p[2] === 'n/d';
+      var title = p[1] + (p[3] && p[3] !== p[1] && p[3] !== 'n/d' ? ' · ' + p[3] : '');
+      var detail = missing
+        ? 'No está en marcha (n/d)'
+        : 'pid ' + p[2] + ' · uid ' + p[4] + ' · ns ' + p[5] + ' (' + p[6] + ' que init)';
+      var detail2 = missing
+        ? ''
+        : '/product/overlay: ' + p[7] + ' líneas · módulo: ' + p[8] + ' líneas · ve Nexus.apk: ' + p[9];
+      ul.appendChild(el('li', { class: 'item' }, [
+        el('div', { class: 'ico ' + (missing ? 'warn' : 'info') }, [icon(missing ? 'alert' : 'info')]),
+        el('div', { class: 'body' }, [
+          el('div', { class: 't', text: title }),
+          el('div', { class: 'd', text: detail }),
+          detail2 ? el('div', { class: 'd', text: detail2 }) : null
+        ])
+      ]));
+    });
+    if (!rows) {
+      ul.appendChild(el('li', { class: 'item' }, [el('div', { class: 'body muted small', text: 'No se pudo leer el mapa; mira la salida completa.' })]));
+    }
+  }
+  $('btn-mounts').addEventListener('click', function () {
+    busy(true);
+    show('mounts-out', 'Leyendo…');
+    run(TOOL + ' mounts-map', 150000)
+      .then(function (r) {
+        lastMounts = out(r);
+        renderMounts(lastMounts);
+        show('mounts-out', lastMounts);
+      })
+      .catch(function (e) { lastMounts = ''; clear($('mounts-list')); show('mounts-out', e.message); })
+      .then(function () { busy(false); });
+  });
+  $('btn-mounts-copy').addEventListener('click', function () {
+    if (!lastMounts) { toast('Primero pulsa «Mapa de montajes»'); return; }
+    copyText(lastMounts).then(function (ok) { toast(ok ? 'Resultado copiado' : 'Mantén pulsado el texto para copiarlo'); });
   });
   $('btn-export').addEventListener('click', function () {
     busy(true);

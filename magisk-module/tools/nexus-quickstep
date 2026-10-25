@@ -16,6 +16,10 @@
 #                                     registros del último arranque fallido
 #   nexus-quickstep logs [segundos]  copia todos los registros a /sdcard/Nexus-Logs (RESUMEN.txt dice
 #                                     en claro si el arranque fue bien o falló)
+#   nexus-quickstep mounts-map        qué ve cada proceso clave (init, zygotes, system_server, SystemUI,
+#                                     Nexus, una app normal) de /product/overlay, del módulo y de
+#                                     Nexus.apk. SOLO LECTURA: no monta, no desmonta, no escribe
+#                                     configuración ni activa el overlay (ver do_mounts_map)
 #   nexus-quickstep capture start|stop|keep
 #                                     registro del arranque (lo usa post-fs-data.sh, ver abajo)
 #
@@ -75,6 +79,12 @@ HYBRID_MARK="$STATE_DIR/hybrid-changed"
 # Historial de intentos (una línea por suceso: fecha|suceso|detalle) y carpeta de módulos de root.
 HISTORY_FILE="$STATE_DIR/history.log"
 MODULES_DIR="${NEXUS_MODULES_DIR:-/data/adb/modules}"
+# Límites de tiempo (segundos) de las lecturas de diagnóstico: una lectura de /proc/<pid>/... puede
+# quedarse colgada si el proceso está en mitad de un cambio de montajes. Ver tmo y do_mounts_map.
+READ_LIMIT="${NEXUS_READ_LIMIT:-3}"
+PS_LIMIT="${NEXUS_PS_LIMIT:-8}"
+PM_LIMIT="${NEXUS_PM_LIMIT:-12}"
+PROBE_LIMIT="${NEXUS_PROBE_LIMIT:-25}"
 
 say() { echo "$*"; }
 die() { echo "nexus-quickstep: $*" >&2; exit 1; }
@@ -85,13 +95,32 @@ log() {
 }
 
 usage() {
-  say "Uso: nexus-quickstep status | enable [--force] [--umount-fix] | disable [--reboot] | bound | state | diag [--export] | logs | umount-fix on|restore|status | preflight | history | sync-apk [--wait]"
+  say "Uso: nexus-quickstep status | enable [--force] [--umount-fix] | disable [--reboot] | bound | state | diag [--export] | logs | mounts-map | umount-fix on|restore|status | preflight | history | sync-apk [--wait]"
   exit "${1:-2}"
 }
 
 need_root() {
   [ "$(id -u)" = "0" ] || die "hace falta root (su -c nexus-quickstep ...)."
 }
+
+# tmo SEGUNDOS comando [args...]: ejecuta un comando EXTERNO con límite de tiempo y devuelve su código
+# (124, 137 o 143 si se cortó por tiempo). No sirve para funciones del script ni para builtins. Usa
+# `timeout` (toybox/coreutils) si existe; si no, un temporizador propio con kill.
+if command -v timeout >/dev/null 2>&1; then
+  tmo() { t="$1"; shift; timeout -k 1 "$t" "$@"; }
+else
+  tmo() {
+    t="$1"; shift
+    "$@" &
+    tp=$!
+    ( sleep "$t"; kill "$tp" 2>/dev/null ) >/dev/null 2>&1 &
+    tw=$!
+    wait "$tp" 2>/dev/null
+    trc=$?
+    kill "$tw" 2>/dev/null
+    return "$trc"
+  }
+fi
 
 # Estado del overlay en este arranque. Un overlay estático no sale en `cmd overlay list` (comprobado en
 # Android 17), así que se mira el resultado: si config_recentsComponentName apunta a Nexus, está aplicado.
@@ -818,8 +847,10 @@ capture_start() {
 # Qué ve cada proceso importante del overlay y de /product. Se ejecuta justo al detectar el fallo de
 # zygote (antes de reiniciar), que es el único momento en que esa información existe: el arranque
 # siguiente va sin overlay. /proc/<pid>/root resuelve rutas en el espacio de montajes de ese proceso.
+# Sin argumento escribe en $CAPTURE_DIR/probe.txt (el uso original, en el arranque que falla).
+# `mounts-map` la reutiliza en un arranque normal pasándole otra ruta de salida.
 capture_probe() {
-  out="$CAPTURE_DIR/probe.txt"
+  out="${1:-$CAPTURE_DIR/probe.txt}"
   {
     echo "Sonda de visibilidad del overlay: $(date '+%Y-%m-%d %H:%M:%S')"
     echo "archivo esperado: $OVERLAY_PATH"
@@ -889,6 +920,172 @@ capture_keep() {
   return 0
 }
 
+# --- Mapa de montajes por proceso (SOLO LECTURA) ---
+# `mounts-map` contesta a una pregunta: en un arranque normal, ¿qué ve cada proceso importante de
+# /product/overlay, de los montajes del módulo y de /product/priv-app/Nexus/Nexus.apk? Es lo que
+# falló con el overlay estático (zygote no podía reabrir el APK porque la ocultación de root le había
+# quitado el montaje) y lo que hay que saber antes de volver a intentar nada.
+#
+# No monta, no desmonta, no escribe configuración, no toca `enabled` ni activa el overlay. Lo único que
+# escribe son sus dos informes dentro de $STATE_DIR (mounts-map.txt y mounts-probe.txt).
+# Cada lectura de /proc/<pid>/... y cada comando externo va con límite de tiempo (tmo); un proceso que
+# no existe o no se puede leer sale como n/d. La sonda detallada es capture_probe, la misma del
+# arranque que falla, reutilizada aquí con otra ruta de salida.
+#
+# Salida: líneas `meta|clave|valor` y `proc|etiqueta|pid|nombre|uid|ns|ns frente a init|líneas con
+# /product/overlay|líneas con el módulo|ve Nexus.apk`, y después la sonda detallada en texto libre
+# (la lee el WebUI, pestaña Registros). En mountinfo el módulo aparece por su ruta relativa al
+# dispositivo (/adb/modules/<id>/…) o por la completa (lowerdir=/data/adb/modules/<id>/…): por eso se
+# cuenta por el id del módulo, que está en las dos.
+
+# Lista "pid nombre" de todos los procesos; el nombre es el primer argumento sin su ruta. Se prueban
+# varias formas de `ps` (toybox de Android, procps…): ninguna está verificada en todas las ROM. Si
+# ninguna sirve, la lista queda vacía y mm_pid_of cae en `pidof`.
+mm_list() {
+  for mm_fmt in "-A -o pid,args" "-e -o pid,args" "-A -o PID,ARGS"; do
+    # shellcheck disable=SC2086
+    l=$(tmo "$PS_LIMIT" ps $mm_fmt 2>/dev/null | awk 'NR > 1 && $1 ~ /^[0-9]+$/ { n = $2; sub(".*/", "", n); print $1, n }')
+    [ -n "$l" ] && { echo "$l"; return 0; }
+  done
+  return 0
+}
+
+# Primer pid cuyo nombre es exactamente $1 (vacío si no hay). Usa la lista ya leída; si `ps` no sirvió, pidof.
+mm_pid_of() {
+  p=$(echo "$MM_PROCS" | awk -v n="$1" '$2 == n { print $1; exit }')
+  [ -n "$p" ] || p=$(tmo "$READ_LIMIT" pidof "$1" 2>/dev/null | awk '{ print $1 }')
+  echo "$p"
+}
+
+mm_uid() {
+  tmo "$READ_LIMIT" awk '/^Uid:/ { print $2; exit }' "/proc/$1/status" 2>/dev/null
+}
+
+# Una app normal en marcha: primero una de terceros (pm list packages -3); si no hay ninguna en marcha,
+# la primera con uid de app (10000-19999) cuyo nombre no parezca de sistema. Imprime "pid nombre".
+mm_normal_app() {
+  n=0
+  for pk in $(tmo "$PM_LIMIT" pm list packages -3 2>/dev/null | sed -n 's/^package://p'); do
+    n=$((n + 1))
+    [ "$n" -gt 80 ] && break
+    p=$(mm_pid_of "$pk")
+    [ -n "$p" ] && { echo "$p $pk"; return 0; }
+  done
+  echo "$MM_PROCS" | awk '$2 ~ /\./ && $2 !~ /:/ && $2 !~ /_zygote$/ && $2 !~ /^(com\.android\.|android\.|app\.nexus\.launcher|com\.google\.android\.(gms|gsf|webview))/ { print $1, $2 }' | head -n 20 |
+    while read -r p pk; do
+      u=$(mm_uid "$p")
+      case "$u" in '' | *[!0-9]*) continue ;; esac
+      if [ "$u" -ge 10000 ] && [ "$u" -le 19999 ]; then echo "$p $pk"; break; fi
+    done
+}
+
+# Una línea `proc|…` por proceso. $1 etiqueta, $2 pid (vacío o inexistente = n/d), $3 nombre.
+mm_row() {
+  r_label="$1"; r_pid="$2"; r_name="${3:-n/d}"
+  case "$r_pid" in '' | *[!0-9]*) r_pid="" ;; esac
+  if [ -z "$r_pid" ] || [ ! -d "/proc/$r_pid" ]; then
+    echo "proc|$r_label|n/d|$r_name|n/d|n/d|n/d|n/d|n/d|n/d"
+    return 0
+  fi
+  r_uid=$(mm_uid "$r_pid")
+  r_ns=$(tmo "$READ_LIMIT" readlink "/proc/$r_pid/ns/mnt" 2>/dev/null | sed -n 's/^mnt:\[\([0-9][0-9]*\)\]$/\1/p')
+  r_ovl=$(tmo "$READ_LIMIT" grep -cF "$PRODUCT_DIR/overlay" "/proc/$r_pid/mountinfo" 2>/dev/null)
+  r_mod=$(tmo "$READ_LIMIT" grep -cF "$MM_MOD_ID" "/proc/$r_pid/mountinfo" 2>/dev/null)
+  # ¿Ve el APK? Primero se comprueba que se puede mirar dentro de su raíz: sin eso, "no" sería mentira.
+  r_apk="n/d"
+  if tmo "$READ_LIMIT" stat -c %i "/proc/$r_pid/root/" >/dev/null 2>&1; then
+    tmo "$READ_LIMIT" stat -c %s "/proc/$r_pid/root$MM_APK" >/dev/null 2>&1
+    case $? in
+      0) r_apk="sí" ;;
+      124 | 137 | 143) r_apk="n/d" ;;
+      *) r_apk="no" ;;
+    esac
+  fi
+  [ "$r_label" = "init" ] && MM_INIT_NS="$r_ns"
+  r_cmp="n/d"
+  if [ -n "$r_ns" ] && [ -n "$MM_INIT_NS" ]; then
+    if [ "$r_ns" = "$MM_INIT_NS" ]; then r_cmp="igual"; else r_cmp="distinto"; fi
+  fi
+  echo "proc|$r_label|$r_pid|$r_name|${r_uid:-n/d}|${r_ns:-n/d}|$r_cmp|${r_ovl:-n/d}|${r_mod:-n/d}|$r_apk"
+}
+
+# Sonda detallada: capture_probe con otra ruta de salida. Sus lecturas no llevan límite propio (se dejó
+# tal cual para no tocar el camino del arranque que falla), así que va en segundo plano y se corta
+# pasados PROBE_LIMIT segundos. Se avisa por un marcador y no por `kill -0`, que da verdadero con un
+# proceso ya terminado y sin recoger.
+mm_probe() {
+  mp_out="$STATE_DIR/mounts-probe.txt"
+  mp_done="$STATE_DIR/mounts-probe.done"
+  rm -f "$mp_out" "$mp_done"
+  ( capture_probe "$mp_out"; : > "$mp_done" ) &
+  mp_pid=$!
+  mp_n=0
+  while [ ! -e "$mp_done" ] && [ "$mp_n" -lt "$PROBE_LIMIT" ]; do
+    sleep 1
+    mp_n=$((mp_n + 1))
+  done
+  if [ ! -e "$mp_done" ]; then
+    pkill -P "$mp_pid" 2>/dev/null
+    kill "$mp_pid" 2>/dev/null
+    echo "(la sonda superó ${PROBE_LIMIT} s y se cortó: salida parcial)"
+  fi
+  [ -r "$mp_out" ] && cat "$mp_out"
+  rm -f "$mp_done"
+  return 0
+}
+
+mm_build() {
+  m="${MODDIR%/}"
+  MM_MOD_ID="${m##*/}"
+  MM_APK="$PRODUCT_DIR/priv-app/Nexus/Nexus.apk"
+  MM_INIT_NS=""
+  MM_PROCS=$(mm_list)
+  echo "# Mapa de montajes de Nexus (solo lectura)"
+  echo "meta|fecha|$(date '+%Y-%m-%d %H:%M:%S')"
+  echo "meta|boot_id|$(boot_id)"
+  echo "meta|arranque_completado|$(boot_completed && echo 1 || echo 0)"
+  echo "meta|selinux|$(tmo 2 getenforce 2>/dev/null)"
+  echo "meta|overlay_pedido|$([ -f "$STATE_DIR/enabled" ] && echo 1 || echo 0)"
+  echo "meta|overlay_en_disco|$([ -f "$OVERLAY_PATH" ] && echo 1 || echo 0)"
+  echo "meta|recientes|$(tmo 8 cmd overlay lookup --user "$USER_ID" android "$COMPONENT_KEY" 2>/dev/null | head -n 1)"
+  echo "meta|id_modulo|$MM_MOD_ID"
+  echo "meta|ruta_overlay|$PRODUCT_DIR/overlay"
+  echo "meta|ruta_apk|$MM_APK"
+  echo "meta|procesos_leidos|$(echo "$MM_PROCS" | grep -c .)"
+  echo "# columnas de proc: etiqueta|pid|nombre|uid|ns de montajes (inodo)|ns frente a init|líneas de mountinfo con la ruta del overlay|líneas con el id del módulo|¿ve Nexus.apk?"
+
+  mm_row "init" 1 "init"
+  mm_row "zygote64" "$(mm_pid_of zygote64)" "zygote64"
+  mm_row "zygote" "$(mm_pid_of zygote)" "zygote"
+  mm_row "webview_zygote" "$(mm_pid_of webview_zygote)" "webview_zygote"
+  az=$(echo "$MM_PROCS" | awk '$2 ~ /_zygote$/ && $2 != "webview_zygote" { print $1, $2 }' | head -n 2)
+  if [ -n "$az" ]; then
+    echo "$az" | while read -r azp azn; do mm_row "app_zygote" "$azp" "$azn"; done
+  else
+    mm_row "app_zygote" "" "app_zygote"
+  fi
+  mm_row "system_server" "$(mm_pid_of system_server)" "system_server"
+  mm_row "systemui" "$(mm_pid_of com.android.systemui)" "com.android.systemui"
+  mm_row "app.nexus.launcher" "$(mm_pid_of "$PKG")" "$PKG"
+  na=$(mm_normal_app)
+  mm_row "app normal" "${na%% *}" "${na#* }"
+
+  echo
+  echo "=== Sonda detallada (capture_probe, la del arranque que falla, reutilizada) ==="
+  mm_probe
+}
+
+do_mounts_map() {
+  need_root
+  mm_file="$STATE_DIR/mounts-map.txt"
+  if mkdir -p "$STATE_DIR" 2>/dev/null && : > "$mm_file" 2>/dev/null; then
+    mm_build > "$mm_file" 2>&1
+    cat "$mm_file"
+  else
+    mm_build
+  fi
+}
+
 kv() { echo "$1=$2"; }
 
 # Estado en líneas clave=valor: lo lee el WebUI del módulo (webroot/index.html).
@@ -929,6 +1126,60 @@ show_state() {
 
 section() { echo; echo "=== $1 ==="; }
 
+# Módulos de root instalados, uno por línea: id, nombre, versión y estado. Marca los de zygisk y
+# hybrid_mount (NeoZygisk, hybrid_mount…), que son los que deciden qué procesos ven los montajes.
+diag_modules() {
+  found=0
+  for d in "$MODULES_DIR"/*/; do
+    [ -f "${d}module.prop" ] || continue
+    found=1
+    mid=$(sed -n 's/^id=//p' "${d}module.prop" | head -n 1)
+    mnm=$(sed -n 's/^name=//p' "${d}module.prop" | head -n 1)
+    mvr=$(sed -n 's/^version=//p' "${d}module.prop" | head -n 1)
+    mvc=$(sed -n 's/^versionCode=//p' "${d}module.prop" | head -n 1)
+    mst="activo"
+    [ -f "${d}disable" ] && mst="desactivado"
+    [ -f "${d}remove" ] && mst="se borrará al reiniciar"
+    mtag=""
+    case "$mid $mnm" in *[Zz]ygisk* | *[Hh]ybrid*) mtag="  <-- zygisk / hybrid_mount" ;; esac
+    echo "id=$mid | nombre=$mnm | versión=$mvr | versionCode=$mvc | $mst$mtag"
+  done
+  [ "$found" = "1" ] || echo "(no hay módulos en $MODULES_DIR o no se pueden leer)"
+}
+
+# hybrid_mount: solo se LEE. disable_umount lo cambia únicamente `umount-fix`/`enable --umount-fix`.
+diag_hybrid() {
+  echo "archivo: $HYBRID_CONFIG"
+  if [ ! -f "$HYBRID_CONFIG" ]; then
+    echo "(no existe: este móvil no usa hybrid_mount o lo tiene en otra ruta)"
+    return 0
+  fi
+  echo "disable_umount (leído): $(hybrid_value)"
+  if [ -f "$HYBRID_MARK" ]; then
+    echo "cambiado por Nexus: sí, el $(cat "$HYBRID_MARK") (copia del original en $HYBRID_BACKUP)"
+  else
+    echo "cambiado por Nexus: no"
+  fi
+  echo "--- líneas disable_umount / default_mode del archivo"
+  grep -nE '^[[:space:]]*(disable_umount|default_mode)[[:space:]]*=' "$HYBRID_CONFIG" 2>/dev/null | head -n 6
+  grep -qE '^[[:space:]]*default_mode[[:space:]]*=' "$HYBRID_CONFIG" 2>/dev/null || echo "(default_mode no aparece en el archivo)"
+}
+
+# Denegaciones de SELinux que nombran a Nexus o al dominio priv_app: lo que impediría leer el APK, el
+# overlay o un montaje aunque el montaje exista. Dos fuentes, hasta 40 líneas de cada una: logcat y
+# dmesg (el kernel guarda las de los primeros segundos del arranque, que logcat puede haber perdido).
+diag_avc() {
+  for src in logcat dmesg; do
+    echo "--- $src (últimas 40)"
+    if [ "$src" = "logcat" ]; then
+      av=$(tmo 20 logcat -b all -d -v threadtime 2>/dev/null | grep -E 'avc: +denied' | grep -iE 'nexus|priv_app' | tail -n 40)
+    else
+      av=$(tmo 10 dmesg 2>/dev/null | grep -E 'avc: +denied' | grep -iE 'nexus|priv_app' | tail -n 40)
+    fi
+    if [ -n "$av" ]; then echo "$av"; else echo "(ninguna)"; fi
+  done
+}
+
 build_diag() {
   echo "Nexus Launcher: diagnóstico del módulo"
   echo "fecha: $(date '+%Y-%m-%d %H:%M:%S')"
@@ -939,6 +1190,19 @@ build_diag() {
   done
   section "Gestor de root"
   (ksud --version || magisk -v || apd --version) 2>&1 | head -n 3
+  section "Pila de root: versiones"
+  if command -v ksud >/dev/null 2>&1; then
+    echo "KernelSU, ksud: $(tmo 5 ksud --version 2>&1 | head -n 1)"
+    echo "KernelSU, kernel: $(tmo 5 ksud debug version 2>&1 | head -n 2 | tr '\n' ' ')"
+  else
+    echo "ksud: no está en el PATH"
+  fi
+  echo "--- módulos de root (los de zygisk y hybrid_mount, marcados)"
+  diag_modules
+  section "hybrid_mount (solo lectura)"
+  diag_hybrid
+  section "SELinux: avc denied de Nexus / priv_app"
+  diag_avc
   section "Módulo"
   cat "$MODDIR/module.prop" 2>/dev/null
   ls -laZ "$MODDIR" 2>&1 | head -n 30
@@ -1015,7 +1279,7 @@ do_diag() {
     out="$EXPORT_DIR/Nexus-diagnostico.tar.gz"
     rm -f "$out"
     files="diag.txt"
-    for f in watchdog.log tripped failed-boot capture; do
+    for f in watchdog.log tripped failed-boot capture mounts-map.txt; do
       [ -e "$STATE_DIR/$f" ] && files="$files $f"
     done
     # shellcheck disable=SC2086
@@ -1049,6 +1313,7 @@ case "$1" in
   state) need_root; show_state ;;
   diag) do_diag "$2" ;;
   logs) do_logs "${2:-0}" ;;
+  mounts-map) do_mounts_map ;;
   capture)
     need_root
     case "$2" in
