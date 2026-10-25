@@ -32,6 +32,9 @@ import androidx.dynamicanimation.animation.FloatPropertyCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 
+import app.lawnchair.animation.HomeSpringParams;
+import app.lawnchair.animation.NexusLog;
+
 import com.android.launcher3.DeviceProfile;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
@@ -257,7 +260,17 @@ public class RectFSpringAnim extends ReleaseCheck {
         float endY = getTrackedYFromRect(mTargetRect);
         float minVisibleChange = Math.abs(1f / mStartRect.height());
 
-        if (enableScalingRevealHomeAnimation()) {
+        // Nexus: los tres resortes (x, y y escala) salen del perfil de cierre, no de los recursos
+        // de Launcher3. Se lee una sola vez aquí, nunca por fotograma.
+        final HomeSpringParams nexusSpring = HomeSpringParams.current();
+        final boolean scalingReveal = enableScalingRevealHomeAnimation();
+        NexusLog.i("NexusGesture", "RectFSpringAnim: rama="
+                + HomeSpringParams.branchLabel(scalingReveal)
+                + " rigidez=" + nexusSpring.stiffness
+                + " amortiguacion=" + nexusSpring.dampingRatio
+                + " vel(px/s)=" + xVelocityPxPerS + "," + yVelocityPxPerS);
+
+        if (scalingReveal) {
             ResourceProvider rp = DynamicResource.provider(context);
             long minVelocityXPxPerS = rp.getInt(R.dimen.swipe_up_min_velocity_x_px_per_s);
             long maxVelocityXPxPerS = rp.getInt(R.dimen.swipe_up_max_velocity_x_px_per_s);
@@ -273,8 +286,8 @@ public class RectFSpringAnim extends ReleaseCheck {
             yVelocityPxPerS = adjustVelocity(
                     yVelocityPxPerS, minVelocityYPxPerS, maxVelocityYPxPerS, fallOffFactor);
 
-            float stiffnessX = rp.getFloat(R.dimen.swipe_up_rect_x_stiffness);
-            float dampingX = rp.getFloat(R.dimen.swipe_up_rect_x_damping_ratio);
+            float stiffnessX = nexusSpring.stiffness;
+            float dampingX = nexusSpring.dampingRatio;
             mRectXSpring =
                     new SpringAnimation(this, RECT_CENTER_X)
                             .setSpring(
@@ -285,8 +298,8 @@ public class RectFSpringAnim extends ReleaseCheck {
                             .setStartVelocity(xVelocityPxPerS)
                             .addEndListener(onXEndListener);
 
-            float stiffnessY = rp.getFloat(R.dimen.swipe_up_rect_y_stiffness);
-            float dampingY = rp.getFloat(R.dimen.swipe_up_rect_y_damping_ratio);
+            float stiffnessY = nexusSpring.stiffness;
+            float dampingY = nexusSpring.dampingRatio;
             mRectYSpring =
                     new SpringAnimation(this, RECT_Y)
                             .setSpring(
@@ -298,8 +311,8 @@ public class RectFSpringAnim extends ReleaseCheck {
                             .setStartVelocity(yVelocityPxPerS)
                             .addEndListener(onYEndListener);
 
-            float stiffnessZ = rp.getFloat(R.dimen.swipe_up_rect_scale_stiffness_v2);
-            float dampingZ = rp.getFloat(R.dimen.swipe_up_rect_scale_damping_ratio_v2);
+            float stiffnessZ = nexusSpring.stiffness;
+            float dampingZ = nexusSpring.dampingRatio;
             mRectScaleAnim =
                     new SpringAnimation(this, RECT_SCALE_PROGRESS)
                             .setSpring(
@@ -331,30 +344,21 @@ public class RectFSpringAnim extends ReleaseCheck {
             float maxXValue = Math.max(startX, endX);
 
             mRectXAnim = new FlingSpringAnim(this, context, RECT_CENTER_X, startX, endX,
-                    dampedXVelocityPxPerS, mMinVisChange, minXValue, maxXValue, mDampingX,
-                    mStiffnessX, onXEndListener);
+                    dampedXVelocityPxPerS, mMinVisChange, minXValue, maxXValue,
+                    nexusSpring.dampingRatio, nexusSpring.stiffness, onXEndListener);
 
             float minYValue = Math.min(startY, endY);
             float maxYValue = Math.max(startY, endY);
             mRectYAnim = new FlingSpringAnim(this, context, RECT_Y, startY, endY,
-                    dampedYVelocityPxPerS, mMinVisChange, minYValue, maxYValue, mDampingY,
-                    mStiffnessY, onYEndListener);
+                    dampedYVelocityPxPerS, mMinVisChange, minYValue, maxYValue,
+                    nexusSpring.dampingRatio, nexusSpring.stiffness, onYEndListener);
 
-            ResourceProvider rp = DynamicResource.provider(context);
-            float damping = rp.getFloat(R.dimen.swipe_up_rect_scale_damping_ratio);
-
-            // Increase the stiffness for devices where we want the window size to transform
-            // quicker.
-            boolean shouldUseHigherStiffness = profile != null
-                    && (profile.getDeviceProperties().isLandscape() || profile.getDeviceProperties().isTablet());
-            float stiffness = shouldUseHigherStiffness
-                    ? rp.getFloat(R.dimen.swipe_up_rect_scale_higher_stiffness)
-                    : rp.getFloat(R.dimen.swipe_up_rect_scale_stiffness);
-
+            // Nexus: la escala usa el mismo resorte de cierre que x e y (ya no hay rigidez
+            // distinta en horizontal ni tabletas).
             mRectScaleAnim = new SpringAnimation(this, RECT_SCALE_PROGRESS)
                     .setSpring(new SpringForce(1f)
-                            .setDampingRatio(damping)
-                            .setStiffness(stiffness))
+                            .setDampingRatio(nexusSpring.dampingRatio)
+                            .setStiffness(nexusSpring.stiffness))
                     .setStartVelocity(velocityPxPerMs.y * minVisibleChange)
                     .setMaxValue(1f)
                     .setMinimumVisibleChange(minVisibleChange)

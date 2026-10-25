@@ -32,9 +32,12 @@ data class MotionProfile(
         const val OPEN_STIFFNESS = 170f
         const val OPEN_DAMPING = 0.90f
 
-        /** Resorte de cierre: mismo camino de vuelta al icono, algo más rápido y con rebote leve. */
+        /**
+         * Resorte de cierre: mismo camino de vuelta al icono, algo más rápido y con rebote leve.
+         * Lo usan los tres resortes (x, y y escala) de `RectFSpringAnim` y el final del gesto.
+         */
         const val CLOSE_STIFFNESS = 320f
-        const val CLOSE_DAMPING = 0.88f
+        const val CLOSE_DAMPING = 0.80f
 
         /** Vuelta del fondo de pantalla: sin rebote perceptible (un rebote se lee como parpadeo). */
         const val RETURN_STIFFNESS = 260f
