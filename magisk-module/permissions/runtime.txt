@@ -1,0 +1,29 @@
+# Permisos de EJECUCIÓN (peligrosos) que el módulo concede a Nexus (app.nexus.launcher) por defecto.
+# Uno por línea; '#' es un comentario.
+#
+# Con esta lista, .github/scripts/build-magisk-module.sh genera
+#   system/product/etc/default-permissions/default-permissions-nexus.xml
+# con cada permiso como `fixed="false"`: el usuario puede revocarlo después desde Ajustes del sistema.
+#
+# Reglas que la build comprueba (si no se cumplen, falla):
+#   - cada permiso de esta lista tiene que estar en el manifiesto del APK (aapt2 dump permissions);
+#   - ninguno puede estar en allow.txt (esos son privilegiados, van en privapp-permissions-nexus.xml);
+#   - el XML tiene que ser válido y tener exactamente estos permisos.
+#
+# Solo están los que Nexus declara Y usa en su código (comprobaciones o peticiones de permiso reales):
+#   - contactos: búsqueda de contactos del cajón (ContactsSearchProvider);
+#   - medios y almacenamiento: búsqueda de archivos (FileSearchProvider, FileAccessManager).
+android.permission.READ_CONTACTS
+android.permission.READ_MEDIA_IMAGES
+android.permission.READ_MEDIA_VIDEO
+android.permission.READ_MEDIA_AUDIO
+android.permission.READ_EXTERNAL_STORAGE
+
+# Fuera a propósito (se pueden añadir arriba si se quiere):
+#   CALL_PHONE: declarado, pero no se encontró ningún uso en el código; es sensible.
+#   POST_NOTIFICATIONS: declarado; el código no lo pide ni lo comprueba.
+#   READ_MEDIA_VISUAL_USER_SELECTED: Nexus solo lo usa para detectar el acceso PARCIAL a fotos; con
+#     READ_MEDIA_IMAGES/VIDEO concedidos no aporta nada.
+#   WRITE_EXTERNAL_STORAGE, READ/WRITE_HISTORY_BOOKMARKS: heredados, sin uso en Nexus.
+#
+# Esto no sustituye a la lista de permisos de not-privileged.txt: ahí siguen, para que no se denieguen.

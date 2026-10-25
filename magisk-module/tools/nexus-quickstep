@@ -16,6 +16,9 @@
 #                                     registros del último arranque fallido
 #   nexus-quickstep logs [segundos]  copia todos los registros a /sdcard/Nexus-Logs (RESUMEN.txt dice
 #                                     en claro si el arranque fue bien o falló)
+#   nexus-quickstep home-role status|on|off
+#                                     poner o quitar a Nexus como app de Inicio (rol HOME) con `cmd role`.
+#                                     Nunca se hace solo: solo a petición (botón del WebUI). Ver do_home_role
 #   nexus-quickstep capture start|stop|keep
 #                                     registro del arranque (lo usa post-fs-data.sh, ver abajo)
 #
@@ -85,13 +88,32 @@ log() {
 }
 
 usage() {
-  say "Uso: nexus-quickstep status | enable [--force] [--umount-fix] | disable [--reboot] | bound | state | diag [--export] | logs | umount-fix on|restore|status | preflight | history | sync-apk [--wait]"
+  say "Uso: nexus-quickstep status | enable [--force] [--umount-fix] | disable [--reboot] | bound | state | diag [--export] | logs | home-role status|on|off | umount-fix on|restore|status | preflight | history | sync-apk [--wait]"
   exit "${1:-2}"
 }
 
 need_root() {
   [ "$(id -u)" = "0" ] || die "hace falta root (su -c nexus-quickstep ...)."
 }
+
+# tmo SEGUNDOS comando [args...]: ejecuta un comando EXTERNO con límite de tiempo y devuelve su código
+# (124, 137 o 143 si se cortó por tiempo). No sirve para funciones del script ni para builtins. Usa
+# `timeout` (toybox/coreutils) si existe; si no, un temporizador propio con kill.
+if command -v timeout >/dev/null 2>&1; then
+  tmo() { t="$1"; shift; timeout -k 1 "$t" "$@"; }
+else
+  tmo() {
+    t="$1"; shift
+    "$@" &
+    tp=$!
+    ( sleep "$t"; kill "$tp" 2>/dev/null ) >/dev/null 2>&1 &
+    tw=$!
+    wait "$tp" 2>/dev/null
+    trc=$?
+    kill "$tw" 2>/dev/null
+    return "$trc"
+  }
+fi
 
 # Estado del overlay en este arranque. Un overlay estático no sale en `cmd overlay list` (comprobado en
 # Android 17), así que se mira el resultado: si config_recentsComponentName apunta a Nexus, está aplicado.
@@ -889,6 +911,124 @@ capture_keep() {
   return 0
 }
 
+# --- Nexus como app de Inicio (rol HOME) ---
+# `home-role on` pone a Nexus como app de Inicio con `cmd role add-role-holder`; `home-role off` devuelve el
+# launcher que había antes. NUNCA se ejecuta solo (ni en el arranque ni en el vigilante): solo a petición.
+#
+# HIPÓTESIS SIN VERIFICAR EN ANDROID 17: la sintaxis de `cmd role` (subcomandos get-role-holders,
+# add-role-holder y remove-role-holder, y el indicador --user) está tomada de lo que se sabe de AOSP, no
+# comprobada en esta ROM. Por eso, antes de tocar nada, se lee `cmd role help` y se exige que lista esos
+# subcomandos; el --user solo se usa si la ayuda lo menciona. Si no cuadra, se niega y no cambia nada.
+# El formato de `dumpsys role` (name=android.app.role.HOME / holders=<paquete>) sí está visto en móviles
+# reales, y se usa para leer el titular actual si get-role-holders no devuelve nada.
+#
+# Cambiar de app de Inicio no afecta al arranque; a mano se deshace en Ajustes > Apps > Apps
+# predeterminadas > App de inicio.
+HOME_ROLE="android.app.role.HOME"
+HOME_PREV="$STATE_DIR/home-role-prev"
+
+# Comprueba que `cmd role` sirve y fija RUSER. Devuelve 0 si se puede usar, 1 si no (y deja el motivo en ROLE_WHY).
+role_probe() {
+  ROLE_WHY=""
+  RUSER=""
+  rh=$(tmo 10 cmd role help 2>&1)
+  for sub in get-role-holders add-role-holder remove-role-holder; do
+    case "$rh" in
+      *"$sub"*) ;;
+      *) ROLE_WHY="este Android no tiene «cmd role $sub» (salida de «cmd role help»: $(echo "$rh" | head -n 2 | tr '\n' ' ' | cut -c1-120))"; return 1 ;;
+    esac
+  done
+  case "$rh" in *--user*) RUSER="--user $USER_ID" ;; esac
+  return 0
+}
+
+# Titular actual del rol de Inicio (vacío si no se puede leer).
+home_holder() {
+  # shellcheck disable=SC2086
+  h=$(tmo 10 cmd role get-role-holders $RUSER "$HOME_ROLE" 2>/dev/null | tr -d '\r' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | grep -v '^$' | head -n 1)
+  if [ -z "$h" ]; then
+    h=$(tmo 10 dumpsys role 2>/dev/null | grep -A3 "name=$HOME_ROLE" | sed -n 's/.*holders=//p' | head -n 1 | sed 's/[, ].*//')
+  fi
+  echo "$h"
+}
+
+pkg_installed() {
+  tmo 10 pm path "$1" 2>/dev/null | grep -q '^package:'
+}
+
+do_home_role() {
+  need_root
+  case "$1" in
+    status)
+      if role_probe; then
+        cur=$(home_holder)
+        kv role_cmd 1
+        kv holder "$cur"
+        kv nexus_is_home "$([ "$cur" = "$PKG" ] && echo 1 || echo 0)"
+      else
+        kv role_cmd 0
+        kv role_why "$ROLE_WHY"
+        kv holder ""
+        kv nexus_is_home 0
+      fi
+      kv nexus_installed "$(pkg_installed "$PKG" && echo 1 || echo 0)"
+      kv prev "$(head -n 1 "$HOME_PREV" 2>/dev/null)"
+      ;;
+    on)
+      role_probe || die "no se cambia nada: $ROLE_WHY."
+      pkg_installed "$PKG" || die "Nexus ($PKG) no está instalado: no se cambia nada."
+      cur=$(home_holder)
+      if [ "$cur" = "$PKG" ]; then
+        say "Nexus ya es la app de Inicio. No se cambia nada."
+        return 0
+      fi
+      mkdir -p "$STATE_DIR" 2>/dev/null
+      wrote_prev=0
+      if [ -n "$cur" ]; then
+        echo "$cur" > "$HOME_PREV" && wrote_prev=1
+      fi
+      say "App de Inicio actual: ${cur:-desconocida}. Poniendo a Nexus…"
+      # shellcheck disable=SC2086
+      res=$(tmo 20 cmd role add-role-holder $RUSER "$HOME_ROLE" "$PKG" 2>&1)
+      log "home-role on: add-role-holder -> $(echo "$res" | tr '\n' ' ' | cut -c1-160)"
+      now=$(home_holder)
+      if [ "$now" = "$PKG" ]; then
+        hist home "Nexus puesto como app de Inicio (antes: ${cur:-desconocida})"
+        say "Hecho: Nexus es ahora la app de Inicio. Para volver: nexus-quickstep home-role off."
+      else
+        [ "$wrote_prev" = "1" ] && rm -f "$HOME_PREV"
+        hist home "no se pudo poner a Nexus como app de Inicio: $(echo "$res" | tr '\n' ' ' | cut -c1-100)"
+        die "no se pudo: tras add-role-holder el titular es «${now:-desconocido}». Respuesta del sistema: ${res:-(vacía)}. Nada más se ha tocado."
+      fi
+      ;;
+    off)
+      role_probe || die "no se cambia nada: $ROLE_WHY."
+      cur=$(home_holder)
+      if [ "$cur" != "$PKG" ]; then
+        say "Nexus no es la app de Inicio ahora (lo es: ${cur:-desconocida}). No se cambia nada."
+        return 0
+      fi
+      prev=$(head -n 1 "$HOME_PREV" 2>/dev/null)
+      [ -n "$prev" ] || die "no hay guardado cuál era el launcher anterior (¿lo cambiaste a mano?). No se cambia nada: elige otro en Ajustes > Apps > Apps predeterminadas > App de inicio."
+      pkg_installed "$prev" || die "el launcher anterior ($prev) ya no está instalado. No se cambia nada: elige otro en Ajustes > Apps > Apps predeterminadas > App de inicio."
+      say "Devolviendo la app de Inicio a $prev…"
+      # shellcheck disable=SC2086
+      res=$(tmo 20 cmd role add-role-holder $RUSER "$HOME_ROLE" "$prev" 2>&1)
+      log "home-role off: add-role-holder $prev -> $(echo "$res" | tr '\n' ' ' | cut -c1-160)"
+      now=$(home_holder)
+      if [ "$now" = "$prev" ]; then
+        rm -f "$HOME_PREV"
+        hist home "app de Inicio devuelta a $prev"
+        say "Hecho: la app de Inicio vuelve a ser $prev."
+      else
+        hist home "no se pudo devolver la app de Inicio a $prev: $(echo "$res" | tr '\n' ' ' | cut -c1-100)"
+        die "no se pudo: tras add-role-holder el titular es «${now:-desconocido}». Respuesta del sistema: ${res:-(vacía)}. Elige el launcher a mano en Ajustes."
+      fi
+      ;;
+    *) usage 2 ;;
+  esac
+}
+
 kv() { echo "$1=$2"; }
 
 # Estado en líneas clave=valor: lo lee el WebUI del módulo (webroot/index.html).
@@ -1058,6 +1198,7 @@ case "$1" in
       *) usage 2 ;;
     esac
     ;;
+  home-role) do_home_role "$2" ;;
   guard) need_root; do_guard ;;
   -h | --help | help) usage 0 ;;
   *) usage 2 ;;

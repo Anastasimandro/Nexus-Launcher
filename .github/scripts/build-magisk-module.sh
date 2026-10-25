@@ -10,6 +10,9 @@
 #   customize.sh, META-INF/        instalador
 #   system/product/priv-app/Nexus/Nexus.apk
 #   system/product/etc/permissions/privapp-permissions-nexus.xml
+#   system/product/etc/default-permissions/default-permissions-nexus.xml
+#                                            permisos de ejecución (permissions/runtime.txt) concedidos
+#                                            por defecto, siempre revocables (fixed="false")
 #   overlay-static/NexusRecentsOverlay.apk   RRO estático que hace de Nexus el proveedor de Quickstep.
 #                                            NO va en system/: post-fs-data.sh lo copia a
 #                                            system/product/overlay/ solo si existe el archivo
@@ -31,6 +34,7 @@ module_dir="${MODULE_DIR:-magisk-module}"
 pkg="app.nexus.launcher"
 allow_file="$module_dir/permissions/allow.txt"
 normal_file="$module_dir/permissions/not-privileged.txt"
+runtime_file="$module_dir/permissions/runtime.txt"
 # Sin estos dos el módulo no sirve de nada: son los que dejan a Nexus pedir sus animaciones.
 essential=(
   android.permission.START_TASKS_FROM_RECENTS
@@ -45,6 +49,7 @@ fail() {
 [[ -f $apk ]] || fail "No existe el APK '$apk'."
 [[ -f $allow_file ]] || fail "Falta $allow_file."
 [[ -f $normal_file ]] || fail "Falta $normal_file."
+[[ -f $runtime_file ]] || fail "Falta $runtime_file."
 [[ -f $module_dir/module.prop && -f $module_dir/customize.sh ]] || fail "Faltan archivos en $module_dir."
 [[ -f $module_dir/tools/nexus-quickstep ]] || fail "Falta $module_dir/tools/nexus-quickstep."
 [[ -f $module_dir/service.sh ]] || fail "Falta $module_dir/service.sh."
@@ -87,7 +92,9 @@ read_list() {
 }
 allowed=$(read_list "$allow_file")
 normal=$(read_list "$normal_file")
+runtime=$(read_list "$runtime_file")
 [[ -n $allowed ]] || fail "$allow_file no contiene ningún permiso."
+[[ -n $runtime ]] || fail "$runtime_file no contiene ningún permiso."
 
 for perm in "${essential[@]}"; do
   grep -qxF "$perm" <<<"$allowed" || fail "$perm es imprescindible y no está en $allow_file."
@@ -96,12 +103,19 @@ done
 
 bad=$(grep -vE '^[A-Za-z0-9_.]+$' <<<"$requested" || true)
 [[ -z $bad ]] || fail "Nombres de permiso no válidos en el APK: $bad"
-for f in "$allow_file" "$normal_file"; do
+for f in "$allow_file" "$normal_file" "$runtime_file"; do
   bad=$(read_list "$f" | grep -vE '^[A-Za-z0-9_.]+$' || true)
   [[ -z $bad ]] || fail "Nombres de permiso no válidos en $f: $bad"
 done
 overlap=$(comm -12 <(printf '%s\n' "$allowed") <(printf '%s\n' "$normal") || true)
 [[ -z $overlap ]] || fail "Están a la vez en allow.txt y not-privileged.txt: $(tr '\n' ' ' <<<"$overlap")"
+# Cada permiso de ejecución: tiene que estar en el manifiesto del APK, no ser privilegiado y seguir en
+# not-privileged.txt (si no, privapp-permissions-nexus.xml lo denegaría).
+while IFS= read -r perm; do
+  grep -qxF "$perm" <<<"$requested" || fail "$perm está en runtime.txt y el manifiesto del APK no lo declara."
+  ! grep -qxF "$perm" <<<"$allowed" || fail "$perm está en runtime.txt y en allow.txt: un permiso no puede ser a la vez de ejecución y privilegiado."
+  grep -qxF "$perm" <<<"$normal" || fail "$perm está en runtime.txt pero no en not-privileged.txt: el XML de privapp lo denegaría."
+done <<<"$runtime"
 
 granted=$(comm -12 <(printf '%s\n' "$requested") <(printf '%s\n' "$allowed"))
 skipped=$(comm -12 <(printf '%s\n' "$requested") <(printf '%s\n' "$normal"))
@@ -156,6 +170,21 @@ xml="$root/system/product/etc/permissions/privapp-permissions-nexus.xml"
   echo '</permissions>'
 } > "$xml"
 
+# Permisos de ejecución concedidos por defecto. Lo lee DefaultPermissionGrantPolicy (la ruta
+# /product/etc/default-permissions es una de las que mira). fixed="false": el usuario puede revocarlos.
+dp_dir="$root/system/product/etc/default-permissions"
+mkdir -p "$dp_dir"
+dp_xml="$dp_dir/default-permissions-nexus.xml"
+{
+  echo '<?xml version="1.0" encoding="utf-8"?>'
+  echo '<!-- Generado por .github/scripts/build-magisk-module.sh. No editar a mano. -->'
+  echo '<exceptions>'
+  echo "    <exception package=\"$pkg\">"
+  while IFS= read -r perm; do echo "        <permission name=\"$perm\" fixed=\"false\"/>"; done <<<"$runtime"
+  echo '    </exception>'
+  echo '</exceptions>'
+} > "$dp_xml"
+
 # --- Comprobaciones del resultado antes de empaquetar ---
 grep -qxF "version=$version" "$root/module.prop" || fail "module.prop no quedó con version=$version."
 grep -qxF "versionCode=$version_code" "$root/module.prop" || fail "module.prop no quedó con versionCode=$version_code."
@@ -174,6 +203,29 @@ if command -v python3 >/dev/null 2>&1; then
   python3 -I -c 'import sys, xml.dom.minidom as m; m.parse(sys.argv[1])' "$xml" || fail "El XML de permisos no es válido."
 fi
 
+# default-permissions: estructura exacta (una sola excepción, para este paquete, con todos los permisos
+# de runtime.txt y ninguno más, todos revocables) y XML válido.
+n_dp=$(grep -c '<permission name=' "$dp_xml" || true)
+n_rt=$(grep -c . <<<"$runtime" || true)
+(( n_dp == n_rt )) || fail "default-permissions tiene $n_dp permisos y runtime.txt $n_rt."
+[[ $(grep -c '<exception package=' "$dp_xml" || true) == 1 ]] || fail "default-permissions debe tener una sola <exception>."
+grep -qF "<exception package=\"$pkg\">" "$dp_xml" || fail "default-permissions no es para $pkg."
+! grep -q 'fixed="true"' "$dp_xml" || fail "default-permissions tiene permisos fijos (fixed=\"true\"): deben poder revocarse."
+if command -v python3 >/dev/null 2>&1; then
+  python3 -I - "$dp_xml" "$pkg" <<'PYEOF' || fail "default-permissions no es válido o no coincide con runtime.txt."
+import sys, xml.dom.minidom as m
+doc = m.parse(sys.argv[1])
+root = doc.documentElement
+assert root.tagName == "exceptions"
+exc = root.getElementsByTagName("exception")
+assert len(exc) == 1 and exc[0].getAttribute("package") == sys.argv[2]
+perms = exc[0].getElementsByTagName("permission")
+names = [p.getAttribute("name") for p in perms]
+assert names and len(set(names)) == len(names)
+assert all(p.getAttribute("fixed") == "false" for p in perms)
+PYEOF
+fi
+
 # --- Zip ---
 chmod 0755 "$root/customize.sh" "$root/META-INF/com/google/android/update-binary" \
   "$root/system/bin/nexus-quickstep" "$root/service.sh" "$root/post-fs-data.sh" "$root/uninstall.sh"
@@ -185,9 +237,10 @@ unzip -tq "$out_abs" >/dev/null || fail "El zip generado está corrupto."
 for entry in module.prop customize.sh META-INF/com/google/android/update-binary \
   META-INF/com/google/android/updater-script system/product/priv-app/Nexus/Nexus.apk \
   system/product/etc/permissions/privapp-permissions-nexus.xml \
+  system/product/etc/default-permissions/default-permissions-nexus.xml \
   overlay-static/NexusRecentsOverlay.apk system/bin/nexus-quickstep service.sh post-fs-data.sh uninstall.sh webroot/index.html; do
   unzip -l "$out_abs" "$entry" >/dev/null 2>&1 || fail "Falta $entry dentro del zip."
 done
 
-echo "Módulo $version (versionCode $version_code): $(grep -c . <<<"$granted" || true) permisos concedidos, $(grep -c . <<<"$denied" || true) denegados, $n_skipped sin tocar." >&2
+echo "Módulo $version (versionCode $version_code): $(grep -c . <<<"$granted" || true) permisos concedidos, $(grep -c . <<<"$denied" || true) denegados, $n_skipped sin tocar, $n_rt de ejecución por defecto." >&2
 echo "→ $out_abs" >&2

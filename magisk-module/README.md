@@ -12,6 +12,7 @@ customize.sh                                             comprueba Android 14+, 
 META-INF/com/google/android/{update-binary,updater-script}
 system/product/priv-app/Nexus/Nexus.apk                  el APK de esa release
 system/product/etc/permissions/privapp-permissions-nexus.xml   lista blanca de permisos (generada)
+system/product/etc/default-permissions/default-permissions-nexus.xml   permisos de ejecución concedidos por defecto, revocables (generada desde permissions/runtime.txt)
 overlay-static/NexusRecentsOverlay.apk                   overlay ESTÁTICO que hace de Nexus el proveedor de Quickstep (fuera de system/: no se monta de serie)
 post-fs-data.sh                                          copia ese overlay a /product/overlay solo si se pidió con `enable`
 service.sh                                               vigilante: si SystemUI no se enlaza a Nexus, lo desactiva y reinicia
@@ -26,7 +27,7 @@ El módulo lleva dentro el APK de su misma versión. Al flashearlo (si Android e
 
 ## WebUI
 
-Cuatro pestañas: **Inicio** (qué pasa y un botón con lo que conviene hacer, los tres pasos pedir → reiniciar → verificar), **Comprobar** (comprobaciones previas con semáforo y una recomendación), **Registros** (historial de intentos, informe, copia a `Nexus-Logs`) y **Ajustes** (plan A, plan B, desactivar, reiniciar). Por debajo usa estos comandos, que también valen en terminal: `nexus-quickstep state | preflight | history | diag | logs`.
+Cuatro pestañas: **Inicio** (qué pasa y un botón con lo que conviene hacer, los tres pasos pedir → reiniciar → verificar), **Comprobar** (comprobaciones previas con semáforo y una recomendación), **Registros** (historial de intentos, informe, copia a `Nexus-Logs`) y **Ajustes** (plan A, plan B, desactivar, reiniciar). Por debajo usa estos comandos, que también valen en terminal: `nexus-quickstep state | preflight | history | diag | logs | home-role`. En Ajustes hay además la tarjeta **App de Inicio** (poner o quitar a Nexus como launcher con `cmd role`, solo a petición).
 
 - `preflight` solo lee. Imprime `check|id|nivel|título|detalle` y una línea `recommend|camino|texto` (`install`, `active`, `plan-a`, `plan-b` o `enable`).
 - `history` es la cronología (`fecha|suceso|detalle`). Los sucesos de antes de que el reloj esté ajustado salen con fecha 1970 y el WebUI los muestra como «al arrancar».

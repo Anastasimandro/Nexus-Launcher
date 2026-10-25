@@ -69,3 +69,38 @@ Si P1 dice que no es efectivo: o hay otro overlay de la imagen con más priorida
 ## 6. Qué enviar si algo falla
 
 `nexus-quickstep status`, `/data/adb/nexus_quickstep/watchdog.log`, `adb logcat -b all -v threadtime -d` (justo después del fallo), `dumpsys activity services app.nexus.launcher/com.android.quickstep.TouchInteractionService`, el informe de errores de Nexus (`quickstepProbe:`) y la versión exacta de la ROM (`getprop ro.build.fingerprint`).
+
+## 8. Integración sin overlay: permisos de ejecución y app de Inicio
+
+Dos cosas que **no** tocan recientes, el overlay ni el arranque. Las dos son hipótesis sin probar en un móvil con Android 17.
+
+### 8.1 Permisos de ejecución por defecto (`default-permissions`)
+
+El módulo lleva `system/product/etc/default-permissions/default-permissions-nexus.xml`, que lo genera la build desde `permissions/runtime.txt` (contactos, imágenes, vídeo, audio y almacenamiento: los que Nexus declara **y** usa en su código para buscar contactos y archivos). Todos con `fixed="false"`: se pueden revocar en Ajustes. La build falla si un permiso de la lista no está en el manifiesto del APK, si es privilegiado o si el XML no cuadra.
+
+**Qué se espera, sin garantía:** según lo que recuerdo de AOSP (no lo he podido comprobar en el código de Android 17), el sistema aplica estos XML al conceder los permisos por defecto: al crear un usuario y tras una actualización del sistema (cambio de huella), no necesariamente al flashear un módulo sobre un sistema ya en marcha. Si no se concede nada tras reiniciar, **eso es un resultado válido de la prueba**: avísame y no se cambia de camino sin hablarlo.
+
+| # | Prueba | Esperado |
+|---|---|---|
+| D1 | Tras flashear y reiniciar: `ls -l /product/etc/default-permissions/default-permissions-nexus.xml` | El archivo existe (lo monta el módulo) |
+| D2 | `dumpsys package app.nexus.launcher` y mirar `runtime permissions:` | `READ_CONTACTS`, `READ_MEDIA_*` y `READ_EXTERNAL_STORAGE` con `granted=true` **si** el sistema los aplicó |
+| D3 | Revocar uno a mano en Ajustes → Apps → Nexus → Permisos y reiniciar | Sigue revocado (si no, es que el sistema lo vuelve a conceder y hay que decírmelo) |
+| D4 | `logcat -b all -d \| grep -i "default-permissions\|DefaultPermission"` | Sin errores sobre el XML |
+
+Para quitar solo esto: borra la línea del permiso en `permissions/runtime.txt` y reconstruye, o desactiva el módulo (`touch /data/adb/modules/nexus_launcher_systemless/disable` desde recovery). Un permiso ya concedido no se retira solo: se revoca en Ajustes o con `pm revoke app.nexus.launcher <permiso>`.
+
+### 8.2 Nexus como app de Inicio (`cmd role`)
+
+WebUI → Ajustes → **App de Inicio**, o `su -c nexus-quickstep home-role status | on | off`. **Nunca es automático**: solo con el botón (el de poner pide confirmación). Guarda el launcher anterior en `/data/adb/nexus_quickstep/home-role-prev` para poder volver.
+
+**Hipótesis sin verificar en tu ROM:** la sintaxis de `cmd role` (subcomandos `get-role-holders`, `add-role-holder`, `remove-role-holder` e indicador `--user`) la conozco de AOSP, pero no he podido comprobarla en Android 17. Por eso la herramienta lee `cmd role help` antes de tocar nada: si no lista esos subcomandos, **se niega, no cambia nada y lo dice** (el botón sale desactivado con el motivo). El `--user` solo se usa si la ayuda lo menciona. Tras cambiar, vuelve a leer el titular y, si no es el esperado, lo cuenta como fallo.
+
+| # | Prueba | Esperado |
+|---|---|---|
+| H1 | `su -c "cmd role help"` | Lista `get-role-holders`, `add-role-holder`, `remove-role-holder`. **Mándame esta salida tal cual**, aunque funcione |
+| H2 | `su -c nexus-quickstep home-role status` | `role_cmd=1`, `holder=<tu launcher actual>` |
+| H3 | Botón «Poner Nexus como app de Inicio» (o `home-role on`) | Nexus pasa a ser Inicio; el botón Inicio abre Nexus; `prev=` muestra el anterior |
+| H4 | Botón «Volver al launcher anterior» (o `home-role off`) | Vuelve el anterior |
+| H5 | `home-role off` sin haber hecho `on` (o con el anterior desinstalado) | Se niega con un mensaje y no cambia nada |
+
+**Vuelta atrás a mano:** Ajustes → Apps → Apps predeterminadas → App de inicio. No afecta al arranque.

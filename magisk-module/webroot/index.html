@@ -325,6 +325,27 @@
         </p>
       </div>
 
+      <div class="card" id="home-card">
+        <h2>App de Inicio</h2>
+        <div class="switch-row">
+          <div>
+            <h3>Nexus como launcher de Inicio</h3>
+            <p class="small muted" style="margin:0" id="home-text">—</p>
+          </div>
+          <span class="chip" id="home-chip">—</span>
+        </div>
+        <p class="small muted" style="margin:10px 0 12px">
+          Usa <b>cmd role</b> para poner a Nexus como app de Inicio sin pasar por Ajustes del sistema, y guarda cuál era la
+          anterior para volver con un botón. Nunca se hace solo. No toca el arranque: a mano se deshace en
+          Ajustes → Apps → Apps predeterminadas → App de inicio.
+        </p>
+        <div class="pair">
+          <button class="btn" id="btn-home-on" disabled>Poner Nexus como app de Inicio</button>
+          <button class="btn" id="btn-home-off" disabled>Volver al launcher anterior</button>
+        </div>
+        <pre id="home-out" tabindex="0"></pre>
+      </div>
+
       <div class="card">
         <h2>La app y el módulo</h2>
         <p class="small muted" style="margin:0 0 10px">
@@ -379,6 +400,15 @@
   <div class="pair">
     <button class="btn" id="dlg-cancel">Cancelar</button>
     <button class="btn primary" id="dlg-ok">Activar</button>
+  </div>
+</dialog>
+
+<dialog id="dlg-home" aria-labelledby="dlg-home-title">
+  <h3 id="dlg-home-title">Poner Nexus como app de Inicio</h3>
+  <p class="muted" id="dlg-home-text">Nexus pasará a ser tu app de Inicio. Se guarda cuál es la actual para poder volver.</p>
+  <div class="pair">
+    <button class="btn" id="dlg-home-cancel">Cancelar</button>
+    <button class="btn primary" id="dlg-home-ok">Poner Nexus</button>
   </div>
 </dialog>
 
@@ -525,6 +555,7 @@
     'arranque-fallido': ['Arranque fallido', 'bad', 'x'],
     'verificado': ['Verificado', 'ok', 'check'],
     'hybrid': ['Ajuste de hybrid_mount', 'info', 'info'],
+    'home': ['App de Inicio', 'info', 'home'],
     'apk': ['App de Nexus', 'info', 'check']
   };
 
@@ -780,6 +811,44 @@
       $('t-' + t).setAttribute('aria-selected', t === name ? 'true' : 'false');
     });
     window.scrollTo(0, 0);
+    if (name === 'settings') { loadHome(); }
+  }
+
+  /* App de Inicio (rol HOME): `home-role status` da role_cmd, holder, nexus_is_home, nexus_installed y prev. */
+  var homeRole = null;
+  function renderHomeRole() {
+    var on = $('btn-home-on'), off = $('btn-home-off'), chip = $('home-chip'), text = $('home-text');
+    if (!homeRole) { return; }
+    if (homeRole.role_cmd !== '1') {
+      chip.textContent = 'no disponible'; chip.className = 'chip';
+      text.textContent = 'Este Android no admite el cambio desde aquí: ' + (homeRole.role_why || 'cmd role no responde') + '. Elige el launcher en Ajustes del sistema.';
+      on.disabled = true; off.disabled = true;
+      return;
+    }
+    var isNexus = homeRole.nexus_is_home === '1';
+    chip.textContent = isNexus ? 'Nexus' : (homeRole.holder || '?');
+    chip.className = 'chip' + (isNexus ? ' on' : '');
+    text.textContent = isNexus
+      ? (homeRole.prev ? 'Nexus es la app de Inicio. Antes: ' + homeRole.prev + '.' : 'Nexus es la app de Inicio (no hay guardada una anterior).')
+      : 'Ahora es: ' + (homeRole.holder || 'desconocida') + '.';
+    on.disabled = isNexus || homeRole.nexus_installed !== '1';
+    off.disabled = !(isNexus && homeRole.prev);
+  }
+  function loadHome() {
+    if (!hasKsu) { return Promise.resolve(); }
+    return run(TOOL + ' home-role status', 40000)
+      .then(function (r) { homeRole = parseKV(r.out); renderHomeRole(); })
+      .catch(function (e) { $('home-text').textContent = e.message; });
+  }
+  function homeAction(which) {
+    busy(true);
+    return run(TOOL + ' home-role ' + which, 60000)
+      .then(function (r) {
+        show('home-out', out(r));
+        toast(r.code === 0 ? 'Hecho' : 'No se pudo cambiar');
+      })
+      .catch(function (e) { show('home-out', e.message); })
+      .then(function () { busy(false); return loadHome().then(function () { return refresh(); }); });
   }
 
   function askReboot(text) {
@@ -891,6 +960,10 @@
       .catch(function (e) { toast(e.message); })
       .then(function () { busy(false); return refresh(); });
   });
+  $('btn-home-on').addEventListener('click', function () { $('dlg-home').showModal(); });
+  $('dlg-home-cancel').addEventListener('click', function () { $('dlg-home').close(); });
+  $('dlg-home-ok').addEventListener('click', function () { $('dlg-home').close(); homeAction('on'); });
+  $('btn-home-off').addEventListener('click', function () { homeAction('off'); });
   $('btn-plan-a-on').addEventListener('click', function () { planA(true); });
   $('btn-plan-a-off').addEventListener('click', function () { planA(false); });
 
